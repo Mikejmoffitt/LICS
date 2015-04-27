@@ -23,7 +23,7 @@ _voidCallback *h_int(void)
 u16 lylepal[] = {
 	0x000, 0xEEE, 0x888, 0x444,
 	0x24A, 0x0E8, 0xC44, 0x622,
-	0x026, 0xEE0, 0x000, 0x000,
+	0x026, 0x0EE, 0x000, 0x000,
 	0x000, 0x000, 0x000, 0x000
 };
 
@@ -55,34 +55,21 @@ int main(void)
 
 
 	sprites_init();
-	u16 i = 0;
+	u8 i = 0;
+
+	u8 size;
 
 	u16 delay = 0;
 	u8 dir = 0;
 	VDP_setHInterrupt(0);
 	u8 pad = 0;
-	u8 sprnum = 0;
-	for (;;)
-	{	
-		u8 size;
-		p1 = pad_read(0);
-		if (p1 & KEY_A)
-		{
-			if (pad == 0)
-			{
-				sprnum++;
-				pad = 1;
-			}
-		}
-		else
-		{
-			pad = 0;
-		}
-		if (sprnum < 0x10)
+	for (i = 0; i < 0x18; i++)
+	{
+		if (i < 0x10)
 		{
 			size = SPRITE_SIZE(2,3);	
 		}
-		else if (sprnum < 0x14)
+		else if (i < 0x14)
 		{
 			size = SPRITE_SIZE(3,2);
 		}
@@ -90,17 +77,19 @@ int main(void)
 		{
 			size = SPRITE_SIZE(3,3);
 		}
-		if (sprnum == 0x18)
+		if (i == 0x18)
 		{
-			sprnum = 0;
+			i = 0;
 		}
+		sprite_put(16 + (12 * i), 112 + (i % 2 == 0 ? 32 : 0), size, 256 + (9 * i));
+		player_dma(i,32*(256 + 9*i));	
+	}
 
-		sprite_put(160,112, size, 256);
+
+	for (;;)
+	{	
 		VDP_waitVSync();
-
-		player_dma(sprnum,32*256);
-		
-		sprites_dma_simple();
+		sprites_dma(32);
 
 	}
 	return 0;	

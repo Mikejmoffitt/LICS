@@ -30,9 +30,12 @@ void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link)
 	}
 	u16 *addr = &sprite_table[num << 2];
 	*addr = 128 + y;
-	*(addr + 1) = (size << 8) + link;
-	*(addr + 2) = attr;
-	*(addr + 3) = 128 + x;
+	addr++;
+	*addr = (size << 8) + link;
+	addr++;
+	*addr = attr;
+	addr++;
+	*addr = 128 + x;
 }
 
 void sprite_put(u16 x, u16 y, u8 size, u16 attr)

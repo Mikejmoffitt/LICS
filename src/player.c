@@ -14,7 +14,7 @@ void player_dma(u16 num, u16 dest)
 		offset = 120 + (9 * num);
 	}
 
-	u16 size = (num < LYLE_3x3_CUTOFF) ? (6 * 16) : (9 * 16);
+	u16 size = (num < LYLE_3x3_CUTOFF) ? (9 * 16) : (9 * 16);
 
 	VDP_doVRamDMA(gfx_lyle + (32 *offset),dest,size);
 }
