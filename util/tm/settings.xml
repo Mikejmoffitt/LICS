@@ -5,10 +5,10 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/lyle.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/font.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/res/gfx/planb_ingame.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/util/tm2"/>
   <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/res/gfx/teleporter.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/util/tm0"/>
   <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/res/gfx/player.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/res/gfx/ready.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/GhostInTheMachine/gen/res/gfx/mask.bin"/>

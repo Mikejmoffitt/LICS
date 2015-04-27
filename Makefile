@@ -84,7 +84,7 @@ OBJS = $(RESOURCES)
 all: out.bin 
 
 run: out.bin
-	@exec util/Fusion $< 2> /dev/null
+	@exec mednafen $< 2> /dev/null
 
 test: out.bin
 	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
