@@ -15,13 +15,13 @@
 *.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
 *.so
 *.so.*
 *.dylib
 
 # Executables
-*.exe
+out.bin
+out/out.bin
 *.out
 *.app
 *.i*86

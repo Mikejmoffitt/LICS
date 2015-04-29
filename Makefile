@@ -86,6 +86,9 @@ all: out.bin
 run: out.bin
 	@exec mednafen $< 2> /dev/null
 
+debug: out.bin
+	@exec wine ./util/regen/Regen.exe ./out.bin
+
 test: out.bin
 	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
 
