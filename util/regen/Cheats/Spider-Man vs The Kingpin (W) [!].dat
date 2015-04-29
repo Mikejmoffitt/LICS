@@ -1,0 +1,55 @@
+[0]
+Name=Infinite Life
+0=Off
+1=On,0183EE:6002
+
+[1]
+Name=Shooting A Web Requires No Web Energy
+0=Off
+1=On,016A9E:6002
+
+[2]
+Name=Infinite Time
+0=Off
+1=On,071A82:6002
+
+[3]
+Name=Using Web Shield Requires No Web Energy
+0=Off
+1=On,016C92:6002
+
+[4]
+Name=Web Shield Lasts Longer
+0=Off
+1=On,0183D8:6002
+
+[5]
+Name=Infinite Number Of Pictures
+0=Off
+1=On,014DF6:6002
+
+[6]
+Name=Swinging On A Web Increases Web Energy Instead Of Decreasing It
+0=Off
+1=On,016E76:506D
+
+[7]
+Name=Invincible When Hit
+0=Off
+1=On,018422:6092
+
+[8]
+Name=One Hit Kills
+0=Off
+1=On,01832E:0000
+
+[9]
+Name=Don't Get Stunned When Hit
+0=Off
+1=On,01846C:E100
+
+[10]
+Name=Infinite Health And No Blinking When Hit
+0=Off
+1=On,018472:E100
+

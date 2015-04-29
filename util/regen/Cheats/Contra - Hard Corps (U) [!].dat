@@ -1,0 +1,30 @@
+[0]
+Name=Invincibility (Player 1)
+0=Off
+1=On,FFD759:0047
+
+[1]
+Name=Infinite Lives P1
+0=Off
+1=On,FFFA0C:0009
+
+[2]
+Name=Ray And Sheena Have Double Jump
+0=Off
+1=On,00E850:0001
+
+[3]
+Name=You Don't Lose A Weapon When You Die
+0=Off
+1=On,00F4C2:6002
+
+[4]
+Name=Infinite Bombs
+0=Off
+1=On,FFFA11:0009
+
+[5]
+Name=Start With All Weapons
+0=Off
+1=On,00CC9C:003F
+

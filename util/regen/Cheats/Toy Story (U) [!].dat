@@ -1,0 +1,10 @@
+[0]
+Name=Infinite lives
+0=Off
+1=On,0006A0:600A
+
+[1]
+Name=Invulnerability
+0=Off
+1=On,0028A6:6036
+

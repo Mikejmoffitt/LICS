@@ -1,0 +1,20 @@
+[0]
+Name=Protection From All Damage (Infinite Energy)  
+0=Off
+1=On,00863E:6006,008670:6006
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,00D1AA:6006
+
+[2]
+Name=No Damage From Obstacles
+0=Off
+1=On,008658:4E75
+
+[3]
+Name=Untouchable
+0=Off
+1=On,007E64:0040
+

@@ -1,0 +1,35 @@
+[0]
+Name=Invincible/Enemies Cannot Hurt You
+0=Off
+1=On,YKYA-AAXR
+
+[1]
+Name=Infinite Energy
+0=Off
+1=On,FFD62A:0001
+
+[2]
+Name=Infinite Mutant Powers
+0=Off
+1=On,FFD63A:0004
+
+[3]
+Name=Infinite Back-Up Teams
+0=Off
+1=On,FFD729:0000
+
+[4]
+Name=Infinite Switching Characters
+0=Off
+1=On,FFD63F:0004
+
+[5]
+Name=Start On Level Modifier
+0=Off
+1=Part Way Through Savage Land,0279B8:0003
+2=Shi'ar Empire,0279B8:0004
+3=Excalibur's Lighthouse,0279B8:0005
+4=Inside Excalibur's Lighthouse,0279B8:0006
+5=Ahab's Future World,0279B8:0007
+6=Mojo's Crunch,0279B8:0008
+7=Asteroid M,0279B8:000A

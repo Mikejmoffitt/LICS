@@ -1,0 +1,20 @@
+[0]
+Name=Player 1 Is Invincible  
+0=Off
+1=On,FFD253:0064,FFD3F5:0064,FFD597:0064,FFD739:0064,FFD8DB:0064
+
+[1]
+Name=Auto Complete Special Mission
+0=Off
+1=On,FFE4E3:0001
+
+[2]
+Name=Infinite Fight Health Bazooka Guy (Player 1)
+0=Off
+1=On,FFD3E5:0008
+
+[3]
+Name=Infinite Fight Health Grenade Guy (Player 1)
+0=Off
+1=On,FFD243:0008
+

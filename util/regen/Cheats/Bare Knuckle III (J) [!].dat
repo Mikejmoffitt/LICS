@@ -1,0 +1,40 @@
+[0]
+Name=MASTER CODE (Anti-Lockout Code)
+0=Off
+1=On,0006DE:4E75
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,00C63A:6004
+
+[2]
+Name=Invinciblity
+0=Off
+1=On,008B3E:C601
+
+[3]
+Name=Infinite Energy
+0=Off
+1=On,FFDF6C:0034
+
+[4]
+Name=No HP Loss From Special Attack
+0=Off
+1=On,00DB42:4E71
+
+[5]
+Name=Play As Ash
+0=Off
+1=On,0033CC:0008
+
+[6]
+Name=Character Change In-Game
+0=Off
+1=On,0033CC:0000
+
+[7]
+Name=Infinite Time In Level 6
+0=Off
+1=On,FF88E2:0060
+

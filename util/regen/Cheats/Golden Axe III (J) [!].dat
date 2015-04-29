@@ -1,0 +1,35 @@
+[0]
+Name=Infinite Energy
+0=Off
+1=On,FFC8E6:3300
+
+[1]
+Name=Infinite Lives (Player 1)
+0=Off
+1=On,FFC8E0:0002
+
+[2]
+Name=Set Max./Infinite Magic (Player 1)
+0=Off
+1=On,FFC8E4:0006
+
+[3]
+Name=Always Have 4 Rescued Allies (Player 1)
+0=Off
+1=On,FFC8E2:0004
+
+[4]
+Name=Untouchable By Special Hits
+0=Off
+1=On,000A42:4E75
+
+[5]
+Name=Untouchable By Regular Hits
+0=Off
+1=On,000E48:60FA
+
+[6]
+Name=1 Hit Kills Enemy
+0=Off
+1=On,000E04:4268
+

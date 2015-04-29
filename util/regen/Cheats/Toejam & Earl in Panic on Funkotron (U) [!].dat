@@ -1,0 +1,15 @@
+[0]
+Name=Have Infinite Everything
+0=Off
+1=On,00A888:1FFF
+
+[1]
+Name=Start With 10 Lives
+0=Off
+1=On,013CC4:0009
+
+[2]
+Name=Start With 99 Funkitude
+0=Off
+1=On,013104:0063
+

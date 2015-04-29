@@ -1,0 +1,15 @@
+[0]
+Name=Infinite Energy P1  
+0=Off
+1=On,FF119D:0080,FF11A1:0080
+
+[1]
+Name=Infinite Time
+0=Off
+1=On,FF1959:0063
+
+[2]
+Name=Super Moves Are Easy To Do Now
+0=Off
+1=On,002446:4074
+

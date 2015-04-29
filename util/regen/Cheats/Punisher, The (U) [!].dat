@@ -1,0 +1,40 @@
+[0]
+Name=Infinite Time
+0=Off
+1=On,0009BA:6004
+
+[1]
+Name=Infinite Health (Punisher)
+0=Off
+1=On,FFA0D9:0063
+
+[2]
+Name=Infinite Health (Nick Fury)
+0=Off
+1=On,FFA0DB:0063
+
+[3]
+Name=Infinite Lives (Punisher)
+0=Off
+1=On,FFA141:0009
+
+[4]
+Name=Infinite Lives (Nick Fury)
+0=Off
+1=On,FFA143:0009
+
+[5]
+Name=Infinite Blasts (Punisher)
+0=Off
+1=On,FF8936:0009
+
+[6]
+Name=Infinite Blasts (Nick Fury)
+0=Off
+1=On,FF8937:0009
+
+[7]
+Name=Infinite Weapon Usage (Nick Fury)
+0=Off
+1=On,FF9E33:0010
+

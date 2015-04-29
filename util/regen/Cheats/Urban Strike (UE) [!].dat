@@ -1,0 +1,66 @@
+[0]
+Name=MASTER CODE (MUST BE ENTERED)
+0=Off
+1=On,1FF0D4:4E75
+
+[1]
+Name=Infinite Armor Modifier
+0=Off
+1=Hawaii,FFAFDD:270F,FFF455:270F
+2=Baja Oil Rigs,FFA9DD:270F,FFFAE5:270F
+3=Inside The Rig,FFB58D:270F,FFF8C3:270F
+4=Mexico,FFBDDB:270F,FFEEEB:270F
+5=San Francisco,FFAFBD:270F,FFF5A5:270F
+6=Alcatraz,FFC2ED:270F,FFF749:270F
+7=New York City,FFB797:270F,FFF4A9:270F
+8=Las Vegas,FFAB37:270F,FFF6CB:270F
+9=Malone's Casino,FFAD20:270F,FFF845:270F
+10=Underground,FFAE9B:270F,FFFB0F:270F
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,005CE6:601E
+
+[3]
+Name=Infinite Fuel
+0=Off
+1=On,005B4A:6012
+
+[4]
+Name=Infinite Ammo
+0=Off
+1=On,00F446:6002
+
+[5]
+Name=Infinite Time
+0=Off
+1=On,00690E:6002
+
+[6]
+Name=Infinite Passenger Load
+0=Off
+1=On,FF10DB:0000
+
+[7]
+Name=Start On Campaign Modifier
+0=Off
+1=Campaign 2: Baja Oil Rigs,FF10C3:0001
+2=Campaign 3: Inside The Rig,FF10C3:0002
+3=Campaign 4: Mexico,FF10C3:0003
+4=Campaign 5: San Francisco,FF10C3:0004
+5=Campaign 6: Alcatraz,FF10C3:0005
+6=Campaign 7: New York City,FF10C3:0006
+7=Campaign 8: Las Vegas,FF10C3:0007
+8=Campaign 9: Malone's Casino,FF10C3:0008
+9=Campaign 10: Underground,FF10C3:0009
+
+[8]
+Name=Mohican Armor Starts At 10,000
+0=Off
+1=On,1A0A1C:2710
+
+[9]
+Name=Blackhawke Armor Starts At 10,000
+0=Off
+1=On,1A0CA6:2710

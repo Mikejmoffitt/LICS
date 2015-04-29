@@ -1,0 +1,10 @@
+[0]
+Name=Infinite Health
+0=Off
+1=On,FFC485:0007
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,FFC483:0009
+

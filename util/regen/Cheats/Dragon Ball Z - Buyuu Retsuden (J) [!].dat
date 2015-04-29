@@ -1,0 +1,20 @@
+[0]
+Name=Master Code/Regional Lockout Bypass Code 
+0=Off
+1=On,000332:604E
+
+[1]
+Name=Health Modifier Player 1 \ 
+0=Off
+1=On,FFE783:0099
+
+[2]
+Name=Health Modifier Player 1 /
+0=Off
+1=On,FFE785:0099
+
+[3]
+Name=Health Modifier Player 2  
+0=Off
+1=On,FFE8AB:0000,FFE8AD:0000
+

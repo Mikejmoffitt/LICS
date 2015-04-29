@@ -1,0 +1,55 @@
+[0]
+Name=Infinite Energy
+0=Off
+1=On,001D8C:601E
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,001D8C:6006
+
+[2]
+Name=Enemy Hits And Timer Have No Effect
+0=Off
+1=On,001D4C:6002
+
+[3]
+Name=Unlimited Cherry Bombs After You Buy One
+0=Off
+1=On,00266A:7400
+
+[4]
+Name=Unlimited Rockets After You Buy One
+0=Off
+1=On,002688:7400
+
+[5]
+Name=Unlimited Spray Paint Once You Get It
+0=Off
+1=On,002C06:602A
+
+[6]
+Name=Stop Timer On Level 3 Door Puzzle
+0=Off
+1=On,00419E:6026
+
+[7]
+Name=Infinite Time
+0=Off
+1=On,FF01C3:0099
+
+[8]
+Name=Infinite Hits
+0=Off
+1=On,FF01B5:0003
+
+[9]
+Name=Infinite Spraypaint
+0=Off
+1=On,FF02C7:00FF
+
+[10]
+Name=Float
+0=Off
+1=On,FF01FF:006E
+

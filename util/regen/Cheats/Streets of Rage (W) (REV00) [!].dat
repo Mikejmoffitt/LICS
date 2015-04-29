@@ -1,0 +1,25 @@
+[0]
+Name=Infinite Energy
+0=Off
+1=On,FFB833:0050
+
+[1]
+Name=Invincible
+0=Off
+1=On,FFB849:001B
+
+[2]
+Name=Infinite Time
+0=Off
+1=On,FFFB01:0040
+
+[3]
+Name=Infinite Lives
+0=Off
+1=On,FFFF20:0009
+
+[4]
+Name=Infinite Special Weapons
+0=Off
+1=On,FFFF21:0001
+

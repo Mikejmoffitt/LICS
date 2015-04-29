@@ -1,0 +1,25 @@
+[0]
+Name=Infinite Fighters
+0=Off
+1=On,0041AE:6006
+
+[1]
+Name=Keep Special Weapon Power When You Lose A Fighter 
+0=Off
+1=On,0041CE:6002
+
+[2]
+Name=Start With All Special Weapons Available  
+0=Off
+1=On,0004EE:33FC,0004F0:001F,0004F2:00FF
+
+[3]
+Name=Master Code (Must Be Entered)
+0=Off
+1=On,000374:4E75
+
+[4]
+Name=Invincible/Cannot Be Killed
+0=Off
+1=On,FFA809:0073
+

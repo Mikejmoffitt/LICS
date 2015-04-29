@@ -1,0 +1,20 @@
+[0]
+Name=Infinite Credits
+0=Off
+1=On,000816:6004
+
+[1]
+Name=Infinite Lives (Side-View Missions Only)
+0=Off
+1=On,001354:6004
+
+[2]
+Name=Infinite Lives (Top-View Missions Only)
+0=Off
+1=On,001E10:6004
+
+[3]
+Name=Never Fully Die And Lose Weapons
+0=Off
+1=On,FF8000:0001
+

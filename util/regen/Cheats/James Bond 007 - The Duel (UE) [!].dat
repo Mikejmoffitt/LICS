@@ -1,0 +1,25 @@
+[0]
+Name=Infinite Clips
+0=Off
+1=On,FFF47B:0004
+
+[1]
+Name=Infinite Ammo
+0=Off
+1=On,FFF47F:0011
+
+[2]
+Name=Infinite Grenades
+0=Off
+1=On,FFF481:0003
+
+[3]
+Name=Infinite Lives
+0=Off
+1=On,FFF47A:0004
+
+[4]
+Name=Infinite Health
+0=Off
+1=On,FFE0AE:0009
+

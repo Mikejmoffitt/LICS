@@ -1,0 +1,70 @@
+[0]
+Name=Jump Much Higher
+0=Off
+1=On,0063AA:FFF9
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,0012E2:6004
+
+[2]
+Name=Every Few Seconds, Health Improves 8%
+0=Off
+1=On,000FDA:5040
+
+[3]
+Name=Elsie-Dee Never Comes
+0=Off
+1=On,000F82:6004
+
+[4]
+Name=Nearly Invincible
+0=Off
+1=On,001EC6:6006
+
+[5]
+Name=Invincible Against Fire, Acid, Water, Bats
+0=Off
+1=On,002B60:600C
+
+[6]
+Name=Invincible Against Android Dogs
+0=Off
+1=On,0C46F8:600C
+
+[7]
+Name=Invincible Against Electricity
+0=Off
+1=On,002722:0000
+
+[8]
+Name=Invincible Against Some Shots
+0=Off
+1=On,002834:600C
+
+[9]
+Name=Invincible Against Guard Androids
+0=Off
+1=On,0027E4:600C
+
+[10]
+Name=Invincible Against Tree Darts
+0=Off
+1=On,0029BC:600C
+
+[11]
+Name=Invincible Against Lurker  
+0=Off
+1=On,00529A:6024,00520C:6024
+
+[12]
+Name=Some Of Your Slashes And Punches Do 10x More Damage Than Normal
+0=Off
+1=On,0021DC:00C8
+
+[13]
+Name=Some Of Your Kicks Do 10x More Damage Than Normal
+0=Off
+1=On,0021DA:0078
+

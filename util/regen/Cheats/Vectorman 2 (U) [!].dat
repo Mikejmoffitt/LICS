@@ -1,0 +1,45 @@
+[0]
+Name=Infinite Health
+0=Off
+1=On,FFE9BB:000A
+
+[1]
+Name=Invincible Vectorman
+0=Off
+1=On,FFE5AA:001F
+
+[2]
+Name=Infinite Ammo (All Weapons)
+0=Off
+1=On,FFE9C9:0064
+
+[3]
+Name=Infinite Rocket Thrusts (Enable When Needed)
+0=Off
+1=On,FFE4CA:0000
+
+[4]
+Name=Multi-Jump
+0=Off
+1=On,00EF8C:6004
+
+[5]
+Name=Rapid Fire (All Weapons)
+0=Off
+1=On,FFE4CE:00FF
+
+[6]
+Name=Timer Starts At 99 Minutes
+0=Off
+1=On,FFE9D2:0063
+
+[7]
+Name=Pause Game & Press Down For Level Select
+0=Off
+1=On,FFED03:0008
+
+[8]
+Name=Pause Game & Press Down For Weapon Select
+0=Off
+1=On,FFED04:0006
+

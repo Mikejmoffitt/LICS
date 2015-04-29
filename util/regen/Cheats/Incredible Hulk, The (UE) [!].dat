@@ -1,0 +1,40 @@
+[0]
+Name=Infinite Health
+0=Off
+1=On,FF08A4:0063
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,FF0889:0009
+
+[2]
+Name=Infinite Time To Defeat Bosses
+0=Off
+1=On,0FB63A:0000
+
+[3]
+Name=Guns Have Infinite Ammo
+0=Off
+1=On,105DAC:0000
+
+[4]
+Name=Mostly Untouchable
+0=Off
+1=On,105BD0:4E75
+
+[5]
+Name=Hold B For Super Jump
+0=Off
+1=On,1057C6:0013
+
+[6]
+Name=Infinite Transformation Capsules
+0=Off
+1=On,0FA8D8:0000
+
+[7]
+Name=Level Select Screen Appears After You Start Game
+0=Off
+1=On,0FA3D8:6002
+

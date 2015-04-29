@@ -1,0 +1,44 @@
+[0]
+Name=Invincible
+0=Off
+1=Enable,FFE32B:0002
+2=Disable,FFE32B:0000
+
+[1]
+Name=Infinite Energy
+0=Off
+1=On,FFE879:000B
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,FFE97D:0009
+
+[3]
+Name=Infinite Time
+0=Off
+1=On,FFE891:003B
+
+[4]
+Name=Max Energy
+0=Off
+1=On,FFE87B:000A
+
+[5]
+Name=Infinite Rocket Boost Jumps
+0=Off
+1=On,00D3C2:6004
+
+[6]
+Name=Weapon Modifier  
+0=Off
+1=Normal,FFE885:0000,FFE391:0000
+2=Rapid Fire,FFE885:0001,FFE391:0001
+3=Spread,FFE885:0002,FFE391:0002
+4=Bola,FFE885:0003,FFE391:0003
+
+[7]
+Name=Weapons Don't Run Out
+0=Off
+1=On,069CD4:4E75
+

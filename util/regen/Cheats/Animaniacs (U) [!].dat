@@ -1,0 +1,15 @@
+[0]
+Name=Infinite Lives
+0=Off
+1=On,FFFB70:000A
+
+[1]
+Name=Infinite Energy
+0=Off
+1=On,FFFB16:003F
+
+[2]
+Name=Infinite Time
+0=Off
+1=On,FFFB0E:003D
+

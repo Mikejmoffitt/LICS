@@ -1,0 +1,35 @@
+[0]
+Name=MASTER CODE - MUST BE ENTERED
+0=Off
+1=On,000942:6026
+
+[1]
+Name=Infinite lives
+0=Off
+1=On,004B54:6002
+
+[2]
+Name=Infinite Batarangs
+0=Off
+1=On,0068E6:6002
+
+[3]
+Name=Infinite rockets for the Batwing
+0=Off
+1=On,00696A:6002
+
+[4]
+Name=Infinite rockets for the Batmobile
+0=Off
+1=On,0069AE:6002
+
+[5]
+Name=Invincibility
+0=Off
+1=On,010162:6008
+
+[6]
+Name=Level Select
+0=Off
+1=On,000BB6:4E71
+

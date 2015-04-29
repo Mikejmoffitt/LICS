@@ -1,0 +1,15 @@
+[0]
+Name=Infinite Lives
+0=Off
+1=On,FF0051:0009
+
+[1]
+Name=Infinite Health
+0=Off
+1=On,FF4104:0063
+
+[2]
+Name=Infinite Specials
+0=Off
+1=On,FF4114:0006
+

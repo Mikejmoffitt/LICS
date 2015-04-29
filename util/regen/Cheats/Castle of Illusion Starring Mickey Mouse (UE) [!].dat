@@ -1,0 +1,39 @@
+[0]
+Name=MASTER CODE (MUST BE ENTERED)
+0=Off
+1=On,000324:6020
+
+[1]
+Name=Invincibility/Untouchable
+0=Off
+1=On,0092E8:0928
+
+[2]
+Name=Infinite Health
+0=Off
+1=On,FFF322:0005
+
+[3]
+Name=Infinite Lives
+0=Off
+1=On,FFF325:0009
+
+[4]
+Name=Infinite Apples
+0=Off
+1=On,FFF321:0063
+
+[5]
+Name=Infinite Items
+0=Off
+1=On,FFF320:0005
+
+[6]
+Name=Mickey Jumps Higher
+0=Off
+1=On,00C8C4:0026
+
+[7]
+Name=Keep Items Between Levels
+0=Off
+1=On,07A92C:4A78

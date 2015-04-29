@@ -1,0 +1,40 @@
+[0]
+Name=Infinite Rings
+0=Off
+1=On,FFFE29:0008
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,FFC120:0008
+
+[2]
+Name=Infinite Pogo Sticks
+0=Off
+1=On,FFFE27:0008
+
+[3]
+Name=Infinite Bikes
+0=Off
+1=On,FFFE25:0008
+
+[4]
+Name=Infinite Canes
+0=Off
+1=On,FFFE28:0008
+
+[5]
+Name=Infinite Tokens
+0=Off
+1=On,FFFE2A:0008
+
+[6]
+Name=Infinite Capes
+0=Off
+1=On,FFFE2B:0008
+
+[7]
+Name=Invincible/Cannot Be Hurt
+0=Off
+1=On,FFFE24:0080
+

@@ -1,0 +1,15 @@
+[0]
+Name=Invincibility/Untouchable
+0=Off
+1=On,FFA03E:0001
+
+[1]
+Name=Infinite Health
+0=Off
+1=On,FFA038:0008
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,FFFD53:0063
+

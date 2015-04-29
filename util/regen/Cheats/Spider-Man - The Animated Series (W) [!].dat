@@ -1,0 +1,25 @@
+[0]
+Name=Invincibility
+0=Off
+1=On,010022:EC32
+
+[1]
+Name=Infinite Health
+0=Off
+1=On,FFD3CA:0063
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,FFD786:0003
+
+[3]
+Name=Infinite Blue And Red Webs
+0=Off
+1=On,FFD77A:143C
+
+[4]
+Name=Infinite Blue And Red Granades
+0=Off
+1=On,FFD77C:0202
+

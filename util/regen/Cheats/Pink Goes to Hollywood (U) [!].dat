@@ -1,0 +1,15 @@
+[0]
+Name=Infinite Energy
+0=Off
+1=On,FFC0C2:0008
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,FFBFCB:0009
+
+[2]
+Name=Invincibility
+0=Off
+1=On,FFC0D3:0009
+

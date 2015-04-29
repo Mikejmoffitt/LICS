@@ -1,0 +1,20 @@
+[0]
+Name=Infinite Lives
+0=Off
+1=On,0087A4:2600
+
+[1]
+Name=Infinite Special Attacks
+0=Off
+1=On,009542:2600
+
+[2]
+Name=Infinite Energy  
+0=Off
+1=On,FF84EB:0040,FF9581:0040
+
+[3]
+Name=Invincibility/Cannot Be Hurt  
+0=Off
+1=On,FF94C0:00FF,FF94C1:00FF
+

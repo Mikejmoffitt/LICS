@@ -1,0 +1,45 @@
+[0]
+Name=Infinite Daredevils
+0=Off
+1=On,FF20E3:0009
+
+[1]
+Name=Infinite Ghost Riders
+0=Off
+1=On,FF20E1:0009
+
+[2]
+Name=Infinite Captain Americas
+0=Off
+1=On,FF20DF:0009
+
+[3]
+Name=Infinite Hawkeye Help Icons
+0=Off
+1=On,FF20E5:0009
+
+[4]
+Name=Infinite Lives P1
+0=Off
+1=On,FF1FA3:0009
+
+[5]
+Name=Almost Infinite Energy
+0=Off
+1=On,01C56A:D076
+
+[6]
+Name=Press X To Skip Level
+0=Off
+1=On,FF20E7:0009
+
+[7]
+Name=Untouchable Against Normal Attacks
+0=Off
+1=On,01C100:006A
+
+[8]
+Name=When You Get Hit You Attack With A Spin Kick  
+0=Off
+1=On,01C302:20BA,01C308:4082
+

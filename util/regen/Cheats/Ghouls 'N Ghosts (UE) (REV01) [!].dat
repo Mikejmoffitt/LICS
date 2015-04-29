@@ -1,0 +1,185 @@
+[0]
+Name=MASTER CODE (MUST BE ENTERED)
+0=Off
+1=On,000234:6020
+
+[1]
+Name=Enable Invincibility  
+0=Off
+1=On,FFFF80:0000,FFFF81:0000,FFFF82:0000
+
+[2]
+Name=Infinite Armor (Player 1)
+0=Off
+1=On,FFB210:0001
+
+[3]
+Name=Infinite Lives (Player 1)
+0=Off
+1=On,FFB213:0003
+
+[4]
+Name=Infinite Time (Console Only)
+0=Off
+1=On,FFB049:0030
+
+[5]
+Name=Infinite Time (Player 1&2)
+0=Off
+1=On,FFB049:0059
+
+[6]
+Name=Enables The Stage Select Cheat
+0=Off
+1=On,002180:0001
+
+[7]
+Name=Enable Cheat Mode Option (Invincibility/Slow Motion)
+0=Off
+1=On,FFFFF2:0001
+
+[8]
+Name=Switch F/X On To Levitate Jump (Player 1)
+0=Off
+1=On,FFB217:0060
+
+[9]
+Name=Instant Charge On Magic Armor/Weapon
+0=Off
+1=On,0073B4:0001
+
+[10]
+Name=Magic Meter Builds Up Faster (Player 1&2)
+0=Off
+1=On,FFE532:0001
+
+[11]
+Name=Set Magic Meter (Player 1&2)
+0=Off
+1=On,FFB344:0001
+
+[12]
+Name=Jump Higher (Doesn't Work If Your Character Keeps Magic Armor)
+0=Off
+1=On,0091BA:0800
+
+[13]
+Name=Jump Higher (While Your Character Keeps Magic Armor)
+0=Off
+1=On,0091C2:0800
+
+[14]
+Name=Armor Upgrade Modifier (Old Man)
+0=Off
+1=On,FFB212:0000
+
+[15]
+Name=Armor Upgrade Modifier (No Armor)
+0=Off
+1=On,FFB212:0001
+
+[16]
+Name=Armor Upgrade Modifier (Normal Armor)
+0=Off
+1=On,FFB212:0002
+
+[17]
+Name=Armor Upgrade Modifier (Gold Armor)
+0=Off
+1=On,FFB212:0003
+
+[18]
+Name=Armor Upgrade Modifier (Duck)
+0=Off
+1=On,FFB212:0004
+
+[19]
+Name=Set Weapon Modifier (Player 1) (Lance)
+0=Off
+1=On,FFB22C:0000
+
+[20]
+Name=Set Weapon Modifier (Player 1) (Dagger)
+0=Off
+1=On,FFB22C:0001
+
+[21]
+Name=Set Weapon Modifier (Player 1) (Torch)
+0=Off
+1=On,FFB22C:0002
+
+[22]
+Name=Set Weapon Modifier (Player 1) (Sword)
+0=Off
+1=On,FFB22C:0003
+
+[23]
+Name=Set Weapon Modifier (Player 1) (Axe)
+0=Off
+1=On,FFB22C:0004
+
+[24]
+Name=Set Weapon Modifier (Player 1) (Discus)
+0=Off
+1=On,FFB22C:0005
+
+[25]
+Name=Set Weapon Modifier (Player 1) (Bracelet)
+0=Off
+1=On,FFB22C:0006
+
+[26]
+Name=Can Shoot Up To 4 Fires At A Time
+0=Off
+1=On,00EB72:0004
+
+[27]
+Name=Can Shoot Up To 4 Lances At A Time
+0=Off
+1=On,00E49E:0005
+
+[28]
+Name=Can Shoot Up To 4 Shields At A Time
+0=Off
+1=On,00F7D8:0004
+
+[29]
+Name=Can Shoot Up To 5 Daggers At A Time
+0=Off
+1=On,00E710:0005
+
+[30]
+Name=Can Swing The Sword 4 Times Faster
+0=Off
+1=On,00F206:0004
+
+[31]
+Name=Stage Select (Stage 1)
+0=Off
+1=On,FFB22E:0000
+
+[32]
+Name=Stage Select (Stage 2)
+0=Off
+1=On,FFB22E:0001
+
+[33]
+Name=Stage Select (Stage 3)
+0=Off
+1=On,FFB22E:0002
+
+[34]
+Name=Stage Select (Stage 4)
+0=Off
+1=On,FFB22E:0003
+
+[35]
+Name=Stage Select (Stage 5)
+0=Off
+1=On,FFB22E:0004
+
+[36]
+Name=Stage Select (Final Stage)
+0=Off
+1=On,FFB22E:0005
+

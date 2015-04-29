@@ -1,0 +1,30 @@
+[0]
+Name=Magic Doesn't Decrease When Walking
+0=Off
+1=On,00D4D8:7000
+
+[1]
+Name=Magic Doesn't Decrease When Jumping
+0=Off
+1=On,00D7A8:7000
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,00DFD0:6004
+
+[3]
+Name=Each Child Found Restores Full Power
+0=Off
+1=On,010862:7040
+
+[4]
+Name=Almost Invincible
+0=Off
+1=On,014788:4240
+
+[5]
+Name=No Kids To Find
+0=Off
+1=On,FFDE4F:0000
+

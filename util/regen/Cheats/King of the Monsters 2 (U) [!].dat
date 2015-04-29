@@ -1,0 +1,10 @@
+[0]
+Name=Infinite Time
+0=Off
+1=On,FF060F:0063
+
+[1]
+Name=Infinite Health P1
+0=Off
+1=On,FF0993:0080
+

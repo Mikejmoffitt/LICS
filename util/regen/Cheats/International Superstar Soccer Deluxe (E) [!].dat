@@ -1,0 +1,20 @@
+[0]
+Name=Master Code (Must Always Be On)
+0=Off
+1=On,147F68:6002
+
+[1]
+Name=Infinite Time (Minutes Digit)
+0=Off
+1=On,FF17CC:0009
+
+[2]
+Name=Infinite Time (Seconds - Tens Digit)
+0=Off
+1=On,FF17CD:0009
+
+[3]
+Name=Infinite Time (Seconds - Ones Digit)
+0=Off
+1=On,FF17CE:0009
+

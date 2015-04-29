@@ -1,0 +1,45 @@
+[0]
+Name=Infinite Ammo  
+0=Off
+1=On,FFFBF7:0009,FFFBF6:0009
+
+[1]
+Name=Infinite Super Plasma Shots
+0=Off
+1=On,FFFDED:0009
+
+[2]
+Name=Invulnerable
+0=Off
+1=On,FFFBFF:0034
+
+[3]
+Name=No Air Loss In Sea Pod
+0=Off
+1=On,2533F0:6014
+
+[4]
+Name=No Damage To Sea Pod From Running Into Walls
+0=Off
+1=On,258354:6046
+
+[5]
+Name=Invincible/Cannot Be Touched
+0=Off
+1=On,FFFD28:0041
+
+[6]
+Name=Infinite Health
+0=Off
+1=On,24B2F2:6030
+
+[7]
+Name=Infinite Shields
+0=Off
+1=On,FFFF61:0009
+
+[8]
+Name=Start On Intestines
+0=Off
+1=On,247674:000D
+

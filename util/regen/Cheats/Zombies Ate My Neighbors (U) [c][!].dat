@@ -1,0 +1,35 @@
+[0]
+Name=Infinite Lives
+0=Off
+1=On,00BA92:6006
+
+[1]
+Name=Infinite Weapons Once You Have At Least 1
+0=Off
+1=On,00E4DE:6002
+
+[2]
+Name=Start With Bazookas
+0=Off
+1=On,00713C:0040
+
+[3]
+Name=Infinite Special Items Once You Have At Least 1
+0=Off
+1=On,00E706:6018
+
+[4]
+Name=Start With A Monster Potion
+0=Off
+1=On,007148:0054
+
+[5]
+Name=Almost Infinite Health
+0=Off
+1=On,00BD26:6002
+
+[6]
+Name=Infinite Keys Once You Have At Least One
+0=Off
+1=On,00E246:6002
+

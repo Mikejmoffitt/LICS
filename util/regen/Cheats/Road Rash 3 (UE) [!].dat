@@ -1,0 +1,45 @@
+[0]
+Name=MASTER CODE--MUST BE ENTERED
+0=Off
+1=On,R0TB-86XJ
+
+[1]
+Name=Bike doesn't take damage from hitting cars
+0=Off
+1=On,ATXT-EA6N
+
+[2]
+Name=Player is invincible
+0=Off
+1=On,PVAA-EA2R
+
+[3]
+Name=Infinite nitro bursts
+0=Off
+1=On,BA4A-CA6C
+
+[4]
+Name=Start with $50,000
+0=Off
+1=On,VA2A-BGAC
+
+[5]
+Name=Bikes are free
+0=Off
+1=On,A5TT-AA40
+
+[6]
+Name=Upgrades are free
+0=Off
+1=On,AXVA-AA6J
+
+[7]
+Name=Never get charged for police fines
+0=Off
+1=On,RFHT-C612
+
+[8]
+Name=Don't get charged for bike repairs
+0=Off
+1=On,RFJA-C6W6
+

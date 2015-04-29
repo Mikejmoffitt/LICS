@@ -1,0 +1,25 @@
+[0]
+Name=Infinite Health
+0=Off
+1=On,FF1A3F:0002
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,FF022E:0099
+
+[2]
+Name=Infinite Boogers
+0=Off
+1=On,FF023C:0032
+
+[3]
+Name=Infinite Strong Belches/Burps/Farts
+0=Off
+1=On,FF023E:0025
+
+[4]
+Name=Max Plungers
+0=Off
+1=On,FF0232:0099
+

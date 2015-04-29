@@ -1,0 +1,20 @@
+[0]
+Name=Heart Restores Health Fully
+0=Off
+1=On,00B71A:5C79
+
+[1]
+Name=Protection From Drowning
+0=Off
+1=On,00CE88:6004
+
+[2]
+Name=Unlimited Health
+0=Off
+1=On,00DC34:600E
+
+[3]
+Name=Unlimited Lives
+0=Off
+1=On,020564:600C
+

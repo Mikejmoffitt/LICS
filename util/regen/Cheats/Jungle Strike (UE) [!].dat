@@ -1,0 +1,69 @@
+[0]
+Name=MASTER CODE (MUST BE ENTERED)
+0=Off
+1=On,1FF2E0:4E75
+
+[1]
+Name=Infinite Armor Modifier
+0=Off
+1=Washington D.C.,FFBD81:270F,FFF86B:270F
+2=Sub Hunt,FFB3C1:270F,FFF577:270F
+3=Training Ground,FFCAC9:270F,FFFBB3:270F
+4=Night Strike,FFBD3F:270F,FFF4A5:270F
+5=Puloso City,FFC227:270F,FFF301:270F
+6=Snow Fortress,FFBCC5:270F,FFF93D:270F
+7=River Raid,FFB1C7:270F,FFFBB3:270F
+8=Mountains,FFB203:270F,FFFBB3:270F
+9=Return Home,FFB807:270F,FFF895:270F
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,FF10CF:0003
+
+[3]
+Name=Infinite Fuel
+0=Off
+1=On,FF10C7:0064
+
+[4]
+Name=Infinite Ammo
+0=Off
+1=On,044BE2:6002
+
+[5]
+Name=Infinite Passenger Load
+0=Off
+1=On,FF10CB:0000
+
+[6]
+Name=Start On Campaign Modifier
+0=Off
+1=Campaign 2: Sub Hunt,038C94:0001
+2=Campaign 3: Training Ground,038C94:0002
+3=Campaign 4: Night Strike,038C94:0003
+4=Campaign 5: Puloso City,038C94:0004
+5=Campaign 6: Snow Fortress,038C94:0005
+6=Campaign 7: River Raid,038C94:0006
+7=Campaign 8: Mountains,038C94:0007
+8=Campaign 9: Return Home,038C94:0008
+
+[7]
+Name=Maximum Armor For Helicopter Is 9,999
+0=Off
+1=On,18C81A:270F
+
+[8]
+Name=Maximum Armor For Hovercraft Is 9,999
+0=Off
+1=On,18CAAC:270F
+
+[9]
+Name=Maximum Armor For Motorcycle Is 9,999
+0=Off
+1=On,18CB5A:270F
+
+[10]
+Name=Maximum Armor For Stealth Is 9,999
+0=Off
+1=On,18CD9C:270F

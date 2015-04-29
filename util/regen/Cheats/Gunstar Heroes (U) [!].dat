@@ -1,0 +1,25 @@
+[0]
+Name=MASTER CODE - MUST BE ENTERED
+0=Off
+1=On,AJBT-AA5R
+
+[1]
+Name=Protection Against Most Hits
+0=Off
+1=On,AL4T-AA3A
+
+[2]
+Name=Protection From Falling Off Screen
+0=Off
+1=On,AAJT-CAFA
+
+[3]
+Name=Vitality-Up Worth Much More
+0=Off
+1=On,HX6T-BAKN
+
+[4]
+Name=Always Have 999 Vitality (Infinite Vitality)
+0=Off
+1=On,AM2T-AA4N
+

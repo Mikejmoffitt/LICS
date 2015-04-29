@@ -1,0 +1,1060 @@
+Version 0.972
+-------------
+I hate to make releases so quickly but I have to since there was a bug left
+in the EEPROM code that could cause some games to fail.
+
+* Fixed a bug in EEPROM code which caused NBA Jam Tournament Edition to crash.
+
+
+Version 0.971
+-------------
+This is a quick maintenance release mainly to fix some stability issues.
+The internal version number of Regen executable hasn't been changed so that
+the previous localization DLLs will keep working for this new release as well since
+it is mainly a bug fix release. It is recommended however that translators update
+their translations for this new release as it add few stuff as well.
+
+* Fixed localization DLL not being loaded correctly sometimes and converted some 
+  ANSI parts to Unicode internally.
+
+* Fixed Regen crashing when loading a Genesis game after SMS/GG.
+
+* Fixed Regen crashing when SuperHQ is toggled during SMS/GG.
+
+* Fixed Regen crashing when Save/Load State As was selected.
+
+* Fixed Regen SSE2 optimized build crashing on Athlon64.
+
+* Fixed UAC related crashes on Windows Vista/7.
+
+* Fixed Sonic 3D Blast crashing in bonus stage.
+
+* Fixed CRAM viewer in the VDP debugger.
+
+* Altered 68k and VDP timings a little bit. Fixes the Street Racer background 
+  (sky) gradient.
+
+* Added configurable lowpass filtering. Its only avaialable in SuperHQ mode.
+  It configures the internal filtering applied when in HQ mode. The other
+  "Lowpass filter" is not affected by this. That applies filtering to the final
+  sound output.
+
+* Added the ability to choose on screen message font.
+
+* Added smooth animation (aka interframe blending with motion blurring). Makes 
+  the output image a little realistic and closer to TV.
+
+* Added ".md" extension to the ROM loading stuff.
+
+
+Version 0.97
+------------
+
+* Preliminary Genesis/Megadrive VDP Mode 4 (SMS mode) support. Although there is no game that
+  uses it, I've been asked by many homebrew developers/hackers to add support for this.
+  Note that Mode 4 in MD is a bit different than in SMS. These little details are detailed
+  in Charles MacDonald's SMS/MD docs. Due to time contraints, this feature isn't very havily
+  tested so expect some bugs :) . Also note that this DOES NOT put the hardware in Mark III
+  compatibility mode. The ports will still be unuseable.
+
+* Hopefully fixed Sonic And Knuckles and other SRAM issues. The main problem is that I
+  haven't been able to reproduce these problems at my end so thats why I can't be sure.
+
+* Fixed Micro Machines 2 showing incorrect stage start screen when booth EEPROM and
+  J-Cart are enabled.
+
+* Hooked up EPPROM to some more games.
+
+* Fixed Plan A/Window initialization bug. Thanks to Eke for reporting the bug (and fix!).
+
+* Improved PSG. It should sound more accurate now. Levels have also been changed a bit.
+  Thanks to Shadow for reporting very detailed bugs and information about it.
+  
+* Added support for RPI plugin scalers of 3x and 4x. Previoulsy Regen only supported 2x
+  scaler, now it supports all of them. In short, all of Kega plugins will now work. :)
+
+* Added the option to boost PSG noise to make some people happy :) .
+
+* Added SMS border emulation.
+
+* Improved SMS emulation. Should be more accurate now.
+
+* Fixed "Output 4:3 aspect" not working in SMS games.
+
+* Modified the NTSC filter plugin. Now you can instantly see the changes you make 
+  (like Hue, Contrast etc..) in the NTSC configuration dialog.
+
+* Removed the old on screen text display engine and added new one. The new one has the
+  following advantages over the old one:
+    
+    - Support for Unicode.
+    - Allows translation of the on-screen messages.
+    - Works when fullscreen is enabled.
+    - Hopefully doesn't have the problem of displaying garbage on some video cards.
+  
+* Added reconfigurable overdrive factor support. Previously, this was set to overdrive the final
+  sound output by 2. Now yo can control is fom 1.0 to 5.0.
+  
+* Added featue to control the volume levels of FM and PSG separately. PSG Boost feature
+  has been removed. This setting is mainly for those who are very picky about the volume
+  levels between FM and PSG. But another factor in this is the game itself. Sound in
+  some games may get clipped if the respective volume amplification is too much. So
+  this needs a lot of tweaking before it can be used perfectly. My recommendation is
+  to keep the settings between 1 and 2.5 and then use the overdrive factor setting to
+  further amplify the sound.
+
+* Scanlines effects added. Four predefined settings are given (25%, 50%, 75% and 100%).
+  There is also the option to set the intensity to whatever value you want (for example 12%).
+  Note however that the predefined scanlines setting are much faster than custom one.
+  So its foolish to set custom intesity at 50% for example.
+
+* Added "Power Saving mode" to increase laptop/notebook/netbook battery life while playing.
+  In this mode, Regen won't use 100% CPU. But this can cause a little bit of jumpiness in FPS/video.
+  
+* Removed picture being a bit blurry even if nearst neighbour filter was selected (in non-stretch mode).
+  Strecthing will still cause blurrines however.
+  
+* Fixed palette problem when brighten was enabled in Game Gear games. Note that brighten 
+  may not have much of an effect on Game Gear games since the dynamic, extrapolated 
+  color range of Game Gear is close to 16-bit 565 colors.
+  
+* Added support to take screenshots in PNG format. This setting can be controlled in
+  "Paths and Preferences" dialog. Support for taking screenshot in BMP is still present.
+
+* Fixed support for 12-in-1 and 4-in-1 cartridges.
+
+* Added support for following unlicensed games:
+  
+    - Super Mario 2 1998
+    - Super Mario Bros.
+    - King of Fighter 98
+    - Super 19-in-1
+    - Super 15-in-1
+
+* Changed the detection of unlicensed games. Now you need to disable "Autofix Checksum"
+  in order for unlicensed games to work.
+
+* Fixed cheat editor bug in "Cheats" dialog. Previously, it would ask for more values
+  than required.
+  
+* Fixed BallZ 3D locking up by default.
+
+* Fixed Regen crashing when editing cheats in the "Cheats" dialog by double-clicking
+  an empty place.
+  
+* SuperHQ option now works at whatever sound rate is selected. This means it is now
+  supported by both 44100 and 48000 output sampling rates.
+
+* Fixed cheat searching. Newly searched and added cheats now work. After adding
+  a newly found cheat, they will appear in the "Cheats" dialog. After being added,
+  they are turned on by default. 
+
+* Removed support for reconfigurable shortcuts using the INI. But you can still 
+  reconfigure shortcuts using another way. See the next change :) .
+
+* Fixed bugs related to brighten. In some games, enabling disabling birghten would
+  cause some colors to turn black.
+  
+* Completely new localization support. Now, you not only translate the menus but
+  translate the dialogs, message box text and even the on screen text to your
+  language. Using this, you can also reconfigure the shortcuts. See "Localization.txt"
+  in "Languages" subdirectory to see how to translate.
+  
+* Added "Alternate Timing" mode. This will fix jumpy FPS/stuttering video/audio 
+  for some poeple.
+  
+* Corrected mid-frame CRAM writes handling. Mega Turrican's background sky gradient
+  is now displayed properly.
+  
+* Added option to increase ROM space from 4 MB to 8 MB. This can only be changed by
+  modifying the INI file and setting "LargeROMSpace" setting to "1" (LargeROMSpace = 1).
+  
+* Heavily refined path configuration dialog. Also contains other preferences as well
+  so it has been renamed to "Paths and Preferences".
+
+* Fixed up UPS patching support. Now it works (finally). If you click "System->Patch",
+  it will first search for a corresponding UPS patch in the configured Patch directory
+  and apply that patch. If not found, it will give UPS patch selection dialog to select
+  some patch. For automatic searching of patches, the UPS patches must be of the same name
+  as the ROM file but with a ".ups" extension.
+
+* Option to automatically patch up a ROM if a corresponding UPS patch is found in the
+  configured patches directory. If it is not found, it does *NOT* pop up an error message
+  and will silently continue the game UNPATCHED. It was done because popping an error upon
+  loading of every game without a patch is rather annoying. For automatic searching of patches, 
+  the UPS patches must be of the same name as the ROM file but with a ".ups" extension.
+  
+* Option to ignore the CRC errors that were encountered during the patching of ROM.
+
+* Added feature to enable/disable the autoamtic loading of cheat files.
+
+* Small refinement to the menus. The menu items which start a dialog box now end with "...".
+
+* Improvements to the command line and drag-drop code. Now its case insensitive and now
+  you can load SMS/GG files by drag-dropping.
+  
+* Fixed the bug whereby loading a SMS game with fullscreen option given on the command line
+  didn't go into fullscreen.
+  
+* Added support for SMS cheats. Note that only hex cheats are supported.
+
+* Added ROM browser. Now you select the file inside 7z/Zip archives.
+
+* Fixed a bug whereby loading a game after another caused the new game to be ran at the
+  refresh rate of the previous game. This caused problems when, for example, one loaded
+  PAL game after NTSC or vice versa.
+  
+* Fixed a bug which would caused Sonic Crackers to crash Regen while it locked up the hardware.
+
+* Fixed a bug which caused a system lock up by a previously loaded game to not clear up while
+  loading a new ROM.
+  
+* Input recording and replaying feature. Now you can record movies in Regen record format.
+  Then you can exchange movies with other users. But most importantly, you can now record 
+  the movie without lagging and then later replay it in Regen while re-recording it as an AVI,
+  to upload it on video sites like Youtube etc..
+  
+* Added option to slow down emulation speed. Various speed settings are also given.
+  From 3% to 100% settings. Useful for TASing.
+
+* Added frame advance feature to the menu item. This feature was present in many previous
+  versions as well but people are too lazy to read the manuals and asked me to add it when it
+  is already there.
+
+* Added links to docs and some important websites to the "Help" menu.
+
+* Some other stuff as well which now I've forgotten >_> .
+
+* Now with a serious Read Me. :D
+
+Debugger Build:
+***************
+Most of these bugs reports and suggestions were made by Wiz and BigNailCow from
+Shinning Force II (and Sonic) hacking scene. A few of the requested couldn't be
+added becuase of my laziness. Sorry :) .
+
+* Added spectrum analyzer. Useful for some music makers and it just looks damn cool :D .
+
+* Fixed overclocking feature which got broken in 0.95.
+
+* Fixed mismatch between displayed PC and the starting PC in diassesmbly window after pressing
+  any of the stepping buttons.
+  
+* Now the 68000 debugger shows the exact address of breaking when breaking using "Breakpoint Range" mode.
+
+* Fixed YM2612 debugger bug where Sustain level was being displayed as Release rate (Thanks to Tiido for reporting).
+
+* Added "Go to Address" feature in the ROM browser to go to a specific address.
+
+* Added tracing feature to the 68k debugger. Its a bit unstable right now but traces are created
+  perfectly (but may cause Regen to crash sometimes). So its recommended to create a savestate before
+  using that feature. Tracing will make Regen very slow and if you don't know how to use it correctly, you will
+  find yourself running out of hard disk space :P.
+  
+* Made VDP layer selection dialog non-modal.
+
+
+Version 0.96
+------------
+
+* A little limitation of vcell scrolling emulated correctly. Thanks to
+  Steve Snake for detailed info on this. (F1 World Champioship, Kawasaki
+  Challenge use this)
+  
+* Changed the YM2413 emulator a little. Should sound more accurate.
+  (After Burner 2, Ys (J) etc..)
+  
+* Many new YM2612 improvements and upates. Thanks to the new research and testing
+  by Nemesis.
+
+* Sprite masking bug in Mickey Mania fixed.
+
+* Many improvements to renderer. Now passes all of the sprite masking and limitations
+  tests.
+
+* Cheats fixed.
+
+* Palette select bit emulated. Sik's ROM fucks up correctly now :P .
+
+* Completely overhauled Z80 handling and emulation. RAZE has been removed.
+  It has been tested quite heavily alongside the real thing by Tiido and 
+  is very close to the real hardware now. But this has made emulator a bit 
+  slow as well. My thanks goes to Tiido for testing this. ;)
+  
+* Fixed lightgun support which got broken in 0.95
+
+* Option added to remove flickering while in interlacing mode.
+
+* Fixed AVI recording.
+
+* Improved stability and crashes (hopefully).
+
+* Option added to force the output image aspect to be 4:3 (which the real hardware does).
+  In this mode, games with 256 pixels width will be scaled to 320.
+  
+* Ability to load SMS/GG ROMs from the command line.
+
+
+Version 0.95
+------------
+The release took quite a while because I've been getting very less time to
+work on it. The changes of 0.93 "Beta" releases have been merged in it since
+this is a proper release after 0.85. This release should be more accurate than
+EVER. Though I am not making any claims ;) .
+
+* Preliminary Sega Master System, GameGear, SG-1000, SC3000 support.
+  It should be *very* accurate. I've also spent lot of time making it fast.
+
+  Firstly, the SMS/GG/SG/SC emulation is based on docs and various posts on
+  SMSPower by Charles MacDonald and others. Some things were figured out from
+  MEKA. So don't forget to thank Charles MacDonald and Omar Cornut because;
+  of the amount of information they make avaiable (especially Charles),
+  you'd better have a good excuse for writing inaccurate emulator for
+  these machines :D .
+  
+  Secondly, SMS/GG/SC/SG emulation uses Z80 emulator by Juergen Buchmueller because
+  it contains correct implmentation of some undocumented/obscure behaviour needed
+  by some games (for example, Rambo III). And I wasn't going to spend time
+  on fixing RAZE which I could spend on something else. So thanks goes out to 
+  Juergen Buchmueller for his accurate Z80 emulator. RAZE is still used in 
+  Genesis emulation though.
+  
+  Thirdly, nearly everything that I knew of (read: could find documented) is
+  supported!!. This includes stuff like BIOS, paddles, lightgun, sports pads,
+  3D glasses (simulated) etc... Let me know if I missed anything and I'll add it. 
+  
+  Finally, I would like to thank Eke. A modified ROM database of games requiring
+  special handling (mappers, devices etc...) was taken from his Wii/GameCube port of 
+  smsplus. Region detection and some header related things were also figured out from
+  there. Due to all this, I was able to very quickly test and debug support for those
+  games which otherwise would've taken me weeks or even months. Thanks again Eke :) .
+
+* Very significant VDP timing changes. It should be more accurate than ever. DMA and FIFO
+  part was also rewritten completely. All games SHOULD now run flawlessly but I guess we'll
+  see.
+  
+* Many Z80 interrupt handling related changes. Fixes missing sound in WaterWorld and
+  should fix incorrect sound in some others (eg Flashback).
+
+* New FIR resampler. 
+
+  This resampler is written by the awesome Shay Green aka blargg
+  and is very high quality (more than linear interpolation which was used previously).
+  As a result, sound is more better. Also thanks to him for getting it working in Regen.
+
+* Window sizes *should* be correct now.
+
+* Shortened the ReadMe file quite a bit so that people can actually try and read it :D .
+
+* UPS patch support will be completely (re)broken it this release. I wanted to integrate it a bit
+  more tightly but due to the lack of time I couldn't :( . So I have disabled it.
+  
+* Again, due to the lack of time, I couldn't complete my new multi-language support.
+  But fortunately, old system has been put back again.
+  
+* Due to some new code, I was unable to apply compiler optimizations to a critical
+  part of code without breaking it. So this release may be quite a bit slower.
+  Damn you MSVC!!!
+
+* Implemented frequency counter overflow bug.
+
+  This finally fixes the one instrument in Ariel, Shaq-Fu, Spider-Man: The
+  Animated Series, Scooby-Doo Mysteries, etc. Thanks go to Nemesis.
+  Fixed only in SuperHQ mode.
+
+* Added SSG-EG support to the YM2612 core.
+
+  Thanks go out to Jarek Burczynski, Tatsuyuki Satoh and Nemesis. 
+  Surprisingly, more games use it than I thought. It is used by Alisia's Dragon,
+  Asterix, GhostBusters, Buba N Stix, Top Gear 2 etc.
+  I am sure there many more games that are using it.
+  
+* Fixed sound in Spiderman And Venom - Separation Anxiety, Indiana Jones and the Last
+  Crusade, Doom Troopers + some others. Thanks to a Russian guy who wants to remain 
+  anonymous for reporting these problems.
+
+* YM2612 envelope generator now gets updated at approximately every 2.43 cycle.
+
+* Added correct CSM mode support. Thanks to Nemesis again.
+
+* Fixed the poping/crackling in many games (Sonic 1/2/3, Urban Strike etc...). Turned
+  out be a problem in YM2612 core. I thought it was the Z80 interrupt timings.
+  
+* Implmented cycle accurate sample generation.Thanks to Eke and Nemesis for help in this.
+  Fast DAC in some games is now fixed and all games now sound more accurate, 
+  clean and better.
+  
+* Improved PSG noise emulation. Thanks to Maxim's docs and HardWareMan, Eep386.
+  Listen to Robocop vs. Terminator.
+  
+* Also corrected the PSG levels compared to YM2612 (hopefully). But I don't think
+  they are correct. It seems that PSG (especially noise) volumes get very high
+  sometimes. For example in WWF Arcade Game at character selection screen, the noise
+  volume level is very high in the a real Megadrive whereas in Regen (and all other
+  emus for that matter) it is about three to four times lower(?).
+
+* Fixed Combat Cars two player mode screen.
+
+* Optimized the YM2612 core resulting in nice speed increase.
+
+* Optimized the VDP rendering code resulting in another good speed increase.
+
+* Konami Justifier support. Thanks to Eke.
+
+* Fixed sound in some Chinese games. GoodGen lists them unknown. But they look
+  very nice.
+
+* Fixed Time Killers and Onslaught lock-ups.
+
+* Fixed Ya-Se Chuanshuo.
+
+* Removed the old debugger and added many new debuggers in its place which are
+  more better and powerful. All the debuggers are based on a special Gens Tracer
+  mod by Yakovlev Victor. Thanks.
+  
+* Improved 6-button pad support a bit. Fixes controls in Mortal Kombat.
+
+* Fixed Menacer support. The only game that I know of which uses this is Menacer
+  6-in-1 and it requires the Menacer to be plugged into port two. Capture
+  and release the mouse with F7 (default).
+
+* Added overclocking support (68k only). The setting is not saved. Takes
+  effect immediately. Will break timing sensitive games for sure.
+  
+* Fixed a small bug in VDP timing which would cause a one line glitch at 
+  the bottom in Lotus 2, Kawasaki Challenge and some others.
+  
+* Fixed flickering in Zero the Kamikaze Squirrel.
+
+* Fixed sound in Stargate, Batman Forever, Judge Dredd and maybe some more games.
+
+* Implemented ROM/RAM switching support. Needed in Sonic 3 & Knuckles,
+  Phantasy Star 4 and Story of Thor.
+  
+* Complete rewrite of the frontend timing/synchronization code. 
+  It has the following advantages:
+	
+	- No periodic sound skips anymore.
+	- VSync should now work better and work on more PCs. PAL games too shouldn't have stutters anymore.
+	- It is very fast.
+	- No emulation hiccups
+	- Regen is now much more responsive
+  
+* Debugger disassembly fixed.
+
+* DAC sound in Mega Turrican and some others fixed.
+
+* Changed VDP timings a bit. This fixes Streets of Rage intro not showing up.
+
+* Fixed lots of buffer overflows and memory leaks in my YM2612 core. Now Mega Turrican
+  track 2 doesn't create a stack overflow which was present in the beta :) .
+
+* Added Hue, Saturation etc.. controls to NTSC filter plugin.
+  Note that configuration dialog box will only appear when some game is running.
+  
+* Added a tiny cheat editor. Double click on a cheat to open it. Note that modified
+  cheats are not saved. Also, multi address cheats are not supported yet.
+
+* Improved region detection a bit.
+
+* Fixed a nasty bug in the save state code which was casuing loading of states to completely
+  fail sometimes.
+  
+* Fixed command line bugs. It should now work perfectly.
+
+* Added the ability to set fullscreen from command line. The syntax is:
+
+	"regen --fullscreen path_to_ROM"
+
+* FPS display is now more precise and more frequently updated.
+
+* Fixed "Save state as.." saving without any extension.
+
+* Added lightgun cursor support. This is only meant for Justifier games. It may
+  not work correctly with Menacer.
+
+* Automatically load cheat file based upon naming of the game. Otherwise the usual
+  open file dialog will appear.
+  
+  For example if you loaded the game "Sonic and Knuckles & Sonic 3 (W) [!].zip", 
+  then if there is a file called "Sonic and Knuckles & Sonic 3 (W) [!].dat" in
+  the configurable cheats directory, it will be loaded automatically.
+  
+* Fixed the bug when someone pressed Alt + Enter twice to get out of fullscreen.
+
+* Fixed a bug when J-Cart was set (had to be disabled from ini file).
+
+* Fixed brighten/enhanced feature. It is now saved as well.
+
+* Hopefully fixed starting directory problems when loading a ROM. Because of this
+  LastROM entry has been added in the config file.
+
+* Regen does not close if loading of a ROM failed.
+
+* Regen is now linked with MSLU library to make it work in Win9x.
+  You will need unicows.dll. The startup time will be a bit slower on
+  WinXP and above than previously.
+
+* Hopefully fixed the bugs with the lowpass filter.
+
+* Regen does not use 100% CPU while paused.
+
+* Regen is now compatible with WinXP visual styles.
+
+* AVI recording is broken for now due to new sync code.
+
+* New style changelog file which is more readable and pleasant to the eyes :). Thanks to Adam.
+
+* A lot more changes than listed here and now I've forgotten. Specially in between the betas.
+
+
+Version 0.85
+------------
+
+  Well, this release may not look much different from previous (0.77) one but believe
+  me there have been many, many changes. Two major emulation subsystems have been totally
+  replaced with new ones. They are the timing and event system and the second being the
+  new YM2612 core. There were many betas released to make sure every game worked correctly
+  and more accurately than ever. Though it’s true that I haven't implemented some front-end
+  related feature requests because I didn't wanted to delay this release any longer.
+  I am sorry for that.
+
+
+* Totally rewrote timing code and implemented a new event system.
+
+  I think this new code is very close to being 100% accurate. Although Regen still
+  emulates line-by-line this code will give results that can only be achieved by running
+  the emulator cycle-by-cycle. This code is not slow either. In fact, it may be faster
+  than the previous code. This code is still in early stages but I thought it was stable
+  enough to released. Now why I did it? Especially since the previous system was already
+  very mature. Well the only *real* reason for me was that a user posted me a small demo
+  program that will only run correctly if the timings of the emulator were absolutely
+  perfect. So, as you may have guessed, that it did not work correctly under Regen.
+  But the interesting thing is that it did not work correctly in Kega either. Fixing
+  the demo broke many other games. But with this new system not only the demo works
+  correctly but also all the games work perfect (as far as I've tested).
+
+  This new system has also fixed some games that did not work previously which include:
+
+	- Bram Stoker's Dracula
+	- Wheel of Fortune
+
+  It also fixes some of the glitches in games like Legends of Galahad, Nigel Mansell's
+  World Championship Racing, Striker, Deadly Moves (runs even better than Kega) and many more.
+
+* Replaced MAME's FM core with my own YM2612 emulator which I had been working on for some
+  time. This is the reason this release took so long. It more accurate than MAME's core
+  and very close to real thing. Listen to Warlock, Ariel, Shaq Fu etc. for the difference.
+  If a game still doesn't sound correctly please report it.
+
+* Changed 68k timings. This fixes Surging Aura.
+
+* Sound in Pac-Man 2, The New Adventures (U) fixed. Maybe the first time for any Genesis
+  emulator. I couldn't find any other emu that runs it correctly.
+
+* Corrected the behavior of X-MEN 2 and Eternal Champions on reset.
+
+* Fixed the PAR finally this time. All the codes will now work Regen that worked in
+  Kega and real hardware.
+
+* Added multi-language support to Regen menus.
+
+  There are many languages available by default. Thanks to their authors. See the
+  respective language files for their names. You can create your own language file too.
+  See the readme for that. Please note that there won't be any check beside any selected
+  language. That is because I noticed the list changes on every run of Regen even if no
+  new languages are installed. This creates the problem of check appearing against wrong
+  language. There are solutions to it but its just too much pain.
+
+* Changed the drop list height in redefine keys dialog so that 6-button, Menacer, Sega Mouse
+  options are visible. People thought Regen didn't support them :-)
+
+* Regen will now correctly load Kega and Gens' created SRAM files.
+
+* Now you can pause a game then press space for executing just one frame. Useful for taking
+  precise screenshots.
+
+* Fixed and improved the EEPROM support. All games that *did* have EEPROM originally will
+  run correctly now.
+
+* Fixed a small glitch in country sub menu.
+
+* Multiple messages can now be displayed.
+
+* Added a small program in "Fonts" directory to create fonts for the emulator text engine.
+
+  Please note that it will ask twice to select font. The first will be used when
+  'Superfast Rendering' or 'None' is selected. The second will be used when a plugin is
+  selected and is usually the same as the first one but nearly twice the size. I could do it
+  programmatically but I didn't because this way the user can tweak the sizes individually
+  because the second font doesn't appear to be exactly twice the size (little bigger) even
+  the height is exactly the twice of the first one.
+
+* AVI movie recording support. Don't ask for any other format please.
+  Recording directory is same as sound.
+
+* Loading a game multiple times will create only one entry in the File History.
+
+* Fixed FPS display being cut-off if in three or more digits in None plugin mode.
+
+* Fixed some crashes especially when changing the sound rate.
+
+* New About box :) .
+
+* Many other internal changes.
+
+
+Version 0.77
+-------------
+
+* Implemented the highly requested "SuperHQ" option in sound settings.
+
+  Enabling this will result in highly accurate sound and very close to real thing.
+  But it will also slow down emulation so you must have a fast enough PC. Sound rate
+  will automatically be set to 48000Hz. See Sonic 1, Sonic 3D intro, Vectorman intro,
+  X-Men intro and nearly all games for the difference in accuracy and quality. I am
+  trying to make it as accurate as Kega Fusion. And if you have something to tell me
+  about YM2612, it is highly welcomed :-). Do tell me if it is still inaccurate
+  including the game in which it sounds wrong.
+
+* WAV dumping modified so that it works correctly in SuperHQ mode.
+
+* Rewrote major part of DirectSound code to fix the static in sound on some computers.
+
+* No need to restart the emulator after changing sound rate.
+
+* Changed 68k timings a bit. Fixes "California Games".
+
+* Improved VDP write timings. Fixes Double Clutch menu (no flickering anymore).
+
+* This time really fixed the sprite masking code. Fixes sprites appearing above HUD
+  in Vectorman and Streets of Rage.
+
+* Improved VBLANK timings which fix X-perts.
+
+* Updated SVP emulator.
+
+* Following unlicensed games are now supported. As always Autofix Checksum must
+  be enabled:
+
+	- Lion King 3
+	- Super King Kong 99
+
+* Fixed the following reported bugs:
+
+	- Regen crashing if "Brighten" enabled without any game loaded.
+	- Backspace key not working to toggle Turbo Mode.
+	- Cheats not being unloaded when loading a game after another game.
+	- Hard/soft reset, power off crashing emulator when no game is loaded.
+	- Having sound disabled for most of the game until you reactivate it,
+          doesn't re-enable sound.
+	- Using the taskbar button for Regen doesn't always autopause gameplay.
+          It keeps on playing minimized.
+	- Regen doesn't create SRM files properly if you load new game without power
+          offing previous running game.
+	- Country submenu not setting the right region.
+
+
+Version 0.7
+------------
+
+  I had some more features to add than these but due to university work I could not
+  complete them and I had to save some things to do in 0.8 :)
+
+
+* Fixed a problem in sprite masking code. Fixes sprites in Castle of Illusion
+  appearing above the window plane.
+
+* Fixed sprite problems in Contra - Hard Corps.
+
+* Added preliminary FIFO and its timing (VDP write latency) emulation.
+
+  Menu in Double Clutch is now correct (but flickers) and The Chaos Engine runs
+  perfect (no flickering on scroll). It was reported by Eke and he also helped
+  in fixing it.Thanks.
+
+* Fixed corrupted games when loaded after Virtua Racing.
+
+* Improved DMA timings (Sonic 3D intro).
+
+* Added 7zip support. Only the first file in it will be loaded.
+
+* Added support to redefine menu shortcuts.
+
+* Regen now remembers last ROM path.
+
+* Rewrote major part of DirectInput code to fix some controller issues.
+  All controller related issues should be gone.
+
+* Selecting a window size now has a little check by the selection.
+
+* The "Off" options are now highlighted when loading cheats.
+
+* Default directories for BIOS (system dependant), SRM, BRM, Save States,
+  Screenshots, etc. 
+
+* Configuration settings for the various settings and paths to BIOS/various
+  directories (like Kega). 
+
+* Added option to brighten the screen (like Kega). But there is no support to save it
+  because it is not correct for all the games (especially the games with Shadow/Highlight
+  effects).
+
+* Following unlicensed games now run correctly, still many more to come:
+
+	- Soul Blade
+	- 12-in-1
+	- 4-in-1
+	- Smart Mouse
+
+* Regen will now create the default directories and will show a small message box when it’s
+  ran for the first time.
+
+* Added a special keyword to the cheat files called "Default" this will auto-enable cheat
+  options. For example:
+
+	 [3] 
+	 Name=Infinite Lives
+	 0=Off
+	 1=On
+	 Default=1
+	 
+  This will enable the second option (since counting from zero) for this cheat.
+
+* Added option to reload the cheat file in cheats dialog box. I did this because my cheat
+  editor was very buggy and did not save the cheat file correctly. Now the user can easily
+  edit the cheat code with their favorite editor and reload the cheat file instantly.
+  Note that all the enabled cheats will revert back to being off except those which were
+  auto-enabled with the special "Default" keyword.
+
+* When there is no history to be displayed, nothing appears when hovering over the
+  File History sub-menu. 
+
+* Fixed "Disable menu shortcuts" option.
+
+* Fixed "Reset to default keys" option.
+
+* Fixed a minor bug in command line code.
+
+* Option to shorten the path in the history to game name only. Only changeable through
+  the ini file by setting ShortHistoryNames to 1.
+
+* Removed the empty file history slots when less than 5 games have been played. 
+
+* Cheat Window is a bit bigger now (on request).
+
+* Fixed Port 2 controller being saved on Port 1d, and possibly others.
+
+* Fixed buzzing sounds when disabling sound mid-game.
+
+* Netplay option has been disabled in this release because it was way too buggy.
+
+* Text engine uses a bit smaller font.
+
+* Regen now directly creates and sizes itself to the last position instead of creating
+  at center and moving to the last window place or resizing itself.
+
+* Minor fixes and tweaks.
+
+* Many, many, MANY new cheat files added (thanks to King of Chaos).
+
+* Fixed many typos in the ReadMe file. Thanks to Adam.
+
+* Some more things which I forgot.
+
+
+Version 0.6
+-----------
+
+* Changed the Z-80 emulator from MZ-80 to RAZE as this is much more accurate and since
+  MZ-80 was having some problems with some games. If you find some games broken report
+  them.
+
+* Updated M68K core to latest version as a result debugger disassembly is broken for now.
+
+* Added highly customizable and fast text engine. You can change the text color from the
+  ini file by modifying TextColor_R, TextColor_G, TextColor_B values. Option to make and
+  change fonts will be added later.
+
+* Option to show framerate.
+
+* Added my own pixel doubling (non-anti-aliased) and interpolation filter plugins.
+
+* Added option to not emulate console lock-ups. These are not emulated by default.
+  You can emulate them by setting EmulateLockups variable to 1 in the ini file.
+
+* Changed the name of "Superfast blitting" to "Superfast rendering" as this is right.
+
+* SRAM and EEPROM saving and loading added. Maybe incorrect, I couldn't test it much.
+  You can disable their loading and saving from the "System" menu.
+
+* WAV logging added. VGM logging will be added soon. The directory where the sound will be
+  dumped can be specified in the ini file by changing the SoundDumpDir variable.
+
+* Made Super Street Fighter II working. You must disable autofix checksum for it to work.
+
+* Tried to improve the PAR support. I couldn't test it much. Tell me how it goes.
+
+* Regen can now fool the "Emulator Detector" program made by Tiido. It can detect if his
+  program is being run on real Genesis or on an emulator. I could not find any emulator that
+  is capable of fooling it, not even Kega.
+
+* Following unlicensed games added, more to come soon:
+
+	- Super Bubble Bobble
+	- Earth Defend
+	- Whac-A-Critter / Mallet Legend 
+	- Funny World And Balloon Boy
+	- Squirrel King
+	- A Bugs Life (Autofix checksum must be disabled for this game to work)
+
+* Fixed the following bugs (mostly reported by ZSNES forum members):
+
+	- Sprites showing up in Battle Tech start when they shouldn't be. Thanks to Eke for
+          reporting this problem and telling the solution too :-)
+	- Sound problems in Sonic 2.
+	- Loading another game past Virtua Racing causes the graphics to be messed up.
+	- Loading another game from history when Virtua Racing is loading causes the emulator
+          to crash.
+	- Does not mute sound when lost focus.
+	- Once a cheat is enabled, you can't change the state if it's a multi-option cheat. 
+          (E.g. Sonic 1 chaos emerald modifier, can't change from six to five, always goes back
+          to six). 
+
+* Hopefully fixed (or at least minimized) the static in sound when window is moved.
+
+* The following things are still unfixed due to some valid reasons :-)
+
+	- Ultimate Mortal Kombat Trilogy. AFAIK it’s a hack. I don't like to add hacked games
+          that need special handling. But if there are enough people who would like to see it on
+          Regen then I will add it. Currently there have been just 2 requests :)
+	- No autopause if minimized using taskbar button. Windows reports that Regen has the focus.
+          I could not find any emulator, with autopause option, that autopaused this way.
+	- Save states in Virtua Racing. Genecyst savestate format currently does not allow extra
+          stuff to be saved. It needs to be extended.
+	- Game no Kanzume o Tokuyou won't run. It wants to write to ROM and also seems to use
+          unused VDP control bits.
+	  I have not found *right*(read without hack) way to run this game.
+	- Wonder Library will also not run. Is it really a Genesis game?? Seems to be a SegaCD
+          game. It does lots of unused memory read/writes in the SegaCD area.
+
+
+Version 0.5
+-----------
+
+* DMA timings implemented. This fixes the following:
+
+	- Single line at bottom in Virtua Racing.
+	- DAC in Virtua Racing now runs correctly.
+	- Legends of Galahad bottom screen.
+	- Formula 1 and Kawasaki Challenge bottom screen.
+	- Insector X intro being too fast.
+	- Many others
+
+* Autofix checksum option added. Note that fixing checksum might break some games.
+
+* Improved YM2612 emulation again.
+
+* Serial EEPROM emulation added. Huge thanks to Eke for his very good documentation
+  on this.
+
+* Added Hex code and PAR (Pro Action Replay) cheat code support to cheat engine.
+  All codes working in Kega should work.
+
+* Fixed the following bugs (taken directly from the Regen topic in ZSNES forums,
+  thanks to King of Chaos):
+
+	- Clicking Disable Sound without game loaded can cause the emulator
+          to crash.
+	- The setting for disabling sound (and other settings) isn't saved
+          sometimes. 
+	- Editing the Disable Sound setting in the INI doesn't disable the
+          sound, trying to disable it crashes the emulator. 
+	- Clear History sometimes doesn't work, unless you click it several times. 
+	- Clicking on an empty history slot will crash the emulator. 
+	- ROMs bigger than the 4MB Genesis limit (e.g Super Street Fighter II)
+          causes the emulator to crash. 
+	- No selection for Gamepad under Use in the controller configuration. 
+	- When you change games, you can't load in a new cheat file for the new game. 
+	- When you "power off" the emulator, you can still activate cheats,
+          no "No game loaded" dialog. 
+	- No checkboxes for the selected Sound Rate, so you don't know which one
+          you're using. 
+	- System > Country > Auto Detect does not have a check by it when selected.
+
+* Some unlicensed game support. The following unlicensed games are supported right now
+  more will be added later, huge thanks to Haze (David Haywood):
+
+	- Lion King II
+	- Elf Wor
+	- Mahjong Lover
+
+* Emulation of system lock-up on illegal address access. Now Sonic Crackers hangs just
+  like in reality.
+
+
+Version 0.41
+------------
+
+  This is just a quick update because of a small mistake I made.
+
+
+* Forgot to uncomment a line of code which made Mega Man (possibly others) break.
+
+* As a bonus I included the Sesame Street fix too :-).
+
+
+Version 0.4
+-----------
+
+  Note:
+  Massive changes were done regarding interrupt handling which may have
+  resulted in some games being broken from the previous version.
+  If you find one do tell me.
+
+
+* All accuracy hindering things have been removed from this release. Because of this,
+  this version will be slower (read very slow) than the previous one.
+
+* Aggressive interrupt checking.
+
+* Sprite collision and overflow flags now implemented (needed by Shadow of the Beast,
+  Strider 2).
+
+* Changed Musashi's interrupt handling. This fixes Lemmings status bar.
+
+* SRAM support added. Many games needed this to work properly (Dragon Slayer, NHL 96 etc.).
+  No support to save it though.
+
+* Dino Dini Soccer runs perfectly now. Even more accurate than Kega Fusion and Gens!
+
+* DAC now works in Virtua Racing but is not correct.
+
+* Fatal Rewind lockup fixed.
+
+* Double Dragon 2 lockup fixed.
+
+* 68000 Debugger enabled. This was the most requested feature!
+  It might be buggy though :-)
+
+* Stretch option added.
+
+* Option added in NTSC filer to disable scanlines.
+
+* Incorrect screenshots fixed.
+
+* Command line support. Only supports loading of games right now.
+
+* Clear history fixed
+
+* Regen now remembers window position.
+
+* Fixed sound pausing on window move while a game is running.
+
+* Other minor tweaks and fix-ups.
+
+
+Version 0.3
+-----------
+
+* Preliminary SVP emulation added. Thanks to notaz and TascoDeluxe.
+  Although now Virtua Racing is playable but the DAC won't run (strange).
+
+* SoundBufferSize option added to ini file. Default value is 7 because
+  that worked best on my PC. If sound is skipping try playing with different
+  values.
+
+* DirectInput support
+
+* 6-button pad, Teamplayer, 4-way play, lightgun, sega mouse, J-Cart
+  support (all preliminary)
+
+* Sonic 3D bonus stage fixed (got broken in previous version)
+
+* Captain planet screen fixed
+
+* Further FM emulator improvements. Sound should be a bit more accurate. For an example
+  see Sonic 3 Chaos emerald stages as he picks the balls. It sounds more close to Kega
+  now than previously.
+
+* FM timers fixed in FM emulator. This fixes sound in some games. Thanks to Eke.
+
+* Single line glitches in many games fixed (Road rash 1, 2 etc ...)
+
+* Mouse capture/release using F12. This is used for Menacer Lightgun and Sega Mouse.
+
+* Many more games now work (Super Kick Off, etc.).
+
+* Drag and drop file support.
+
+* Added joypad support. Since I don't have any gamepads I can not tell if it will work.
+  It is just based on estimation.
+
+* Fixed Z80 interrupt timing (again). This fixes slow or missing music from some games.
+
+
+Version 0.2
+------------
+
+* Modified FM emulator slightly. It should sounds a bit more accurate now.
+
+* Fixed sound timing problems with games.
+
+* Due to above "Apply timing fix" option now removed
+
+* Fixed some frontend problems that some users reported
+
+* Fixed savestates. They should load correctly now.
+
+* A few tweaks.
+
+* ScreenShotDir option added to the ini file
+
+
+Version 0.01
+------------
+
+* Renderer rewrite. Most things implemented.
+
+* VDP rewrite with H/V counter thanks to Gens and Genesis Plus.
+
+* Tatsuyuki Satoh's YM2612 emulator added.
+
+* DSound added.
+
+* Added PAL timing.
+
+* Improved sync between 68k and Z80. As a result many games work now but still
+  some sound issues.
+
+* Added "Apply timing fix" option to fix sound in some games because of interrupts
+  firing too closely. This makes sound in some games a bit fast.
+
+* Added country selection, domestic, overseas things.
+
+* Some sprite problems fixed. Thanks to TascoDLX.
+
+* Some usual frontend things added.
+
+* Kega Fusion plugin support.
+
+* Savestates support, loading still incorrect.
+
+* Changed memory handlers from "ifs” to "switch".
+
+* Many, many other things.
+
+
+Version 0.001 [unreleased]
+--------------------------
+
+* Everything is new
+
+* Basic VDP added
+
+* Basic renderer. No shadow/highlight support. No interlace support.
+  No limitations implemented.
+
+* No sound
+
+* Just enough to make some games work.

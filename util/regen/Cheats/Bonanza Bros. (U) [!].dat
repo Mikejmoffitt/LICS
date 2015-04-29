@@ -1,0 +1,20 @@
+[0]
+Name=Infinite Time
+0=Off
+1=On,0106D0:4A28
+
+[1]
+Name=Infinite Lives For The Red Player
+0=Off
+1=On,00539E:6068
+
+[2]
+Name=Infinite Lives For The Blue Player
+0=Off
+1=On,00542A:606C
+
+[3]
+Name=Invincibility
+0=Off
+1=On,FF56BF:0001
+

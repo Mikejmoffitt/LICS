@@ -1,0 +1,29 @@
+[0]
+Name=Infinite Health
+0=Off
+1=On,010462:6016
+
+[1]
+Name=Infinite Lives P1
+0=Off
+1=On,FFF657:0009
+
+[2]
+Name=Infinite Lives P2
+0=Off
+1=On,FFF697:0009
+
+[3]
+Name=Infinite Weapon Orange Bar P1
+0=Off
+1=On,FFF658:002D
+
+[4]
+Name=Infinite Weapon Orange Bar P2
+0=Off
+1=On,FFF698:002D
+
+[5]
+Name=Weapon Gets Full Power On First Power Up
+0=Off
+1=On,013D0C:7206

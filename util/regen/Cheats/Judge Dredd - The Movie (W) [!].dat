@@ -1,0 +1,35 @@
+[0]
+Name=Infinite Health P1
+0=Off
+1=On,FF2B41:0085
+
+[1]
+Name=Infinite Lives
+0=Off
+1=On,FF2B2E:0009
+
+[2]
+Name=Boomerang Bullets
+0=Off
+1=On,FF3169:0009
+
+[3]
+Name=Infinite Futuristic Pipe-Bombs
+0=Off
+1=On,FF316B:0009
+
+[4]
+Name=Infinite Large Missiles
+0=Off
+1=On,FF316D:0063
+
+[5]
+Name=Infinite Sleeker Missiles
+0=Off
+1=On,FF316F:0063
+
+[6]
+Name=Infinite Blue Canister Missiles
+0=Off
+1=On,FF3171:0063
+

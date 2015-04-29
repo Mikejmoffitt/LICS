@@ -1,0 +1,45 @@
+[0]
+Name=MASTER CODE (MUST BE ENTERED)
+0=Off
+1=On,00040A:6002
+
+[1]
+Name=Invinciblity
+0=Off
+1=On,FFEE08:00FF
+
+[2]
+Name=Infinite Lives
+0=Off
+1=On,00481E:6004
+
+[3]
+Name=Invulnerable To Enemy Attack
+0=Off
+1=On,005E10:600C
+
+[4]
+Name=Infinite Hits
+0=Off
+1=On,FF8F97:0008
+
+[5]
+Name=Infinite Bubble Gum Ammo
+0=Off
+1=On,FF8F93:0032
+
+[6]
+Name=Begin The Game With About 15 Units of Popcorn
+0=Off
+1=On,00503C:31C2
+
+[7]
+Name=Once Your Grab Popcorn, It Never Decreases
+0=Off
+1=On,005108:6002
+
+[8]
+Name=Donald Doesn't Calm Down Until The End of A Level
+0=Off
+1=On,005FDE:6002
+

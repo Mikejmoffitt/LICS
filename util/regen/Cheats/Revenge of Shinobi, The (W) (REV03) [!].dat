@@ -1,0 +1,30 @@
+[0]
+Name=Infinite Health
+0=Off
+1=On,FFE13B:0008
+
+[1]
+Name=Infinite Magic
+0=Off
+1=On,FFE145:0001
+
+[2]
+Name=Infinite Shurukens
+0=Off
+1=On,FFE13F:0063
+
+[3]
+Name=Invincible
+0=Off
+1=On,FFC03F:001B
+
+[4]
+Name=Super Jump (Jitsu of Fushin)
+0=Off
+1=On,FFE00B:0001
+
+[5]
+Name=Infinite Lives
+0=Off
+1=On,FFE141:0003
+
