@@ -72,10 +72,10 @@ default: release
 .PHONY: clean
 
 run: release
-	@exec ./util/regen/regen ../../out.bin
+	@exec ./util/regen/regen ../../out/rom.bin
 
 test: release
-	@exec ./util/megaloader/mega-usb out.bin
+	@exec ./util/megaloader/mega-usb out/rom.bin
 
 clean:
 	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin

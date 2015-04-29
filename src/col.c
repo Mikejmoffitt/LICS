@@ -25,7 +25,7 @@ void col_puts40(u16 x, u16 y, char *s)
 		{
 			VDP_setTileMapXY(
 				VDP_PLAN_B,
-				TILE_ATTR_FULL(0,0,0,0,
+				TILE_ATTR_FULL(0,1,0,0,
 				(*s + (COL_FONT_VRAM_OFFSET/32))),
 				x,y);	
 			x++;
@@ -54,7 +54,7 @@ void col_puts(u16 x, u16 y, char *s)
 		{
 			VDP_setTileMapXY(
 				(flip) ? VDP_PLAN_B : VDP_PLAN_A,
-				TILE_ATTR_FULL(0,0,0,0,
+				TILE_ATTR_FULL(0,1,0,0,
 				(*s + COL_FONT_SEL + (COL_FONT_VRAM_OFFSET/32))),
 				x >> 1,y);	
 			x++;

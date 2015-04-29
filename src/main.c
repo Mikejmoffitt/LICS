@@ -20,10 +20,10 @@ _voidCallback *h_int(void)
 }
 
 u16 lylepal[] = {
-	0xFFF, 0xEEE, 0x888, 0x444,
+	0x000, 0xEEE, 0x888, 0x444,
 	0x24A, 0x0E8, 0xC44, 0x622,
 	0x026, 0x0EE, 0x000, 0x000,
-	0x000, 0x000, 0x000, 0x000
+	0x000, 0x008, 0x080, 0x800
 };
 
 void setup(void)
@@ -43,14 +43,14 @@ void setup(void)
 
 int main(void)
 {
-	u16 assholes = 0;
 	u16 delay_mod = 4;
 	setup();
 	col_puts40(8,3,"Lyle sprite test");
-	VDP_setPalette(0,&lylepal);
+	VDP_setPalette(3,&lylepal);
 	VDP_setHIntCounter(hint_val);
 	volatile u8 p1 = pad_read(0);
 	VDP_setHInterrupt(0);
+	VDP_setHilightShadow(1);
 
 
 	sprites_init();
@@ -80,13 +80,34 @@ int main(void)
 		{
 			i = 0;
 		}
-		sprite_put(16 + (12 * i), 112 + (i % 2 == 0 ? 32 : 0), size, 256 + (9 * i));
+		u16 tile = 256 + (9 * i);
+		sprite_put(16 + (12 * i), 112 + (i % 2 == 0 ? 32 : 0), size, TILE_ATTR(3,i%2,0,1) + tile);
 		player_dma(i,32*(256 + 9*i));	
 	}
-
+	
+	u16 x = 64;
+	u16 y = 64;
 
 	for (;;)
 	{	
+		p1 = pad_read(0);
+		if (p1 & KEY_RIGHT)
+		{
+			x++;
+		}
+		if (p1 & KEY_LEFT)
+		{
+			x--;
+		}
+		if (p1 & KEY_UP)
+		{
+			y--;
+		}
+		if (p1 & KEY_DOWN)
+		{
+			y++;
+		}
+		sprite_set(0,x,y,SPRITE_SIZE(3,3),TILE_ATTR(3,1,0,0) + 256 + (9 * 0x17),1);
 		VDP_waitVSync();
 		sprites_dma(32);
 
