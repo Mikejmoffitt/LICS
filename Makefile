@@ -79,14 +79,20 @@ RESOURCES+=$(S80S:.s80=.o)
 
 OBJS = $(RESOURCES)
 
-.PHONY: all run clean
+.PHONY: all clean mednafen debug gens
 
 all: out.bin 
 
-run: out.bin
+mednafen: out.bin
 	@exec mednafen $< 2> /dev/null
 
 debug: out.bin
+	@exec gens $< 2> /dev/null
+
+gens: out.bin
+	@exec gens $< 2> /dev/null
+
+regen: out.bin
 	@exec wine ./util/regen/Regen.exe ../../out.bin
 
 test: out.bin

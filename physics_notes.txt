@@ -1,0 +1,37 @@
+Lyle in Cube Sector physics notes
+---------------------------------
+
+Lyle:
+= Physics =
+Walking top speed: 1.7px/f
+Max fall speed: 8px/f
+X accel/decel: 0.15px/f^2
+Y accel due to gravity: 0.23px/f^2
+Jump strength: -3.7px/f
+Jump hold str: 0.1px/f ?
+
+When lyle is hurt, perform a short jump, set X velocity = 1.9px/f
+
+= Animations =
+Cube kick / throw anim length: 8 frames
+Time until CP spawn particles appear: 5 frames
+Time until CP spawn occurs: 60 frames
+Time until fast CP spawn occurs: 30 frames
+Time until a cube is lifted: "15" frames (effectively 12...)
+
+Cubes:
+= Physics =
+Y accel due to gravity:
+	dy = dy + 0.2;
+Y mod when cube bounces on the ground: 
+	if dy > 2px/f, dy = (dy - (0.28*dy);
+Cube bounces on another cube:
+	dy = (dy - (dy * 0.28)) - 0.75;
+	dx = 1px/f;
+Cube is stuck overlapping another:
+	dy = -4 for one cube only;
+Cube kick speed:
+	dx = 3px/f;
+Cube hits backdrop after kick:
+	dy = -0.3px/f;
+	dx = 1px/f
