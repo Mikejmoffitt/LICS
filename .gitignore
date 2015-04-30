@@ -14,6 +14,11 @@
 *.la
 *.lo
 
+# vim shit
+*.swp
+inc/*.swp
+src/*.swp
+
 # Shared objects (inc. Windows DLLs)
 *.so
 *.so.*
