@@ -63,6 +63,7 @@ void setup(void)
 	VDP_setScreenHeight224();
 	VDP_setHIntCounter(112);
 	VDP_setHilightShadow(0);
+	VDP_setScanMode(0);
 	SYS_enableInts();
 	sprites_init();
 }
@@ -71,7 +72,7 @@ void player_test(void)
 {
 	player_init(&pl);	
 	pl.y = 64;
-	pl.x = 64;
+	pl.x = intToFix32(64);
 	for (;;)
 	{
 		

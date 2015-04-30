@@ -49,7 +49,7 @@ struct player
 {
 	u16 type; // Universal type all objects share
 	// Lyle physics vars
-	u16 x, y;
+	fix32 x, y;
 	u16 cam_x, cam_y;
 	fix16 dx, dy;
 	u16 grounded;

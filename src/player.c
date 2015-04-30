@@ -126,13 +126,13 @@ void player_accel(player *pl)
 void player_eval_grounded(player *pl)
 {
 	// For now, a hack for testing
-	if (pl->y >= 150)
+	if (fix32ToInt(pl->y) >= 150)
 	{
 		pl->grounded = 1;
 		if (pl->dy > FZERO)
 		{
 			pl->dy = FZERO;
-			pl->y = 150;
+			pl->y = intToFix32(150);;
 		}
 	}
 	else
@@ -155,8 +155,8 @@ void player_jump(player *pl)
 void player_move(player *pl)
 {
 	// Do movement	
-	pl->x += fix16ToRoundedInt(pl->dx);
-	pl->y += fix16ToRoundedInt(pl->dy);
+	pl->x = fix32Add(pl->x,fix16ToFix32(pl->dx));
+	pl->y = fix32Add(pl->y,fix16ToFix32(pl->dy));
 
 	// In the air, gravity is affected by the player holding jump or not
 	if (!pl->grounded)
@@ -258,6 +258,6 @@ void player_draw(player *pl)
 	{
 		size = SPRITE_SIZE(3,3);
 	}
-	sprite_put(pl->x - pl->cam_x, pl->y - pl->cam_y, size, 
+	sprite_put(fix32ToInt(pl->x) - pl->cam_x, fix32ToInt(pl->y) - pl->cam_y, size, 
 		TILE_ATTR(3,1,0,pl->direction) + PLAYER_VRAM_SLOT);
 }
