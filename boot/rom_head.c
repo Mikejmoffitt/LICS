@@ -24,9 +24,9 @@ const struct
 } rom_header = {
     "SEGA MEGA DRIVE ",
     "MIKEJMOFFITT2015",
-    "COMPUTER SCIENCE HOUSE DEMO PROGRAM             ",
-    "http://csh.rit.edu                              ",
-    "GM 12738462-11",
+    "Lyle in Cube Sector                             ",
+    "{ bogozone.net/lyle.html } { mikejmoffitt.com } ",
+    "GM 12738462-12",
     0x0000,
     "JD              ",
     0x00000000,
@@ -38,6 +38,6 @@ const struct
     0x00200000,
     0x002001FF,
     "            ",
-    "DEMONSTRATION PROGRAM                   ",
+    "LYLE IN CUBE SECTOR                     ",
     "JUE             "
 };

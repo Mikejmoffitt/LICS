@@ -2,6 +2,12 @@
 #define PLAYER_H
 
 #include <genesis.h>
+#include "gfx.h"
+#include "mpad.h"
+#include "objtypes.h"
+#include "sprites.h"
+
+#define LYLE_3x3_CUTOFF 0x14
 
 #define PLAYER_DX_MAX FIX16(1.7)
 #define PLAYER_DX_MIN FIX16(-1.7)
@@ -13,8 +19,10 @@
 #define PLAYER_JUMP_DY FIX16(-3.7)
 #define PLAYER_JUMP_HOLD_STR FIX16(0.1)
 #define PLAYER_STEP_UP 4
+#define FZERO FIX16(0.0)
 
 #define PLAYER_CUBE_FX 5 // If cube spawn count is above, make particles
+
 #define PLAYER_CUBE_SPAWN 60 // Cube spawns at this point. 
 #define PLAYER_CUBE_SPAWN_FAST 30
 
@@ -26,13 +34,31 @@
 #define PLAYER_HURT_TIME 30
 #define PLAYER_INVULN_TIME 80
 
-#define PLAYER_MAX_CP 30 
+#define PLAYER_MAX_CP 30
+
+#define PLAYER_RIGHT 0
+#define PLAYER_LEFT 1
+
+#define PLAYER_START_HP 5
+#define PLAYER_START_CP 5
+
+#define PLAYER_VRAM_SLOT 256
 
 typedef struct player player;
 struct player
 {
+	u16 type; // Universal type all objects share
 	// Lyle physics vars
-	fix16 x, y, dx, dy;
+	u16 x, y;
+	u16 cam_x, cam_y;
+	fix16 dx, dy;
+	u16 grounded;
+	u16 direction;
+	u16 control_disabled;
+
+	// Animation vars
+	u16 anim_cnt; // Counts always, used for modulus for animations
+	u16 anim_frame; // Which animation frame to DMA
 	u16 holding_cube; // flag for if holding a cube
 	u16 throw_cnt; // If non-zero, throwing anim plays
 	u16 throwdown_cnt;
@@ -43,12 +69,41 @@ struct player
 	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
 	u16 hp;
 	u16 cp;
+
+	// Hold last gamepad state
+	u8 input;
+	u8 input_prev;
 };
 
+// Init function for Lyle's variables
+void player_init(player *pl);
 
-#define LYLE_3x3_CUTOFF 0x14
 // Put Lyle's sprite #n at addr dest
 void player_dma(u16 num, u16 dest);
+
+// Update gamepad state
+void player_input(player *pl);
+
+// Cube spawning
+void player_cp(player *pl);
+
+// Handle inputs affecting accel/decel
+void player_accel(player *pl);
+
+// Determine if player is grounded
+void player_eval_grounded(player *pl);
+
+// Allow player to jump
+void player_jump(player *pl);
+
+// Run d additions, handle collisions
+void player_move(player *pl);
+
+// Determine which animation frame to DMA in
+void player_calc_anim(player *pl);
+
+// Update entry in sprite table cache
+void player_draw(player *pl);
 
 
 
