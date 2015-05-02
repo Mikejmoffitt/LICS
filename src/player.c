@@ -93,7 +93,7 @@ void player_accel(player *pl)
 	}
 
 	// deceleration
-	if (pl->dx > FZERO && !(pl->input & KEY_RIGHT))
+	if (pl->dx > FZERO && !(pl->input & (KEY_RIGHT | KEY_LEFT)))
 	{
 		pl->dx = fix16Sub(pl->dx,PLAYER_X_DECEL);	
 		// Don't decel into the other direction
@@ -102,7 +102,7 @@ void player_accel(player *pl)
 			pl->dx = FZERO;
 		}
 	}
-	else if (pl->dx < FZERO && !(pl->input & KEY_LEFT))
+	else if (pl->dx < FZERO && !(pl->input & (KEY_RIGHT | KEY_LEFT)))
 	{
 		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);				
 		// Don't decel into the other direction
@@ -211,7 +211,7 @@ void player_calc_anim(player *pl)
 	
 	if (pl->grounded)
 	{
-		if (pl->dx == FZERO) // Standing
+		if (!(pl->input & (KEY_LEFT | KEY_RIGHT))) // Standing
 		{
 			pl->anim_frame = 0x00;
 		}

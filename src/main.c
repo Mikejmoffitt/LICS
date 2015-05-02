@@ -3,34 +3,28 @@
 #include "mpad.h"
 #include "sprites.h"
 #include "player.h"
-
-u16 hint_val = 1;
-u16 col = 0;
-u16 col_off = 0;
-u16 phrase_num = 0;
-
-vu8 vbl_ok = 0;
-
+#include "globalsys.h"
 player pl;
 
-u16 expal[] = {
+u16 pal0[] = {
 	0x000, 0x402, 0x60A, 0x60E,
 	0x666, 0x444, 0x222, 0x000,
 	0x026, 0x0EE, 0x000, 0x000,
 	0x000, 0x008, 0x080, 0x800
 };
 
-u16 lylepal[] = {
+u16 pal3[] = {
 	0x000, 0xEEE, 0x888, 0x444,
 	0x24A, 0x0E8, 0xC44, 0x622,
-	0x026, 0x0EE, 0x000, 0x000,
-	0x000, 0x000, 0x000, 0x000
+	0x026, 0x0EE, 0x000, 0xE88,
+	0x084, 0xCCE, 0x00E, 0xC0E
 };
 
 
 _voidCallback *v_int(void)
 {
 	vbl_ok = 1;
+	VDP_setPaletteColor(0,0x000);
 	return;
 }	
 
@@ -63,7 +57,6 @@ void setup(void)
 	VDP_setScreenHeight224();
 	VDP_setHIntCounter(112);
 	VDP_setHilightShadow(0);
-	VDP_setScanMode(0);
 	SYS_enableInts();
 	sprites_init();
 }
@@ -75,7 +68,6 @@ void player_test(void)
 	pl.x = intToFix32(64);
 	for (;;)
 	{
-		
 		player_eval_grounded(&pl);
 		player_input(&pl);
 		player_cp(&pl);
@@ -103,8 +95,8 @@ int main(void)
 	col_puts40(9,2,"Lyle in Cube Sector!?");
 	col_puts(21,3,"More Blast Processing than you think!");
 	col_puts40(0,21,"________________________________________");
-	VDP_setPalette(0,&expal);
-	VDP_setPalette(3,&lylepal);
+	VDP_setPalette(0,&pal0);
+	VDP_setPalette(3,&pal3);
 	VDP_setHInterrupt(0);
 
 	player_test();

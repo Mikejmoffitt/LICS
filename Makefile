@@ -98,6 +98,9 @@ regen: out.bin
 test: out.bin
 	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
 
+test32: out.bin
+	@exec util/megaloader/mega32 md $< /dev/ttyUSB0 2> /dev/null
+
 boot/sega.o: boot/rom_head.bin
 	$(AS) $(ASFLAGS) boot/sega.s -o $@
 

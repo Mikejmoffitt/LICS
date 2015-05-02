@@ -5,5 +5,7 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
-  <property key="recentFile" value="C:\Users\Moffitt\Development\LICS\res\gfx\lyle.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/lyle.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/fg.bak.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/fg.bin"/>
 </settings>
