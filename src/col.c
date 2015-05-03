@@ -2,7 +2,7 @@
 
 void col_init(void)
 {
-	VDP_doVRamDMA(gfx_font,COL_FONT_VRAM_OFFSET,16 * 256);
+	VDP_doVRamDMA(gfx_font,32*COL_FONT_VRAM_SLOT,16 * 256);
 
 	VDP_setHorizontalScroll(PLAN_B,4);
 }
@@ -26,7 +26,7 @@ void col_puts40(u16 x, u16 y, char *s)
 			VDP_setTileMapXY(
 				VDP_PLAN_B,
 				TILE_ATTR_FULL(0,1,0,0,
-				(*s + (COL_FONT_VRAM_OFFSET/32))),
+				(*s + (COL_FONT_VRAM_SLOT))),
 				x,y);	
 			x++;
 		}
@@ -55,7 +55,7 @@ void col_puts(u16 x, u16 y, char *s)
 			VDP_setTileMapXY(
 				(flip) ? VDP_PLAN_B : VDP_PLAN_A,
 				TILE_ATTR_FULL(0,1,0,0,
-				(*s + COL_FONT_SEL + (COL_FONT_VRAM_OFFSET/32))),
+				(*s + COL_FONT_SEL + (COL_FONT_VRAM_SLOT))),
 				x >> 1,y);	
 			x++;
 			flip = (flip) ? 0 : 1;

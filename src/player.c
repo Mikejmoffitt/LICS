@@ -27,6 +27,7 @@ void player_init(player *pl)
 	pl->input = 0;
 	pl->input_prev = 0;
 
+	player_set_pal();
 }
 
 void player_dma(u16 num, u16 dest)
@@ -45,6 +46,11 @@ void player_dma(u16 num, u16 dest)
 	u16 size = (offset >= 120) ? (9 * 16) : (6 * 16);
 
 	VDP_doVRamDMA(gfx_lyle + (32 *offset),dest,size);
+}
+
+void player_set_pal(void)
+{
+	VDP_setPalette(PLAYER_PALNUM,PLAYER_PAL);
 }
 
 void player_input(player *pl)
@@ -259,5 +265,5 @@ void player_draw(player *pl)
 		size = SPRITE_SIZE(3,3);
 	}
 	sprite_put(fix32ToInt(pl->x) - pl->cam_x, fix32ToInt(pl->y) - pl->cam_y, size, 
-		TILE_ATTR(3,1,0,pl->direction) + PLAYER_VRAM_SLOT);
+		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
 }

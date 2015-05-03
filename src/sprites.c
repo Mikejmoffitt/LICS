@@ -17,8 +17,22 @@ void sprites_dma(register spr_num)
 
 void sprites_dma_simple()
 {
+	// No sprites placed, don't bother
+	if (next_spr == 0)
+	{
+		return;
+	}
+	// Terminate the list at the last sprite
+	sprites_clamp_link(next_spr - 1);
 	VDP_doVRamDMA(sprite_table,sprite_addr,next_spr << 2);
 	next_spr = 0;
+}
+
+void sprites_clamp_link(u8 num)
+{
+	u16 *addr = &sprite_table[num << 2];
+	addr++;
+	*addr = *addr & 0xFF00; // Set next link to 0 to terminate list
 }
 
 void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link)

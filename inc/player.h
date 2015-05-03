@@ -3,6 +3,7 @@
 
 #include <genesis.h>
 #include "gfx.h"
+#include "pal.h"
 #include "mpad.h"
 #include "objtypes.h"
 #include "sprites.h"
@@ -42,7 +43,10 @@
 #define PLAYER_START_HP 5
 #define PLAYER_START_CP 5
 
-#define PLAYER_VRAM_SLOT 256
+#define PLAYER_VRAM_SLOT 512
+
+#define PLAYER_PALNUM 2
+#define PLAYER_PAL pal_lyle
 
 typedef struct player player;
 struct player
@@ -80,6 +84,9 @@ void player_init(player *pl);
 
 // Put Lyle's sprite #n at addr dest
 void player_dma(u16 num, u16 dest);
+
+// DMA Lyle's palette
+void player_set_pal(void);
 
 // Update gamepad state
 void player_input(player *pl);

@@ -21,6 +21,9 @@ void sprites_dma(register spr_num);
 // DMA up to next_sprite without passing it
 void sprites_dma_simple(void);
 
+// Cut off the sprite list at the last set one
+void sprites_clamp_list(u8 num);
+
 // Set properties for sprite in the sprite table
 void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link);
 
