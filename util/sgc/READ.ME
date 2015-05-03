@@ -1,0 +1,64 @@
+Haroldo's SGCC utilities v1.0 quick readme:
+
+MAKEGFS.EXE -> Creates a GFS file for use with the GFS library.
+               All you will need to do to use that is to make a list file
+               containing a listing of the files that will be included on
+               the GFS, and then run this program from the command line,
+               informing the name of the list file and the name of the
+               resulting GFS file.
+
+APPLYGFS.EXE -> Appends a GFS file to a compiled Sega Genesis ROM. To use it,
+                first compile your program with SGCC, and then run this
+                program, passing as parameters the name of the ROM, the
+                offset from where the GFS will be added (must be the same
+                offset specified in GFS.H, but in decimal), and the name of
+                the GFS file.
+
+PCX2GEN.EXE -> Converts a 256 color PCX file to a Tileset/Map pair. Note that
+               only 16 colors are used. To use it simply run the program,
+               passing as parameters the PCX file, and the output filename
+               (.TIL and .MAP will be automatically added for the Tileset and
+               the Map, respectively).
+
+PCXG2GEN.EXE -> Same as above, but it converts a 256 color grayscale PCX, and it
+                performs some heavy tile optimization, in order to reduce the
+                number of characters used. You can specify the maximum number of
+                tiles that you want, so that the program will gradually reduce
+                the quality of the image, until it uses exactly the number of
+                characters specified, or less. To use it run the program,
+                specifying the number of tiles, the PCX file and the output
+                filename.
+
+PCXG2GENS.EXE -> Converts a PCX file into a set of 4x4 tiles (32x32 pixels)
+                 sprites. Run it from the command line, passing as parameters
+                 the name of the PCX file, the name of the output file, and
+                 the number of sprites to be converted. see MAGE.PCX for a
+                 template.
+
+MAGE.PCX -> Template for the program above.
+
+GEN_2_4.EXE -> Similar to PCX2GENS, but works with 2x4 tiles (16x32 pixels)
+               sprites. Use EMPTY16.PCX as a template.
+
+FLI2GSPR -> Converts a 256 color 320x200 FLI animation into a set of Sega
+            Genesis sprites. Run it without parameters to see all the options
+            available.
+
+RDC.EXE -> Compresses a file for use with the RDC library. To compress a
+           file, use "RDC c <destination> <origin>". To uncompress, use
+           "RDC u <destination> <origin>".
+
+GENED.EXE -> A Sega Genesis Tileset/Map/Palette editor. Most of it is
+             self-explanatory. Press 'a' inside the program for a listing of
+             the keyboard commands.
+
+EMPTY.PCX -> 2x2 tiles (16x16 pixels) template. Intended for use with a
+             future utility, that i'm going to create later.
+
+TP7\ -> Source code for the utilities that were made in Turbo Pascal.
+
+FPC\ -> Source code for the utilities that were done in 32-bit Free Pascal.
+
+3RD\ -> Some 3rd party utilities.
+
+SGCC\ -> Libraries for SGCC. See SGCC\LIBRARY.TXT for details.

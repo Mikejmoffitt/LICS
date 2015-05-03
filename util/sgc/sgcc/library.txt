@@ -1,0 +1,74 @@
+Haroldo's SGCC libraries v1.0 quick readme:
+
+GENESIS.C -> Slightly improved version of Paul W. Lee's GENESIS.C
+
+GENESISB.C -> Suplementary Sega Genesis routines, by me.
+
+GENESIS.H -> Header file for both GENESIS.C and GENESISB.C
+
+GFS.C -> Sega Genesis File System routines. The Genesis File System (GFS) is
+         a set of routines intended to simplify the inclusion of binary data
+         into a ROM file. All one needs to do is to use MAKEGFS.EXE (included
+         with my SGCC utilities) to take all the binary data that one wants
+         to be included on the ROM, and then all of them will be reunited in
+         a single file. Then, compile your source without the data, and
+         finally use APPLYGFS.EXE to merge the code with the GFS file. See
+         TEST.C for an example.
+
+GFS.H -> Header file for the above.
+
+INTERR.C -> Interrupt routines. You will notice that both units are empty.
+            In order to actually use them, you have to add your own code.
+            init_interr is called by the runtime library during the
+            initialization, and poll_interr is called at each VBL (about
+            60Hz).
+
+INTERR.H -> Header file for the above.
+
+MAKEFILE -> Makefile for TEST.C. First of all, you'll have to run MKDAT.BAT,
+            under the DATA\ subdirectory, in order to create GAMEDATA.GFS,
+            and then run the makefile using MAKE. Notice that the MAKE that
+            comes with SGCC has a bug with subdirectories, and will not be
+            able to run this makefile, so you'll have to use another MAKE.
+            I have tested FPC's MAKE.EXE and Borland's MAKE.EXE, and both of
+            them worked allright.
+
+OBJET.INC -> List of all the objects that will have to be linked. Used by the
+             makefile.
+
+PLEE.S -> Long multiplication/long division support for SGCC, by Johann Ruegg
+
+PSGSOUND.C -> PSG sound routines by Kevin Banks.
+
+PSGSOUND.H -> Header for the above
+
+RDC.C -> RDC decompression routines. To be used with data compressed by
+         RDC.EXE, included with my utilities.
+
+RDC.H -> Header for the above.
+
+FONT.C -> 8x8 1bpp font loading routines.
+
+FONT.H -> Header for the above.
+
+RPGWALK.C -> Routines for making a walking character, adequated for an RPG.
+
+RPGWALK.H -> Header for the above
+
+SEGA.S -> The runtime library.
+
+CONIO.C -> Vastly improved version of Kaneda's port of CONIO.C. Still
+           incomplete, though.
+
+CONIO.H -> Header for the above.
+
+STRING.C -> Kaneda's port of standard C string library.
+
+STRING.H -> Header for the above.
+
+TEST.C -> A little example to show how to use the libraries. Not very clean
+          code, though.
+
+UTILS.C -> Some useful routines, most important of them being random().
+
+UTILS.H -> Header for the above.
