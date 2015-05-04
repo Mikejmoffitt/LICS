@@ -7,7 +7,7 @@
 #include "plane.h"
 #include "display.h"
 
-char *get_file(char *path, char *title, char *patterns)
+const char *get_file(char *path, char *title, char *patterns)
 {
 	ALLEGRO_FILECHOOSER *dialogue = al_create_native_file_dialog(
 		path, title, patterns, ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
@@ -18,7 +18,7 @@ char *get_file(char *path, char *title, char *patterns)
 		return NULL;
 	}
 
-	const char *ret_str = (char *)malloc(sizeof(char) * strnlen(al_get_native_file_dialog_path(dialogue,0),256) + 1);
+	char *ret_str = (char *)malloc(sizeof(char) * strlen(al_get_native_file_dialog_path(dialogue,0)) + 1);
 	strncpy(ret_str,al_get_native_file_dialog_path(dialogue,0),255);
 	al_destroy_native_file_dialog(dialogue);
 	return ret_str;
@@ -32,8 +32,8 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	char *tf_name;
-	char *pf_name;
+	const char *tf_name;
+	const char *pf_name;
 
 	if (argc < 3)
 	{

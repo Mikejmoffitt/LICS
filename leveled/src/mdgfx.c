@@ -127,7 +127,7 @@ ALLEGRO_BITMAP *mdgfx_load_chr(ALLEGRO_FILE *tf, ALLEGRO_FILE *pf,u32 w,u32 h)
 		return NULL;
 	}
 	ALLEGRO_COLOR pal[16];
-	mdgfx_pal_load_loop(&pal, pf);
+	mdgfx_pal_load_loop(&pal[0], pf);
 	pal[0] = al_map_rgba(0,0,0,0);
 	
 	// Set a default palette of a greyscale gradient
@@ -167,7 +167,7 @@ ALLEGRO_BITMAP *mdgfx_load_chr(ALLEGRO_FILE *tf, ALLEGRO_FILE *pf,u32 w,u32 h)
 					return ret;
 				}
 			}
-			mdgfx_plot_tile(t, x, y, workbuffer, &pal);
+			mdgfx_plot_tile(t, x, y, workbuffer, &pal[0]);
 			free(t);
 		}
 	}

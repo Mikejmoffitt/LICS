@@ -45,9 +45,9 @@ struct plane
 
 void plane_init(plane *p);
 
-void plane_load_tileset(plane *p, char *tile, char *pal);
-void plane_load_bg(plane *p, char *tile, char *pal);
-void plane_load_data(plane *p, char *data);
+void plane_load_tileset(plane *p, const char *tile, const char *pal);
+void plane_load_bg(plane *p, const char *tile, const char *pal);
+void plane_load_data(plane *p, const char *data);
 
 void plane_create_data(plane *p, u32 w, u32 h);
 

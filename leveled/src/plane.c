@@ -17,7 +17,7 @@ void plane_init(plane *p)
 	printf ("Making checker BG\n");
 	p->level_bg = al_create_bitmap(PLANE_DRAW_W*TILESIZE,PLANE_DRAW_H*TILESIZE);
 	al_set_target_bitmap(p->level_bg);
-	al_clear_to_color(al_map_rgb(0,0,0));
+	al_clear_to_color(al_map_rgb(40,40,50));
 	for (u32 y = 0; y < PLANE_DRAW_H * 2; y++)
 	{
 		for (u32 x = 0; x < PLANE_DRAW_W * 2; x++)
@@ -27,13 +27,13 @@ void plane_init(plane *p)
 				al_draw_filled_rectangle(
 					x*TILESIZE/2,y*TILESIZE/2,
 					(x+1)*TILESIZE/2,(y+1)*TILESIZE/2,
-					al_map_rgb(8,8,8));
+					al_map_rgb(50,50,40));
 			}
 		}
 	}
 }
 
-void plane_load_tileset(plane *p, char *tile, char *pal)
+void plane_load_tileset(plane *p, const char *tile, const char *pal)
 {
 	printf("Opening %s for tile data...\n",tile);
 	ALLEGRO_FILE *tf = al_fopen(tile,"r");
@@ -53,7 +53,7 @@ void plane_load_tileset(plane *p, char *tile, char *pal)
 	printf("Loaded tileset graphics data.\n");
 }
 
-void plane_load_bg(plane *p, char *tile, char *pal)
+void plane_load_bg(plane *p, const char *tile, const char *pal)
 {
 	ALLEGRO_FILE *tf = al_fopen(tile,"r");
 	if (!tf)
@@ -71,7 +71,7 @@ void plane_load_bg(plane *p, char *tile, char *pal)
 	printf("Loaded backdrop graphics data.\n");
 }
 
-void plane_load_data(plane *p, char *d)
+void plane_load_data(plane *p, const char *d)
 {
 	ALLEGRO_FILE *df = al_fopen(d,"r");
 	if (!df)
@@ -191,6 +191,11 @@ void plane_draw_vram(plane *p, u32 x, u32 y)
 
 	// Text label
 	plane_print_label(x, y, col, "VRAM Data");
+
+	// Show selection
+	char selmsg[16];
+	sprintf(&selmsg[0],"Tile: 0x%04X",selection);
+	al_draw_text(font,al_map_rgb(255,255,255),x, y + CHR_H - 3 + TILESIZE,0,selmsg);
 }
 
 void plane_handle_mouse(plane *p)
@@ -205,18 +210,20 @@ void plane_handle_mouse(plane *p)
 		active_window = WINDOW_MAP;
 		cursor_x = scroll_x + (mouse_x - PLANE_DRAW_X) / TILESIZE;
 		cursor_y = scroll_y + (mouse_y - PLANE_DRAW_Y) / TILESIZE;
+		// Lock to 16x16 coords
 		if (sel_size == SEL_FULL)
 		{
-
 			cursor_x = 2 * (cursor_x / 2);
 			cursor_y = 2 * (cursor_y / 2);
 		}
-		u32 cdx = PLANE_DRAW_X + (cursor_x - scroll_x) * TILESIZE;
+
+		// Cursor draw coordinates based on cursor X
+		u32 cdx = PLANE_DRAW_X + (cursor_x- scroll_x) * TILESIZE;
 		u32 cdy = PLANE_DRAW_Y + (cursor_y - scroll_y) * TILESIZE;
 
 		u32 cdx2 = cdx + ((sel_size == SEL_FULL) ? (2*TILESIZE) : TILESIZE);
-	
 		u32 cdy2 = cdy + ((sel_size == SEL_FULL) ? (2*TILESIZE) : TILESIZE);
+
 		al_draw_rectangle(cdx,cdy,cdx2,cdy2,al_map_rgba(255,255,0,128),1);
 		if (mousestate.buttons & 1)
 		{
@@ -240,6 +247,12 @@ void plane_handle_mouse(plane *p)
 		{
 			u32 sel_x = (mouse_x - VRAM_DRAW_X) / TILESIZE;
 			u32 sel_y = (mouse_y - VRAM_DRAW_Y) / TILESIZE;
+			// Lock to 16x16 coords
+			if (sel_size == SEL_FULL)
+			{
+				sel_x = 2 * (sel_x / 2);
+				sel_y = 2 * (sel_y / 2);
+			}
 			selection = sel_x + (CHR_T_W * sel_y);
 		}
 	}
