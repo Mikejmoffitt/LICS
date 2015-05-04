@@ -52,7 +52,7 @@ void setup(void)
 
 void player_test(void)
 {
-	tileset_load_fg(TILESET_FG_OUTSIDE2);
+	tileset_load_fg(TILESET_FG_OUTSIDE1);
 	player_init(&pl);	
 	pl.y = 64;
 	pl.x = intToFix32(64);

@@ -7,6 +7,9 @@ u32 scroll_y;
 u32 scroll_max_x;
 u32 scroll_max_y;
 
+s32 mouse_x;
+s32 mouse_y;
+
 u32 cursor_x;
 u32 cursor_y;
 
@@ -15,11 +18,42 @@ u32 active_window;
 u32 selection;
 u32 sel_size;
 
+u32 quit;
+
 ALLEGRO_DISPLAY *display;
 ALLEGRO_BITMAP *main_buffer;
 ALLEGRO_BITMAP *scale_buffer;
 
 ALLEGRO_KEYBOARD_STATE keystate;
+ALLEGRO_MOUSE_STATE mousestate;
+
+ALLEGRO_FONT *font;
+ALLEGRO_EVENT_QUEUE *queue;
+
+void display_register_queue(void)
+{
+	queue = al_create_event_queue();
+	if (!queue)
+	{
+		printf("Error: Couldn't create event queue. The program can run, but\n");
+		printf("window events will not trigger (exit, resize, etc).\n");
+		return;
+	}
+	al_register_event_source(queue,al_get_display_event_source(display));
+}
+
+void display_handle_queue(void)
+{
+	ALLEGRO_EVENT ev;
+	while (!al_is_event_queue_empty(queue))
+	{
+		al_get_next_event(queue, &ev);
+		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+		{
+			quit = 1;
+		}
+	}
+}
 
 void display_update(void)
 {
@@ -37,7 +71,23 @@ void display_update(void)
 	al_set_target_bitmap(main_buffer);
 	al_clear_to_color(al_map_rgb(0,0,0));
 	al_get_keyboard_state(&keystate);
+	al_get_mouse_state(&mousestate);
 
+	mouse_x = mousestate.x / (display_w / (1.0 * BUFFER_W));
+	mouse_y = mousestate.y / (display_h / (1.0 * BUFFER_H));
+
+
+}
+
+void display_font_init(void)
+{
+	al_init_font_addon();
+	al_init_ttf_addon();
+	font = al_load_ttf_font("font.ttf",-10,ALLEGRO_TTF_MONOCHROME);
+	if (!font)
+	{
+		printf("Error: Couldn't load font.ttf.\n");
+	}
 }
 
 u32 display_init(void)
@@ -46,11 +96,14 @@ u32 display_init(void)
 	display_h = BUFFER_H * PRESCALE;
 	scroll_x = 0;
 	scroll_y = 0;
-	scroll_max_x = 32;
-	scroll_max_y = 32;
+	scroll_max_x = 40;
+	scroll_max_y = 28;
 	cursor_x = 0;
 	cursor_y = 0;
+	mouse_x = 0;
+	mouse_y = 0;
 	selection = 0;
+	quit = 0;
 	sel_size = SEL_FULL;
 	display = al_create_display(display_w,display_h);
 	if (!display)
@@ -82,8 +135,14 @@ u32 display_init(void)
 	al_set_target_bitmap(scale_buffer);
 	al_clear_to_color(al_map_rgb(0,0,0));
 	al_install_keyboard();
+	al_install_mouse();
 	al_init_primitives_addon();
+
+	display_font_init();
+	display_register_queue();
 	printf("Display environment initialized.\n");
+
+
 	return 1;
 }
 
@@ -138,3 +197,7 @@ void display_handle_scroll(void)
 	}
 }
 
+u32 display_mouse_region(u32 x, u32 y, u32 w, u32 h)
+{
+	return ((mouse_x > x) && (mouse_x < (x+w)) && (mouse_y > y) && (mouse_y < (y+h)));
+}
