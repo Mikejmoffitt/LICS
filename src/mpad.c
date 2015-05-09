@@ -2,16 +2,16 @@
 
 // Read from a Sega Mega Drive controller port.
 // Returns a bitfield - SCBARLDU (EX: bit0, LSB, is 0 when "up" is held);
-unsigned char pad_read(unsigned char pl)
+u8 pad_read(u16 pl)
 {
 	// Controller data register, offset by player number
-	volatile unsigned char *ctrlr = (unsigned char *)VDP_GAMEPAD + (2 * pl);
+	vu8 *ctrlr = (unsigned char *)VDP_GAMEPAD + (pl << 1);
 	
 	// Set bit 6 to read B,C,etc
 	*ctrlr |= (0x40); 
 	
 	// Grab U,D,L,R and B,C
-	volatile unsigned char ret = (*ctrlr & 0xF) | ((*ctrlr & 0x30) << 1); 
+	vu8 ret = (*ctrlr & 0xF) | ((*ctrlr & 0x30) << 1); 
 	
 	// Clear bit 6 to get A and Start
 	*ctrlr = *ctrlr & ~(0x40); 

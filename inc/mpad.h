@@ -1,6 +1,7 @@
 #ifndef MPAD_H
 #define MPAD_H
 // Megadrive Pad reading routine
+#include <genesis.h>
 
 #define PLAYER_1 0
 #define PLAYER_2 1
@@ -18,7 +19,7 @@
 #define VDP_GAMEPAD 0xA10003
 
 // Returns a bitfield - SCBARLDU (EX: bit0, LSB, is 0 when "up" is held);
-unsigned char pad_read(unsigned char pl);
+u8 pad_read(u16 pl);
 
 #endif
 
