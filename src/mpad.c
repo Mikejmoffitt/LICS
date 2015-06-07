@@ -1,7 +1,6 @@
 #include "mpad.h"
 
 // Read from a Sega Mega Drive controller port.
-// Returns a bitfield - SCBARLDU (EX: bit0, LSB, is 0 when "up" is held);
 u8 pad_read(u16 pl)
 {
 	// Controller data register, offset by player number

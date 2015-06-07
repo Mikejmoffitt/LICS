@@ -33,16 +33,21 @@ void player_init(player *pl)
 void player_dma(u16 num, u16 dest)
 {
 	u16 offset = 0;
+
+	// Destination is specified in bytes
 	dest = dest * 32;
+	// Most sprites are just six tiles - 3x2 or 2x3
 	if (num < LYLE_3x3_CUTOFF)
 	{
 		offset = num * 6;
 	}
+	// All 3x3 sprites are stored later in Lyle's graphics set
 	else
 	{
 		num -= 0x14;
 		offset = 120 + (9 * num);
 	}
+	// Num tiles to transfer * word size = DMA size in words
 	u16 size = (offset >= 120) ? (9 * 16) : (6 * 16);
 
 	VDP_doVRamDMA(gfx_lyle + (32 *offset),dest,size);
