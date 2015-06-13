@@ -33,6 +33,30 @@ void plane_init(plane *p)
 	}
 }
 
+void plane_destroy(plane *p)
+{
+	if (p == NULL)
+	{
+		return;
+	}
+	if (p->tileset_chr)
+	{
+		al_destroy_bitmap(p->tileset_chr);
+	}
+	if (p->bg_chr)
+	{
+		al_destroy_bitmap(p->bg_chr);
+	}
+	if (p->level_bg)
+	{
+		al_destroy_bitmap(p->level_bg);
+	}
+	if (p->plane_data)
+	{
+		free(p->plane_data);
+	}
+}
+
 // ------- Graphical resource IO -----------
 void plane_load_tileset(plane *p, const char *tile, const char *pal)
 {
@@ -103,6 +127,8 @@ void plane_load_data(plane *p, const char *d)
 }
 
 // --------- Map file IO ----------
+
+// Loads a map from a file. Includes init of hte plane structure
 int plane_load_map(plane *p, const char *m)
 {
 	ALLEGRO_FILE *mf = al_fopen(m, "r");
@@ -111,11 +137,27 @@ int plane_load_map(plane *p, const char *m)
 		printf("Couldn't open %s for reading.\n",m);
 		return 0;
 	}
+
+	if (p)
+	{
+		plane_destroy(p);
+		p = NULL;
+	}
+	
+	// First get dimensions of level
+	
+
+	while(!al_feof(mf))
+	{
+		
+	}
+
 	return 1;	
 }
 
 int plane_save_map(plane *p, const char *m)
 {
+	
 	return 1;
 }
 
@@ -296,5 +338,9 @@ void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg)
 
 void plane_handle_io(plane *p, const char *m)
 {
-	// User hits save key
+	if (al_key_down(&keystate,ALLEGRO_KEY_F5))
+	{
+		plane_save_map(p, m);
+	}
+	// User hits save ikey
 }

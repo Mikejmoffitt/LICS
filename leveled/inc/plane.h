@@ -37,13 +37,14 @@ struct plane
 	ALLEGRO_BITMAP *level_bg;
 	// Level data and information
 	u16 *plane_data; // Will be (sizeof(u16) * (32 * w) * (32 * h)
-	u32 plane_w; // Width in 32-column screens
-	u32 plane_h; // Height in 32-column screens
+	u32 plane_w; // Width in 40-column screens
+	u32 plane_h; // Height in 32-row screens
 	u32 tileset_num;
 	u32 bg_num;
 };
 
 void plane_init(plane *p);
+void plane_destroy(plane *p);
 
 void plane_load_tileset(plane *p, const char *tile, const char *pal);
 void plane_load_bg(plane *p, const char *tile, const char *pal);

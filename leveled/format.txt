@@ -1,0 +1,47 @@
+LYLE IN CUBE SECTOR MD LEVEL FORMAT DOCUMENTATION
+-------------------------------------------------
+
+Header:
+
+typedef struct level_header level_header;
+struct level_header
+{
+	// Dimensions in terms of screens (40x32 tiles)
+	u16 w;
+	u16 h;
+
+	// Position on the map for the top-left of the level
+	u8 map_x;
+	u8 map_y;
+
+	// Selections for level appearance
+	u8 tileset;
+	u8 pal;
+	u8 bg;
+
+	// Bitfield for various options (boss room, etc)
+	u16 flags;
+};
+
+Following the header is the map data, stored as 16-bit words ready to be copied
+to the plane mapping in VRAM.
+
+Immediately afterwards is the object list. Each object is 8 bytes, and the list
+is at most 128 entries long (1 KiB). The game will parse it to populate the 
+game's runtime object list in work RAM, but it is not parsed at any othe time.
+
+Objects like the orbs and bosses are treated specially. If a BOSS has already
+been marked as defeated, it will not load (which boss is dictated by the flags
+bitfield.) The same goes for the orbs.
+
+typedef struct level_obj level_obj;
+struct level_obj
+{
+	// Object type and flags/param
+	u16 type;
+	u16 flags;
+
+	// Coordinates in real position (not blocks)
+	u16 x;
+	u16 y;
+};
