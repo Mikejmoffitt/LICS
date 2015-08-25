@@ -36,14 +36,14 @@ void plane_init(plane *p)
 void plane_load_tileset(plane *p, const char *tile, const char *pal)
 {
 	printf("Opening %s for tile data...\n",tile);
-	ALLEGRO_FILE *tf = al_fopen(tile,"r");
+	ALLEGRO_FILE *tf = al_fopen(tile,"rb");
 	if (!tf)
 	{
 		printf("Error: couldn't open %s for tile data.\n",tile);
 		return;
 	}
 	printf("Opening %s for palette data...\n",pal);
-	ALLEGRO_FILE *pf = al_fopen(pal,"r");
+	ALLEGRO_FILE *pf = al_fopen(pal,"rb");
 	if (!pf)
 	{
 		printf("Error: couldn't open %s for palette data.\n",pal);
@@ -55,13 +55,13 @@ void plane_load_tileset(plane *p, const char *tile, const char *pal)
 
 void plane_load_bg(plane *p, const char *tile, const char *pal)
 {
-	ALLEGRO_FILE *tf = al_fopen(tile,"r");
+	ALLEGRO_FILE *tf = al_fopen(tile,"rb");
 	if (!tf)
 	{
 		printf("Error: couldn't open %s for tile data.\n",tile);
 		return;
 	}
-	ALLEGRO_FILE *pf = al_fopen(pal,"r");
+	ALLEGRO_FILE *pf = al_fopen(pal,"rb");
 	if (!pf)
 	{
 		printf("Error: couldn't open %s for palette data.\n",pal);
@@ -73,7 +73,7 @@ void plane_load_bg(plane *p, const char *tile, const char *pal)
 
 void plane_load_data(plane *p, const char *d)
 {
-	ALLEGRO_FILE *df = al_fopen(d,"r");
+	ALLEGRO_FILE *df = al_fopen(d,"rb");
 	if (!df)
 	{
 		printf("Error: couldn't open %s for plane data.\n",d);

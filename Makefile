@@ -95,6 +95,9 @@ gens: out.bin
 regen: out.bin
 	@exec wine ./util/regen/Regen.exe ../../out.bin
 
+fusion: out.bin
+	@exec util/Fusion $< 2> /dev/null
+
 test: out.bin
 	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
 

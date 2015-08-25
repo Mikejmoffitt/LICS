@@ -50,7 +50,7 @@ void player_dma(u16 num, u16 dest)
 
 void player_set_pal(void)
 {
-	VDP_setPalette(PLAYER_PALNUM,PLAYER_PAL);
+	VDP_setPalette(PLAYER_PALNUM,pal_lyle);
 }
 
 void player_input(player *pl)

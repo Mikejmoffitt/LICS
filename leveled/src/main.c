@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 		pf_name = argv[2];
 	}
 
-	if (tf_name == NULL || pf_name == NULL)
+	if (!tf_name || !pf_name)
 	{
 		return 0;
 	}
