@@ -33,6 +33,31 @@ void plane_init(plane *p)
 	}
 }
 
+void plane_destroy(plane *p)
+{
+	if (p == NULL)
+	{
+		return;
+	}
+	if (p->tileset_chr)
+	{
+		al_destroy_bitmap(p->tileset_chr);
+	}
+	if (p->bg_chr)
+	{
+		al_destroy_bitmap(p->bg_chr);
+	}
+	if (p->level_bg)
+	{
+		al_destroy_bitmap(p->level_bg);
+	}
+	if (p->plane_data)
+	{
+		free(p->plane_data);
+	}
+}
+
+// ------- Graphical resource IO -----------
 void plane_load_tileset(plane *p, const char *tile, const char *pal)
 {
 	printf("Opening %s for tile data...\n",tile);
@@ -101,6 +126,42 @@ void plane_load_data(plane *p, const char *d)
 	al_fclose(df);
 }
 
+// --------- Map file IO ----------
+
+// Loads a map from a file. Includes init of hte plane structure
+int plane_load_map(plane *p, const char *m)
+{
+	ALLEGRO_FILE *mf = al_fopen(m, "r");
+	if (!mf)
+	{
+		printf("Couldn't open %s for reading.\n",m);
+		return 0;
+	}
+
+	if (p)
+	{
+		plane_destroy(p);
+		p = NULL;
+	}
+	
+	// First get dimensions of level
+	
+
+	while(!al_feof(mf))
+	{
+		
+	}
+
+	return 1;	
+}
+
+int plane_save_map(plane *p, const char *m)
+{
+	
+	return 1;
+}
+
+
 void plane_create_data(plane *p, u32 w, u32 h)
 {
 	p->plane_w = w;
@@ -109,13 +170,13 @@ void plane_create_data(plane *p, u32 w, u32 h)
 	{
 		free(p->plane_data);
 	}
-	p->plane_data = (u16 *)malloc(sizeof(u16) * (40*w) * (28*h));
+	p->plane_data = (u16 *)malloc(sizeof(u16) * (40*w) * (32*h));
 	if (!p->plane_data)
 	{
 		printf("Couldn't malloc for plane data.\n");
 		return;
 	}
-	for (int i = 0; i < w * h * 40 * 28; i++)
+	for (int i = 0; i < w * h * 40 * 32; i++)
 	{
 		p->plane_data[i] = i;
 	}
@@ -139,7 +200,7 @@ void plane_draw_map(plane *p, u32 x, u32 y)
 	// Render the map
 	for (u32 i = 0; i < PLANE_DRAW_H; i++)
 	{
-		if (i >= p->plane_h * 28)
+		if (i >= p->plane_h * 32)
 		{
 			return;
 		}	
@@ -261,10 +322,9 @@ void plane_handle_mouse(plane *p)
 
 void plane_scroll_limits(plane *p, u32 *x, u32 *y)
 {
-	printf("Setting scroll limits. Old values: %d, %d\n",*x,*y);
 	*x = ((40*p->plane_w) - (PLANE_DRAW_W));
-	*y = ((28*p->plane_h) - (PLANE_DRAW_H));
-	printf("New values: %d, %d\n",*x,*y);
+	*y = ((32*p->plane_h) - (PLANE_DRAW_H));
+	printf("Scroll limits: %d, %d\n",*x,*y);
 }
 
 void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg)
@@ -274,4 +334,13 @@ void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg)
 		x + (8 * strlen(msg)) + 1, y - 1, 
 		al_map_rgb(0,0,0));
 	al_draw_text(font,col,x, y - 11,0,msg);
+}
+
+void plane_handle_io(plane *p, const char *m)
+{
+	if (al_key_down(&keystate,ALLEGRO_KEY_F5))
+	{
+		plane_save_map(p, m);
+	}
+	// User hits save ikey
 }

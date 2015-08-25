@@ -34,17 +34,35 @@ int main(int argc, char **argv)
 
 	const char *tf_name;
 	const char *pf_name;
+	const char *map_name;
 
 	if (argc < 3)
 	{
-		printf("Usage: leveled [tiledata] [paldata]\nGoing interactive.\n");
+		printf("Usage: leveled [tiledata] [paldata] [mapfile]\nGoing interactive.\n");
+		al_show_native_message_box(display, "Interactive Mode",
+		"LICS Editor is entering interactive mode.",
+		"You must supply a tileset, palette, and (optional) map file.\nWarning: This mode is not fully stable yet. It is recommended that you select these parameters via the command line instead.\n",NULL,ALLEGRO_MESSAGEBOX_WARN);
 		tf_name = get_file(".","Open tile data","*.bin;*.*");
+		if (!tf_name)
+		{
+			display_shutdown();
+			al_uninstall_system();
+			return 0;
+		}
 		pf_name = get_file(".","Open palette data","*.pal;*.bin;*.*");
+		if (!pf_name)
+		{
+			display_shutdown();
+			al_uninstall_system();
+			return 0;
+		}
+		map_name = get_file(".","Open map data","*.map;*.*");
 	}
 	else
 	{
 		tf_name = argv[1];
 		pf_name = argv[2];
+		map_name = argv[3];
 	}
 
 	if (!tf_name || !pf_name)
@@ -56,9 +74,13 @@ int main(int argc, char **argv)
 	plane_init(&pl);
 	printf("Loading tileset...\n");
 	plane_load_tileset(&pl,tf_name,pf_name);
+	if (map_name != NULL)
+	{
+		plane_load_map(&pl,map_name);
+	}
 	//free(pf_name);
 	//free(tf_name);
-	plane_create_data(&pl,2,2);
+	plane_create_data(&pl,1,1);
 
 	plane_scroll_limits(&pl, &scroll_max_x, &scroll_max_y);
 
@@ -69,6 +91,7 @@ int main(int argc, char **argv)
 		plane_draw_vram(&pl, VRAM_DRAW_X, VRAM_DRAW_Y);
 		plane_draw_map(&pl, PLANE_DRAW_X, PLANE_DRAW_Y);
 		plane_handle_mouse(&pl);
+		plane_handle_io(&pl,map_name);
 		display_update();
 		display_handle_queue();
 	}

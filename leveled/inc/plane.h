@@ -12,7 +12,7 @@
 #define PLANE_DRAW_X 160
 #define PLANE_DRAW_Y 16
 #define PLANE_DRAW_W 40
-#define PLANE_DRAW_H 28
+#define PLANE_DRAW_H 32
 
 #define VRAM_DRAW_X 16
 #define VRAM_DRAW_Y 16
@@ -37,17 +37,22 @@ struct plane
 	ALLEGRO_BITMAP *level_bg;
 	// Level data and information
 	u16 *plane_data; // Will be (sizeof(u16) * (32 * w) * (32 * h)
-	u32 plane_w; // Width in 32-column screens
-	u32 plane_h; // Height in 32-column screens
+	u32 plane_w; // Width in 40-column screens
+	u32 plane_h; // Height in 32-row screens
 	u32 tileset_num;
 	u32 bg_num;
 };
 
 void plane_init(plane *p);
+void plane_destroy(plane *p);
 
 void plane_load_tileset(plane *p, const char *tile, const char *pal);
 void plane_load_bg(plane *p, const char *tile, const char *pal);
 void plane_load_data(plane *p, const char *data);
+
+// Returns zero if there is a problem loading or saving the level file
+int plane_load_map(plane *p, const char *m);
+int plane_save_map(plane *p, const char *m);
 
 void plane_create_data(plane *p, u32 w, u32 h);
 
@@ -65,5 +70,8 @@ void plane_handle_mouse(plane *p);
 
 // Print a text label above a window, complete with opaque black BG
 void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg);
+
+// Handle inputs to trigger saving
+void plane_handle_io(plane *p, const char *m);
 
 #endif

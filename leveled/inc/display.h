@@ -10,7 +10,7 @@
 
 #define BUFFER_W 512
 #define BUFFER_H 384
-#define PRESCALE 2
+#define PRESCALE 1
 
 #define SEL_SINGLE 0
 #define SEL_FULL 1
