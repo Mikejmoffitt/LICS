@@ -23,24 +23,36 @@ struct map_obj
 
 typedef struct map_file map_file;
 struct map_file
-{
+{	
+	// Room name (mostly for the editor)
 	char name[MAP_NAME_SIZE];
-	u16 room_num; // Unique room identifier
-	u16 w; // Width of map in tiles
-	u16 h; // Height of map in tiles
-	u16 size; // Map size in 16-bit words, pre-calculated
+	// Unique room identifier
+	u16 id; 
+	// Dimensions for the room in screens
+	u16 w; 
+	u16 h;
+
+	// Position in top-left of game-wide map
 	u8 map_x;
 	u8 map_y;
 
+	// Graphics tileset and palette to display with (enum)
+	u8 tileset; 
+	u8 tile_palette;
+
+	// Palette for enemies, objects
+	u8 sprite_palette;
+
+	// Which background to choose from (enum); palette implied
+	u8 background;
+
+	// Large array of map objects for the object list (null terminated)
 	map_obj objects[MAP_NUM_OBJS];
 
-	u8 tileset; 
-	u8 palette;
-	u8 background;
-	u8 other;
-	u16 map_data; // This will be abused based on the map dimensions. A real file will go longer than this.
-
-
+	// Starting point of map data. In truth, this will be greater than one
+	// in size; this struct is just being used to make the raw map data 
+	// easier to work with.
+	u16 map_data[1]; 
 };
 
 #endif
