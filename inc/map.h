@@ -42,7 +42,6 @@ struct map_file
 
 	// Graphics tileset and palette to display with (enum)
 	u8 tileset; 
-	u8 tile_palette;
 
 	// Palette for enemies, objects
 	u8 sprite_palette;

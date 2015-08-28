@@ -139,6 +139,10 @@ u32 display_init(void)
 	al_init_primitives_addon();
 
 	display_font_init();
+	if (!font)
+	{
+		return 0;
+	}
 	display_register_queue();
 	printf("Display environment initialized.\n");
 

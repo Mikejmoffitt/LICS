@@ -1,22 +1,23 @@
 #include "plane.h"
 
-void plane_init(plane *p)
+static ALLEGRO_BITMAP *checker_bg;
+static ALLEGRO_BITMAP *fg_chr;
+static ALLEGRO_BITMAP *bg_chr;
+
+void plane_init(void)
 {
 	printf("Plane init!\n");
-	p->plane_data = NULL;
-	p->tileset_chr = NULL;
-	p->bg_chr = NULL;
-	p->tileset_num = 0;
-	p->bg_num = 0;
-	p->plane_w = 1;
-	p->plane_h = 1;
-	p->level_bg = NULL;
+	fg_chr = NULL;
+	bg_chr = NULL;
 
 	// Generate checker backdrop
 
 	printf ("Making checker BG\n");
-	p->level_bg = al_create_bitmap(PLANE_DRAW_W*TILESIZE,PLANE_DRAW_H*TILESIZE);
-	al_set_target_bitmap(p->level_bg);
+	if (!checker_bg)
+	{
+		checker_bg = al_create_bitmap(PLANE_DRAW_W*TILESIZE,PLANE_DRAW_H*TILESIZE);
+	}
+	al_set_target_bitmap(checker_bg);
 	al_clear_to_color(al_map_rgb(40,40,50));
 	for (u32 y = 0; y < PLANE_DRAW_H * 2; y++)
 	{
@@ -33,33 +34,45 @@ void plane_init(plane *p)
 	}
 }
 
-void plane_destroy(plane *p)
+void plane_destroy(void)
 {
-	if (p == NULL)
+	if (fg_chr)
 	{
-		return;
+		al_destroy_bitmap(fg_chr);
 	}
-	if (p->tileset_chr)
+	if (bg_chr)
 	{
-		al_destroy_bitmap(p->tileset_chr);
+		al_destroy_bitmap(bg_chr);
 	}
-	if (p->bg_chr)
+	if (checker_bg)
 	{
-		al_destroy_bitmap(p->bg_chr);
+		al_destroy_bitmap(checker_bg);
 	}
-	if (p->level_bg)
-	{
-		al_destroy_bitmap(p->level_bg);
-	}
-	if (p->plane_data)
-	{
-		free(p->plane_data);
-	}
+
 }
 
 // ------- Graphical resource IO -----------
-void plane_load_tileset(plane *p, const char *tile, const char *pal)
+void plane_load_fg(void)
 {
+	char tile[256];
+	char pal[256];
+	switch (map_header.tileset)
+	{
+		default:
+		case MAP_SET_OUTSIDE1:
+			sprintf(tile,"res/gfx/outside1.bin");
+			sprintf(pal,"res/pal/outside1.pal");
+			break;
+		case MAP_SET_OUTSIDE2:
+			sprintf(tile,"res/gfx/outside2.bin");
+			sprintf(pal,"res/pal/outside2.pal");
+			break;
+		case MAP_SET_INSIDE1:
+			sprintf(tile,"res/gfx/inside1.bin");
+			sprintf(pal,"res/pal/inside1.pal");
+			break;
+	}
+
 	printf("Opening %s for tile data...\n",tile);
 	ALLEGRO_FILE *tf = al_fopen(tile,"rb");
 	if (!tf)
@@ -74,145 +87,80 @@ void plane_load_tileset(plane *p, const char *tile, const char *pal)
 		printf("Error: couldn't open %s for palette data.\n",pal);
 		if (tf) {al_fclose(tf);}
 	}
-	p->tileset_chr = mdgfx_load_chr(tf,pf,CHR_T_W,CHR_T_H);
-	printf("Loaded tileset graphics data.\n");
+	fg_chr = mdgfx_load_chr(tf,pf,CHR_T_W,CHR_T_H);
+	printf("Loaded foreground graphics data.\n");
 }
 
-void plane_load_bg(plane *p, const char *tile, const char *pal)
+void plane_load_bg(void)
 {
+	char tile[256];
+	char pal[256];
+	switch (map_header.tileset)
+	{
+		default:
+		case MAP_SET_OUTSIDE1:
+			sprintf(tile,"res/gfx/outside1.bin");
+			sprintf(pal,"res/pal/outside1.pal");
+			break;
+		case MAP_SET_OUTSIDE2:
+			sprintf(tile,"res/gfx/outside2.bin");
+			sprintf(pal,"res/pal/outside2.pal");
+			break;
+		case MAP_SET_INSIDE1:
+			sprintf(tile,"res/gfx/inside1.bin");
+			sprintf(pal,"res/pal/inside1.pal");
+			break;
+	}
+
+	printf("Opening %s for tile data...\n",tile);
 	ALLEGRO_FILE *tf = al_fopen(tile,"rb");
 	if (!tf)
 	{
 		printf("Error: couldn't open %s for tile data.\n",tile);
 		return;
 	}
+	printf("Opening %s for palette data...\n",pal);
 	ALLEGRO_FILE *pf = al_fopen(pal,"rb");
 	if (!pf)
 	{
 		printf("Error: couldn't open %s for palette data.\n",pal);
 		if (tf) {al_fclose(tf);}
 	}
-	p->bg_chr = mdgfx_load_chr(tf,pf,CHR_T_W,CHR_T_H);
+	bg_chr = mdgfx_load_chr(tf,pf,CHR_T_W,CHR_T_H);
 	printf("Loaded backdrop graphics data.\n");
 }
 
-void plane_load_data(plane *p, const char *d)
+void plane_draw_map(u32 x, u32 y)
 {
-	ALLEGRO_FILE *df = al_fopen(d,"rb");
-	if (!df)
-	{
-		printf("Error: couldn't open %s for plane data.\n",d);
-	}
-	int64_t size = al_fsize(df);
-	if (size == -1)
-	{
-		printf("Can't get plane data file size.\n");
-		al_fclose(df);
-		return;
-	}
-	p->plane_data = (u16 *)malloc(sizeof(u8) * size);
-	if (!p->plane_data) 
-	{
-		printf("Couldn't malloc for plane data.\n");
-		return;
-	}
-	int64_t idx = 0;
-	while (!al_feof(df) && idx < size)
-	{
-		p->plane_data[idx] = al_fread16be(df);
-		idx += 2;
-	}
-	printf("Loaded plane data.\n");
-	al_fclose(df);
-}
-
-// --------- Map file IO ----------
-
-// Loads a map from a file. Includes init of hte plane structure
-int plane_load_map(plane *p, const char *m)
-{
-	ALLEGRO_FILE *mf = al_fopen(m, "r");
-	if (!mf)
-	{
-		printf("Couldn't open %s for reading.\n",m);
-		return 0;
-	}
-
-	if (p)
-	{
-		plane_destroy(p);
-		p = NULL;
-	}
-	
-	// First get dimensions of level
-	
-
-	while(!al_feof(mf))
-	{
-		
-	}
-
-	return 1;	
-}
-
-int plane_save_map(plane *p, const char *m)
-{
-	
-	return 1;
-}
-
-
-void plane_create_data(plane *p, u32 w, u32 h)
-{
-	p->plane_w = w;
-	p->plane_h = h;
-	if (p->plane_data)
-	{
-		free(p->plane_data);
-	}
-	p->plane_data = (u16 *)malloc(sizeof(u16) * (40*w) * (32*h));
-	if (!p->plane_data)
-	{
-		printf("Couldn't malloc for plane data.\n");
-		return;
-	}
-	for (int i = 0; i < w * h * 40 * 32; i++)
-	{
-		p->plane_data[i] = i;
-	}
-}
-
-void plane_draw_map(plane *p, u32 x, u32 y)
-{
+	if (!map_data) { return; }
 	ALLEGRO_COLOR col = (active_window == WINDOW_MAP) ? 
 		al_map_rgb(PLANE_BORDER_COLOR) : 
 		al_map_rgb(PLANE_INACTIVE_COLOR);
 	al_set_target_bitmap(main_buffer);
-	ALLEGRO_BITMAP *chr = p->tileset_chr;
-	if (!p->plane_data) { return; }
+	ALLEGRO_BITMAP *chr = fg_chr;
 
 	// Put a border around the map
 	al_draw_rectangle(x - 4, y - 4, 
 		x + (TILESIZE * PLANE_DRAW_W) + 4, 
 		y + (TILESIZE * PLANE_DRAW_H) + 4,
 		col,PLANE_BORDER_THICKNESS);
-	al_draw_bitmap(p->level_bg,x,y,0);
+	al_draw_bitmap(checker_bg,x,y,0);
 	// Render the map
 	for (u32 i = 0; i < PLANE_DRAW_H; i++)
 	{
-		if (i >= p->plane_h * 32)
+		if (i >= map_header.h * 32)
 		{
 			return;
 		}	
 		for (u32 j = 0; j < PLANE_DRAW_W; j++)
 		{
-			if (j >= p->plane_w * 40)
+			if (j >= map_header.w * 40)
 			{
 				continue;	
 			}	
 			u32 t_idx = j + scroll_x;
-			t_idx += (i + scroll_y) * (40 * p->plane_w);
-			u16 t_choice = p->plane_data[t_idx];
+			t_idx += (i + scroll_y) * (40 * map_header.w);
+			u16 t_choice = map_data[t_idx];
 			// determine coords of tile to pull from tileset from buffer
 			u32 t_x = TILESIZE * (t_choice % CHR_T_W);
 			u32 t_y = TILESIZE * (t_choice/CHR_T_W);
@@ -225,7 +173,7 @@ void plane_draw_map(plane *p, u32 x, u32 y)
 	plane_print_label(x, y, col, "Map Data");
 }
 
-void plane_draw_vram(plane *p, u32 x, u32 y)
+void plane_draw_vram(u32 x, u32 y)
 {
 
 	ALLEGRO_COLOR col = (active_window == WINDOW_VRAM) ? 
@@ -239,7 +187,7 @@ void plane_draw_vram(plane *p, u32 x, u32 y)
 		col,PLANE_BORDER_THICKNESS);
 
 	// Draw the VRAM dump
-	al_draw_bitmap(p->tileset_chr,x,y,0);
+	al_draw_bitmap(fg_chr,x,y,0);
 
 	// Show which is selected
 	u32 sel_x = (selection % CHR_T_W) * TILESIZE;
@@ -259,10 +207,9 @@ void plane_draw_vram(plane *p, u32 x, u32 y)
 	al_draw_text(font,al_map_rgb(255,255,255),x, y + CHR_H - 3 + TILESIZE,0,selmsg);
 }
 
-void plane_handle_mouse(plane *p)
+void plane_handle_mouse(void)
 {
-	// Mouse is in map regoin
-
+	// Mouse is in map region
 
 	if (display_mouse_region(
 		PLANE_DRAW_X,PLANE_DRAW_Y,
@@ -288,16 +235,16 @@ void plane_handle_mouse(plane *p)
 		al_draw_rectangle(cdx,cdy,cdx2,cdy2,al_map_rgba(255,255,0,128),1);
 		if (mousestate.buttons & 1)
 		{
-			u32 t_idx = cursor_x + ((cursor_y) * (40 * p->plane_w));
-			p->plane_data[t_idx] = selection;
+			u32 t_idx = cursor_x + ((cursor_y) * (40 * map_header.w));
+			map_data[t_idx] = selection;
 			if (sel_size == SEL_FULL)
 			{
 				t_idx++;
-				p->plane_data[t_idx] = selection + 1;
-				t_idx += (p->plane_w * 40) - 1;
-				p->plane_data[t_idx] = selection + (CHR_T_W);
+				map_data[t_idx] = selection + 1;
+				t_idx += (map_header.w * 40) - 1;
+				map_data[t_idx] = selection + (CHR_T_W);
 				t_idx += 1;
-				p->plane_data[t_idx] = selection + (CHR_T_W + 1);
+				map_data[t_idx] = selection + (CHR_T_W + 1);
 			}
 		}
 	}
@@ -320,10 +267,10 @@ void plane_handle_mouse(plane *p)
 
 }
 
-void plane_scroll_limits(plane *p, u32 *x, u32 *y)
+void plane_scroll_limits(u32 *x, u32 *y)
 {
-	*x = ((40*p->plane_w) - (PLANE_DRAW_W));
-	*y = ((32*p->plane_h) - (PLANE_DRAW_H));
+	*x = ((40*map_header.w) - (PLANE_DRAW_W));
+	*y = ((32*map_header.h) - (PLANE_DRAW_H));
 	printf("Scroll limits: %d, %d\n",*x,*y);
 }
 
@@ -336,11 +283,11 @@ void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg)
 	al_draw_text(font,col,x, y - 11,0,msg);
 }
 
-void plane_handle_io(plane *p, const char *m)
+void plane_handle_io()
 {
+	// User hits save ikey
 	if (al_key_down(&keystate,ALLEGRO_KEY_F5))
 	{
-		plane_save_map(p, m);
+		map_save();
 	}
-	// User hits save ikey
 }

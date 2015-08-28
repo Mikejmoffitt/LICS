@@ -35,3 +35,5 @@ out/out.bin
 
 # Debug files
 *.dSYM/
+
+editor

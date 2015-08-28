@@ -8,6 +8,7 @@
 #include "types.h"
 #include "mdgfx.h"
 #include "display.h"
+#include "map.h"
 
 #define PLANE_DRAW_X 160
 #define PLANE_DRAW_Y 16
@@ -28,50 +29,28 @@
 #define PLANE_INACTIVE_COLOR 40,40,40
 #define PLANE_BORDER_THICKNESS 2
 
-typedef struct plane plane;
-struct plane
-{
-	// Graphics data
-	ALLEGRO_BITMAP *tileset_chr;
-	ALLEGRO_BITMAP *bg_chr;
-	ALLEGRO_BITMAP *level_bg;
-	// Level data and information
-	u16 *plane_data; // Will be (sizeof(u16) * (32 * w) * (32 * h)
-	u32 plane_w; // Width in 40-column screens
-	u32 plane_h; // Height in 32-row screens
-	u32 tileset_num;
-	u32 bg_num;
-};
+void plane_init(void);
+void plane_destroy(void);
 
-void plane_init(plane *p);
-void plane_destroy(plane *p);
-
-void plane_load_tileset(plane *p, const char *tile, const char *pal);
-void plane_load_bg(plane *p, const char *tile, const char *pal);
-void plane_load_data(plane *p, const char *data);
-
-// Returns zero if there is a problem loading or saving the level file
-int plane_load_map(plane *p, const char *m);
-int plane_save_map(plane *p, const char *m);
-
-void plane_create_data(plane *p, u32 w, u32 h);
+void plane_load_fg(void);
+void plane_load_bg(void);
 
 // Draw map contents on screen at x, y in the buffer
-void plane_draw_map(plane *p, u32 x, u32 y);
+void plane_draw_map(u32 x, u32 y);
 
 // Draw tiles at x, y in the buffer
-void plane_draw_vram(plane *p, u32 x, u32 y);
+void plane_draw_vram(u32 x, u32 y);
 
 // Calculate max camera X and Y
-void plane_scroll_limits(plane *p, u32 *x, u32 *y);
+void plane_scroll_limits(u32 *x, u32 *y);
 
 // Take mouse input for clicking on VRAM, map, etc
-void plane_handle_mouse(plane *p);
+void plane_handle_mouse(void);
 
 // Print a text label above a window, complete with opaque black BG
 void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg);
 
 // Handle inputs to trigger saving
-void plane_handle_io(plane *p, const char *m);
+void plane_handle_io();
 
 #endif
