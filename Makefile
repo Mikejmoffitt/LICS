@@ -145,7 +145,7 @@ out.iso: out.elf_scd
 	$(BINTOS) $<
 
 %.o: %.c
-	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@
+	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./gccerc
 
 %.o: %.s 
 	$(AS) $(ASFLAGS) $< -o $@

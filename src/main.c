@@ -14,7 +14,6 @@ void player_test(void)
 {
 	player pl;
 	map_load_tileset(0);
-
 	map_file *mapf = &mapdata_testroom[0];
 
 	u16 *gb = (&mapdata_testroom[0] + sizeof(map_file) - 2);
