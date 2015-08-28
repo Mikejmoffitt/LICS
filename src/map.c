@@ -2,6 +2,7 @@
 
 #include "pal.h"
 #include "gfx.h"
+#include "vramslots.h"
 
 void map_load_tileset(register num)
 {
@@ -19,7 +20,7 @@ void map_load_tileset(register num)
 			src_ptr = (u32)gfx_inside1;
 			break;
 	}
-	VDP_doVRamDMA(src_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_DATASIZE);
+	VDP_doVRamDMA(src_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_VRAM_LEN * 16);
 }
 
 void map_load_palette(register num)

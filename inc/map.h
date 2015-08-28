@@ -11,13 +11,6 @@ Also handles some object list functions.
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128
 
-#define MAP_FG_PALNUM 0
-#define MAP_FG_VRAM_SLOT 0
-#define MAP_FG_NUM_TILES (16 * 16) // Each tile is 32 bytes
-#define MAP_FG_DATASIZE (MAP_FG_NUM_TILES * 16) // Size in words
-#define MAP_BG_PALNUM 1
-#define MAP_BG_VRAM_SLOT 256
-
 #define MAP_SET_OUTSIDE1 0
 #define MAP_SET_OUTSIDE2 1
 #define MAP_SET_INSIDE1 2

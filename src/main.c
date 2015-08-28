@@ -6,6 +6,8 @@
 #include "gfx.h"
 #include "pal.h"
 #include "tileset.h"
+#include "map.h"
+#include "vramslots.h"
 
 void player_test(void)
 {
@@ -30,7 +32,7 @@ void player_test(void)
 		
 		system_wait_v();
 		
-		player_dma(pl.anim_frame, PLAYER_VRAM_SLOT);
+		player_dma(&pl);
 		sprites_dma_simple();
 	}
 

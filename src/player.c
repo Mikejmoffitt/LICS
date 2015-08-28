@@ -1,5 +1,12 @@
 #include "player.h"
 
+#include "gfx.h"
+#include "pal.h"
+#include "mpad.h"
+#include "vramslots.h"
+#include "sprites.h"
+#include "objtypes.h"
+
 void player_init(player *pl)
 {
 	pl->type = OBJ_PLAYER;
@@ -30,12 +37,13 @@ void player_init(player *pl)
 	player_set_pal();
 }
 
-void player_dma(u16 num, u16 dest)
+void player_dma(player *pl)
 {
+	u16 num = pl->anim_frame;
 	u16 offset = 0;
 
 	// Destination is specified in bytes
-	dest = dest * 32;
+	u16 dest = PLAYER_VRAM_SLOT * 32;
 	// Most sprites are just six tiles - 3x2 or 2x3
 	if (num < LYLE_3x3_CUTOFF)
 	{
