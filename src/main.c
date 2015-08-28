@@ -5,13 +5,17 @@
 #include "system.h"
 #include "gfx.h"
 #include "pal.h"
-#include "tileset.h"
 #include "map.h"
+#include "tileset.h"
+#include "mapdata.h"
 #include "vramslots.h"
 
 void player_test(void)
 {
 	player pl;
+	map_load_tileset(0);
+	map_file *mapf = &mapdata_testroom[0];
+	VDP_doVRamDMA(&(mapf->map_data[0]),VDP_getAPlanAddress(),64);
 	tileset_load_fg(TILESET_FG_OUTSIDE1);
 	player_init(&pl);	
 	pl.y = 64;
@@ -35,13 +39,12 @@ void player_test(void)
 		player_dma(&pl);
 		sprites_dma_simple();
 	}
-
 }
 
 int main(void)
 {
 	system_init();
-	map_load_tileset(0);
+
 	player_test();
 	return 0;	
 }

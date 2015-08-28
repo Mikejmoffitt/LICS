@@ -22,9 +22,9 @@ the length of a 256-tile DMA is only (256 * 16).
 #define PLAYER_VRAM_LEN 12
 
 
-#define PLAYER_PALNUM 0
-#define MAP_FG_PALNUM 1
-#define MAP_BG_PALNUM 2
-#define OBJECTS_PALNUM 3
+#define MAP_FG_PALNUM 0
+#define MAP_BG_PALNUM 1
+#define OBJECTS_PALNUM 2
+#define PLAYER_PALNUM 3
 
 #endif
