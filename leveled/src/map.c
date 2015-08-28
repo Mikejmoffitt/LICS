@@ -13,7 +13,9 @@ void map_new()
 
 	printf("[map] Creating new room.\n");
 	printf("\nRoom title? (31 chars)\n>");
-	fgets(map_header.name, 32, stdin);
+	fgets(in_buffer, 32, stdin);
+	memset(map_header.name,0,32);
+	snprintf(map_header.name,31,"%s",in_buffer);
 	printf("\nRoom ID? (integer)\n>");
 	fgets(in_buffer, 3, stdin);
 	map_header.id = atoi(in_buffer);
