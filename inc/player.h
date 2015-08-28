@@ -44,8 +44,8 @@
 #define PLAYER_START_CP 5
 
 #define PLAYER_VRAM_SLOT 512
-
 #define PLAYER_PALNUM 2
+
 
 typedef struct player player;
 struct player

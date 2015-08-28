@@ -7,7 +7,6 @@ static vu16 vbl_active;
 static _voidCallback *v_int(void)
 {
 	vbl_active = 1;
-	VDP_setPaletteColor(0,0xFFFF);
 	return;
 }
 

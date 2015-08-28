@@ -39,6 +39,8 @@ void player_test(void)
 int main(void)
 {
 	system_init();
+	map_load_tileset(0);
+	map_load_palette(0);
 	player_test();
 	return 0;	
 }

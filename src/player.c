@@ -55,7 +55,7 @@ void player_dma(u16 num, u16 dest)
 
 void player_set_pal(void)
 {
-	VDP_setPalette(PLAYER_PALNUM,pal_lyle);
+	VDP_doCRamDMA(pal_lyle, 32 * PLAYER_PALNUM, 16);
 }
 
 void player_input(player *pl)
