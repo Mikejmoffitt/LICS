@@ -33,6 +33,8 @@ void player_init(player *pl)
 
 	pl->input = 0;
 	pl->input_prev = 0;
+	pl->cam_x = 0;
+	pl->cam_y = 0;
 
 	player_set_pal();
 }
