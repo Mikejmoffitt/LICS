@@ -1,6 +1,6 @@
 #include "tileset.h"
 
-void tileset_load_fg(register set)
+void tileset_load_fg(u16 set)
 {
 	u16 *pal;
 	u32 from;

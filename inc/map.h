@@ -6,7 +6,7 @@ Support functions for rendering the map to plane A.
 Also handles some object list functions.
 */
 
-#include <genesis.h>
+#include <stdint.h>
 
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128
@@ -14,10 +14,10 @@ Also handles some object list functions.
 typedef struct map_obj map_obj;
 struct map_obj
 {
-	u16 x; // X in real coordinates (pixel-precise)
-	u16 y; // Y in real coordinates (pixel-precise)
-	u16 type; // Object ID 
-	u16 data; // Depends on object type. Best example is entrance IDs.
+	uint16_t x; // X in real coordinates (pixel-precise)
+	uint16_t y; // Y in real coordinates (pixel-precise)
+	uint16_t type; // Object ID 
+	uint16_t data; // Depends on object type. Best example is entrance IDs.
 };
 
 
@@ -27,24 +27,24 @@ struct map_file
 	// Room name (mostly for the editor)
 	char name[MAP_NAME_SIZE];
 	// Unique room identifier
-	u16 id; 
+	uint16_t id; 
 	// Dimensions for the room in screens
-	u16 w; 
-	u16 h;
+	uint16_t w; 
+	uint16_t h;
 
 	// Position in top-left of game-wide map
-	u8 map_x;
-	u8 map_y;
+	uint8_t map_x;
+	uint8_t map_y;
 
 	// Graphics tileset and palette to display with (enum)
-	u8 tileset; 
-	u8 tile_palette;
+	uint8_t tileset; 
+	uint8_t tile_palette;
 
 	// Palette for enemies, objects
-	u8 sprite_palette;
+	uint8_t sprite_palette;
 
 	// Which background to choose from (enum); palette implied
-	u8 background;
+	uint8_t background;
 
 	// Large array of map objects for the object list (null terminated)
 	map_obj objects[MAP_NUM_OBJS];
@@ -52,7 +52,7 @@ struct map_file
 	// Starting point of map data. In truth, this will be greater than one
 	// in size; this struct is just being used to make the raw map data 
 	// easier to work with.
-	u16 map_data[1]; 
+	uint16_t map_data[1]; 
 };
 
 #endif

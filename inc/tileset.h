@@ -19,6 +19,6 @@
 #include "gfx.h"
 #include "pal.h"
 
-void tileset_load_fg(register set);
+void tileset_load_fg(u16 set);
 
 #endif

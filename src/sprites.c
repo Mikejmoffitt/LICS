@@ -1,8 +1,8 @@
 #include "sprites.h"
 
-u8 next_spr;
-u16 sprite_addr;
-u16 sprite_table[NUM_SPRITES * 4];
+static u8 next_spr;
+static u16 sprite_addr;
+static u16 sprite_table[NUM_SPRITES * 4];
 
 void sprites_init(void)
 {
@@ -56,4 +56,19 @@ void sprite_put(u16 x, u16 y, u8 size, u16 attr)
 {
 	sprite_set(next_spr,x,y,size,attr,next_spr+1);
 	next_spr++;
+}
+
+u8 sprites_get_next_sprite(void)
+{
+	return next_spr;
+}
+
+u16 sprites_get_sprite_addr(void)
+{
+	return sprite_addr;
+}
+
+u16 *sprites_get_table(void)
+{
+	return &sprite_table[0];
 }

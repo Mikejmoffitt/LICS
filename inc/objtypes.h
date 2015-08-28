@@ -7,6 +7,8 @@ typedef struct object object;
 struct object
 {
 	u16 type;	
+	u16 x;
+	u16 y;
 };
 
 #define OBJ_PLAYER 1
