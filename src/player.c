@@ -147,13 +147,13 @@ void player_accel(player *pl)
 void player_eval_grounded(player *pl)
 {
 	// For now, a hack for testing
-	if (fix32ToInt(pl->y) >= 150)
+	if (fix32ToInt(pl->y) >= 184 - 16)
 	{
 		pl->grounded = 1;
 		if (pl->dy > FZERO)
 		{
 			pl->dy = FZERO;
-			pl->y = intToFix32(150);;
+			pl->y = intToFix32(184 - 16);
 		}
 	}
 	else

@@ -29,11 +29,14 @@ struct map_file
 	char name[MAP_NAME_SIZE];
 
 	// Room identifier, unique to this one
-	uint16_t id;
+	uint8_t ex0; // Currently unused extra info
+	uint8_t id;
 
 	// Dimensions in 320x240 segments
-	uint16_t w; // w * 40 columns
-	uint16_t h; // h * 32 rows
+	uint8_t ex1;
+	uint8_t w; // w * 40 columns
+	uint8_t ex2;
+	uint8_t h; // h * 32 rows
 
 	// Position for the top-left of this room on the game map
 	uint8_t map_x;

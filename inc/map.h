@@ -31,10 +31,14 @@ struct map_file
 	// Room name (mostly for the editor)
 	char name[MAP_NAME_SIZE];
 	// Unique room identifier
-	u16 id; 
+	u8 ex0;
+	u8 id; 
+
 	// Dimensions for the room in screens
-	u16 w; 
-	u16 h;
+	u8 ex1;
+	u8 w; 
+	u8 ex2;
+	u8 h;
 
 	// Position in top-left of game-wide map
 	u8 map_x;
@@ -55,7 +59,7 @@ struct map_file
 	// Starting point of map data. In truth, this will be greater than one
 	// in size; this struct is just being used to make the raw map data 
 	// easier to work with.
-	u16 map_data[1]; 
+	u8 map_data[1]; 
 };
 
 void map_load_tileset(register num);

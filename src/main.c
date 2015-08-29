@@ -16,10 +16,18 @@ void player_test(void)
 	map_load_tileset(0);
 	map_file *mapf = &mapdata_testroom[0];
 
-	u16 *gb = (&mapdata_testroom[0] + sizeof(map_file) - 2);
-	VDP_doVRamDMA(gb,VDP_getAPlanAddress(),64);
+	for (int i = 0; i < 32; i++)
+	{
 
-	tileset_load_fg(TILESET_FG_OUTSIDE1);
+		VDP_doVRamDMA((mapf->map_data + 160 * (i + 4)),VDP_getAPlanAddress() + 128 * i,40);
+	}
+
+
+	int i = 0;
+
+	//VDP_doVRamDMA(data,VDP_getAPlanAddress() / 2,5120);
+
+	tileset_load_fg(TILESET_FG_OUTSIDE2);
 	player_init(&pl);	
 	pl.y = 64;
 	pl.x = intToFix32(64);

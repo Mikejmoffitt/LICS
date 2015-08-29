@@ -77,7 +77,13 @@ void map_save()
 		return;
 	}
 	fwrite(&map_header,sizeof(map_header),1,f);
-	fwrite(map_data,sizeof(uint16_t),(map_header.w * 40) * (map_header.h * 32),f);
+	// Swap endianness again during save
+	size_t map_nwords = (map_header.w * 40) * (map_header.h * 32);
+	for (unsigned int i = 0; i < map_nwords; i++)
+	{
+		fputc(map_data[i] >> 8,f); // MSB first
+		fputc((unsigned char)map_data[i],f); // LSB first
+	}
 	printf("[map] Done writing to %s at %lX.\n", map_fname,ftell(f));
 	fclose(f);
 }
@@ -104,7 +110,15 @@ void map_load()
 		size_t map_nwords = (map_header.w * 40) * (map_header.h * 32);
 		printf("Got map sized %d by %d\n",map_header.w * 40,map_header.h * 32);
 		map_data = (uint16_t *)calloc(sizeof(uint16_t),map_nwords);
-		fread(map_data,sizeof(uint16_t),map_nwords,f);
+
+		// Read in file, swapping from little endian to big endian on the fly
+		for (unsigned int i = 0; i < map_nwords; i++)
+		{
+			uint16_t val;
+			val = fgetc(f) << 8; // MSB first
+			val += fgetc(f); // LSB first
+			map_data[i] = val;
+		}
 		printf("[map] Done loading to %s at %lX.\n", map_fname, ftell(f));
 		printf("[map] Map name: %s\n",map_header.name);
 		fclose(f);
