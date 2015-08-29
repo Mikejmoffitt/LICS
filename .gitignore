@@ -19,14 +19,15 @@
 inc/*.swp
 src/*.swp
 
+out/out.bin
+out.bin
+
 # Shared objects (inc. Windows DLLs)
 *.so
 *.so.*
 *.dylib
 
 # Executables
-out.bin
-out/out.bin
 *.out
 *.app
 *.i*86
