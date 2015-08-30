@@ -7,16 +7,17 @@
 #include "sprites.h"
 #include "objtypes.h"
 
+#include "state.h"
+
 void player_init(player *pl)
 {
 	pl->type = OBJ_PLAYER;
-	pl->x = 0;
-	pl->y = 0;
+	pl->x = FZERO32;
+	pl->y = FZERO32;
 	pl->dx = FZERO;
 	pl->dy = FZERO;
 	pl->grounded = 0;
 	pl->direction = PLAYER_RIGHT;
-	pl->control_disabled = 0;
 	
 	pl->anim_cnt = 0;
 	pl->anim_frame = 0;
@@ -28,13 +29,13 @@ void player_init(player *pl)
 	pl->cp_cnt = 0;
 	pl->hurt_cnt = 0;
 	pl->invuln_cnt = 0;
-	pl->hp = PLAYER_START_HP;
-	pl->cp = PLAYER_START_CP;
+	pl->control_disabled = 0;
 
 	pl->input = 0;
 	pl->input_prev = 0;
-	pl->cam_x = 0;
-	pl->cam_y = 0;
+
+	pl->hp = 0;
+	pl->cp = 0;
 
 	player_set_pal();
 }
@@ -279,6 +280,6 @@ void player_draw(player *pl)
 	{
 		size = SPRITE_SIZE(3,3);
 	}
-	sprite_put(fix32ToInt(pl->x) - pl->cam_x, fix32ToInt(pl->y) - pl->cam_y, size, 
+	sprite_put(fix32ToInt(pl->x) - state.cam_x, fix32ToInt(pl->y) - state.cam_y, size, 
 		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
 }

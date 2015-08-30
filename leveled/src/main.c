@@ -41,6 +41,7 @@ int main(int argc, char **argv)
 		plane_draw_map(PLANE_DRAW_X, PLANE_DRAW_Y);
 		plane_handle_mouse();
 		plane_handle_io();
+		plane_print_info();
 		display_update();
 		display_handle_queue();
 	}

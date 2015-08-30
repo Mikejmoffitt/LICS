@@ -10,12 +10,14 @@
 #define PLAYER_DY_MAX FIX16(8.0)
 #define PLAYER_X_ACCEL FIX16(0.15)
 #define PLAYER_X_DECEL FIX16(0.15)
-#define PLAYER_Y_ACCEL FIX16(0.23)
-#define PLAYER_Y_ACCEL_WEAK FIX16(0.13)
+
+#define PLAYER_Y_ACCEL FIX16(0.276)
+#define PLAYER_Y_ACCEL_WEAK FIX16(0.156)
 #define PLAYER_JUMP_DY FIX16(-3.7)
 #define PLAYER_JUMP_HOLD_STR FIX16(0.1)
 #define PLAYER_STEP_UP 4
 #define FZERO FIX16(0.0)
+#define FZERO32 FIX32(0.0)
 
 #define PLAYER_CUBE_FX 5 // If cube spawn count is above, make particles
 
@@ -44,7 +46,6 @@ struct player
 	u16 type; // Universal type all objects share
 	// Lyle physics vars
 	fix32 x, y;
-	u16 cam_x, cam_y;
 	fix16 dx, dy;
 	u16 grounded;
 	u16 direction;
@@ -61,6 +62,7 @@ struct player
 	u16 cp_cnt; // Counts up to PLAYER_CUBE_SPAWN
 	u16 hurt_cnt; // If non-zero, hurt anim, no controls
 	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
+
 	u16 hp;
 	u16 cp;
 

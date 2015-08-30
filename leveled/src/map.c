@@ -1,4 +1,5 @@
 #include "map.h"
+#include "display.h"
 
 const char *map_fname;
 
@@ -7,27 +8,33 @@ map_file map_header;
 
 void map_new()
 {
-	char in_buffer[32];
-	memset(in_buffer, 0, sizeof(char) * 32);
+	char in_buffer[MAP_NAME_LEN];
+	memset(in_buffer, 0, sizeof(char) * MAP_NAME_LEN);
 	memset(&map_header, 0, sizeof(map_file));
 
 	printf("[map] Creating new room.\n");
-	printf("\nRoom title? (31 chars)\n>");
-	fgets(in_buffer, 32, stdin);
-	memset(map_header.name,0,32);
-	snprintf(map_header.name,31,"%s",in_buffer);
+	printf("\nRoom title? (%d chars)\n",MAP_NAME_LEN - 1);
+	printf("<");
+	for (int i = 0; i < MAP_NAME_LEN - 1; i++)
+	{
+		printf("-");
+	}
+	printf(">\n>");
+	fgets(in_buffer, MAP_NAME_LEN, stdin);
+	memset(map_header.name,0,MAP_NAME_LEN);
+	snprintf(map_header.name,MAP_NAME_LEN - 1,"%s",in_buffer);
 	printf("\nRoom ID? (integer)\n>");
 	fgets(in_buffer, 3, stdin);
 	map_header.id = atoi(in_buffer);
-	while (map_header.w == 0 || map_header.h >= 16)
+	while (map_header.w == 0 || map_header.w >= MAP_MAX_WIDTH)
 	{
-		printf("\nWidth in 40-column screens? (integer)\n>");
+		printf("\nWidth in %d-column screens? (integer)\n>",MAP_WIDTH);
 		fgets(in_buffer, 3, stdin);
 		map_header.w = atoi(in_buffer);
 	}
-	while (map_header.h == 0 || map_header.h >= 16)
+	while (map_header.h == 0 || map_header.h >= MAP_MAX_HEIGHT)
 	{
-		printf("\nHeight in 32-row screens? (integer)\n>");
+		printf("\nHeight in %d-row screens? (integer)\n>",MAP_HEIGHT);
 		fgets(in_buffer, 3, stdin);
 		map_header.h = atoi(in_buffer);
 	}
@@ -38,7 +45,7 @@ void map_new()
 		map_data = NULL;
 	}
 	printf(" ( creating a map %d by %d screens)\n",map_header.w,map_header.h);
-	size_t map_nwords = (map_header.w * 40) * (map_header.h * 32);
+	size_t map_nwords = (map_header.w * MAP_WIDTH) * (map_header.h * 32);
 	map_data = (uint16_t *)calloc(sizeof(uint16_t),map_nwords);
 
 	printf("\nTop-left map X? (integer)\n>");
@@ -78,13 +85,16 @@ void map_save()
 	}
 	fwrite(&map_header,sizeof(map_header),1,f);
 	// Swap endianness again during save
-	size_t map_nwords = (map_header.w * 40) * (map_header.h * 32);
+	size_t map_nwords = (map_header.w * MAP_WIDTH) * (map_header.h * MAP_HEIGHT);
 	for (unsigned int i = 0; i < map_nwords; i++)
 	{
 		fputc(map_data[i] >> 8,f); // MSB first
 		fputc((unsigned char)map_data[i],f); // LSB first
 	}
 	printf("[map] Done writing to %s at %lX.\n", map_fname,ftell(f));
+
+	sprintf(display_title,"%s",map_fname);
+	al_set_window_title(display, display_title);
 	fclose(f);
 }
 
@@ -107,8 +117,8 @@ void map_load()
 			free(map_data);
 			map_data = NULL;
 		}
-		size_t map_nwords = (map_header.w * 40) * (map_header.h * 32);
-		printf("Got map sized %d by %d\n",map_header.w * 40,map_header.h * 32);
+		size_t map_nwords = (map_header.w * MAP_WIDTH) * (map_header.h * MAP_HEIGHT);
+		printf("Got map sized %d by %d\n",map_header.w * MAP_WIDTH,map_header.h * MAP_HEIGHT);
 		map_data = (uint16_t *)calloc(sizeof(uint16_t),map_nwords);
 
 		// Read in file, swapping from little endian to big endian on the fly
@@ -121,6 +131,14 @@ void map_load()
 		}
 		printf("[map] Done loading to %s at %lX.\n", map_fname, ftell(f));
 		printf("[map] Map name: %s\n",map_header.name);
+		printf("[map] ID: %d\n",map_header.id);
+		printf("[map] W: %d\n",map_header.w);
+		printf("[map] H: %d\n",map_header.w);
+		printf("[map] X: %d\n",map_header.map_x);
+		printf("[map] Y: %d\n",map_header.map_y);
+		printf("[map] Tileset: %d\n",map_header.tileset);
+		printf("[map] Sprite Pal: %d\n",map_header.sprite_palette);
+		printf("[map] Background: %d\n",map_header.background);
 		fclose(f);
 	}
 }

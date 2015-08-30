@@ -6,28 +6,20 @@
 #include "gfx.h"
 #include "pal.h"
 #include "map.h"
-#include "tileset.h"
 #include "mapdata.h"
 #include "vramslots.h"
+#include "state.h"
 
 void player_test(void)
 {
 	player pl;
-	map_load_tileset(0);
-	map_file *mapf = &mapdata_testroom[0];
-
-	for (int i = 0; i < 32; i++)
+	state_load_room(1);
+	for (int i = 0; i < 28; i++)
 	{
 
-		VDP_doVRamDMA((mapf->map_data + 160 * (i + 4)),VDP_getAPlanAddress() + 128 * i,40);
+		VDP_doVRamDMA((state.current_map + (80 * 5) * (i + 2)),VDP_getAPlanAddress() + 128 * i,40);
 	}
 
-
-	int i = 0;
-
-	//VDP_doVRamDMA(data,VDP_getAPlanAddress() / 2,5120);
-
-	tileset_load_fg(TILESET_FG_OUTSIDE2);
 	player_init(&pl);	
 	pl.y = 64;
 	pl.x = intToFix32(64);
@@ -42,7 +34,8 @@ void player_test(void)
 
 		player_eval_grounded(&pl);
 		player_calc_anim(&pl);
-		
+
+		state_update_scroll(fix32ToInt(pl.x),fix32ToInt(pl.y));
 		player_draw(&pl);
 		
 		system_wait_v();

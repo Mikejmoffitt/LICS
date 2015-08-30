@@ -49,6 +49,8 @@ extern ALLEGRO_EVENT_QUEUE *queue;
 
 extern u32 quit;
 
+extern char display_title[256];
+
 void display_register_queue(void);
 void display_handle_queue(void);
 void display_update(void);

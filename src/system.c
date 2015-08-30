@@ -29,6 +29,7 @@ void system_init(void)
 	VDP_setScreenWidth320();
 	VDP_setScreenHeight224();
 	VDP_setHilightShadow(0);
+	VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_2TILE);
 	sprites_init();
 
 }

@@ -4,8 +4,15 @@ static ALLEGRO_BITMAP *checker_bg;
 static ALLEGRO_BITMAP *fg_chr;
 static ALLEGRO_BITMAP *bg_chr;
 
+static ALLEGRO_EVENT_QUEUE *input_queue;
+
 void plane_init(void)
 {
+	if (!al_is_system_installed())
+	{
+		fprintf(stderr, "Allegro is not installed.\n");
+		return;
+	}
 	printf("Plane init!\n");
 	fg_chr = NULL;
 	bg_chr = NULL;
@@ -32,6 +39,15 @@ void plane_init(void)
 			}
 		}
 	}
+
+	input_queue = al_create_event_queue();
+	al_install_keyboard();
+	if (!input_queue)
+	{
+		fprintf(stderr,"Couldn't create input event queue. The keyboard will not work.\n");
+		return;
+	}
+	al_register_event_source(input_queue, al_get_keyboard_event_source());
 }
 
 void plane_destroy(void)
@@ -48,7 +64,6 @@ void plane_destroy(void)
 	{
 		al_destroy_bitmap(checker_bg);
 	}
-
 }
 
 // ------- Graphical resource IO -----------
@@ -130,6 +145,7 @@ void plane_load_bg(void)
 	printf("Loaded backdrop graphics data.\n");
 }
 
+// Rendering routines
 void plane_draw_map(u32 x, u32 y)
 {
 	if (!map_data) { return; }
@@ -154,12 +170,12 @@ void plane_draw_map(u32 x, u32 y)
 		}	
 		for (u32 j = 0; j < PLANE_DRAW_W; j++)
 		{
-			if (j >= map_header.w * 40)
+			if (j >= map_header.w * MAP_WIDTH)
 			{
 				continue;	
 			}	
 			u32 t_idx = j + scroll_x;
-			t_idx += (i + scroll_y) * (40 * map_header.w);
+			t_idx += (i + scroll_y) * (MAP_WIDTH * map_header.w);
 			u16 t_choice = map_data[t_idx];
 			// determine coords of tile to pull from tileset from buffer
 			u32 t_x = TILESIZE * (t_choice % CHR_T_W);
@@ -207,6 +223,8 @@ void plane_draw_vram(u32 x, u32 y)
 	al_draw_text(font,al_map_rgb(255,255,255),x, y + CHR_H - 3 + TILESIZE,0,selmsg);
 }
 
+// Input handling routines
+
 void plane_handle_mouse(void)
 {
 	// Mouse is in map region
@@ -235,17 +253,19 @@ void plane_handle_mouse(void)
 		al_draw_rectangle(cdx,cdy,cdx2,cdy2,al_map_rgba(255,255,0,128),1);
 		if (mousestate.buttons & 1)
 		{
-			u32 t_idx = cursor_x + ((cursor_y) * (40 * map_header.w));
+			u32 t_idx = cursor_x + ((cursor_y) * (MAP_WIDTH * map_header.w));
 			map_data[t_idx] = selection;
 			if (sel_size == SEL_FULL)
 			{
 				t_idx++;
 				map_data[t_idx] = selection + 1;
-				t_idx += (map_header.w * 40) - 1;
+				t_idx += (map_header.w * MAP_WIDTH) - 1;
 				map_data[t_idx] = selection + (CHR_T_W);
 				t_idx += 1;
 				map_data[t_idx] = selection + (CHR_T_W + 1);
 			}
+			sprintf(display_title,"%s [*]",map_fname);
+			al_set_window_title(display, display_title);
 		}
 	}
 	else if (display_mouse_region(VRAM_DRAW_X,VRAM_DRAW_Y,CHR_W,CHR_H))
@@ -267,10 +287,33 @@ void plane_handle_mouse(void)
 
 }
 
+void plane_print_info(void)
+{
+	// Position and selection information
+	char msg[64];
+	sprintf(msg, "Cursor: %d, %d", cursor_x, cursor_y);
+	plane_print_label(8, BUFFER_H - 24, al_map_rgb(255,255,255), msg);
+	sprintf(msg, "Scroll: %d, %d", scroll_x, scroll_y);
+	plane_print_label(32, BUFFER_H - 16, al_map_rgb(192,192,192), msg);
+	sprintf(msg, "Room Name: %s (#%d)", map_header.name, map_header.id);
+	plane_print_label(8, BUFFER_H - 8, al_map_rgb(255,128,128), msg);
+
+	// Settings
+	if (sel_size == SEL_FULL)
+	{
+		sprintf(msg, "Brush size: large (16x16)");
+	}
+	else
+	{
+		sprintf(msg, "Brush size: small (8x8)");
+	}
+	plane_print_label(8, BUFFER_H - 32, al_map_rgb(128,255,128), msg);
+}
+
 void plane_scroll_limits(u32 *x, u32 *y)
 {
-	*x = ((40*map_header.w) - (PLANE_DRAW_W));
-	*y = ((32*map_header.h) - (PLANE_DRAW_H));
+	*x = ((MAP_WIDTH*map_header.w) - (PLANE_DRAW_W));
+	*y = ((MAP_HEIGHT*map_header.h) - (PLANE_DRAW_H));
 	printf("Scroll limits: %d, %d\n",*x,*y);
 }
 
@@ -283,11 +326,78 @@ void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg)
 	al_draw_text(font,col,x, y - 11,0,msg);
 }
 
-void plane_handle_io()
+void plane_handle_io(void)
 {
 	// User hits save ikey
-	if (al_key_down(&keystate,ALLEGRO_KEY_F5))
+	while (!al_is_event_queue_empty(input_queue))
 	{
-		map_save();
+		ALLEGRO_EVENT ev;
+		al_get_next_event(input_queue, &ev);
+	
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
+		{
+			switch (ev.keyboard.keycode)
+			{
+				// Let Ctrl+S save 
+				case ALLEGRO_KEY_S:
+					if (!al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
+					{
+						break;
+					}
+				case ALLEGRO_KEY_F5:
+					map_save();
+					break;
+				case ALLEGRO_KEY_F6:
+				case ALLEGRO_KEY_T:
+					sel_size = (sel_size == SEL_FULL) ? 0 : SEL_FULL;
+					break;
+				case ALLEGRO_KEY_UP:
+					if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
+					{
+						if (scroll_y < MAP_HEIGHT)
+						{
+							scroll_y = 0;
+							break;
+						}
+						scroll_y = scroll_y - MAP_HEIGHT;
+						scroll_y = MAP_HEIGHT * (scroll_y / MAP_HEIGHT);
+					}
+					break;
+				case ALLEGRO_KEY_DOWN:
+					if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
+					{
+						scroll_y = scroll_y + MAP_HEIGHT;
+						scroll_y = MAP_HEIGHT * (scroll_y / MAP_HEIGHT);
+						if (scroll_y > scroll_max_y)
+						{
+							scroll_y = scroll_max_y;
+						}
+					}
+					break;
+				case ALLEGRO_KEY_LEFT:
+					if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
+					{
+						if (scroll_x < MAP_WIDTH)
+						{
+							scroll_x = 0;
+							break;
+						}
+						scroll_x = scroll_x - MAP_WIDTH;
+						scroll_x = MAP_WIDTH * (scroll_x / MAP_WIDTH);
+					}
+					break;
+				case ALLEGRO_KEY_RIGHT:
+					if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
+					{
+						scroll_x = scroll_x + MAP_WIDTH;
+						scroll_x = MAP_WIDTH * (scroll_x / MAP_WIDTH);
+						if (scroll_x > scroll_max_x)
+						{
+							scroll_x = scroll_max_x;
+						}
+					}
+					break;
+			}
+		}
 	}
 }

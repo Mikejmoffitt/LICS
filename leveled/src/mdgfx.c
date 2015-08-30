@@ -31,12 +31,15 @@ void mdgfx_pal_load_loop(ALLEGRO_COLOR *c, ALLEGRO_FILE *pf)
 	{
 		// Get next Motorola style (big-endian) palette entry
 		u16 entry = al_fread16be(pf);
-		printf("Got pal entry #%X: %3X\n",i,entry);
+		printf("[%3X] ",entry);
+		if (i % 8 == 0)
+		{
+			printf("\n");
+		}
 		*c = mdgfx_color_entry(entry);
 		c++; // Hehehehe C++ get it?
 		i++;
 	}
-	printf("Got Megadrive palette.\n");
 }
 
 void mdgfx_plot_tile(u8 *t, u16 x, u16 y, ALLEGRO_BITMAP *d, ALLEGRO_COLOR *c)

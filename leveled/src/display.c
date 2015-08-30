@@ -30,6 +30,8 @@ ALLEGRO_MOUSE_STATE mousestate;
 ALLEGRO_FONT *font;
 ALLEGRO_EVENT_QUEUE *queue;
 
+char display_title[256];
+
 void display_register_queue(void)
 {
 	queue = al_create_event_queue();
@@ -171,6 +173,10 @@ void display_shutdown(void)
 
 void display_handle_scroll(void)
 {
+	if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
+	{
+		return;
+	}
 	if (al_key_down(&keystate,ALLEGRO_KEY_RIGHT))
 	{
 		if (scroll_x < scroll_max_x)

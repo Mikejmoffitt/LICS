@@ -24,7 +24,6 @@ struct map_obj
 	u16 data; // Depends on object type. Best example is entrance IDs.
 };
 
-
 typedef struct map_file map_file;
 struct map_file
 {	
@@ -62,7 +61,7 @@ struct map_file
 	u8 map_data[1]; 
 };
 
-void map_load_tileset(register num);
-void map_load_palette(register num);
+void map_load_tileset(u8 num);
+map_file *map_by_id(u8 num);
 
 #endif

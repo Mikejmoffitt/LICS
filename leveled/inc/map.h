@@ -13,6 +13,12 @@
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128
 
+#define MAP_WIDTH 40
+#define MAP_HEIGHT 30
+#define MAP_NAME_LEN 32
+#define MAP_MAX_WIDTH 24
+#define MAP_MAX_HEIGHT 24
+
 typedef struct map_obj map_obj;
 struct map_obj
 {

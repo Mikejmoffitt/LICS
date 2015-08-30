@@ -13,7 +13,7 @@
 #define PLANE_DRAW_X 160
 #define PLANE_DRAW_Y 16
 #define PLANE_DRAW_W 40
-#define PLANE_DRAW_H 32
+#define PLANE_DRAW_H 30
 
 #define VRAM_DRAW_X 16
 #define VRAM_DRAW_Y 16
@@ -47,10 +47,13 @@ void plane_scroll_limits(u32 *x, u32 *y);
 // Take mouse input for clicking on VRAM, map, etc
 void plane_handle_mouse(void);
 
+// Show settings, level meta info
+void plane_print_info(void);
+
 // Print a text label above a window, complete with opaque black BG
 void plane_print_label(u32 x, u32 y, ALLEGRO_COLOR col, const char *msg);
 
 // Handle inputs to trigger saving
-void plane_handle_io();
+void plane_handle_io(void);
 
 #endif
