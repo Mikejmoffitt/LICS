@@ -147,10 +147,15 @@ void player_accel(player *pl)
 
 void player_eval_grounded(player *pl)
 {
-	// For now, a hack for testing
+
+	if (pl->dy < FZERO)
+	{
+		pl->grounded = 0;
+		return;
+	}
 	u16 px = fix32ToInt(pl->x);
 	u16 py = fix32ToInt(pl->y);
-
+	// "Is the tile one pixel below me solid?"
 	if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM + 1)) || 
 		(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM + 1)))
 	{
@@ -212,22 +217,29 @@ static void player_vertical_collision(player *pl)
 	px -= fix16ToInt(pl->dx);
 	// Vertical collision
 	// "Am I now stuck with my feet in the ground?"
-	// This check always runs so that the player's "step up" functionality works
-	if (pl->dy > FZERO)
+	if (pl->dy >= FZERO)
 	{
-		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM - 1)) ||
-			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM - 1)))
+		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM)) ||
+			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM)))
 		{
 			// Snap to nearest 8px boundary
-			py = 8 * (py / 8);
+			py = 8 * (py / 8) - 1;
 			pl->y = intToFix32(py);
 			pl->dy = FZERO;
-			// Are we still stuck? Move up 8px since the snap didn't quite work right.
-			if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM - 1)) ||
-				(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM - 1)))
+			for (int i = 0; i < 8; i++)
 			{
-				pl->y = fix32Sub(pl->y,intToFix32(8));
+				// Are we still stuck? Move up 8px since the snap didn't quite work right.
+				if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM)) ||
+					(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM)))
+				{
+					pl->y = fix32Sub(pl->y,intToFix32(1));
+				}
+				else
+				{
+					break;
+				}
 			}
+			/*
 			else
 			{
 				player_eval_grounded(pl);
@@ -237,7 +249,7 @@ static void player_vertical_collision(player *pl)
 					pl->y = fix32Add(pl->y,intToFix32(8));
 					player_eval_grounded(pl);
 				}
-			}
+			}*/
 		}
 	}
 	else if (pl->dy < FZERO)

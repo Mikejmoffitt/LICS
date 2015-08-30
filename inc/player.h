@@ -54,7 +54,7 @@
 #define PLAYER_CHK_MID (PLAYER_CHK_FOOT - 8)
 
 #define PLAYER_DRAW_LEFT -8
-#define PLAYER_DRAW_TOP -24
+#define PLAYER_DRAW_TOP -23
 
 typedef struct player player;
 struct player
