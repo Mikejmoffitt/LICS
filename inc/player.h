@@ -48,7 +48,7 @@
 // 0,0 is the bottom-center of the player.
 #define PLAYER_CHK_LEFT -5
 #define PLAYER_CHK_RIGHT 4
-#define PLAYER_CHK_TOP -19
+#define PLAYER_CHK_TOP -18
 #define PLAYER_CHK_BOTTOM 0
 #define PLAYER_CHK_FOOT (PLAYER_CHK_BOTTOM - PLAYER_STEP_UP) 
 #define PLAYER_CHK_MID (PLAYER_CHK_FOOT - 8)

@@ -239,17 +239,13 @@ static void player_vertical_collision(player *pl)
 					break;
 				}
 			}
-			/*
-			else
+			player_eval_grounded(pl);
+			// Somehow we aren't grounded now - move down one tile.
+			if (!pl->grounded)
 			{
+				pl->y = fix32Add(pl->y,intToFix32(8));
 				player_eval_grounded(pl);
-				// Somehow we aren't grounded now - move down one tile.
-				if (!pl->grounded)
-				{
-					pl->y = fix32Add(pl->y,intToFix32(8));
-					player_eval_grounded(pl);
-				}
-			}*/
+			}
 		}
 	}
 	else if (pl->dy < FZERO)
@@ -259,7 +255,7 @@ static void player_vertical_collision(player *pl)
 			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_TOP - 1)))
 		{
 			// Snap to nearest 8px boundary, with head room accounted for
-			py = 8 * (py / 8) + 4;
+			py = 8 * (py / 8) + 3;
 			pl->y = intToFix32(py);
 			if (pl->dy < FIX16(-1.0))
 			{
