@@ -13,16 +13,16 @@
 void player_test(void)
 {
 	player pl;
-	state_load_room(1);
-	for (int i = 0; i < 28; i++)
+	state_load_room(64);
+	for (int i = 0; i < 32; i++)
 	{
 
-		VDP_doVRamDMA((state.current_map + (80 * 5) * (i + 2)),VDP_getAPlanAddress() + 128 * i,40);
+		VDP_doVRamDMA((state.current_map + (80 * 1) * (i)),VDP_getAPlanAddress() + 128 * i,40);
 	}
 
 	player_init(&pl);	
-	pl.y = 64;
-	pl.x = intToFix32(64);
+	pl.y = intToFix32(160);
+	pl.x = intToFix32(224 - 32);
 	for (;;)
 	{
 		player_eval_grounded(&pl);

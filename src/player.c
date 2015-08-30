@@ -148,14 +148,13 @@ void player_accel(player *pl)
 void player_eval_grounded(player *pl)
 {
 	// For now, a hack for testing
-	if (fix32ToInt(pl->y) >= 184 - 16)
+	u16 px = fix32ToInt(pl->x);
+	u16 py = fix32ToInt(pl->y);
+
+	if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM + 1)) || 
+		(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM + 1)))
 	{
 		pl->grounded = 1;
-		if (pl->dy > FZERO)
-		{
-			pl->dy = FZERO;
-			pl->y = intToFix32(184 - 16);
-		}
 	}
 	else
 	{
@@ -174,11 +173,105 @@ void player_jump(player *pl)
 	}
 }
 
+static void player_walk_collision(player *pl)
+{
+	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl->x);
+
+	// Horizontal collision
+	if (pl->dx > FZERO)
+	{
+		if ((map_collision(px + PLAYER_CHK_RIGHT, py + PLAYER_CHK_TOP)) ||
+			(map_collision(px + PLAYER_CHK_RIGHT, py + PLAYER_CHK_FOOT)) ||
+			(map_collision(px + PLAYER_CHK_RIGHT, py + PLAYER_CHK_MID))) 
+		{
+			px = 8 * (px / 8);
+			px += 3;
+			pl->x = intToFix32(px);
+			pl->dx = FZERO;
+		}
+	}
+	else if (pl->dx < FZERO)
+	{
+		if ((map_collision(px + PLAYER_CHK_LEFT, py + PLAYER_CHK_TOP)) ||
+			(map_collision(px + PLAYER_CHK_LEFT, py + PLAYER_CHK_FOOT) ) ||
+			(map_collision(px + PLAYER_CHK_LEFT, py + PLAYER_CHK_MID) )) 
+		{
+			px = 8 * (px / 8);
+			px += 5;
+			pl->x = intToFix32(px);
+			pl->dx = FZERO;
+		}
+	}
+}
+
+static void player_vertical_collision(player *pl)
+{
+	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl->x);
+	px -= fix16ToInt(pl->dx);
+	// Vertical collision
+	// "Am I now stuck with my feet in the ground?"
+	// This check always runs so that the player's "step up" functionality works
+	if (pl->dy > FZERO)
+	{
+		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM - 1)) ||
+			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM - 1)))
+		{
+			// Snap to nearest 8px boundary
+			py = 8 * (py / 8);
+			pl->y = intToFix32(py);
+			pl->dy = FZERO;
+			// Are we still stuck? Move up 8px since the snap didn't quite work right.
+			if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM - 1)) ||
+				(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM - 1)))
+			{
+				pl->y = fix32Sub(pl->y,intToFix32(8));
+			}
+			else
+			{
+				player_eval_grounded(pl);
+				// Somehow we aren't grounded now - move down one tile.
+				if (!pl->grounded)
+				{
+					pl->y = fix32Add(pl->y,intToFix32(8));
+					player_eval_grounded(pl);
+				}
+			}
+		}
+	}
+	else if (pl->dy < FZERO)
+	{
+		// "Am I now stuck with my head in the ceiling?"
+		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_TOP - 1)) ||
+			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_TOP - 1)))
+		{
+			// Snap to nearest 8px boundary, with head room accounted for
+			py = 8 * (py / 8) + 4;
+			pl->y = intToFix32(py);
+			if (pl->dy < FIX16(-1.0))
+			{
+				pl->dy = FIX16(-1.0);
+			}
+		}
+	}
+}
+
+
 void player_move(player *pl)
 {
+	if (pl->input & KEY_A)
+	{
+		pl->dy = PLAYER_DY_MAX;
+	}
 	// Do movement	
 	pl->x = fix32Add(pl->x,fix16ToFix32(pl->dx));
 	pl->y = fix32Add(pl->y,fix16ToFix32(pl->dy));
+
+	player_vertical_collision(pl);
+	player_walk_collision(pl);
+
+	player_eval_grounded(pl);
 
 	// In the air, gravity is affected by the player holding jump or not
 	if (!pl->grounded)
@@ -268,18 +361,24 @@ void player_calc_anim(player *pl)
 void player_draw(player *pl)
 {
 	u16 size;
+	u16 yoff;
 	if (pl->anim_frame < 0x10)
 	{
 		size = SPRITE_SIZE(2,3);
+		yoff = PLAYER_DRAW_TOP;
 	}
 	else if (pl->anim_frame < 0x14)
 	{
 		size = SPRITE_SIZE(3,2);
+		yoff = PLAYER_DRAW_TOP + 8;
 	}
 	else
 	{
 		size = SPRITE_SIZE(3,3);
+		yoff = PLAYER_DRAW_TOP;
 	}
-	sprite_put(fix32ToInt(pl->x) - state.cam_x, fix32ToInt(pl->y) - state.cam_y, size, 
+	sprite_put(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT - state.cam_x, 
+		fix32ToInt(pl->y) + yoff - state.cam_y, 
+		size, 
 		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
 }

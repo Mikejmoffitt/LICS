@@ -10,6 +10,7 @@
 static const map_file *maplist[] = {
 	(map_file *)&mapdata_testroom,
 	(map_file *)&mapdata_startroom,
+	(map_file *)&mapdata_coltest,
 	0
 };
 
@@ -62,4 +63,11 @@ map_file *map_by_id(u8 num)
 void map_draw_full(u16 cam_x, u16 cam_y)
 {
 	
+}
+
+u16 map_collision(u16 px, u16 py)
+{
+	u16 check_addr = ((py / 8) * (state.current_room->w * 40)) + (px / 8);
+	u16 *m = (u16 *)(&state.current_map[0] + (2 * check_addr));
+	return *m & 0xFF80;
 }

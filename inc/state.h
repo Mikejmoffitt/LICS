@@ -3,9 +3,6 @@
 
 #include <genesis.h>
 #include "map.h"
-// Player screen centering offset
-#define STATE_SC_OFFX 5
-#define STATE_SC_OFFY 8
 
 // Screen scrolling transition boundary
 #define STATE_SC_W 320
@@ -21,6 +18,7 @@ struct gamestate
 	map_file *current_room;
 	u8 *current_map;
 	u16 cam_x, cam_y;
+	u16 current_music;
 };
 
 extern gamestate state;

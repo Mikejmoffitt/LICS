@@ -13,10 +13,10 @@
 
 #define PLAYER_Y_ACCEL FIX16(0.276)
 #define PLAYER_Y_ACCEL_WEAK FIX16(0.156)
-#define PLAYER_JUMP_DY FIX16(-3.7 + 0.276)
+#define PLAYER_JUMP_DY FIX16(-3.7 + 0.12)
 //#define PLAYER_JUMP_DY FIX16(-3.7)
 #define PLAYER_JUMP_HOLD_STR FIX16(0.1)
-#define PLAYER_STEP_UP 4
+#define PLAYER_STEP_UP 3
 #define FZERO FIX16(0.0)
 #define FZERO32 FIX32(0.0)
 
@@ -40,6 +40,21 @@
 
 #define PLAYER_START_HP 5
 #define PLAYER_START_CP 5
+
+// Pixel dimensions for player
+#define PLAYER_HEIGHT 20
+#define PLAYER_WIDTH 9
+
+// 0,0 is the bottom-center of the player.
+#define PLAYER_CHK_LEFT -5
+#define PLAYER_CHK_RIGHT 4
+#define PLAYER_CHK_TOP -19
+#define PLAYER_CHK_BOTTOM 0
+#define PLAYER_CHK_FOOT (PLAYER_CHK_BOTTOM - PLAYER_STEP_UP) 
+#define PLAYER_CHK_MID (PLAYER_CHK_FOOT - 8)
+
+#define PLAYER_DRAW_LEFT -8
+#define PLAYER_DRAW_TOP -24
 
 typedef struct player player;
 struct player

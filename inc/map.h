@@ -30,7 +30,7 @@ struct map_file
 	// Room name (mostly for the editor)
 	char name[MAP_NAME_SIZE];
 	// Unique room identifier
-	u8 ex0;
+	u8 music;
 	u8 id; 
 
 	// Dimensions for the room in screens
@@ -61,7 +61,16 @@ struct map_file
 	u8 map_data[1]; 
 };
 
+// DMA a tileset and its associated palette into VRAM and CRAM
 void map_load_tileset(u8 num);
+
+// Return the map by its ID number
 map_file *map_by_id(u8 num);
+
+// Draw the full screen for the current map at these camera coords
+void map_draw_full(u16 cam_x, u16 cam_y);
+
+// What is at this spot on the map (background)?
+u16 map_collision(u16 x, u16 y);
 
 #endif
