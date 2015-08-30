@@ -5,10 +5,13 @@
 #include "map.h"
 // Player screen centering offset
 #define STATE_SC_OFFX 5
+#define STATE_SC_OFFY 8
 
 // Screen scrolling transition boundary
 #define STATE_SC_W 320
+#define STATE_SC_H 224
 #define STATE_SC_SEAMX 160
+#define STATE_SC_SEAMY 112
 
 // Some global game state
 
