@@ -71,6 +71,7 @@ void plane_load_fg(void)
 {
 	char tile[256];
 	char pal[256];
+	printf("Tile choice: %d\n",map_header.tileset);
 	switch (map_header.tileset)
 	{
 		default:

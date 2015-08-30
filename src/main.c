@@ -13,12 +13,15 @@
 void player_test(void)
 {
 	player pl;
-	state_load_room(64);
+	state_load_room(1);
+	map_draw_full(0,0);
+	/*
 	for (int i = 0; i < 32; i++)
 	{
 
-		VDP_doVRamDMA((state.current_map + (80 * 1) * (i)),VDP_getAPlanAddress() + 128 * i,40);
+		VDP_doVRamDMA((state.current_map + (80 * state.current_room->w) * (i)),VDP_getAPlanAddress() + 128 * i,40);
 	}
+	*/
 
 	player_init(&pl);	
 	pl.y = intToFix32(160);
@@ -39,9 +42,13 @@ void player_test(void)
 		player_draw(&pl);
 		
 		system_wait_v();
-		
+		if (pl.input & KEY_A)
+		{
+			map_draw_full(state.cam_x,state.cam_y);
+		}
 		player_dma(&pl);
 		sprites_dma_simple();
+
 	}
 }
 

@@ -268,10 +268,6 @@ static void player_vertical_collision(player *pl)
 
 void player_move(player *pl)
 {
-	if (pl->input & KEY_A)
-	{
-		pl->dy = PLAYER_DY_MAX;
-	}
 	// Do movement	
 	pl->x = fix32Add(pl->x,fix16ToFix32(pl->dx));
 	pl->y = fix32Add(pl->y,fix16ToFix32(pl->dy));

@@ -24,19 +24,16 @@ void map_new()
 	memset(map_header.name,0,MAP_NAME_LEN);
 	snprintf(map_header.name,MAP_NAME_LEN - 1,"%s",in_buffer);
 	printf("\nRoom ID? (integer)\n>");
-	fgets(in_buffer, 3, stdin);
-	map_header.id = atoi(in_buffer);
+	scanf("%d",(int *)&map_header.id);
 	while (map_header.w == 0 || map_header.w >= MAP_MAX_WIDTH)
 	{
 		printf("\nWidth in %d-column screens? (integer)\n>",MAP_WIDTH);
-		fgets(in_buffer, 3, stdin);
-		map_header.w = atoi(in_buffer);
+		scanf("%d",(int *)&map_header.w);
 	}
 	while (map_header.h == 0 || map_header.h >= MAP_MAX_HEIGHT)
 	{
 		printf("\nHeight in %d-row screens? (integer)\n>",MAP_HEIGHT);
-		fgets(in_buffer, 3, stdin);
-		map_header.h = atoi(in_buffer);
+		scanf("%d",(int *)&map_header.h);
 	}
 
 	if (map_data)
@@ -47,26 +44,27 @@ void map_new()
 	printf(" ( creating a map %d by %d screens)\n",map_header.w,map_header.h);
 	size_t map_nwords = (map_header.w * MAP_WIDTH) * (map_header.h * 32);
 	map_data = (uint16_t *)calloc(sizeof(uint16_t),map_nwords);
-
-	printf("\nTop-left map X? (integer)\n>");
-	fgets(in_buffer, 3, stdin);
-	map_header.map_x = atoi(in_buffer);
-
-	printf("\nTop-left map Y? (integer)\n>");
-	fgets(in_buffer, 3, stdin);
-	map_header.map_y = atoi(in_buffer);
-
 	printf("\nTileset chioce? (integer)\n>");
-	fgets(in_buffer, 3, stdin);
-	map_header.tileset = atoi(in_buffer);
+	unsigned int arg;
+	scanf("%d",&arg);
+	map_header.tileset = arg;
 
 	printf("\nSprite palette? (integer)\n>");
-	fgets(in_buffer, 3, stdin);
-	map_header.sprite_palette = atoi(in_buffer);
+	scanf("%d",&arg);
+	map_header.sprite_palette = arg;
 
 	printf("\nBackground? (integer)\n>");
-	fgets(in_buffer, 3, stdin);
-	map_header.background = atoi(in_buffer);
+	scanf("%d",&arg);
+	map_header.background = arg;
+
+	printf("\nTop-left Map coords? (integer)\n>");
+	scanf("%d",&arg);
+	map_header.map_x = arg;
+	printf(" ");
+	scanf("%d",&arg);
+	map_header.map_y = arg;
+
+
 }
 
 void map_save()

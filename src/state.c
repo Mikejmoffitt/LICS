@@ -73,7 +73,7 @@ void state_update_scroll(u16 px, u16 py)
 	// Vertical scrolling
 	if (state.current_room->h <= 1)
 	{
-		state.cam_y = 12;
+		state.cam_y = 0;
 	}
 	else if (py >= (state.current_room->h * STATE_SC_H) - STATE_SC_SEAMY)
 	{
@@ -92,5 +92,4 @@ void state_update_scroll(u16 px, u16 py)
 	{
 		state_scroll_fgy(state.cam_y);
 	}
-
 }

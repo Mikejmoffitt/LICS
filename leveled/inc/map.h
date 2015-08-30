@@ -35,7 +35,7 @@ struct map_file
 	char name[MAP_NAME_SIZE];
 
 	// Room identifier, unique to this one
-	uint8_t ex0; // Currently unused extra info
+	uint8_t music;
 	uint8_t id;
 
 	// Dimensions in 320x240 segments

@@ -8,9 +8,9 @@
 
 // Unordered list of all maps
 static const map_file *maplist[] = {
-	(map_file *)&mapdata_testroom,
+	(map_file *)&mapdata_roomzero,
 	(map_file *)&mapdata_startroom,
-	(map_file *)&mapdata_coltest,
+	(map_file *)&mapdata_sidesquare,
 	0
 };
 
@@ -62,7 +62,22 @@ map_file *map_by_id(u8 num)
 
 void map_draw_full(u16 cam_x, u16 cam_y)
 {
-	
+	u16 plot_x = (cam_x % 512)/8;
+	u16 plot_y = (cam_y % 256)/8;
+	u32 copy_src = state.current_map + (2 * (cam_x / 8));
+	u16 map_width = state.current_room->w * 80;
+	copy_src += (map_width * (cam_y / 8));
+	u32 copy_dest = VDP_getAPlanAddress() + (2 * plot_x) + (128 * plot_y);
+
+	u16 dma_post_len = 64 - plot_x;
+	u16 dma_pre_len = plot_x;
+
+	for (int y = 0; y < 32; y++)
+	{
+		VDP_doVRamDMA(copy_src,copy_dest,41);
+		copy_src += map_width;
+		copy_dest += 128;
+	}
 }
 
 u16 map_collision(u16 px, u16 py)
