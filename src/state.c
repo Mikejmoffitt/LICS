@@ -73,8 +73,7 @@ void state_update_scroll(u16 px, u16 py)
 	// Vertical scrolling
 	if (state.current_room->h <= 1)
 	{
-		// Scroll down half a tile, since our screen height is 224
-		state.cam_y = 8;
+		state.cam_y = 12;
 	}
 	else if (py >= (state.current_room->h * STATE_SC_H) - STATE_SC_SEAMY)
 	{

@@ -301,6 +301,10 @@ void player_calc_anim(player *pl)
 	if (pl->grounded)
 	{
 		pl->anim_cnt++;
+		if (pl->anim_cnt == PLAYER_ANIMSPEED * 4)
+		{
+			pl->anim_cnt = 0;
+		}
 	}
 	else
 	{
@@ -340,18 +344,21 @@ void player_calc_anim(player *pl)
 		}
 		else // Walking cycle
 		{
-			switch ((pl->anim_cnt / 8)% 4)
+			if (pl->anim_cnt < PLAYER_ANIMSPEED)
 			{
-				case 0:
-				case 2:
-					pl->anim_frame = 0x02;
-					break;
-				case 1:
-					pl->anim_frame = 0x03;
-					break;
-				case 3:
-					pl->anim_frame = 0x01;
-					break;
+				pl->anim_frame = 0x02;
+			}
+			else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 2))
+			{
+				pl->anim_frame = 0x03;
+			}
+			else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 3))
+			{
+				pl->anim_frame = 0x02;
+			}
+			else
+			{
+				pl->anim_frame = 0x01;
 			}
 		}
 	}
