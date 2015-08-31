@@ -5,13 +5,11 @@
 #include "mpad.h"
 #include "vramslots.h"
 #include "sprites.h"
-#include "objtypes.h"
 
 #include "state.h"
 
 void player_init(player *pl)
 {
-	pl->type = OBJ_PLAYER;
 	pl->x = FZERO32;
 	pl->y = FZERO32;
 	pl->dx = FZERO;
@@ -288,6 +286,10 @@ void player_move(player *pl)
 		else
 		{
 			pl->dy = fix16Add(pl->dy,PLAYER_Y_ACCEL);
+		}
+		if (pl->dy > PLAYER_DY_MAX)
+		{
+			pl->dy = PLAYER_DY_MAX;
 		}
 	}
 }

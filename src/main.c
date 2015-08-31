@@ -10,45 +10,50 @@
 #include "vramslots.h"
 #include "state.h"
 
-void player_test(void)
+void room_loop(void)
 {
 	player pl;
-	state_load_room(1);
-	map_draw_full(0,0);
-	/*
-	for (int i = 0; i < 32; i++)
+	state.next_id = 1;
+	state.current_id = 64;
+	
+	// Game is in progress
+	while (1)
 	{
-
-		VDP_doVRamDMA((state.current_map + (80 * state.current_room->w) * (i)),VDP_getAPlanAddress() + 128 * i,40);
-	}
-	*/
-
-	player_init(&pl);	
-	pl.y = intToFix32(160);
-	pl.x = intToFix32(224 - 32);
-	for (;;)
-	{
-		player_eval_grounded(&pl);
-		player_input(&pl);
-		player_cp(&pl);
-		player_accel(&pl);
-		player_jump(&pl);
-		player_move(&pl);
-
-		player_eval_grounded(&pl);
-		player_calc_anim(&pl);
-
-		state_update_scroll(fix32ToInt(pl.x),fix32ToInt(pl.y));
-		player_draw(&pl);
-		
-		system_wait_v();
-		if (pl.input & KEY_A)
+		player_init(&pl);	
+		pl.y = intToFix32(64);
+		pl.x = intToFix32(64);
+		u16 px;
+		u16 py;
+		state_load_room(state.next_id);
+		state.next_id = 3;
+		do
 		{
-			map_draw_full(state.cam_x,state.cam_y);
-		}
-		player_dma(&pl);
-		sprites_dma_simple();
+			player_eval_grounded(&pl);
+			player_input(&pl);
+			player_cp(&pl);
+			player_accel(&pl);
+			player_jump(&pl);
+			player_move(&pl);
 
+			player_eval_grounded(&pl);
+			player_calc_anim(&pl);
+			px = fix32ToInt(pl.x);
+			py = fix32ToInt(pl.y);
+
+			state_update_scroll(px,py);
+			player_draw(&pl);
+			
+			system_wait_v();
+			if (pl.input & KEY_A)
+			{
+				map_draw_full(state.cam_x,state.cam_y);
+			}
+			state_watch_transitions(px,py,pl.dx,pl.dy);
+			player_dma(&pl);
+			sprites_dma_simple();
+
+		}
+		while (!state_watch_transitions(px,py,pl.dx,pl.dy));
 	}
 }
 
@@ -56,6 +61,6 @@ int main(void)
 {
 	system_init();
 
-	player_test();
+	room_loop();
 	return 0;	
 }

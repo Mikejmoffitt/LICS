@@ -22,10 +22,10 @@
 typedef struct map_obj map_obj;
 struct map_obj
 {
-	uint16_t x;
-	uint16_t y;
 	uint16_t type;
 	uint16_t data;
+	uint16_t x;
+	uint16_t y;
 };
 
 // Abstraction of map file header

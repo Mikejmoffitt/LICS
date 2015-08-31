@@ -7,6 +7,10 @@ static s16 sy_memo;
 
 void state_load_room(u8 roomnum)
 {
+	if (roomnum == state.current_id)
+	{
+		return;
+	}
 	state.cam_x = 65535;
 	state.cam_y = 65535;
 	state.current_room = map_by_id(roomnum);
@@ -18,7 +22,8 @@ void state_load_room(u8 roomnum)
 		state.current_music = state.current_room->music;
 		// Play music if it isn't already
 	}
-	
+	map_draw_full(0,0);
+	state.current_id = roomnum;
 }
 
 // Scrolling support functions
@@ -73,7 +78,7 @@ void state_update_scroll(u16 px, u16 py)
 	// Vertical scrolling
 	if (state.current_room->h <= 1)
 	{
-		state.cam_y = 0;
+		state.cam_y = 16;
 	}
 	else if (py >= (state.current_room->h * STATE_SC_H) - STATE_SC_SEAMY)
 	{
@@ -92,4 +97,29 @@ void state_update_scroll(u16 px, u16 py)
 	{
 		state_scroll_fgy(state.cam_y);
 	}
+}
+
+u16 state_watch_transitions(u16 px, u16 py, fix16 dx, fix16 dy)
+{
+	if (dx == FZERO && dy == FZERO)
+	{
+		return 0;
+	}
+	else if ((px < STATE_TRANSITION_MARGIN) && (dx < FZERO))
+	{
+		return 1;
+	}
+	else if ((px > ((state.current_room->w * 320) - STATE_TRANSITION_MARGIN)) && (dx > FZERO))
+	{
+		return 1;
+	}
+	else if ((py < STATE_TRANSITION_MARGIN) && (dy < FZERO))
+	{
+		return 1;
+	}
+	else if ((py > ((state.current_room->h * 240) - STATE_TRANSITION_MARGIN)) && (dx > FZERO))
+	{
+		return 1;
+	}
+	return 0;
 }

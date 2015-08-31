@@ -61,7 +61,6 @@
 typedef struct player player;
 struct player
 {
-	u16 type; // Universal type all objects share
 	// Lyle physics vars
 	fix32 x, y;
 	fix16 dx, dy;
