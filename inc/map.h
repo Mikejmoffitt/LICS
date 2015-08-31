@@ -91,8 +91,11 @@ void map_load_tileset(u8 num);
 // Return the map by its ID number
 map_file *map_by_id(u8 num);
 
+// Update columns on left or right sides of the screen
+void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 side);
+
 // Update rows on top and bottom of the screen
-void map_draw_vertical(u16 cam_x, u16 cam_y);
+void map_draw_vertical(u16 cam_x, u16 cam_y, u16 side);
 
 // Draw the full screen for the current map at these camera coords
 void map_draw_full(u16 cam_x, u16 cam_y);

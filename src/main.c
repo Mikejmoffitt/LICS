@@ -77,7 +77,14 @@ void room_loop(void)
 			state_update_scroll(px,py);
 			player_draw(&pl);
 			DEBUG_BGCOL(0x444);
-			map_draw_vertical(state.cam_x,state.cam_y);
+			if (pl.dy != FZERO)
+			{
+				map_draw_vertical(state.cam_x,state.cam_y,pl.dy > FZERO);
+			}
+			if (pl.dx != FZERO)
+			{
+				
+			}
 			if (pl.input & KEY_A)
 			{
 				map_draw_full(state.cam_x,state.cam_y);

@@ -69,7 +69,7 @@ map_file *map_by_id(u8 num)
 	}
 }
 
-void map_draw_vertical(u16 cam_x, u16 cam_y)
+void map_draw_vertical(u16 cam_x, u16 cam_y, u16 side)
 {
 	// Useful values for sourcing and plotting
 	// Map width, in tiles * 2 (actual address in VRAM)
@@ -120,21 +120,16 @@ void map_draw_vertical(u16 cam_x, u16 cam_y)
 		dma_len_1 = 0;
 	}
 
+	// Work on the bottom of the screen instead of the top
+	if (side)
+	{
+		dma_src_0 += map_width * 27;
+		dma_dest_0 += STATE_PLANE_W * 2 * 27;
+	}
+
 	// Reduced from 32 to 28 iterations, since only 28 rows are visible on-screen anyway.
-	for (int y = 0; y < STATE_PLANE_H - 2; y++)
-	{		
-		if (y == 2)
-		{
-			dma_src_0 += map_width * (27 - 2);
-			dma_dest_0 += STATE_PLANE_W * 2 * (27 - 2);
-			if (dma_len_1)
-			{
-				dma_src_1 += map_width * (27 - 2);
-				dma_dest_1 += STATE_PLANE_W * 2 * (27 - 2);
-			}
-			y = 26;
-			continue;
-		}
+	for (int y = 0; y < 2; y++)
+	{	
 		// DMA 1
 		// VDP_doVRamDMA(dma_src_0,VDP_getAPlanAddress() + dma_dest_0,dma_len_0);
 		map_dma_queue(dma_src_0,VDP_getAPlanAddress() + dma_dest_0, dma_len_0);
