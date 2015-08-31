@@ -83,7 +83,7 @@ void room_loop(void)
 			}
 			if (pl.dx != FZERO)
 			{
-				
+				map_draw_horizontal(state.cam_x,state.cam_y,pl.dx > FZERO);	
 			}
 			if (pl.input & KEY_A)
 			{
