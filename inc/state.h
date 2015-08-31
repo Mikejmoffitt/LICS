@@ -18,6 +18,11 @@
 #define STATE_SCROLL_DMA 2
 #define STATE_SCROLL_SINGLE 1
 
+#define STATE_MOVED_NONE 0x00
+#define STATE_MOVED_X 0x01
+#define STATE_MOVED_Y 0x02
+#define STATE_MOVED_BOTH (STATE_MOVED_X | STATE_MOVED_Y)
+
 #ifndef FZERO
 #define FZERO FIX16(0.0)
 #endif
@@ -47,8 +52,14 @@ extern gamestate state;
 // Load a room by its ID number
 void state_load_room(u8 roomnum);
 
-// Update camera X based on player position.
-void state_update_scroll(u16 px, u16 py);
+// Update camera X based on player position. Returns a bit field
+// describing in which ways the scrolling has changed.
+// Possible returns:
+// 	STATE_MOVED_NONE
+//	STATE_MOVED_X
+//	STATE_MOVED_Y
+//	STATE_MOVED_BOTH
+u16 state_update_scroll(u16 px, u16 py);
 
 // Commit scroll table updates
 void state_dma_scroll(void);

@@ -58,7 +58,6 @@ void room_loop(void)
 		do
 		{
 			DEBUG_BGCOL(0x200);
-			player_eval_grounded(&pl);
 			player_input(&pl);
 			player_cp(&pl);
 			player_accel(&pl);
@@ -74,14 +73,14 @@ void room_loop(void)
 			px = fix32ToInt(pl.x);
 			py = fix32ToInt(pl.y);
 			DEBUG_BGCOL(0x8E8);
-			state_update_scroll(px,py);
+			u16 moved = state_update_scroll(px,py);
 			player_draw(&pl);
 			DEBUG_BGCOL(0x444);
-			if (pl.dy != FZERO)
+			if (moved & STATE_MOVED_Y)
 			{
 				map_draw_vertical(state.cam_x,state.cam_y,pl.dy > FZERO);
 			}
-			if (pl.dx != FZERO)
+			if (moved & STATE_MOVED_X)
 			{
 				map_draw_horizontal(state.cam_x,state.cam_y,pl.dx > FZERO);	
 			}

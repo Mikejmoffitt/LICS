@@ -85,7 +85,7 @@ static void state_scroll_fgy(s16 amt)
 	}
 }
 
-void state_update_scroll(u16 px, u16 py)
+u16 state_update_scroll(u16 px, u16 py)
 {
 	state.xscroll_cmd = 0;
 	state.yscroll_cmd = 0;
@@ -138,6 +138,8 @@ void state_update_scroll(u16 px, u16 py)
 	{
 		state_scroll_fgx(state.cam_x);
 	}
+
+	return (state.xscroll_cmd ? STATE_MOVED_X : 0) | (state.yscroll_cmd ? STATE_MOVED_Y : 0);
 }
 
 void state_dma_scroll(void)
