@@ -13,8 +13,10 @@ void state_load_room(u8 roomnum)
 	{
 		return;
 	}
-	state.cam_x = -1;
-	state.cam_y = -1;
+	state.cam_x = 65535;
+	state.cam_y = 65535;
+	sx_memo = 65535;
+	sy_memo = 65535;
 	state.current_room = map_by_id(roomnum);
 	state.current_map = (u8 *)&(state.current_room->map_data);
 	map_load_tileset(state.current_room->tileset);
@@ -43,8 +45,6 @@ void state_load_room(u8 roomnum)
 	{
 		VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
 	}
-
-
 }
 
 // Scrolling support functions

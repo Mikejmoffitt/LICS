@@ -47,12 +47,13 @@ void room_loop(void)
 		u16 py = fix32ToInt(pl.y);
 		// Entrance to a room requires a full redraw
 		state_update_scroll(px, py);
+		player_draw(&pl);
 		map_draw_full(state.cam_x, state.cam_y);
 		if (state.current_room->id == 0)
 		{
-
 			col_init();
 		}
+		state_dma_scroll();
 		state.next_id++;
 		do
 		{
