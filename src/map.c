@@ -54,6 +54,8 @@ void map_load_tileset(u8 num)
 	VDP_doVRamDMA(tsrc_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_VRAM_LEN * 16);
 	VDP_doCRamDMA(psrc_ptr,MAP_FG_PALNUM * 32, 16);
 	map_dma_queue_depth = 0;
+	map_dma_h_len[0] = 0;
+	map_dma_h_len[1] = 0;
 }
 
 // Maps are referred to by number so we never have to call them by name

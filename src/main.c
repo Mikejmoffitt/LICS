@@ -11,10 +11,10 @@
 #include "state.h"
 #include "col.h"
 
-
+#define WANT_BGCOL 1
 
 #ifdef WANT_BGCOL
-#define DEBUG_BGCOL(x) VDP_setBackgroundColor(0,x);
+#define DEBUG_BGCOL(x) VDP_setPaletteColor(0,x);
 #else
 #define DEBUG_BGCOL(x) 
 #endif
