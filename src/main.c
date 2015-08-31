@@ -19,6 +19,15 @@
 #define DEBUG_BGCOL(x) 
 #endif
 
+void room_error_msg(void)
+{
+	if (state.current_room->id == 0)
+	{
+		col_puts40(7,12,"Big trouble in cube sector!");
+		col_puts(26,14,"Could not load the next room.");
+	}
+}
+
 void room_loop(void)
 {
 	player pl;
@@ -41,15 +50,10 @@ void room_loop(void)
 		map_draw_full(state.cam_x, state.cam_y);
 		if (state.current_room->id == 0)
 		{
+
 			col_init();
-			col_puts40(7,12,"Big trouble in cube sector!");
-			col_puts40(6,13,"Could not load the next room.");
-			col_puts40(4,15,"Your save data will be fine, but");
-			col_puts40(4,16,"you will need to reset the game.");
 		}
 		state.next_id++;
-		col_init();
-		int i = 0;
 		do
 		{
 			DEBUG_BGCOL(0x200);
@@ -77,6 +81,7 @@ void room_loop(void)
 			{
 				map_draw_full(state.cam_x,state.cam_y);
 			}
+			room_error_msg();
 			DEBUG_BGCOL(0x000);
 			
 			system_wait_v();
