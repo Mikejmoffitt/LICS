@@ -5,6 +5,7 @@
 #include "vramslots.h"
 #include "mapdata.h"
 #include "state.h"
+#include "col.h"
 
 // Unordered list of all maps
 static const map_file *maplist[] = {
@@ -15,10 +16,10 @@ static const map_file *maplist[] = {
 	0
 };
 
-
-
 void map_load_tileset(u8 num)
 {
+	// Black the screen first so no funny wrong blocks show up
+	VDP_doCRamDMA(pal_black,0,64);
 	u32 tsrc_ptr;
 	u32 psrc_ptr;
 	switch (num)
@@ -50,7 +51,7 @@ map_file *map_by_id(u8 num)
 		// List termination; room not found
 		if (!tf)
 		{
-			return NULL;
+			return map_by_id(0);
 		}
 
 		// Found the room, return it

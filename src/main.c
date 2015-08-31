@@ -16,16 +16,17 @@ void room_loop(void)
 	state.next_id = 1;
 	state.current_id = 64;
 	
+	player_init(&pl);	
 	// Game is in progress
 	while (1)
 	{
-		player_init(&pl);	
+		state_load_room(state.next_id);
+		player_init_soft(&pl);	
 		pl.y = intToFix32(64);
 		pl.x = intToFix32(64);
 		u16 px;
 		u16 py;
-		state_load_room(state.next_id);
-		state.next_id = 3;
+		state.next_id++;
 		do
 		{
 			player_eval_grounded(&pl);
@@ -44,6 +45,10 @@ void room_loop(void)
 			player_draw(&pl);
 			
 			system_wait_v();
+			if (pl.input & KEY_A && state.current_id == 0)
+			{
+				state_load_room(state.next_id);
+			}
 			if (pl.input & KEY_A)
 			{
 				map_draw_full(state.cam_x,state.cam_y);

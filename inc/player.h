@@ -91,6 +91,9 @@ struct player
 // Init function for Lyle's variables
 void player_init(player *pl);
 
+// For use in-game - don't reset health, cp, etc
+void player_init_soft(player *pl);
+
 // Put Lyle's sprite in VRAM if needed
 void player_dma(player *pl);
 

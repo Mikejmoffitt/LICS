@@ -22,7 +22,19 @@ void state_load_room(u8 roomnum)
 		state.current_music = state.current_room->music;
 		// Play music if it isn't already
 	}
-	map_draw_full(0,0);
+	if (state.current_room->id == 0)
+	{
+		col_init();
+		col_puts40(7,10,"Big trouble in cube sector!");
+		col_puts40(6,11,"Could not load the next room.");
+		col_puts40(8,13,"Previous");
+		col_puthex(7,14,state.current_id);
+		col_puts40(18,14,"-->");
+		col_puts40(24,13,"Next");
+		col_puthex(22,14,(u32)roomnum);
+		col_puts40(4,16,"Your save data will be fine, but");
+		col_puts40(4,17,"you will need to reset the game.");
+	}
 	state.current_id = roomnum;
 }
 

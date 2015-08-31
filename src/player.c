@@ -12,10 +12,18 @@ void player_init(player *pl)
 {
 	pl->x = FZERO32;
 	pl->y = FZERO32;
+	pl->direction = PLAYER_RIGHT;
+	
+	pl->hp = 0;
+	pl->cp = 0;
+	player_init_soft(pl);
+}
+
+void player_init_soft(player *pl)
+{
 	pl->dx = FZERO;
 	pl->dy = FZERO;
 	pl->grounded = 0;
-	pl->direction = PLAYER_RIGHT;
 	
 	pl->anim_cnt = 0;
 	pl->anim_frame = 0;
@@ -28,13 +36,8 @@ void player_init(player *pl)
 	pl->hurt_cnt = 0;
 	pl->invuln_cnt = 0;
 	pl->control_disabled = 0;
-
 	pl->input = 0;
 	pl->input_prev = 0;
-
-	pl->hp = 0;
-	pl->cp = 0;
-
 	player_set_pal();
 }
 
