@@ -27,6 +27,7 @@ Also handles some object list functions.
 // Each map object besides lyle is 32 bytes, or 16 words
 #define MAP_OBJ_SIZE (2 * 16)
 
+
 typedef struct map_obj map_obj;
 struct map_obj
 {
@@ -95,6 +96,9 @@ void map_draw_vertical(u16 cam_x, u16 cam_y);
 
 // Draw the full screen for the current map at these camera coords
 void map_draw_full(u16 cam_x, u16 cam_y);
+
+// Commit DMA queue to VRAM
+void map_dma(void);
 
 // What is at this spot on the map (background)?
 u16 map_collision(u16 x, u16 y);

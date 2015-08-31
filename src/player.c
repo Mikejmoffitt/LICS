@@ -8,6 +8,10 @@
 
 #include "state.h"
 
+static u32 lyle_dma_src;
+static u16 lyle_dma_dest;
+static u16 lyle_dma_len;
+
 void player_init(player *pl)
 {
 	pl->x = FZERO32;
@@ -41,13 +45,11 @@ void player_init_soft(player *pl)
 	player_set_pal();
 }
 
-void player_dma(player *pl)
+void player_dma_setup(player *pl)
 {
 	u16 num = pl->anim_frame;
-	u16 offset = 0;
+	u16 offset;
 
-	// Destination is specified in bytes
-	u16 dest = PLAYER_VRAM_SLOT * 32;
 	// Most sprites are just six tiles - 3x2 or 2x3
 	if (num < LYLE_3x3_CUTOFF)
 	{
@@ -59,10 +61,15 @@ void player_dma(player *pl)
 		num -= 0x14;
 		offset = 120 + (9 * num);
 	}
-	// Num tiles to transfer * word size = DMA size in words
-	u16 size = (offset >= 120) ? (9 * 16) : (6 * 16);
+	
+	lyle_dma_len = (offset >= 120) ? (9 * 16) : (6 * 16);
+	lyle_dma_src = gfx_lyle + (32 * offset);
+	lyle_dma_dest = PLAYER_VRAM_SLOT * 32;
+}
 
-	VDP_doVRamDMA(gfx_lyle + (32 *offset),dest,size);
+void player_dma(player *pl)
+{
+	VDP_doVRamDMA(lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
 void player_set_pal(void)
@@ -148,7 +155,6 @@ void player_accel(player *pl)
 
 void player_eval_grounded(player *pl)
 {
-
 	if (pl->dy < FZERO)
 	{
 		pl->grounded = 0;

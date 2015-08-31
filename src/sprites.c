@@ -24,7 +24,7 @@ void sprites_dma_simple()
 	}
 	// Terminate the list at the last sprite
 	sprites_clamp_link(next_spr - 1);
-	VDP_doVRamDMA(sprite_table,sprite_addr,next_spr << 2);
+	VDP_doVRamDMA(sprite_table,sprite_addr,(u16)(next_spr << 2));
 	next_spr = 0;
 }
 
@@ -40,7 +40,7 @@ void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link)
 	// Sprite table only holds 80 sprites
 	if (num >= NUM_SPRITES)
 	{
-		return;
+	;
 	}
 	u16 *addr = &sprite_table[num << 2];
 	*addr = 128 + y;

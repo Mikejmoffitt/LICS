@@ -15,6 +15,9 @@
 
 #define STATE_TRANSITION_MARGIN 7
 
+#define STATE_SCROLL_DMA 2
+#define STATE_SCROLL_SINGLE 1
+
 #ifndef FZERO
 #define FZERO FIX16(0.0)
 #endif
@@ -30,6 +33,12 @@ struct gamestate
 	u16 current_music;
 	u16 next_id;
 	u16 next_entrance;
+	u16 vs_en;
+	u16 hs_en;
+	u16 xscroll_cmd;
+	u16 yscroll_cmd;
+	u16 xscroll_vals[STATE_PLANE_H];
+	u16 yscroll_vals[STATE_PLANE_W / 2];
 	u8 current_id;
 };
 
@@ -40,6 +49,9 @@ void state_load_room(u8 roomnum);
 
 // Update camera X based on player position.
 void state_update_scroll(u16 px, u16 py);
+
+// Commit scroll table updates
+void state_dma_scroll(void);
 
 // Check if player has reached a screen edge, load new room if needed
 u16 state_watch_transitions(u16 px, u16 py, fix16 dx, fix16 dy);

@@ -95,6 +95,7 @@ void player_init(player *pl);
 void player_init_soft(player *pl);
 
 // Put Lyle's sprite in VRAM if needed
+void player_dma_setup(player *pl);
 void player_dma(player *pl);
 
 // DMA Lyle's palette

@@ -11,6 +11,14 @@
 #include "state.h"
 #include "col.h"
 
+
+
+#ifdef WANT_BGCOL
+#define DEBUG_BGCOL(x) VDP_setBackgroundColor(0,x);
+#else
+#define DEBUG_BGCOL(x) 
+#endif
+
 void room_loop(void)
 {
 	player pl;
@@ -40,36 +48,48 @@ void room_loop(void)
 			col_puts40(4,16,"you will need to reset the game.");
 		}
 		state.next_id++;
+		col_init();
+		int i = 0;
 		do
 		{
-			VDP_setPaletteColor(0, 0x200);
+			DEBUG_BGCOL(0x200);
 			player_eval_grounded(&pl);
 			player_input(&pl);
 			player_cp(&pl);
 			player_accel(&pl);
 			player_jump(&pl);
-			VDP_setPaletteColor(0, 0x220);
+			DEBUG_BGCOL(0x220);
 			player_move(&pl);
-			VDP_setPaletteColor(0, 0x260);
+			DEBUG_BGCOL(0x260);
 
 			player_eval_grounded(&pl);
 			player_calc_anim(&pl);
-			VDP_setPaletteColor(0, 0x280);
+			player_dma_setup(&pl);
+			DEBUG_BGCOL(0x280);
 			px = fix32ToInt(pl.x);
 			py = fix32ToInt(pl.y);
-			VDP_setPaletteColor(0, 0x8E8);
+			DEBUG_BGCOL(0x8E8);
 			state_update_scroll(px,py);
 			player_draw(&pl);
-			VDP_setPaletteColor(0, 0x000);
+			DEBUG_BGCOL(0x444);
+			map_draw_vertical(state.cam_x,state.cam_y);
+			if (pl.input & KEY_A)
+			{
+				map_draw_full(state.cam_x,state.cam_y);
+			}
+			DEBUG_BGCOL(0x000);
 			
 			system_wait_v();
-			VDP_setPaletteColor(0, 0x00E);
-			map_draw_vertical(state.cam_x,state.cam_y);
-			VDP_setPaletteColor(0, 0x04E);
+
+			// Let's DMA, quick
+			DEBUG_BGCOL(0x00E);
+			map_dma();
+			DEBUG_BGCOL(0xE0E);
+			state_dma_scroll();	
+			DEBUG_BGCOL(0x28E);
 			sprites_dma_simple();
-			VDP_setPaletteColor(0, 0x08C);
+			DEBUG_BGCOL(0x0EE);
 			player_dma(&pl);
-			VDP_setPaletteColor(0, 0x000);
 
 		}
 		while (!state_watch_transitions(px,py,pl.dx,pl.dy));

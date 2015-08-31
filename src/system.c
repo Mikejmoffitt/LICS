@@ -11,7 +11,6 @@ static _voidCallback *v_int(void)
 
 static _voidCallback *h_int(void)
 {
-	VDP_setPaletteColor(0, 0xEE0);
 	vbl_active = 1;
 	return;
 }
@@ -22,7 +21,7 @@ void system_init(void)
 	// Configure interrupts
 	SYS_disableInts();
 	VDP_setHInterrupt(1);
-	VDP_setHIntCounter(223);
+	VDP_setHIntCounter(223 - 16);
 	SYS_setVIntCallback(v_int);
 	SYS_setHIntCallback(h_int);
 	SYS_enableInts();

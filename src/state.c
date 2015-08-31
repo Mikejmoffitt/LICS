@@ -13,8 +13,8 @@ void state_load_room(u8 roomnum)
 	{
 		return;
 	}
-	state.cam_x = 65535;
-	state.cam_y = 65535;
+	state.cam_x = -1;
+	state.cam_y = -1;
 	state.current_room = map_by_id(roomnum);
 	state.current_map = (u8 *)&(state.current_room->map_data);
 	map_load_tileset(state.current_room->tileset);
@@ -28,6 +28,9 @@ void state_load_room(u8 roomnum)
 
 	// Set scrolling scheme
 
+	state.vs_en = (state.current_room->h != 1);
+	state.hs_en = (state.current_room->w != 1);
+
 	if (state.current_room->w == 1 && state.current_room->h == 1)
 	{
 		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
@@ -40,6 +43,8 @@ void state_load_room(u8 roomnum)
 	{
 		VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
 	}
+
+
 }
 
 // Scrolling support functions
@@ -49,41 +54,43 @@ static void state_scroll_fgx(s16 amt)
 	amt = amt * -1;
 	if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
 	{
-		VDP_setHorizontalScroll(PLAN_A, amt);
+		state.xscroll_vals[0] = amt;
+	state.xscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else
 	{
-		u16 scroll_vals[STATE_PLANE_H];
 		for (u16 i = 0; i < STATE_PLANE_H; i++)
 		{
-			scroll_vals[i] = amt;
+			state.xscroll_vals[i] = amt;
 		}
-		VDP_setHorizontalScrollTile(PLAN_A, 0, scroll_vals, STATE_PLANE_H, 1);
+		state.xscroll_cmd = STATE_SCROLL_DMA;
 	}
 }
 
 static void state_scroll_fgy(s16 amt)
 {
-	sy_memo = amt;
+	sy_memo = amt + 1;
 	if (VDP_getVerticalScrollingMode() == VSCROLL_PLANE)
 	{
-		VDP_setVerticalScroll(PLAN_A, amt);
+		state.yscroll_vals[0] = amt;
+		state.yscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else
 	{
-		u16 scroll_vals[STATE_PLANE_W / 2];
 		for (u16 i = 0; i < STATE_PLANE_W / 2; i++)
 		{
-			scroll_vals[i] = amt;
+			state.yscroll_vals[i] = amt;
 		}
-		VDP_setVerticalScrollTile(PLAN_A, 0, scroll_vals, STATE_PLANE_H, 1);
+		state.yscroll_cmd = STATE_SCROLL_DMA;
 	}
 }
 
 void state_update_scroll(u16 px, u16 py)
 {
+	state.xscroll_cmd = 0;
+	state.yscroll_cmd = 0;
 	// Horizontal scrolling
-	if (state.current_room->w <= 1)
+	if (!state.hs_en)
 	{
 		// No need to scroll, single-screen room
 		state.cam_x = 0;
@@ -104,13 +111,8 @@ void state_update_scroll(u16 px, u16 py)
 		state.cam_x = 0;
 	}
 
-	if (state.cam_x != sx_memo)
-	{
-		state_scroll_fgx(state.cam_x);
-	}
-
 	// Vertical scrolling
-	if (state.current_room->h <= 1)
+	if (!state.vs_en)
 	{
 		state.cam_y = 16;
 	}
@@ -130,6 +132,31 @@ void state_update_scroll(u16 px, u16 py)
 	if (state.cam_y != sy_memo)
 	{
 		state_scroll_fgy(state.cam_y);
+	}
+
+	if (state.cam_x != sx_memo)
+	{
+		state_scroll_fgx(state.cam_x);
+	}
+}
+
+void state_dma_scroll(void)
+{
+	if (state.xscroll_cmd == STATE_SCROLL_DMA)
+	{
+	 	VDP_setHorizontalScrollTile(PLAN_A, 0, state.xscroll_vals, STATE_PLANE_H, 1);
+	}
+	else if (state.xscroll_cmd)
+	{
+	 	VDP_setHorizontalScroll(PLAN_A, state.xscroll_vals[0]);
+	}
+	if (state.yscroll_cmd == STATE_SCROLL_DMA)
+	{
+		VDP_setVerticalScrollTile(PLAN_A, 0, state.yscroll_vals, STATE_PLANE_H, 1);
+	}
+	else if (state.yscroll_cmd)
+	{
+		VDP_setVerticalScroll(PLAN_A, state.yscroll_vals[0]);
 	}
 }
 
