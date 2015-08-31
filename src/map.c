@@ -15,7 +15,7 @@ static u16 map_dma_queue_depth;
 
 #define MAP_DMA_H_QUEUE_MAX 48
 
-static u32 map_dma_h_src_queue[MAP_DMA_H_QUEUE_MAX];
+static u16 map_dma_h_src_queue[MAP_DMA_H_QUEUE_MAX];
 static u16 map_dma_h_dest[2];
 static u16 map_dma_h_len[2];
 static u16 map_dma_h_en;
@@ -90,6 +90,7 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 
 	// X and Y components of the source address (top-left visible corner)
 	u16 src_xcomp = (2 * (cam_x / 8));
+	src_xcomp += (right_side?2 * (STATE_SC_W / 8):0);
 	u16 src_ycomp = (map_width * (cam_y / 8));
 
 	// What is the position of the tile shown at cam_x, cam_y?
@@ -108,10 +109,10 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 	if (right_side)
 	{
 		// Add almost one screen width's
-		dma_src += ((STATE_SC_W / 8)) - 1;
-		dma_dest += 2 * (((STATE_SC_W / 8) - plot_x) - 1);
+		dma_dest += (STATE_SC_W / 8) * 2; 
+		//dma_dest += 2 * (((STATE_SC_W / 8) - plot_x));
 		// Horizontal seam
-		if (((plot_x + vis_width + 1) >= (STATE_PLANE_W)))
+		if (((plot_x + vis_width) >= (STATE_PLANE_W)))
 		{
 			dma_dest -= (STATE_PLANE_W * 2);
 		}
@@ -124,7 +125,8 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 
 	for (int i = 0; i < STATE_PLANE_H; i++)
 	{
-		map_dma_h_src_queue[i] = dma_src;
+		map_dma_h_src_queue[i] = *((u16 *)dma_src);
+		dma_src += map_width;
 		map_dma_h_len[current_dma]++;
 		dma_dest += STATE_PLANE_W * 2;
 		// Have we crossed the vertical seam?
@@ -344,6 +346,7 @@ void map_dma(void)
 			map_dma_h_len[1],
 			STATE_PLANE_W * 2);
 	}
+
 }
 
 void map_dma_queue(u32 src, u16 dest, u16 len)
