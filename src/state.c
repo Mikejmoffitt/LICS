@@ -1,5 +1,7 @@
 #include "state.h"
 
+#include "col.h"
+
 gamestate state;
 
 static s16 sx_memo;
@@ -22,40 +24,56 @@ void state_load_room(u8 roomnum)
 		state.current_music = state.current_room->music;
 		// Play music if it isn't already
 	}
-	if (state.current_room->id == 0)
-	{
-		col_init();
-		col_puts40(7,10,"Big trouble in cube sector!");
-		col_puts40(6,11,"Could not load the next room.");
-		col_puts40(8,13,"Previous");
-		col_puthex(7,14,state.current_id);
-		col_puts40(18,14,"-->");
-		col_puts40(24,13,"Next");
-		col_puthex(22,14,(u32)roomnum);
-		col_puts40(4,16,"Your save data will be fine, but");
-		col_puts40(4,17,"you will need to reset the game.");
-	}
 	state.current_id = roomnum;
+
+	// Set scrolling scheme
+
+	if (state.current_room->w == 1 && state.current_room->h == 1)
+	{
+		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+	}
+	else if (state.current_room->w == 1 && state.current_room->h != 1)
+	{
+		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_2TILE);
+	}
+	else
+	{
+		VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
+	}
 }
 
 // Scrolling support functions
 static void state_scroll_fgx(s16 amt)
 {
-	amt = amt * -1;
-	for (int i = 0; i < 32; i++)
-	{
-		VDP_setHorizontalScrollTile(PLAN_A, i, &amt, 1, 0);
-	}
 	sx_memo = amt;
+	amt = amt * -1;
+	if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
+	{
+		VDP_setHorizontalScroll(PLAN_A, amt);
+	}
+	else
+	{
+		for (int i = 0; i < STATE_PLANE_H; i++)
+		{
+			VDP_setHorizontalScrollTile(PLAN_A, i, &amt, 1, 0);
+		}
+	}
 }
 
 static void state_scroll_fgy(s16 amt)
 {
-	for (int i = 0; i < 32; i++)
-	{
-		VDP_setVerticalScrollTile(PLAN_A, i, &amt, 1, 0);
-	}
 	sy_memo = amt;
+	if (VDP_getVerticalScrollingMode() == VSCROLL_PLANE)
+	{
+		VDP_setVerticalScroll(PLAN_A, amt);
+	}
+	else
+	{
+		for (int i = 0; i < STATE_PLANE_W / 2; i++)
+		{
+			VDP_setVerticalScrollTile(PLAN_A, i, &amt, 1, 0);
+		}
+	}
 }
 
 void state_update_scroll(u16 px, u16 py)
