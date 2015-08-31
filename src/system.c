@@ -6,25 +6,28 @@ static vu16 vbl_active;
 
 static _voidCallback *v_int(void)
 {
-	vbl_active = 1;
 	return;
 }
 
 static _voidCallback *h_int(void)
 {
+	VDP_setPaletteColor(0, 0xEE0);
+	vbl_active = 1;
 	return;
 }
 
 void system_init(void)
 {
+	VDP_init();
 	// Configure interrupts
 	SYS_disableInts();
-	SYS_setInterruptMaskLevel(0);
+	VDP_setHInterrupt(1);
+	VDP_setHIntCounter(223);
 	SYS_setVIntCallback(v_int);
+	SYS_setHIntCallback(h_int);
 	SYS_enableInts();
 
 	// Set up basic VDP settings
-	VDP_init();
 	VDP_setPlanSize(SYSTEM_PLANE_W,SYSTEM_PLANE_H);
 	VDP_setScreenWidth320();
 	VDP_setScreenHeight224();

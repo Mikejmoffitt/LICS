@@ -42,29 +42,34 @@ void room_loop(void)
 		state.next_id++;
 		do
 		{
+			VDP_setPaletteColor(0, 0x200);
 			player_eval_grounded(&pl);
 			player_input(&pl);
 			player_cp(&pl);
 			player_accel(&pl);
 			player_jump(&pl);
+			VDP_setPaletteColor(0, 0x220);
 			player_move(&pl);
+			VDP_setPaletteColor(0, 0x260);
 
 			player_eval_grounded(&pl);
 			player_calc_anim(&pl);
+			VDP_setPaletteColor(0, 0x280);
 			px = fix32ToInt(pl.x);
 			py = fix32ToInt(pl.y);
-
+			VDP_setPaletteColor(0, 0x8E8);
 			state_update_scroll(px,py);
 			player_draw(&pl);
+			VDP_setPaletteColor(0, 0x000);
 			
 			system_wait_v();
-			if (pl.input & KEY_A)
-			{
-				map_draw_full(state.cam_x,state.cam_y);
-			}
-			state_watch_transitions(px,py,pl.dx,pl.dy);
-			player_dma(&pl);
+			VDP_setPaletteColor(0, 0x00E);
+			map_draw_vertical(state.cam_x,state.cam_y);
+			VDP_setPaletteColor(0, 0x04E);
 			sprites_dma_simple();
+			VDP_setPaletteColor(0, 0x08C);
+			player_dma(&pl);
+			VDP_setPaletteColor(0, 0x000);
 
 		}
 		while (!state_watch_transitions(px,py,pl.dx,pl.dy));

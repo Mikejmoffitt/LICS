@@ -53,10 +53,12 @@ static void state_scroll_fgx(s16 amt)
 	}
 	else
 	{
-		for (int i = 0; i < STATE_PLANE_H; i++)
+		u16 scroll_vals[STATE_PLANE_H];
+		for (u16 i = 0; i < STATE_PLANE_H; i++)
 		{
-			VDP_setHorizontalScrollTile(PLAN_A, i, &amt, 1, 0);
+			scroll_vals[i] = amt;
 		}
+		VDP_setHorizontalScrollTile(PLAN_A, 0, scroll_vals, STATE_PLANE_H, 1);
 	}
 }
 
@@ -69,10 +71,12 @@ static void state_scroll_fgy(s16 amt)
 	}
 	else
 	{
-		for (int i = 0; i < STATE_PLANE_W / 2; i++)
+		u16 scroll_vals[STATE_PLANE_W / 2];
+		for (u16 i = 0; i < STATE_PLANE_W / 2; i++)
 		{
-			VDP_setVerticalScrollTile(PLAN_A, i, &amt, 1, 0);
+			scroll_vals[i] = amt;
 		}
+		VDP_setVerticalScrollTile(PLAN_A, 0, scroll_vals, STATE_PLANE_H, 1);
 	}
 }
 
