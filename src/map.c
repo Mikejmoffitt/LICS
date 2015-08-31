@@ -13,11 +13,11 @@ static u16 map_dma_dest_queue[MAP_DMA_QUEUE_MAX];
 static u16 map_dma_len_queue[MAP_DMA_QUEUE_MAX];
 static u16 map_dma_queue_depth;
 
-#define MAP_DMA_H_QUEUE_MAX 32
+#define MAP_DMA_H_QUEUE_MAX 48
 
 static u32 map_dma_h_src_queue[MAP_DMA_H_QUEUE_MAX];
-static u32 map_dma_h_dest[2];
-static u32 map_dma_h_len[2];
+static u16 map_dma_h_dest[2];
+static u16 map_dma_h_len[2];
 static u16 map_dma_h_en;
 
 // Unordered list of all maps
@@ -120,6 +120,7 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 	u16 current_dma = 0;
 	map_dma_h_dest[0] = VDP_getAPlanAddress() + dma_dest;
 	map_dma_h_len[0] = 0;
+	map_dma_h_len[1] = 0;
 
 	for (int i = 0; i < STATE_PLANE_H; i++)
 	{
