@@ -64,26 +64,88 @@ map_file *map_by_id(u8 num)
 
 void map_draw_full(u16 cam_x, u16 cam_y)
 {
+	// Useful values for sourcing and plotting
+	// Map width, in tiles * 2 (actual address in VRAM)
+	u16 map_width = state.current_room->w * (2 * (STATE_SC_W / 8));
+
+	// VRAM address at which the vertical seam occurs
+	u16 seam_vaddr = STATE_PLANE_H * STATE_PLANE_W * 2;
+
+	// Width of the screen in double-tiles (actual address)
+	const u16 vis_width = (STATE_SC_W / 8);
+
+	// X and Y components of the source address
+	u16 src_xcomp = (2 * (cam_x / 8));
+	u16 src_ycomp = (map_width * (cam_y / 8));
+
+	// What is the position of the tile shown at cam_x, cam_y?
 	u16 plot_x = (cam_x % (STATE_PLANE_W * 8))/8;
 	u16 plot_y = (cam_y % (STATE_PLANE_H * 8))/8;
-	u32 copy_src = state.current_map + (2 * (cam_x / 8));
-	u16 map_width = state.current_room->w * (2 * (STATE_SC_W / 8));
-	copy_src += (map_width * (cam_y / 8));
-	u32 copy_dest = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
 
-	u16 dma_post_len = (STATE_PLANE_W) - plot_x;
-	u16 dma_pre_len = plot_x;
+	// DMA transfer lengths
+	u16 dma_len[2];
+	dma_len[0] = 0;
+	dma_len[1] = 0;
+
+	// Copy destinations
+	u16 dma_dest[2];
+	dma_dest[0] = 0;
+	dma_dest[1] = 0;
+
+	// Copy sources
+	u32 dma_src[2];
+	dma_src[0] = 0;
+	dma_src[1] = 0;
+
+	// Will we cross the horizontal seam?
+	if ((plot_x + vis_width + 1) >= (STATE_PLANE_W))
+	{
+		// DMA zero is mostly normal, but it cuts short at the seam
+		dma_len[0] = STATE_PLANE_W - plot_x;
+		dma_src[0] = (u32)state.current_map + src_xcomp + src_ycomp;
+		dma_dest[0] = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
+		
+		// DMA 1 fills in the rest, on the "same row" near the left
+		dma_len[1] = (STATE_SC_W / 8) - dma_len[0] + 1;
+		dma_src[1] = dma_src[0] + (2 * dma_len[0]);
+		dma_dest[1] = ((STATE_PLANE_W * 2) * plot_y);
+		//dma_src[1] = state.current_map + (2 * (cam_x / 8)) + dma_len[0] - map_width;
+	}
+	else
+	{
+		dma_len[0] = vis_width + 1;
+		dma_src[0] = (u32)state.current_map + src_xcomp + src_ycomp;
+		dma_dest[0] = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
+	}
 
 	for (int y = 0; y < STATE_PLANE_H; y++)
-	{
-		VDP_doVRamDMA(copy_src,VDP_getAPlanAddress() + copy_dest,41);
-		copy_src += map_width;
-		copy_dest += STATE_PLANE_W * 2;
-		// Crossing vertical seam
-		if (copy_dest >= STATE_PLANE_H * STATE_PLANE_W * 2)
+	{		
+		// DMA 1
+		VDP_doVRamDMA(dma_src[0],VDP_getAPlanAddress() + dma_dest[0],dma_len[0]);
+		dma_src[0] += map_width;
+		dma_dest[0] += STATE_PLANE_W * 2;
+		// Have we crossed the vertical seam?
+		if (dma_dest[0] >= seam_vaddr)
 		{
-			copy_dest -= (STATE_PLANE_H * STATE_PLANE_W * 2);
+			// Loop back around.
+			dma_dest[0] -= seam_vaddr;
 		}
+
+		// DMA 2
+		if (dma_len[1] == 0)
+		{
+			continue;
+		}
+		VDP_doVRamDMA(dma_src[1],VDP_getAPlanAddress() + dma_dest[1],dma_len[1]);
+		dma_src[1] += map_width;
+		dma_dest[1] += STATE_PLANE_W * 2;
+		// Have we crossed the vertical seam?
+		if (dma_dest[1] >= seam_vaddr)
+		{
+			// Loop back around.
+			dma_dest[1] -= seam_vaddr;
+		}
+
 	}
 }
 
