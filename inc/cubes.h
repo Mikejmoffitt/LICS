@@ -23,6 +23,4 @@ struct cube
 	s8 dx, dy;
 }
 
-
-
 #endif
