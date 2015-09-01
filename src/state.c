@@ -55,7 +55,7 @@ static void state_scroll_fgx(s16 amt)
 	if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
 	{
 		state.xscroll_vals[0] = amt;
-	state.xscroll_cmd = STATE_SCROLL_SINGLE;
+		state.xscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else
 	{
@@ -69,7 +69,7 @@ static void state_scroll_fgx(s16 amt)
 
 static void state_scroll_fgy(s16 amt)
 {
-	sy_memo = amt + 1;
+	sy_memo = amt;
 	if (VDP_getVerticalScrollingMode() == VSCROLL_PLANE)
 	{
 		state.yscroll_vals[0] = amt;
@@ -128,7 +128,6 @@ u16 state_update_scroll(u16 px, u16 py)
 	{
 		state.cam_y = 0;
 	}
-
 	if (state.cam_y != sy_memo)
 	{
 		state_scroll_fgy(state.cam_y);

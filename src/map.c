@@ -196,40 +196,32 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 	// Work on the bottom of the screen instead of the top
 	if (bottom_side)
 	{
-		dma_src_0 += map_width * 27;
-		dma_dest_0 += STATE_PLANE_W * 2 * 27;
-	}
-
-	// Reduced from 32 to 28 iterations, since only 28 rows are visible on-screen anyway.
-	for (int y = 0; y < 2; y++)
-	{	
-		// DMA 1
-		// VDP_doVRamDMA(dma_src_0,VDP_getAPlanAddress() + dma_dest_0,dma_len_0);
-		map_dma_queue(dma_src_0,VDP_getAPlanAddress() + dma_dest_0, dma_len_0);
-		dma_src_0 += map_width;
-		dma_dest_0 += STATE_PLANE_W * 2;
-		// Have we crossed the vertical seam?
-		if (dma_dest_0 >= seam_vaddr)
+		dma_src_0 += map_width * 28;
+		dma_dest_0 += STATE_PLANE_W * 2 * 28;
+		// Have we crossed a vertical seam?
+		while (dma_dest_0 >= seam_vaddr)
 		{
 			// Loop back around.
 			dma_dest_0 -= seam_vaddr;
 		}
 
-		// DMA 2
-		if (dma_len_1 == 0)
+		if (dma_len_1)
 		{
-			continue;
+			dma_src_1 += map_width * 28;
+			dma_dest_1 += STATE_PLANE_W * 2 * 28;
+
+			while (dma_dest_1 >= seam_vaddr)
+			{
+				// Loop back around.
+				dma_dest_1 -= seam_vaddr;
+			}
 		}
-//		VDP_doVRamDMA(dma_src_1,VDP_getAPlanAddress() + dma_dest_1,dma_len_1);
+	}
+
+	map_dma_queue(dma_src_0,VDP_getAPlanAddress() + dma_dest_0, dma_len_0);
+	if (dma_len_1)
+	{
 		map_dma_queue(dma_src_1,VDP_getAPlanAddress() + dma_dest_1, dma_len_1);
-		dma_src_1 += map_width;
-		dma_dest_1 += STATE_PLANE_W * 2;
-		// Have we crossed the vertical seam?
-		if (dma_dest_1 >= seam_vaddr)
-		{
-			// Loop back around.
-			dma_dest_1 -= seam_vaddr;
-		}
 	}
 }
 
@@ -347,7 +339,9 @@ void map_dma(void)
 			map_dma_h_dest[1],
 			map_dma_h_len[1],
 			STATE_PLANE_W * 2);
+		map_dma_h_len[1] = 0;
 	}
+	map_dma_h_len[0] = 0;
 
 }
 

@@ -142,6 +142,12 @@ void player_accel(player *pl)
 		}
 	}
 
+	// If dy/dx is almost zero, make it zero
+	if (pl->dx > FIX16(-0.1) && pl->dx < FIX16(0.1) && !(pl->input & (KEY_RIGHT | KEY_LEFT)))
+	{
+		pl->dx = FZERO;
+	}
+
 	// Limit top speed
 	if (pl->dx > PLAYER_DX_MAX)
 	{

@@ -11,13 +11,9 @@
 #include "state.h"
 #include "col.h"
 
-#define WANT_BGCOL 1
+#define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
-#ifdef WANT_BGCOL
-#define DEBUG_BGCOL(x) VDP_setPaletteColor(0,x);
-#else
-#define DEBUG_BGCOL(x) 
-#endif
+u16 debug_bgcol;
 
 void room_error_msg(void)
 {
@@ -87,6 +83,7 @@ void room_loop(void)
 			if (pl.input & KEY_A)
 			{
 				map_draw_full(state.cam_x,state.cam_y);
+				debug_bgcol = 1;
 			}
 			room_error_msg();
 			DEBUG_BGCOL(0x000);
