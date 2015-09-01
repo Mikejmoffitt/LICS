@@ -18,7 +18,18 @@ static u16 map_dma_queue_depth;
 static u16 map_dma_h_src_queue[MAP_DMA_H_QUEUE_MAX];
 static u16 map_dma_h_dest[2];
 static u16 map_dma_h_len[2];
-static u16 map_dma_h_en;
+
+void map_dma_queue(u32 src, u16 dest, u16 len)
+{
+	if (map_dma_queue_depth == MAP_DMA_QUEUE_MAX)
+	{
+		return;
+	}
+	map_dma_src_queue[map_dma_queue_depth] = src;
+	map_dma_dest_queue[map_dma_queue_depth] = dest;
+	map_dma_len_queue[map_dma_queue_depth] = len;
+	map_dma_queue_depth++;
+}
 
 // Unordered list of all maps
 static const map_file *maplist[] = {
@@ -343,18 +354,6 @@ void map_dma(void)
 	}
 	map_dma_h_len[0] = 0;
 
-}
-
-void map_dma_queue(u32 src, u16 dest, u16 len)
-{
-	if (map_dma_queue_depth == MAP_DMA_QUEUE_MAX)
-	{
-		return;
-	}
-	map_dma_src_queue[map_dma_queue_depth] = src;
-	map_dma_dest_queue[map_dma_queue_depth] = dest;
-	map_dma_len_queue[map_dma_queue_depth] = len;
-	map_dma_queue_depth++;
 }
 
 u16 map_collision(u16 px, u16 py)

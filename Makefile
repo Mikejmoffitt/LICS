@@ -81,27 +81,27 @@ OBJS = $(RESOURCES)
 
 .PHONY: all clean mednafen debug gens
 
-all: out.bin 
+all: lyle.bin 
 
-mednafen: out.bin
+mednafen: lyle.bin
 	@exec mednafen $< 2> /dev/null
 
-debug: out.bin
+debug: lyle.bin
 	@exec gens $< 2> /dev/null
 
-gens: out.bin
+gens: lyle.bin
 	@exec gens $< 2> /dev/null
 
-regen: out.bin
-	@exec wine ./util/regen/Regen.exe ../../out.bin
+regen: lyle.bin
+	@exec wine ./util/regen/Regen.exe ../../lyle.bin
 
-fusion: out.bin
+fusion: lyle.bin
 	@exec util/Fusion $< 2> /dev/null
 
-test: out.bin
+test: lyle.bin
 	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
 
-test32: out.bin
+test32: lyle.bin
 	@exec util/megaloader/mega32 md $< /dev/ttyUSB0 2> /dev/null
 
 boot/sega.o: boot/rom_head.bin
@@ -116,8 +116,8 @@ out.iso: out.elf_scd
 	# Create a sega cd image.  Limited to 256K or smaller Roms
 	#
 	$(NM) -n -S -t x out.elf_scd > out.nm
-	$(OBJC) -O binary out.elf_scd out.bin
-	$(SIZEBND) out.bin -sizealign 131072   
+	$(OBJC) -O binary out.elf_scd lyle.bin
+	$(SIZEBND) lyle.bin -sizealign 131072   
 	$(OBJC) -O binary out.elf_scd $(SCD_LOADER)/_filesystem/M_INIT.PRG
 	$(SIZEBND) $(SCD_LOADER)/_filesystem/M_INIT.PRG -sizealign 131072    
 	$(MKISOFS) -iso-level 1 -o $(SCD_LOADER)/filesystem.img -pad $(SCD_LOADER)/_filesystem

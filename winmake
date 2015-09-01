@@ -58,7 +58,7 @@ DEFAULT_FLAGS= -m68000 -Wall -fno-builtin $(INCS) -B$(BIN) -std=c99
 FLAGSZ80= -i$(SRC) -i$(INCLUDE) -i$(RES) -i$(LIBSRC) -i$(LIBINCLUDE)
 
 
-#release: FLAGS= $(DEFAULT_FLAGS) -O2 -fno-web -fno-gcse -fno-unit-at-a-time -fomit-frame-pointer
+#release: FLAGS= $(DEFAULT_FLAGS) -O3 -fno-web -fno-gcse -fno-unit-at-a-time -fomit-frame-pointer
 release: FLAGS= $(DEFAULT_FLAGS) -O2 -fomit-frame-pointer
 release: out/rom.bin
 
@@ -71,20 +71,15 @@ default: release
 
 .PHONY: clean
 
-run: release
-	@exec ./util/regen/regen ../../out/rom.bin
-
-test: release
-	@exec ./util/megaloader/mega-usb out/rom.bin
 
 clean:
-	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin
+	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin lyle.bin
 
 cleanrelease:
-	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin
+	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin lyle.bin
 
 cleandebug:
-	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin out/symbol.txt
+	$(RM) -f $(OBJS) out.lst out/cmd_ out/sega.o out/rom_head.bin out/rom_head.o out/rom.nm out/rom.wch out/rom.out out/rom.bin out/symbol.txt lyle.bin
 
 cleanobj:
 	$(RM) -f $(OBJS) out/sega.o out/rom_head.bin out/rom_head.o out/rom.out
@@ -92,6 +87,7 @@ cleanobj:
 out/rom.bin: out/rom.out
 	$(OBJCPY) -O binary out/rom.out out/rom.bin
 	$(SIZEBND) out/rom.bin -sizealign 131072
+	cp out/rom.bin lyle.bin
 
 out/symbol.txt: out/rom.out
 	$(NM) out/rom.out > out/symbol.txt

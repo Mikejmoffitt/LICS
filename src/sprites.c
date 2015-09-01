@@ -15,6 +15,13 @@ void sprites_dma(register spr_num)
 	VDP_doVRamDMA(sprite_table,sprite_addr,spr_num << 2);
 }
 
+void sprites_clamp_link(u8 num)
+{
+	u16 *addr = &sprite_table[num << 2];
+	addr++;
+	*addr = *addr & 0xFF00; // Set next link to 0 to terminate list
+}
+
 void sprites_dma_simple()
 {
 	// No sprites placed, don't bother
@@ -26,13 +33,6 @@ void sprites_dma_simple()
 	sprites_clamp_link(next_spr - 1);
 	VDP_doVRamDMA(sprite_table,sprite_addr,(u16)(next_spr << 2));
 	next_spr = 0;
-}
-
-void sprites_clamp_link(u8 num)
-{
-	u16 *addr = &sprite_table[num << 2];
-	addr++;
-	*addr = *addr & 0xFF00; // Set next link to 0 to terminate list
 }
 
 void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link)
