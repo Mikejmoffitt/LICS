@@ -35,5 +35,8 @@ void save_clear(void)
 	sram.magic_1 = SAVE_MAGIC;
 	sram.magic_2 = SAVE_MAGIC;
 
+	sram.max_hp = SAVE_DEFAULT_HP;
+	
+
 	save_write();
 }

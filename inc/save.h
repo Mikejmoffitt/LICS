@@ -8,13 +8,28 @@
 #define SAVE_MAP_W 26
 #define SAVE_MAP_H 12
 
+#define SAVE_NUM_ORBS 10
+#define SAVE_DEFAULT_HP 5
+
+#define SAVE_MAP 0x00
+#define SAVE_CUBE_LIFT 0x02
+#define SAVE_CUBE_KICK 0x04
+#define SAVE_CUBE_PHANTOM 0x08
+
 typedef struct save_file save_file;
 struct save_file
 {
 	u16 magic_0;
-	// Which orbs have been collected
-	u16 orbs[16];
+	// Which CP orbs have been collected
+	u16 orbs[SAVE_NUM_ORBS];
+	// How many CP orbs are on lyle
+	u16 orbs_holding;
+	// How many CP orbs have been deposited
+	u16 orbs_deposited;
 	u16 magic_1;
+	// HP orbs collected
+	u16 hp_orbs[SAVE_NUM_ORBS];
+	u16 max_hp;
 	// Bitfield for abilities gained, if needed (I think orbs decide this)
 	u16 abilities;
 	// Map reveal info

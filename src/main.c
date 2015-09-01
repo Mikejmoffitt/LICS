@@ -11,6 +11,8 @@
 #include "state.h"
 #include "col.h"
 #include "save.h"
+#include "cubes.h"
+
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
 u16 debug_bgcol;
@@ -21,7 +23,8 @@ void room_loop(void)
 	state.next_id = 1;
 	state.current_id = 64;
 	
-	player_init(&pl);	
+	player_init(&pl);
+			cube_dma_tiles();
 	// Game is in progress
 	while (1)
 	{

@@ -21,6 +21,8 @@ struct cube
 	map_obj obj;
 	u8 active;
 	s8 dx, dy;
-}
+};
+
+void cube_dma_tiles(void);
 
 #endif
