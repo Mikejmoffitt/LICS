@@ -10,19 +10,10 @@
 #include "vramslots.h"
 #include "state.h"
 #include "col.h"
-
+#include "save.h"
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
 u16 debug_bgcol;
-
-void room_error_msg(void)
-{
-	if (state.current_room->id == 0)
-	{
-		col_puts40(7,12,"Big trouble in cube sector!");
-		col_puts(26,14,"Could not load the next room.");
-	}
-}
 
 void room_loop(void)
 {
@@ -45,10 +36,6 @@ void room_loop(void)
 		state_update_scroll(px, py);
 		player_draw(&pl);
 		map_draw_full(state.cam_x, state.cam_y);
-		if (state.current_room->id == 0)
-		{
-			col_init();
-		}
 		state_dma_scroll();
 		state.next_id++;
 		do
@@ -85,7 +72,6 @@ void room_loop(void)
 				map_draw_full(state.cam_x,state.cam_y);
 				debug_bgcol = 1;
 			}
-			room_error_msg();
 			DEBUG_BGCOL(0x000);
 			
 			system_wait_v();
@@ -108,7 +94,6 @@ void room_loop(void)
 int main(void)
 {
 	system_init();
-
 	room_loop();
 	return 0;	
 }

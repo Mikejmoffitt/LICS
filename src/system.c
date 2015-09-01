@@ -6,12 +6,12 @@ static vu16 vbl_active;
 
 static _voidCallback *v_int(void)
 {
+	vbl_active = 1;
 	return;
 }
 
 static _voidCallback *h_int(void)
 {
-	vbl_active = 1;
 	return;
 }
 

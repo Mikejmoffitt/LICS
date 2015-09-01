@@ -38,3 +38,6 @@ out.bin
 *.dSYM/
 
 editor
+
+lyle.bin
+out/rom.bin
