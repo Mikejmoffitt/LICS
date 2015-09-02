@@ -115,7 +115,7 @@ void player_cp(player *pl)
 		}
 	}
 	// In the middle of doing something that voids this ability
-	if (pl->throw_cnt || pl->lift_cnt || pl->kick_cnt || pl->hurt_cnt || pl->throwdown_cnt)
+	if (pl->lift_cnt || pl->hurt_cnt)
 	{
 		return;
 	}
