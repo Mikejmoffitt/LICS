@@ -80,7 +80,6 @@ void room_loop(void)
 			DEBUG_BGCOL(0x260);
 			player_toss_cubes(&pl);
 			player_lift_cubes(&pl);
-			if (pl.input & KEY_A) { particle_spawn(px,py,0); }
 
 			player_eval_grounded(&pl);
 			player_calc_anim(&pl);

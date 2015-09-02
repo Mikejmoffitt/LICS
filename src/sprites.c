@@ -35,12 +35,12 @@ void sprites_dma_simple()
 	next_spr = 0;
 }
 
-void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link)
+void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link)
 {
 	// Sprite table only holds 80 sprites
 	if (num >= NUM_SPRITES)
 	{
-	;
+		return;
 	}
 	u16 *addr = &sprite_table[num << 2];
 	*addr = 128 + y;
@@ -52,7 +52,7 @@ void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link)
 	*addr = 128 + x;
 }
 
-void sprite_put(u16 x, u16 y, u8 size, u16 attr)
+void sprite_put(s16 x, s16 y, u8 size, u16 attr)
 {
 	sprite_set(next_spr,x,y,size,attr,next_spr+1);
 	next_spr++;

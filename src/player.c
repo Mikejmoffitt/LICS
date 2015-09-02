@@ -10,6 +10,7 @@
 #include "save.h"
 #include "system.h"
 #include "cubes.h"
+#include "particles.h"
 
 static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
@@ -119,7 +120,7 @@ void player_cp(player *pl)
 	{
 		return;
 	}
-
+	
 	u16 cube_price = (sram.have_cheap_phantom ? PLAYER_CP_SPAWN_CHEAP : PLAYER_CP_SPAWN_PRICE);
 	// Spawning of the cube; are we not holding one, and can afford one?
 	if (!pl->holding_cube && pl->cp >= cube_price)
@@ -139,6 +140,11 @@ void player_cp(player *pl)
 			pl->cp_cnt = 0;
 			pl->cp -= cube_price;
 		}
+	}
+	// Sparkling effect when cube is starting to form
+	if (pl->cp_cnt > PLAYER_CUBE_FX && system_osc % 2)
+	{
+		particle_spawn(fix32ToInt(pl->x), fix32ToInt(pl->y) - 32, PARTICLE_TYPE_SPARKLE);
 	}
 }
 
@@ -227,7 +233,7 @@ void player_jump(player *pl)
 		{
 			goto do_jump;
 		}
-		else if (!pl->grounded && pl->holding_cube && sram.have_jump)
+		else if (pl->holding_cube && sram.have_jump)
 		{
 			pl->throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
 			pl->holding_cube = 0;

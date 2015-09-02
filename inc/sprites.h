@@ -20,10 +20,10 @@ void sprites_dma_simple(void);
 void sprites_clamp_list(u8 num);
 
 // Set properties for sprite in the sprite table
-void sprite_set(u8 num, u16 x, u16 y, u8 size, u16 attr, u8 link);
+void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link);
 
 // Simple sprite placement that implies sprite number
-void sprite_put(u16 x, u16 y, u8 size, u16 attr);
+void sprite_put(s16 x, s16 y, u8 size, u16 attr);
 
 // Accessors to internal variables
 u8 sprites_get_next_sprite(void);

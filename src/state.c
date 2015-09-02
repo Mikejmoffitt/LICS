@@ -110,19 +110,18 @@ u16 state_update_scroll(u16 px, u16 py)
 		state.cam_x = 0;
 	}
 
-	u16 euro_ymod = 240 - VDP_getScreenHeight();
 	// Vertical scrolling TODO: Make euro mode less ghetto looking
 	if (!state.vs_en)
 	{
-		state.cam_y = euro_ymod;
+		state.cam_y = 240 - VDP_getScreenHeight();
 	}
-	else if (py >= (state.current_room->h * STATE_SC_H) - (STATE_SC_SEAMY + 16 - euro_ymod))
+	else if (py >= (state.current_room->h * STATE_SC_H) - (VDP_getScreenHeight() / 2))
 	{
-		state.cam_y = (state.current_room->h * STATE_SC_H) - (STATE_SC_SEAMY + 8 - euro_ymod)*2;
+		state.cam_y = (state.current_room->h * STATE_SC_H) - (VDP_getScreenHeight());
 	}
-	else if (py > STATE_SC_SEAMY)
+	else if (py > VDP_getScreenHeight() / 2)
 	{
-		state.cam_y = (py - STATE_SC_SEAMY);
+		state.cam_y = (py - VDP_getScreenHeight() / 2);
 	}
 	else
 	{
