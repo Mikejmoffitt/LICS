@@ -30,7 +30,7 @@ void system_init(void)
 	// Set up basic VDP settings
 	VDP_setPlanSize(SYSTEM_PLANE_W,SYSTEM_PLANE_H);
 	VDP_setScreenWidth320();
-	VDP_setScreenHeight224();
+	VDP_setScreenHeight240();
 	VDP_setHilightShadow(0);
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 	sprites_init();
@@ -46,3 +46,4 @@ void system_wait_v(void)
 	}
 	vbl_active = 0;
 }
+

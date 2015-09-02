@@ -27,8 +27,12 @@ the length of a 256-tile DMA is only (256 * 16).
 #define CUBE_VRAM_SLOT (HUD_VRAM_SLOT + HUD_VRAM_LEN)
 #define CUBE_VRAM_LEN 64
 
+#define PARTICLES_VRAM_SLOT (CUBE_VRAM_SLOT + CUBE_VRAM_LEN)
+#define PARTICLES_VRAM_LEN 64
+
 #define COL_VRAM_SLOT MAP_BG_VRAM_SLOT + 256
 #define COL_VRAM_LEN 256
+
 
 #define MAP_FG_PALNUM 0
 #define MAP_BG_PALNUM 1
@@ -36,5 +40,6 @@ the length of a 256-tile DMA is only (256 * 16).
 #define PLAYER_PALNUM 3
 #define CUBE_PALNUM PLAYER_PALNUM
 #define HUD_PALNUM PLAYER_PALNUM
+#define PARTICLES_PALNUM PLAYER_PALNUM
 
 #endif

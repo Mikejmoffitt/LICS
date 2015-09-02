@@ -43,7 +43,6 @@ static const map_file *maplist[] = {
 void map_load_tileset(u8 num)
 {
 	// Black the screen first so no funny wrong blocks show up
-	VDP_doCRamDMA(pal_black,0,64);
 	u32 tsrc_ptr;
 	u32 psrc_ptr;
 	switch (num)
@@ -209,6 +208,12 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 	{
 		dma_src_0 += map_width * 28;
 		dma_dest_0 += STATE_PLANE_W * 2 * 28;
+		if (VDP_getScreenHeight() == 240)
+		{
+			dma_src_0 += map_width * 2;
+			dma_dest_0 += STATE_PLANE_W * 2 * 2;
+		}
+
 		// Have we crossed a vertical seam?
 		while (dma_dest_0 >= seam_vaddr)
 		{
@@ -216,8 +221,15 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 			dma_dest_0 -= seam_vaddr;
 		}
 
+
 		if (dma_len_1)
 		{
+
+			if (VDP_getScreenHeight() == 240)
+			{
+				dma_src_1 += map_width * 2;
+				dma_dest_1 += STATE_PLANE_W * 2 * 2;
+			}
 			dma_src_1 += map_width * 28;
 			dma_dest_1 += STATE_PLANE_W * 2 * 28;
 
@@ -292,7 +304,6 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 		dma_dest[0] = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
 	}
 
-	// Reduced from 32 to 28 iterations, since only 28 rows are visible on-screen anyway.
 	for (int y = 0; y < STATE_PLANE_H - 2; y++)
 	{		
 		// DMA 1

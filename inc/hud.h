@@ -8,7 +8,7 @@
 #define HUD_HP_SPACING 8
 
 #define HUD_CP_X 8
-#define HUD_CP_Y 200
+#define HUD_CP_Y 216
 
 #define HUD_CP_BAR_HEIGHT 48
 

@@ -19,7 +19,6 @@ void state_load_room(u8 roomnum)
 	sy_memo = 65535;
 	state.current_room = map_by_id(roomnum);
 	state.current_map = (u8 *)&(state.current_room->map_data);
-	map_load_tileset(state.current_room->tileset);
 
 	if (state.current_music != state.current_room->music)
 	{
@@ -111,14 +110,15 @@ u16 state_update_scroll(u16 px, u16 py)
 		state.cam_x = 0;
 	}
 
-	// Vertical scrolling
+	u16 euro_ymod = 240 - VDP_getScreenHeight();
+	// Vertical scrolling TODO: Make euro mode less ghetto looking
 	if (!state.vs_en)
 	{
-		state.cam_y = 16;
+		state.cam_y = euro_ymod;
 	}
-	else if (py >= (state.current_room->h * STATE_SC_H) - STATE_SC_SEAMY)
+	else if (py >= (state.current_room->h * STATE_SC_H) - (STATE_SC_SEAMY + 16 - euro_ymod))
 	{
-		state.cam_y = (state.current_room->h * STATE_SC_H) - STATE_SC_SEAMY*2;
+		state.cam_y = (state.current_room->h * STATE_SC_H) - (STATE_SC_SEAMY + 8 - euro_ymod)*2;
 	}
 	else if (py > STATE_SC_SEAMY)
 	{

@@ -12,18 +12,18 @@
 #include "col.h"
 #include "save.h"
 #include "cubes.h"
+#include "particles.h"
 
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
 u16 debug_bgcol;
 
 void room_setup(player *pl)
-{
-	cube_dma_tiles();
-	hud_dma_tiles();
+{	
+	VDP_setEnable(0);
 	state_load_room(state.next_id);
 	player_init_soft(pl);
-
+	particles_init();
 	// First entry to a room needs some extra processing
 	pl->y = intToFix32(64);
 	pl->x = intToFix32(64);
@@ -31,12 +31,18 @@ void room_setup(player *pl)
 	u16 px = fix32ToInt(pl->x);
 	u16 py = fix32ToInt(pl->y);
 
-	// First room entry needs a redraw
-	state_update_scroll(px, py);
-	player_draw(&pl);
-	map_draw_full(state.cam_x, state.cam_y);
-	state_dma_scroll();
+	// One-time graphics DMA parts
+	map_load_tileset(state.current_room->tileset);
+	particles_dma_tiles();
+	cube_dma_tiles();
+	hud_dma_tiles();
 
+	// First graphical commit
+	state_update_scroll(px, py);
+	map_draw_full(state.cam_x, state.cam_y);
+	player_draw(&pl);
+	state_dma_scroll();
+	VDP_setEnable(1);
 }
 
 void room_loop(void)
@@ -74,10 +80,12 @@ void room_loop(void)
 			DEBUG_BGCOL(0x260);
 			player_toss_cubes(&pl);
 			player_lift_cubes(&pl);
+			if (pl.input & KEY_A) { particle_spawn(px,py,0); }
 
 			player_eval_grounded(&pl);
 			player_calc_anim(&pl);
 			player_dma_setup(&pl);
+			particles_run();
 			DEBUG_BGCOL(0x280);
 			px = fix32ToInt(pl.x);
 			py = fix32ToInt(pl.y);
@@ -93,7 +101,7 @@ void room_loop(void)
 			DEBUG_BGCOL(0x444);
 			if (moved & STATE_MOVED_Y) { map_draw_vertical(state.cam_x,state.cam_y,pl.dy > FZERO); }
 			if (moved & STATE_MOVED_X) { map_draw_horizontal(state.cam_x,state.cam_y,pl.dx > FZERO); }
-			if (pl.input & KEY_A) { debug_bgcol = 1; }
+			particles_draw();
 			DEBUG_BGCOL(0x000);
 			
 			/* Once VBlank begins, transfer all our data! */
