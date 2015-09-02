@@ -492,7 +492,8 @@ void player_draw(player *pl)
 		return;
 	}
 	u16 size;
-	u16 yoff;
+	s16 yoff;
+	s16 xoff = 0;
 	if (pl->anim_frame < 0x10)
 	{
 		size = SPRITE_SIZE(2,3);
@@ -502,13 +503,15 @@ void player_draw(player *pl)
 	{
 		size = SPRITE_SIZE(3,2);
 		yoff = PLAYER_DRAW_TOP + 8;
+		xoff = -4;
 	}
 	else
 	{
 		size = SPRITE_SIZE(3,3);
 		yoff = PLAYER_DRAW_TOP;
+		xoff = (pl->direction) ? -8 : 0;
 	}
-	sprite_put(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT - state.cam_x, 
+	sprite_put(fix32ToInt(pl->x) + xoff + PLAYER_DRAW_LEFT - state.cam_x, 
 		fix32ToInt(pl->y) + yoff - state.cam_y, 
 		size, 
 		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
