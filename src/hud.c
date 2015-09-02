@@ -23,13 +23,6 @@ void hud_draw_health(u16 max, u16 val)
 				SPRITE_SIZE(2,1), attr);
 
 	}
-/*	for (; max != 0; max--)
-	{
-		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT);
-		attr += (val >= max) ? 6 : 8;
-		sprite_put(HUD_HP_X, HUD_HP_Y + 8 + ((max) * (HUD_HP_SPACING), 
-			SPRITE_SIZE(2,1), attr);
-	}*/
 }
 
 void hud_draw_cp(u16 val)
@@ -38,8 +31,14 @@ void hud_draw_cp(u16 val)
 	sprite_put(HUD_CP_X, HUD_CP_Y, SPRITE_SIZE(2,2), 
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT));
 
+	// Hack to scale the bar properly
+	if (val > 15)
+	{
+		val++;	
+	}
+
 	// Top of the bar
-	sprite_put(HUD_CP_X, HUD_CP_Y - HUD_CP_BAR_HEIGHT - 10, SPRITE_SIZE(2,1),
+	sprite_put(HUD_CP_X, HUD_CP_Y - HUD_CP_BAR_HEIGHT - 8, SPRITE_SIZE(2,1),
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + 12));
 	// Bottom of the bar
 	sprite_put(HUD_CP_X, HUD_CP_Y - 2, SPRITE_SIZE(2,1),
@@ -49,7 +48,7 @@ void hud_draw_cp(u16 val)
 	{
 		// Default to "full" tile
 		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, system_osc & 1, HUD_VRAM_SLOT + 14);
-		u16 py = HUD_CP_Y - 10 - (i * 8);
+		u16 py = HUD_CP_Y - 9 - (i * 8);
 		if (val == HUD_CP_BAR_HEIGHT)
 		{
 			sprite_put(HUD_CP_X, py, SPRITE_SIZE(2,1), attr);

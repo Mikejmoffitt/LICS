@@ -87,7 +87,7 @@ void room_loop(void)
 			// hud_draw_health(sram.max_hp,pl.hp); 
 			hud_draw_health(8,pl.hp); 
 			DEBUG_BGCOL(0xE88);
-			hud_draw_cp(pl.cp + (pl.cp >> 1)); 
+			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); 
 			u16 moved = state_update_scroll(px,py);
 			player_draw(&pl);
 			DEBUG_BGCOL(0x444);
