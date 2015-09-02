@@ -21,17 +21,51 @@ Time until a cube is lifted: "15" frames (effectively 12...)
 
 Cubes:
 = Physics =
+
+Collision tests:
+Box collision determines generally if there is a collision
+(check all four corners)
+
+if (cube at all touches a solid background)
+	if (tile below center of tube is solid) and (dx != 0)
+		if (dy > 2) and (tile inside X center of cube is nonsolid)
+			dy = dy - (0.28 * dy);
+			count--;
+		else if (dy <= 2) and (count is > 1)
+			dy = -2;
+			count--;
+		else if (count <= 1)
+			make cube stop; lock y coords to 8x8 grid
+
+	if (dx != 0) and (tile immediately above cube is solid) and (tile 8px below cube is nonsolid)
+		dy = 3;
+
+	if (tile dead center in cube is solid) and (dx != 0)
+		dx = dx * -1;
+		count = 1;
+		dy = 3;
+	
+	if (count 
+
+
+
+Then, if the tile immediately below the cube is solid and dy > 2, 
+	dy = (dy - (0.28*dy);
+
+
+
 Y accel due to gravity:
 	dy = dy + 0.2;
-Y mod when cube bounces on the ground: 
-	if dy > 2px/f, dy = (dy - (0.28*dy);
+Dy mod when cube bounces on the ground: 
+	if dy > 2, dy = (dy - (0.28*dy);
+	c--;
 Cube bounces on another cube:
 	dy = (dy - (dy * 0.28)) - 0.75;
-	dx = 1px/f;
+	dx = 1;
 Cube is stuck overlapping another:
 	dy = -4 for one cube only;
 Cube kick speed:
-	dx = 3px/f;
+	dx = 3;
 Cube hits backdrop after kick:
-	dy = -0.3px/f;
-	dx = 1px/f
+	dy = -0.3;
+	dx = 1

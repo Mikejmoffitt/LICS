@@ -20,25 +20,9 @@ Also handles some object list functions.
 #define MAP_OBJ_CUBE 2
 
 // In the object list for the map, only the four main fields are defined
-// The remaining twelve are used by the objects in-game, unpacked into the
-// actual object list.
 
 #define MAP_OBJ_LIST_SIZE (4 * 2);
-// Each map object besides lyle is 32 bytes, or 16 words
-#define MAP_OBJ_SIZE (2 * 16)
 
-
-typedef struct map_obj map_obj;
-struct map_obj
-{
-	u16 type; // Object ID 
-	u16 data; // Depends on object type. Best example is entrance IDs.
-	u16 x; // X in real coordinates (pixel-precise)
-	u16 y; // Y in real coordinates (pixel-precise)
-	u16 padding[MAP_OBJ_SIZE - (4 * 2)]; // Fill in space for 16 words
-};
-
-// Used in the map data structures - similar, but without game variables
 typedef struct map_list_obj map_list_obj;
 struct map_list_obj
 {
