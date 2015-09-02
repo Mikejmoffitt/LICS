@@ -6,6 +6,8 @@
 #define SYSTEM_PLANE_W 64
 #define SYSTEM_PLANE_H 32
 
+extern u16 system_osc;
+
 void system_init(void);
 void system_wait_v(void);
 

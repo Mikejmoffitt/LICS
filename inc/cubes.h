@@ -11,6 +11,32 @@
 #define CUBE_LEFT -8
 #define CUBE_RIGHT 7
 
+#define CUBE_BLUE 0x100
+#define CUBE_PHANTOM 0x200
+#define CUBE_GREEN 0x300
+#define CUBE_RED 0x400
+#define CUBE_YELLOW 0x800
+// Yellow cube's lower bytes become a bitfield describing contents
+/*
+
+Example values:
+
+0x800 - HP up
+0x801 - 2XHP up
+0x820 - CP up
+0x821 - 2XCP up
+0x840 - CP ORB #0
+0x884 - HP Orb #4
+
+*/
+
+
+#define CUBE_YELLOW_DOUBLE 0x10
+#define CUBE_YELLOW_CP 0x20
+// Lower nybble gives it an ID
+#define CUBE_YELLOW_CPORB 0x40
+#define CUBE_YELLOW_HPORB 0x80
+
 #define CUBE_DESTROY_NORMAL 1
 #define CUBE_DESTROY_EXPLOSION 2
 
@@ -28,11 +54,11 @@ struct cube
 	fix16 dy;
 	u16 state;
 	u16 type;
-	u16 destructable;
 	u16 item_spawn;
 	u16 orb_num;
 };
 
 void cube_dma_tiles(void);
+void cube_draw(u16 x, u16 y, u16 type);
 
 #endif

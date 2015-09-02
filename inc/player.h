@@ -20,23 +20,34 @@
 #define FZERO FIX16(0.0)
 #define FZERO32 FIX32(0.0)
 
-#define PLAYER_CUBE_FX 5 // If cube spawn count is above, make particles
 
-#define PLAYER_CUBE_SPAWN 60 // Cube spawns at this point. 
-#define PLAYER_CUBE_SPAWN_FAST 30
 
 #define PLAYER_THROW_ANIM_LEN 8
-#define PLAYER_KICK_ANIM_LEN 8 
+#define PLAYER_KICK_ANIM_LEN 8
+#define PLAYER_CUBEJUMP_ANIM_LEN 20
 
 #define PLAYER_LIFT_TIME 15
 
 #define PLAYER_HURT_TIME 30
 #define PLAYER_INVULN_TIME 80
 
-#define PLAYER_MAX_CP 30
+#define PLAYER_MAX_CP 32
+#define PLAYER_CP_RESTORE_PERIOD 250
+#define PLAYER_CP_RESTORE_PERIOD_FAST 250
+
+#define PLAYER_CP_SPAWN_SLOW 60
+#define PLAYER_CP_SPAWN_FAST 30
+
+// TODO: Find the real numbers for this. These are made up.
+#define PLAYER_CP_SPAWN_PRICE 4
+#define PLAYER_CP_SPAWN_CHEAP 2
+#define PLAYER_CUBE_SPAWN 60 // Cube spawns at this point. 
+#define PLAYER_CUBE_SPAWN_FAST 30
+#define PLAYER_CUBE_FX 5 // If cube spawn count is above, make particles
 
 #define PLAYER_RIGHT 0
 #define PLAYER_LEFT 1
+
 
 #define PLAYER_START_HP 5
 #define PLAYER_START_CP 5
@@ -71,15 +82,19 @@ struct player
 	// Animation vars
 	u16 anim_cnt; // Counts always, used for modulus for animations
 	u16 anim_frame; // Which animation frame to DMA
-	u16 holding_cube; // flag for if holding a cube
-	u16 throw_cnt; // If non-zero, throwing anim plays
-	u16 throwdown_cnt;
-	u16 kick_cnt;
-	u16 lift_cnt; // If non-zero, in the middle of lifting
-	u16 cp_cnt; // Counts up to PLAYER_CUBE_SPAWN
-	u16 hurt_cnt; // If non-zero, hurt anim, no controls
-	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
 
+	// Action-in-progress counters
+	u16 throwdown_cnt; // If non-zero, air throwing-down anim plays
+	u16 throw_cnt; // If non-zero, throwing anim plays
+	u16 kick_cnt; // If non-zero, kick anim plays
+	u16 lift_cnt; // If non-zero, in the middle of lifting
+	u16 hurt_cnt; // If non-zero, hurt anim, no controls
+
+	u16 holding_cube; // flag for if holding a cube
+	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
+	u16 cp_cnt; // Counts up to PLAYER_CUBE_SPAWN
+
+	// Player status
 	u16 hp;
 	u16 cp;
 
@@ -115,6 +130,15 @@ void player_eval_grounded(player *pl);
 
 // Allow player to jump
 void player_jump(player *pl);
+
+// Run various countdowns for Lyle's special states
+void player_special_counters(player *pl);
+
+// Manage tossing of cubes
+void player_toss_cubes(player *pl);
+
+// Manage lifting of cubes
+void player_lift_cubes(player *pl);
 
 // Run d additions, handle collisions
 void player_move(player *pl);

@@ -30,8 +30,15 @@ struct save_file
 	// HP orbs collected
 	u16 hp_orbs[SAVE_NUM_ORBS];
 	u16 max_hp;
-	// Bitfield for abilities gained, if needed (I think orbs decide this)
-	u16 abilities;
+	// abilities gained
+	u16 have_lift;
+	u16 have_jump;
+	u16 have_kick;
+	u16 have_phantom;
+	u16 have_fast_phantom;
+	u16 have_cheap_phantom;
+	u16 have_cp_regen;
+	u16 have_double_phantom;
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];
 	u16 magic_2;

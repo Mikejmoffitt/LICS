@@ -3,6 +3,7 @@
 #include "sprites.h"
 
 static vu16 vbl_active;
+u16 system_osc;
 
 static _voidCallback *v_int(void)
 {
@@ -38,6 +39,7 @@ void system_init(void)
 
 void system_wait_v(void)
 {
+	system_osc++;
 	while (!vbl_active)
 	{
 		// Twiddle thumbs

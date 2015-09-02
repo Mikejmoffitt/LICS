@@ -7,10 +7,15 @@
 #include "sprites.h"
 
 #include "state.h"
+#include "save.h"
+#include "system.h"
+#include "cubes.h"
 
 static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
 static u16 lyle_dma_len;
+
+static u16 cp_restore_cnt;
 
 void player_init(player *pl)
 {
@@ -18,8 +23,8 @@ void player_init(player *pl)
 	pl->y = FZERO32;
 	pl->direction = PLAYER_RIGHT;
 	
-	pl->hp = 0;
-	pl->cp = 0;
+	pl->hp = 5;
+	pl->cp = 16;
 	player_init_soft(pl);
 }
 
@@ -93,13 +98,47 @@ void player_input(player *pl)
 
 void player_cp(player *pl)
 {
-	if (pl->input & KEY_B)
-	{
-		pl->cp_cnt++;
-	}
-	else
+	// We don't have this power, don't bother
+	if (!sram.have_phantom)
 	{
 		pl->cp_cnt = 0;
+		return;
+	}
+	cp_restore_cnt++;
+	// Manage periodic restoration of CP
+	if (cp_restore_cnt >= PLAYER_CP_RESTORE_PERIOD)
+	{
+		cp_restore_cnt = 0;
+		if (pl->cp != PLAYER_MAX_CP)
+		{
+			pl->cp++;
+		}
+	}
+	// In the middle of doing something that voids this ability
+	if (pl->throw_cnt || pl->lift_cnt || pl->kick_cnt || pl->hurt_cnt || pl->throwdown_cnt)
+	{
+		return;
+	}
+
+	u16 cube_price = (sram.have_cheap_phantom ? PLAYER_CP_SPAWN_CHEAP : PLAYER_CP_SPAWN_PRICE);
+	// Spawning of the cube; are we not holding one, and can afford one?
+	if (!pl->holding_cube && pl->cp >= cube_price)
+	{
+		if (pl->input & KEY_B)
+		{
+			pl->cp_cnt++;
+		}
+		else
+		{
+			pl->cp_cnt = 0;
+		}
+		u16 cube_spawn_period = (sram.have_fast_phantom ? PLAYER_CP_SPAWN_FAST : PLAYER_CP_SPAWN_SLOW);
+		if (pl->cp_cnt >= cube_spawn_period)
+		{
+			pl->holding_cube = CUBE_PHANTOM;
+			pl->cp_cnt = 0;
+			pl->cp -= cube_price;
+		}
 	}
 }
 
@@ -182,12 +221,68 @@ void player_eval_grounded(player *pl)
 
 void player_jump(player *pl)
 {
-	if (pl->grounded)
+	if ((pl->input & KEY_C) && !(pl->input_prev & KEY_C))
 	{
-		if ((pl->input & KEY_C) && !(pl->input_prev & KEY_C))
+		if (pl->grounded)
 		{
-			pl->dy = PLAYER_JUMP_DY;	
+			goto do_jump;
 		}
+		else if (!pl->grounded && pl->holding_cube && sram.have_jump)
+		{
+			pl->throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
+			pl->holding_cube = 0;
+			// Generate cube of right type, throw it down
+			goto do_jump;
+		}
+	}
+
+	return;
+do_jump:
+	pl->dy = PLAYER_JUMP_DY;
+	// Play SFX
+	return;
+}
+
+void player_toss_cubes(player *pl)
+{
+	if (pl->holding_cube && (pl->input & KEY_B) && (!(pl->input_prev & KEY_B)))
+	{
+		// Spawn cube of right type, throw it
+		pl->holding_cube = 0;
+		pl->throw_cnt = PLAYER_THROW_ANIM_LEN;
+	}
+}
+
+void player_lift_cubes(player *pl)
+{
+	if (!sram.have_lift)
+	{
+		return;
+	}
+}
+
+void player_special_counters(player *pl)
+{
+	if (pl->throwdown_cnt)
+	{
+		pl->throwdown_cnt--;
+	}
+	if (pl->throw_cnt)
+	{
+		pl->throw_cnt--;
+	}
+	if (pl->lift_cnt)
+	{
+		pl->lift_cnt--;
+	}
+	if (pl->hurt_cnt)
+	{
+		pl->hurt_cnt--;
+	}
+
+	if (pl->invuln_cnt)
+	{
+		pl->invuln_cnt--;
 	}
 }
 
@@ -311,6 +406,10 @@ void player_move(player *pl)
 
 void player_calc_anim(player *pl)
 {
+	if (pl->invuln_cnt && (system_osc % 8 > 3))
+	{
+		return;
+	}
 	if (pl->grounded)
 	{
 		pl->anim_cnt++;
@@ -388,6 +487,10 @@ void player_calc_anim(player *pl)
 
 void player_draw(player *pl)
 {
+	if (pl->invuln_cnt && (system_osc % 8 > 3))
+	{
+		return;
+	}
 	u16 size;
 	u16 yoff;
 	if (pl->anim_frame < 0x10)
@@ -409,4 +512,10 @@ void player_draw(player *pl)
 		fix32ToInt(pl->y) + yoff - state.cam_y, 
 		size, 
 		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
+
+	// Draw a cube he is holding
+	if (pl->holding_cube)
+	{
+		cube_draw(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + yoff - 15, pl->holding_cube);
+	}
 }
