@@ -37,7 +37,6 @@ struct save_file
 	u16 have_phantom;
 	u16 have_fast_phantom;
 	u16 have_cheap_phantom;
-	u16 have_cp_regen;
 	u16 have_double_phantom;
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];

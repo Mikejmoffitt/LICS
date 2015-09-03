@@ -3,7 +3,11 @@
 
 #include <genesis.h>
 
-#define PARTICLE_LIFE_DEFAULT 15
+#define PARTICLE_LIFE_DEFAULT 10
+#define PARTICLE_LIFE_FIZZLE 11
+#define PARTICLE_LIFE_SPARKLE 14
+#define PARTICLE_LIFE_EXPLOSION 18
+
 #define PARTICLE_TYPE_SPARKLE 0
 #define PARTICLE_TYPE_FIZZLE 1
 #define PARTICLE_TYPE_FIZZLERED 2
@@ -35,6 +39,5 @@ void particles_draw(void);
 
 // Spawn a particle at real-world location
 void particle_spawn(u16 x, u16 y, u16 type);
-
 
 #endif
