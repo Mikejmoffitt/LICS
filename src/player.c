@@ -18,6 +18,11 @@ static u16 lyle_dma_len;
 
 static u16 cp_restore_cnt;
 
+static void player_set_pal(void)
+{
+	VDP_doCRamDMA(pal_lyle, 32 * PLAYER_PALNUM, 16);
+}
+
 void player_init(player *pl)
 {
 	pl->x = FZERO32;
@@ -78,9 +83,19 @@ void player_dma(player *pl)
 	VDP_doVRamDMA(lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
-void player_set_pal(void)
+void player_run(player *pl)
 {
-	VDP_doCRamDMA(pal_lyle, 32 * PLAYER_PALNUM, 16);
+	player_input(pl);
+	player_special_counters(pl);
+	player_accel(pl);
+	player_jump(pl);
+	player_move(pl);
+	player_toss_cubes(pl);
+	player_lift_cubes(pl);
+	player_cp(pl);
+	player_eval_grounded(pl);
+	player_calc_anim(pl);
+	player_dma_setup(pl);
 }
 
 void player_input(player *pl)
@@ -285,7 +300,6 @@ void player_special_counters(player *pl)
 	{
 		pl->hurt_cnt--;
 	}
-
 	if (pl->invuln_cnt)
 	{
 		pl->invuln_cnt--;
@@ -509,6 +523,7 @@ void player_draw(player *pl)
 	{
 		size = SPRITE_SIZE(3,2);
 		yoff = PLAYER_DRAW_TOP + 8;
+
 		xoff = -4;
 	}
 	else
@@ -525,6 +540,6 @@ void player_draw(player *pl)
 	// Draw a cube he is holding
 	if (pl->holding_cube)
 	{
-		cube_draw(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + yoff - 15, pl->holding_cube);
+		cube_draw_single(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + yoff - 15, pl->holding_cube);
 	}
 }

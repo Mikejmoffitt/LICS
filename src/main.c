@@ -39,10 +39,13 @@ void room_setup(player *pl)
 
 	// First graphical commit
 	state_update_scroll(px, py);
-	map_draw_full(state.cam_x, state.cam_y);
 	player_draw(&pl);
 	state_dma_scroll();
-	VDP_setEnable(1);
+	system_wait_v();
+	system_wait_v();
+	system_wait_v();
+	system_wait_v();
+	system_wait_v();
 }
 
 void room_loop(void)
@@ -60,53 +63,31 @@ void room_loop(void)
 		state.next_id++;
 		u16 px;
 		u16 py;
-		u16 i;
 		do
 		{
-			i++;
-			if (i == 48)
-			{
-				i = 0;
-			}
-			/* Engine processing */
+			/* Run one frame of engine logic */
 			DEBUG_BGCOL(0x200);
-			player_special_counters(&pl);
-			player_input(&pl);
-			player_cp(&pl);
-			player_accel(&pl);
-			player_jump(&pl);
-			DEBUG_BGCOL(0x220);
-			player_move(&pl);
-			DEBUG_BGCOL(0x260);
-			player_toss_cubes(&pl);
-			player_lift_cubes(&pl);
-
-			player_eval_grounded(&pl);
-			player_calc_anim(&pl);
-			player_dma_setup(&pl);
+			player_run(&pl);
+			DEBUG_BGCOL(0x204);
 			particles_run();
-			DEBUG_BGCOL(0x280);
 			px = fix32ToInt(pl.x);
 			py = fix32ToInt(pl.y);
 			DEBUG_BGCOL(0x8E8);
 
-			/* Updating scroll and sprite caches */
-			// hud_draw_health(sram.max_hp,pl.hp); 
-			hud_draw_health(8,pl.hp); 
-			DEBUG_BGCOL(0xE88);
-			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); 
-			u16 moved = state_update_scroll(px,py);
-			player_draw(&pl);
+			/* Updating scroll and sprite caches, drawn top-down */
 			DEBUG_BGCOL(0x444);
-			if (moved & STATE_MOVED_Y) { map_draw_vertical(state.cam_x,state.cam_y,pl.dy > FZERO); }
-			if (moved & STATE_MOVED_X) { map_draw_horizontal(state.cam_x,state.cam_y,pl.dx > FZERO); }
+			map_draw_diffs(state_update_scroll(px,py),pl.dx,pl.dy);
+			DEBUG_BGCOL(0x282);
+			hud_draw_health(8,pl.hp); 
+			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
+			player_draw(&pl);
 			particles_draw();
-			DEBUG_BGCOL(0x000);
 			
-			/* Once VBlank begins, transfer all our data! */
+			/* Wait for VBlank. */
+			DEBUG_BGCOL(0x000);
 			system_wait_v();
 
-			// Let's DMA, quick
+			/* Data hauls ass to VRAM with precious little DMA bandwidth */
 			DEBUG_BGCOL(0x00E);
 			map_dma();
 			DEBUG_BGCOL(0x28E);
@@ -115,6 +96,8 @@ void room_loop(void)
 			state_dma_scroll();	
 			DEBUG_BGCOL(0x0EE);
 			player_dma(&pl);
+			// Enable the VDP here at the end. This is to hide frame 0
+			VDP_setEnable(1);
 
 		}
 		while (!state_watch_transitions(px,py,pl.dx,pl.dy));
@@ -124,7 +107,6 @@ void room_loop(void)
 int main(void)
 {
 	system_init();
-	save_clear();
 	room_loop();
 	return 0;	
 }

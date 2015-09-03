@@ -22,6 +22,10 @@ void save_load(void)
 		sf[i] = SRAM_readWord(i * 2);
 	}
 	SRAM_disable();
+	if (sram.magic_0 != SAVE_MAGIC || sram.magic_1 != SAVE_MAGIC || sram.magic_2 != SAVE_MAGIC)
+	{
+		save_clear();
+	}
 }
 
 void save_clear(void)
@@ -41,6 +45,11 @@ void save_clear(void)
 	sram.have_cheap_phantom = 1;
 	sram.have_jump = 1;
 	sram.have_lift = 1;
+
+	sram.opt_interlace = SAVE_OPT_INTERLACE_NORMAL;
+	sram.opt_ctrlscheme = SAVE_OPT_CTRL_NORMAL;
+	sram.opt_mus = 0;
+	sram.opt_sfx = 0;
 
 	save_write();
 }

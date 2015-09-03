@@ -10,6 +10,7 @@ static particle particles[PARTICLES_NUM];
 void particles_dma_tiles(void)
 {
 	VDP_doVRamDMA(gfx_particles,32 * PARTICLES_VRAM_SLOT, 16 * PARTICLES_VRAM_LEN);
+	// Particles use Lyle's palette. No palette transfer here either.
 }
 
 void particles_init(void)

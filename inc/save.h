@@ -16,6 +16,12 @@
 #define SAVE_CUBE_KICK 0x04
 #define SAVE_CUBE_PHANTOM 0x08
 
+#define SAVE_OPT_CTRL_NORMAL 0
+#define SAVE_OPT_CTRL_SWAP 1
+
+#define SAVE_OPT_INTERLACE_NORMAL 0
+#define SAVE_OPT_INTERLACE_ENABLED 1
+
 typedef struct save_file save_file;
 struct save_file
 {
@@ -41,6 +47,12 @@ struct save_file
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];
 	u16 magic_2;
+
+	// Settings
+	u16 opt_interlace;
+	u16 opt_mus;
+	u16 opt_sfx;
+	u16 opt_ctrlscheme;
 };
 
 extern save_file sram;

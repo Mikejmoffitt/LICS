@@ -1,6 +1,8 @@
 #include "system.h"
 // ----------------
 #include "sprites.h"
+#include "mpad.h"
+#include "save.h"
 
 static vu16 vbl_active;
 u16 system_osc;
@@ -33,7 +35,24 @@ void system_init(void)
 	VDP_setScreenHeight240();
 	VDP_setHilightShadow(0);
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+
 	sprites_init();
+
+	save_load();
+	// Allow holding A + Start to change scan modes
+	if ((pad_read(0) & KEY_A) || (pad_read(0) & KEY_START))
+	{
+		sram.opt_interlace = (sram.opt_interlace == SAVE_OPT_INTERLACE_ENABLED) ? (SAVE_OPT_INTERLACE_NORMAL) : (SAVE_OPT_INTERLACE_ENABLED);
+		save_write();
+	}
+	if (sram.opt_interlace == SAVE_OPT_INTERLACE_ENABLED)
+	{
+		VDP_setScanMode(INTERLACED_MODE1);
+	}
+	else
+	{
+		VDP_setScanMode(INTERLACED_NONE);
+	}
 
 }
 

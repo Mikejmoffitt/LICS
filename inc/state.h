@@ -23,6 +23,8 @@
 #define STATE_MOVED_Y 0x02
 #define STATE_MOVED_BOTH (STATE_MOVED_X | STATE_MOVED_Y)
 
+#define STATE_SCROLL_INVALID 32767
+
 #ifndef FZERO
 #define FZERO FIX16(0.0)
 #endif
@@ -45,6 +47,7 @@ struct gamestate
 	u16 xscroll_vals[STATE_PLANE_H];
 	u16 yscroll_vals[STATE_PLANE_W / 2];
 	u8 current_id;
+	u8 fresh_room;
 };
 
 extern gamestate state;

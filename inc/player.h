@@ -113,8 +113,8 @@ void player_init_soft(player *pl);
 void player_dma_setup(player *pl);
 void player_dma(player *pl);
 
-// DMA Lyle's palette
-void player_set_pal(void);
+// Run player's logic for one frame
+void player_run(player *pl);
 
 // Update gamepad state
 void player_input(player *pl);

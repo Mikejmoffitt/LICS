@@ -5,13 +5,33 @@
 #include "state.h"
 #include "system.h"
 
+static cube cubes[CUBES_NUM];
+
 void cube_dma_tiles(void)
 {
 	VDP_doVRamDMA(gfx_cubes, CUBE_VRAM_SLOT * 32 ,CUBE_VRAM_LEN * 16);
 	// Cubes use Lyle's palette. No palette transfer here.
 }
 
-void cube_draw(u16 x, u16 y, u16 type)
+void cubes_init(void)
+{
+	for (u16 i = 0; i < CUBES_NUM; i++)
+	{
+		cubes[i].state = CUBE_STATE_INACTIVE;
+	}
+}
+
+void cubes_run(void)
+{
+
+}
+
+void cubes_draw(void)
+{
+
+}
+
+void cube_draw_single(u16 x, u16 y, u16 type)
 {
 	u16 frame = TILE_ATTR_FULL(CUBE_PALNUM, 1, 0, 0, CUBE_VRAM_SLOT);
 	switch (type & 0xF00)

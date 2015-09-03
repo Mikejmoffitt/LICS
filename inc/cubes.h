@@ -4,6 +4,8 @@
 #include <genesis.h>
 #include "map.h"
 
+#define CUBES_NUM 32
+
 #define CUBE_W 16
 #define CUBE_H 16
 #define CUBE_TOP -15
@@ -11,6 +13,7 @@
 #define CUBE_LEFT -8
 #define CUBE_RIGHT 7
 
+/* Cube type descriptions */
 #define CUBE_BLUE 0x100
 #define CUBE_PHANTOM 0x200
 #define CUBE_GREEN 0x300
@@ -33,32 +36,31 @@ Example values:
 
 #define CUBE_YELLOW_DOUBLE 0x10
 #define CUBE_YELLOW_CP 0x20
-// Lower nybble gives it an ID
+// Lower nybble gives it an ID (which CP orb?)
 #define CUBE_YELLOW_CPORB 0x40
 #define CUBE_YELLOW_HPORB 0x80
 
-#define CUBE_DESTROY_NORMAL 1
-#define CUBE_DESTROY_EXPLOSION 2
-
-#define CUBE_STATE_IDLE 0
-#define CUBE_STATE_CARRY 1
-#define CUBE_STATE_AIR 2
-#define CUBE_STATE_KICKED 3
+#define CUBE_STATE_INACTIVE 0
+#define CUBE_STATE_IDLE 1 
+#define CUBE_STATE_CARRY 2
+#define CUBE_STATE_AIR 3
+#define CUBE_STATE_KICKED 4
 
 typedef struct cube cube;
 struct cube
 {
+	u16 state;
 	u16 x;
 	u16 y;
 	s16 dx;
 	fix16 dy;
-	u16 state;
 	u16 type;
-	u16 item_spawn;
-	u16 orb_num;
 };
 
 void cube_dma_tiles(void);
-void cube_draw(u16 x, u16 y, u16 type);
+void cubes_init(void);
+void cubes_run(void);
+void cubes_draw(void);
+void cube_draw_single(u16 x, u16 y, u16 type);
 
 #endif

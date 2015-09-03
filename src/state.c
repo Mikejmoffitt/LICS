@@ -7,18 +7,20 @@ gamestate state;
 static s16 sx_memo;
 static s16 sy_memo;
 
+// Set up a room by the specified ID.
 void state_load_room(u8 roomnum)
 {
 	if (roomnum == state.current_id)
 	{
 		return;
 	}
-	state.cam_x = 65535;
-	state.cam_y = 65535;
-	sx_memo = 65535;
-	sy_memo = 65535;
+	state.cam_x = STATE_SCROLL_INVALID;
+	state.cam_y = STATE_SCROLL_INVALID;
+	sx_memo = STATE_SCROLL_INVALID;
+	sy_memo = STATE_SCROLL_INVALID;
 	state.current_room = map_by_id(roomnum);
 	state.current_map = (u8 *)&(state.current_room->map_data);
+	state.fresh_room = 1;
 
 	if (state.current_music != state.current_room->music)
 	{
@@ -46,7 +48,7 @@ void state_load_room(u8 roomnum)
 	}
 }
 
-// Scrolling support functions
+// Set the entire H scroll foreground table to amt
 static void state_scroll_fgx(s16 amt)
 {
 	sx_memo = amt;
@@ -66,6 +68,7 @@ static void state_scroll_fgx(s16 amt)
 	}
 }
 
+// Set the entire foreground Y scroll table to amt
 static void state_scroll_fgy(s16 amt)
 {
 	sy_memo = amt;
@@ -84,10 +87,13 @@ static void state_scroll_fgy(s16 amt)
 	}
 }
 
+// Update scrolling camera coordinates based on player real-world coords
+// Returns a bitfield describing if the camera moved, and on which axes
 u16 state_update_scroll(u16 px, u16 py)
 {
 	state.xscroll_cmd = 0;
 	state.yscroll_cmd = 0;
+	py -= 12; // Offset by half of lyle's height
 	// Horizontal scrolling
 	if (!state.hs_en)
 	{
@@ -140,6 +146,7 @@ u16 state_update_scroll(u16 px, u16 py)
 	return (state.xscroll_cmd ? STATE_MOVED_X : 0) | (state.yscroll_cmd ? STATE_MOVED_Y : 0);
 }
 
+// Transfer scrolling information to VRAM as needed
 void state_dma_scroll(void)
 {
 	if (state.xscroll_cmd == STATE_SCROLL_DMA)
@@ -160,6 +167,7 @@ void state_dma_scroll(void)
 	}
 }
 
+// Watch for the player entering/exiting a room.
 u16 state_watch_transitions(u16 px, u16 py, fix16 dx, fix16 dy)
 {
 	if (dx == FZERO && dy == FZERO)
