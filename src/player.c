@@ -288,30 +288,30 @@ void player_toss_cubes(player *pl)
 		if (pl->input & (KEY_DOWN))
 		{
 			cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
-			cdy = FIX16(-2.2);
+			cdy = FIX16(-2.0);
 		}
 		// Holding up; toss straight up
 		else if (pl->input & KEY_UP)
 		{
 			cdx = 0;
-			cdy = FIX16(-5.2);
+			cdy = FIX16(-5.0);
 		}
 		// Throw with direction right
 		else if (pl->input & KEY_RIGHT && pl->direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
-			cdy = FIX16(-1.2);
+			cdy = FIX16(-1.0);
 		}
 		// Left
 		else if (pl->input & KEY_LEFT && pl->direction == PLAYER_LEFT)
 		{
 			cdx = -4;
-			cdy = FIX16(-1.2);
+			cdy = FIX16(-1.0);
 		}
 		else
 		{
 			cdx = (pl->direction == PLAYER_RIGHT) ? 2 : -2;
-			cdy = FIX16(-2.2);
+			cdy = FIX16(-2.0);
 		}
 		
 		// Generate a cube to throw
