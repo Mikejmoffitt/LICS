@@ -60,7 +60,7 @@ static void state_scroll_fgx(s16 amt)
 	}
 	else
 	{
-		for (u16 i = 0; i < STATE_PLANE_H; i++)
+		for (register i = 0; i < STATE_PLANE_H; i++)
 		{
 			state.xscroll_vals[i] = amt;
 		}
@@ -79,7 +79,7 @@ static void state_scroll_fgy(s16 amt)
 	}
 	else
 	{
-		for (u16 i = 0; i < STATE_PLANE_W / 2; i++)
+		for (register i = 0; i < STATE_PLANE_W / 2; i++)
 		{
 			state.yscroll_vals[i] = amt;
 		}

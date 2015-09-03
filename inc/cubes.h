@@ -46,6 +46,9 @@ Example values:
 #define CUBE_STATE_AIR 2
 #define CUBE_STATE_KICKED 3
 
+#define CUBE_STATE_FIZZLE 4
+#define CUBE_FIZZLE_TIME 7
+
 #define CUBE_GRAVITY FIX16(0.2)
 
 typedef struct cube cube;

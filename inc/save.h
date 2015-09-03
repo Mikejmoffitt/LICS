@@ -2,6 +2,7 @@
 #define SAVE_H
 
 #include <genesis.h>
+#include <sram.h>
 
 #define SAVE_MAGIC 0x1337
 #define SAVE_NG 0xDEAD

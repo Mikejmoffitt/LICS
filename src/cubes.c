@@ -6,6 +6,7 @@
 #include "system.h"
 #include "player.h"
 #include "map.h"
+#include "particles.h"
 
 static cube cubes[CUBES_NUM];
 
@@ -17,7 +18,7 @@ void cube_dma_tiles(void)
 
 void cubes_init(void)
 {
-	for (u16 i = 0; i < CUBES_NUM; i++)
+	for (register i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		c->state = CUBE_STATE_INACTIVE;
@@ -37,29 +38,57 @@ static void cube_move(cube *c)
 
 void cubes_run(player *pl)
 {
-	for (u16 i = 0; i < CUBES_NUM; i++)
+	for (register i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
 		{
 			continue;
 		}
+		else if (c->state == CUBE_STATE_FIZZLE)
+		{
+			if (c->dy > 0)
+			{
+				c->dy--;
+			}
+			else
+			{
+				c->state = CUBE_STATE_INACTIVE;	
+			}
+			continue;
+		}
 		else if (c->state != CUBE_STATE_IDLE)
 		{
 			cube_move(c);
+		}
+
+		// Basic collision with Plane A
+		if (c->state != CUBE_STATE_FIZZLE)
+		{
+			if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM))
+			{
+				c->dx = 0;
+				c->dy = 7;
+				c->state = CUBE_STATE_FIZZLE;
+			}
 		}
 	}
 }
 
 void cubes_draw(void)
 {
-	for (u16 i = 0; i < CUBES_NUM; i++)
+	for (register i = 0; i < CUBES_NUM; i++)
 	{
-		if (cubes[i].state == CUBE_STATE_INACTIVE)
+		cube *c = &cubes[i];
+		if (c->state == CUBE_STATE_INACTIVE)
 		{
 			continue;
 		}
-		cube *c = &cubes[i];
+		else if (c->state == CUBE_STATE_FIZZLE)
+		{
+			particle_spawn(c->x, c->y, PARTICLE_TYPE_FIZZLE);
+			continue;
+		}
 		s16 cx = c->x - state.cam_x + CUBE_LEFT;
 		s16 cy = c->y - state.cam_y + CUBE_TOP;
 		if (cx <= -16 || cx >= 320 || cy <= -16 || cy >= 240)
@@ -94,7 +123,7 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 
 void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 {
-	for (u16 i = 0; i < CUBES_NUM; i++)
+	for (register i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
