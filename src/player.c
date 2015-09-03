@@ -50,6 +50,7 @@ void player_init_soft(player *pl)
 	pl->cp_cnt = 0;
 	pl->hurt_cnt = 0;
 	pl->invuln_cnt = 0;
+	pl->action_cnt = 0;
 	pl->control_disabled = 0;
 	pl->input = 0;
 	pl->input_prev = 0;
@@ -81,21 +82,6 @@ void player_dma_setup(player *pl)
 void player_dma(player *pl)
 {
 	VDP_doVRamDMA(lyle_dma_src,lyle_dma_dest,lyle_dma_len);
-}
-
-void player_run(player *pl)
-{
-	player_input(pl);
-	player_special_counters(pl);
-	player_accel(pl);
-	player_jump(pl);
-	player_move(pl);
-	player_toss_cubes(pl);
-	player_lift_cubes(pl);
-	player_cp(pl);
-	player_eval_grounded(pl);
-	player_calc_anim(pl);
-	player_dma_setup(pl);
 }
 
 void player_input(player *pl)
@@ -131,7 +117,7 @@ void player_cp(player *pl)
 		}
 	}
 	// In the middle of doing something that voids this ability
-	if (pl->lift_cnt || pl->hurt_cnt)
+	if (pl->lift_cnt || pl->hurt_cnt || pl->action_cnt)
 	{
 		return;
 	}
@@ -174,12 +160,12 @@ void player_accel(player *pl)
 	if (pl->input & KEY_RIGHT)
 	{
 		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);
-		pl->direction = 0;
+		pl->direction = PLAYER_RIGHT;
 	}
 	else if (pl->input & KEY_LEFT)
 	{
 		pl->dx = fix16Sub(pl->dx,PLAYER_X_ACCEL);
-		pl->direction = 1;
+		pl->direction = PLAYER_LEFT;
 	}
 
 	// deceleration
@@ -251,6 +237,14 @@ void player_jump(player *pl)
 		else if (pl->holding_cube && sram.have_jump)
 		{
 			pl->throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
+		
+			// Generate a cube to throw
+			cube_spawn(fix32ToInt(pl->x),
+				fix32ToInt(pl->y) - 7,
+				pl->holding_cube,
+				CUBE_STATE_AIR,
+				0, FIX16(4));
+
 			pl->holding_cube = 0;
 			// Generate cube of right type, throw it down
 			goto do_jump;
@@ -268,8 +262,48 @@ void player_toss_cubes(player *pl)
 {
 	if (pl->holding_cube && (pl->input & KEY_B) && (!(pl->input_prev & KEY_B)))
 	{
-		// Spawn cube of right type, throw it
+		s16 cdx;
+		fix16 cdy;
+		// Holding down; do a short toss
+		if (pl->input & (KEY_DOWN))
+		{
+			cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
+			cdy = FIX16(-3);
+		}
+		// Holding up; toss straight up
+		else if (pl->input & KEY_UP)
+		{
+			cdx = 0;
+			cdy = FIX16(-6);
+		}
+		// Throw with direction right
+		else if (pl->input & KEY_RIGHT && pl->direction == PLAYER_RIGHT)
+		{
+			cdx = 4;
+			cdy = FIX16(-2);
+		}
+		// Left
+		else if (pl->input & KEY_LEFT && pl->direction == PLAYER_LEFT)
+		{
+			cdx = -4;
+			cdy = FIX16(-2);
+		}
+		else
+		{
+			cdx = (pl->direction == PLAYER_RIGHT) ? 2 : -2;
+			cdy = FIX16(-3);
+		}
+		
+		// Generate a cube to throw
+		cube_spawn(fix32ToInt(pl->x),
+			fix32ToInt(pl->y) - 23,
+			pl->holding_cube,
+			CUBE_STATE_AIR,
+			cdx, cdy);
+
+		// Player response
 		pl->holding_cube = 0;
+		pl->action_cnt = PLAYER_ACTION_THROW;
 		pl->throw_cnt = PLAYER_THROW_ANIM_LEN;
 	}
 }
@@ -303,6 +337,10 @@ void player_special_counters(player *pl)
 	if (pl->invuln_cnt)
 	{
 		pl->invuln_cnt--;
+	}
+	if (pl->action_cnt)
+	{
+		pl->action_cnt--;
 	}
 }
 
@@ -540,6 +578,23 @@ void player_draw(player *pl)
 	// Draw a cube he is holding
 	if (pl->holding_cube)
 	{
-		cube_draw_single(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + yoff - 15, pl->holding_cube);
+		cube_draw_single(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + PLAYER_DRAW_TOP - 15, pl->holding_cube);
 	}
 }
+
+void player_run(player *pl)
+{
+	player_input(pl);
+	player_special_counters(pl);
+	player_accel(pl);
+	player_jump(pl);
+	player_move(pl);
+	player_toss_cubes(pl);
+	player_lift_cubes(pl);
+	player_cp(pl);
+	player_eval_grounded(pl);
+	player_calc_anim(pl);
+	player_dma_setup(pl);
+}
+
+

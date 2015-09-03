@@ -3,6 +3,7 @@
 
 #include <genesis.h>
 #include "map.h"
+#include "player.h"
 
 #define CUBES_NUM 32
 
@@ -14,11 +15,11 @@
 #define CUBE_RIGHT 7
 
 /* Cube type descriptions */
-#define CUBE_BLUE 0x100
-#define CUBE_PHANTOM 0x200
-#define CUBE_GREEN 0x300
-#define CUBE_RED 0x400
-#define CUBE_YELLOW 0x800
+#define CUBE_BLUE 0x0100
+#define CUBE_PHANTOM 0x0200
+#define CUBE_GREEN 0x0300
+#define CUBE_RED 0x0400
+#define CUBE_YELLOW 0x0800
 // Yellow cube's lower bytes become a bitfield describing contents
 /*
 
@@ -42,9 +43,10 @@ Example values:
 
 #define CUBE_STATE_INACTIVE 0
 #define CUBE_STATE_IDLE 1 
-#define CUBE_STATE_CARRY 2
-#define CUBE_STATE_AIR 3
-#define CUBE_STATE_KICKED 4
+#define CUBE_STATE_AIR 2
+#define CUBE_STATE_KICKED 3
+
+#define CUBE_GRAVITY FIX16(0.2)
 
 typedef struct cube cube;
 struct cube
@@ -59,8 +61,9 @@ struct cube
 
 void cube_dma_tiles(void);
 void cubes_init(void);
-void cubes_run(void);
+void cubes_run(player *pl);
 void cubes_draw(void);
 void cube_draw_single(u16 x, u16 y, u16 type);
+void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy);
 
 #endif

@@ -4,6 +4,8 @@
 #include "sprites.h"
 #include "state.h"
 #include "system.h"
+#include "player.h"
+#include "map.h"
 
 static cube cubes[CUBES_NUM];
 
@@ -17,18 +19,55 @@ void cubes_init(void)
 {
 	for (u16 i = 0; i < CUBES_NUM; i++)
 	{
-		cubes[i].state = CUBE_STATE_INACTIVE;
+		cube *c = &cubes[i];
+		c->state = CUBE_STATE_INACTIVE;
 	}
 }
 
-void cubes_run(void)
+static void cube_move(cube *c)
 {
+	if (c->state == CUBE_STATE_AIR)
+	{	
+		c->y += fix16ToInt(c->dy);
+		c->dy = fix16Add(c->dy, CUBE_GRAVITY);
+	}
+	c->x += c->dx;
 
+}
+
+void cubes_run(player *pl)
+{
+	for (u16 i = 0; i < CUBES_NUM; i++)
+	{
+		cube *c = &cubes[i];
+		if (c->state == CUBE_STATE_INACTIVE)
+		{
+			continue;
+		}
+		else if (c->state != CUBE_STATE_IDLE)
+		{
+			cube_move(c);
+		}
+	}
 }
 
 void cubes_draw(void)
 {
-
+	for (u16 i = 0; i < CUBES_NUM; i++)
+	{
+		if (cubes[i].state == CUBE_STATE_INACTIVE)
+		{
+			continue;
+		}
+		cube *c = &cubes[i];
+		s16 cx = c->x - state.cam_x + CUBE_LEFT;
+		s16 cy = c->y - state.cam_y + CUBE_TOP;
+		if (cx <= -16 || cx >= 320 || cy <= -16 || cy >= 240)
+		{
+			continue;
+		}
+		cube_draw_single(c->x + CUBE_LEFT, c->y + CUBE_TOP, c->type);
+	}
 }
 
 void cube_draw_single(u16 x, u16 y, u16 type)
@@ -51,4 +90,22 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 	}
 
 	sprite_put(x - state.cam_x, y - state.cam_y, SPRITE_SIZE(2,2), frame);
+}
+
+void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
+{
+	for (u16 i = 0; i < CUBES_NUM; i++)
+	{
+		cube *c = &cubes[i];
+		if (c->state == CUBE_STATE_INACTIVE)
+		{
+			c->state = state;
+			c->x = x;
+			c->y = y;
+			c->dx = dx;
+			c->dy = dy;
+			c->type = type;
+			return;
+		}
+	}
 }

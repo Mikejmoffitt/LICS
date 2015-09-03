@@ -20,7 +20,9 @@
 #define FZERO FIX16(0.0)
 #define FZERO32 FIX32(0.0)
 
-
+#define PLAYER_ACTION_THROW 2
+#define PLAYER_ACTION_LIFT 2
+#define PLAYER_ACTION_KICK 3
 
 #define PLAYER_THROW_ANIM_LEN 8
 #define PLAYER_KICK_ANIM_LEN 8
@@ -89,6 +91,7 @@ struct player
 	u16 kick_cnt; // If non-zero, kick anim plays
 	u16 lift_cnt; // If non-zero, in the middle of lifting
 	u16 hurt_cnt; // If non-zero, hurt anim, no controls
+	u16 action_cnt; // Generic action delay countdown
 
 	u16 holding_cube; // flag for if holding a cube
 	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
@@ -109,42 +112,14 @@ void player_init(player *pl);
 // For use in-game - don't reset health, cp, etc
 void player_init_soft(player *pl);
 
-// Put Lyle's sprite in VRAM if needed
+// Prepare to possibly copy to VRAM
 void player_dma_setup(player *pl);
+
+// Copy graphics into VRAM slot
 void player_dma(player *pl);
 
 // Run player's logic for one frame
 void player_run(player *pl);
-
-// Update gamepad state
-void player_input(player *pl);
-
-// Cube spawning
-void player_cp(player *pl);
-
-// Handle inputs affecting accel/decel
-void player_accel(player *pl);
-
-// Determine if player is grounded
-void player_eval_grounded(player *pl);
-
-// Allow player to jump
-void player_jump(player *pl);
-
-// Run various countdowns for Lyle's special states
-void player_special_counters(player *pl);
-
-// Manage tossing of cubes
-void player_toss_cubes(player *pl);
-
-// Manage lifting of cubes
-void player_lift_cubes(player *pl);
-
-// Run d additions, handle collisions
-void player_move(player *pl);
-
-// Determine which animation frame to DMA in
-void player_calc_anim(player *pl);
 
 // Update entry in sprite table cache
 void player_draw(player *pl);

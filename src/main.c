@@ -20,10 +20,12 @@ u16 debug_bgcol;
 
 void room_setup(player *pl)
 {	
+	// Blank the display
 	VDP_setEnable(0);
 	state_load_room(state.next_id);
 	player_init_soft(pl);
 	particles_init();
+	cubes_init();
 	// First entry to a room needs some extra processing
 	pl->y = intToFix32(64);
 	pl->x = intToFix32(64);
@@ -69,6 +71,7 @@ void room_loop(void)
 			DEBUG_BGCOL(0x200);
 			player_run(&pl);
 			DEBUG_BGCOL(0x204);
+			cubes_run(&pl);
 			particles_run();
 			px = fix32ToInt(pl.x);
 			py = fix32ToInt(pl.y);
@@ -80,8 +83,9 @@ void room_loop(void)
 			DEBUG_BGCOL(0x282);
 			hud_draw_health(8,pl.hp); 
 			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
-			player_draw(&pl);
 			particles_draw();
+			player_draw(&pl);
+			cubes_draw();
 			
 			/* Wait for VBlank. */
 			DEBUG_BGCOL(0x000);
