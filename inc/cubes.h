@@ -47,6 +47,8 @@ Example values:
 #define CUBE_STATE_KICKED 3
 
 #define CUBE_STATE_FIZZLE 4
+#define CUBE_STATE_FIZZLERED 5
+#define CUBE_STATE_EXPLODE 6
 #define CUBE_FIZZLE_TIME 7
 
 #define CUBE_GRAVITY FIX16(0.2)

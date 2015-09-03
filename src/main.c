@@ -103,6 +103,11 @@ void room_loop(void)
 			// Enable the VDP here at the end. This is to hide frame 0
 			VDP_setEnable(1);
 
+			if (pl.input & KEY_A)
+			{
+				pl.cp = 30;
+			}
+
 		}
 		while (!state_watch_transitions(px,py,pl.dx,pl.dy));
 	}

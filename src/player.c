@@ -16,6 +16,8 @@ static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
 static u16 lyle_dma_len;
 
+static u16 ctype;
+
 static u16 cp_restore_cnt;
 
 static void player_set_pal(void)
@@ -30,7 +32,7 @@ void player_init(player *pl)
 	pl->direction = PLAYER_RIGHT;
 	
 	pl->hp = 5;
-	pl->cp = 16;
+	pl->cp = 30;
 	player_init_soft(pl);
 }
 
@@ -137,7 +139,25 @@ void player_cp(player *pl)
 		u16 cube_spawn_period = (sram.have_fast_phantom ? PLAYER_CP_SPAWN_FAST : PLAYER_CP_SPAWN_SLOW);
 		if (pl->cp_cnt >= cube_spawn_period)
 		{
-			pl->holding_cube = CUBE_PHANTOM;
+			switch (ctype)
+			{
+				default:
+					ctype = CUBE_PHANTOM;
+					break;
+				case CUBE_PHANTOM:
+					ctype = CUBE_BLUE;
+					break;
+				case CUBE_BLUE:
+					ctype = CUBE_RED;
+					break;
+				case CUBE_RED:
+					ctype = CUBE_YELLOW;
+					break;
+				case CUBE_YELLOW:
+					ctype = CUBE_PHANTOM;
+					break;
+			}
+			pl->holding_cube = ctype;
 			pl->cp_cnt = 0;
 			pl->cp -= cube_price;
 		}
@@ -268,30 +288,30 @@ void player_toss_cubes(player *pl)
 		if (pl->input & (KEY_DOWN))
 		{
 			cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
-			cdy = FIX16(-3);
+			cdy = FIX16(-2.2);
 		}
 		// Holding up; toss straight up
 		else if (pl->input & KEY_UP)
 		{
 			cdx = 0;
-			cdy = FIX16(-6);
+			cdy = FIX16(-5.2);
 		}
 		// Throw with direction right
 		else if (pl->input & KEY_RIGHT && pl->direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
-			cdy = FIX16(-2);
+			cdy = FIX16(-1.2);
 		}
 		// Left
 		else if (pl->input & KEY_LEFT && pl->direction == PLAYER_LEFT)
 		{
 			cdx = -4;
-			cdy = FIX16(-2);
+			cdy = FIX16(-1.2);
 		}
 		else
 		{
 			cdx = (pl->direction == PLAYER_RIGHT) ? 2 : -2;
-			cdy = FIX16(-3);
+			cdy = FIX16(-2.2);
 		}
 		
 		// Generate a cube to throw

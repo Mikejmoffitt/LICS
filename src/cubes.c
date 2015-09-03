@@ -45,7 +45,7 @@ void cubes_run(player *pl)
 		{
 			continue;
 		}
-		else if (c->state == CUBE_STATE_FIZZLE)
+		else if (c->state >= CUBE_STATE_FIZZLE)
 		{
 			if (c->dy > 0)
 			{
@@ -65,11 +65,24 @@ void cubes_run(player *pl)
 		// Basic collision with Plane A
 		if (c->state != CUBE_STATE_FIZZLE)
 		{
-			if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM))
+			if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
+				map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) || 
+				map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) || 
+				map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP)) 
 			{
-				c->dx = 0;
-				c->dy = 7;
-				c->state = CUBE_STATE_FIZZLE;
+				if (c->type != CUBE_GREEN)
+				{
+					c->dx = 0;
+					c->dy = 7;
+					if (c->type == CUBE_RED)
+					{
+						c->state = CUBE_STATE_EXPLODE;
+					}
+					else
+					{
+						c->state = CUBE_STATE_FIZZLE;
+					}
+				}
 			}
 		}
 	}
@@ -87,6 +100,16 @@ void cubes_draw(void)
 		else if (c->state == CUBE_STATE_FIZZLE)
 		{
 			particle_spawn(c->x, c->y, PARTICLE_TYPE_FIZZLE);
+			continue;
+		}
+		else if (c->state == CUBE_STATE_FIZZLERED)
+		{
+			particle_spawn(c->x, c->y, PARTICLE_TYPE_FIZZLERED);
+			continue;
+		}
+		else if (c->state == CUBE_STATE_EXPLODE)
+		{
+			particle_spawn(c->x, c->y, PARTICLE_TYPE_EXPLOSION);
 			continue;
 		}
 		s16 cx = c->x - state.cam_x + CUBE_LEFT;
