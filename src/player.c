@@ -56,6 +56,7 @@ void player_init_soft(player *pl)
 	pl->control_disabled = 0;
 	pl->input = 0;
 	pl->input_prev = 0;
+	pl->cubejump_disable = 0;
 	player_set_pal();
 }
 
@@ -248,19 +249,26 @@ void player_eval_grounded(player *pl)
 
 void player_jump(player *pl)
 {
+	if (pl->grounded)
+	{
+		pl->cubejump_disable = 2;
+	}
 	if ((pl->input & KEY_C) && !(pl->input_prev & KEY_C))
 	{
 		if (pl->grounded)
 		{
 			goto do_jump;
 		}
-		else if (pl->holding_cube && sram.have_jump)
+		else if (pl->holding_cube && sram.have_jump && !pl->cubejump_disable)
 		{
 			pl->throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
+
+			// If the wall behind the player is solid, align the cube's X to it
+			// so it doesn't fizzle immediately on throw
 		
 			// Generate a cube to throw
 			cube_spawn(fix32ToInt(pl->x),
-				fix32ToInt(pl->y) - 7,
+				fix32ToInt(pl->y) - 12,
 				pl->holding_cube,
 				CUBE_STATE_AIR,
 				0, FIX16(4));
@@ -362,6 +370,10 @@ void player_special_counters(player *pl)
 	{
 		pl->action_cnt--;
 	}
+	if (pl->cubejump_disable)
+	{
+		pl->cubejump_disable--;
+	}
 }
 
 static void player_walk_collision(player *pl)
@@ -441,12 +453,13 @@ static void player_vertical_collision(player *pl)
 			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_TOP - 1)))
 		{
 			// Snap to nearest 8px boundary, with head room accounted for
-			py = 8 * (py / 8) + 3;
+			py = 8 * ((py + 4) / 8) + 3;
 			pl->y = intToFix32(py);
-			if (pl->dy < FIX16(-1.0))
+			if (pl->dy < PLAYER_CEILING_VECY)
 			{
-				pl->dy = FIX16(-1.0);
+				pl->dy = PLAYER_CEILING_VECY;
 			}
+
 		}
 	}
 }
@@ -605,7 +618,6 @@ void player_draw(player *pl)
 void player_run(player *pl)
 {
 	player_input(pl);
-	player_special_counters(pl);
 	player_accel(pl);
 	player_jump(pl);
 	player_move(pl);
@@ -615,6 +627,7 @@ void player_run(player *pl)
 	player_eval_grounded(pl);
 	player_calc_anim(pl);
 	player_dma_setup(pl);
+	player_special_counters(pl);
 }
 
 

@@ -19,6 +19,7 @@
 #define PLAYER_STEP_UP 3
 #define FZERO FIX16(0.0)
 #define FZERO32 FIX32(0.0)
+#define PLAYER_CEILING_VECY FIX16(-0.5)
 
 #define PLAYER_ACTION_THROW 2
 #define PLAYER_ACTION_LIFT 2
@@ -92,6 +93,7 @@ struct player
 	u16 lift_cnt; // If non-zero, in the middle of lifting
 	u16 hurt_cnt; // If non-zero, hurt anim, no controls
 	u16 action_cnt; // Generic action delay countdown
+	u16 cubejump_disable;
 
 	u16 holding_cube; // flag for if holding a cube
 	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
