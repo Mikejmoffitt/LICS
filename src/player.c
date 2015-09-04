@@ -249,25 +249,43 @@ void player_eval_grounded(player *pl)
 
 void player_jump(player *pl)
 {
+	// Very small timeout to prevent lyle from cube-jumping so the occasional
+	// normal jump doesn't accidentally become a cube jump off a ledge
 	if (pl->grounded)
 	{
 		pl->cubejump_disable = 2;
 	}
+
+	// C key pressed, negative edge (1 -> 0)
 	if ((pl->input & KEY_C) && !(pl->input_prev & KEY_C))
 	{
+		// Normal jump off the ground
 		if (pl->grounded)
 		{
 			goto do_jump;
 		}
+		// Cube jumping, if we have the ability
 		else if (pl->holding_cube && sram.have_jump && !pl->cubejump_disable)
 		{
 			pl->throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
 
 			// If the wall behind the player is solid, align the cube's X to it
-			// so it doesn't fizzle immediately on throw
+			// so it doesn't fizzle immediately on throw. Not sure exactly what
+			// made this happen in the original but this is mimicing what I see
+			// when I play the game.
+			u16 cx = fix32ToInt(pl->x);
+			u16 px = fix32ToInt(pl->x);
+			u16 back_x = (pl->direction == PLAYER_LEFT) ? 
+				(px + PLAYER_CHK_RIGHT + 4) : 
+				(px + PLAYER_CHK_LEFT - 4);
+			// Align the cube
+			if (map_collision(back_x, fix32ToInt(pl->y) + PLAYER_CHK_BOTTOM))
+			{
+				cx = ((cx + 4) / 8) * 8;
+			}
 		
 			// Generate a cube to throw
-			cube_spawn(fix32ToInt(pl->x),
+			cube_spawn(cx,
 				fix32ToInt(pl->y) - 12,
 				pl->holding_cube,
 				CUBE_STATE_AIR,
