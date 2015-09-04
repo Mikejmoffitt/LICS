@@ -71,7 +71,7 @@ void col_puthex(u16 x, u16 y, u32 val)
 void col_puts(u16 x, u16 y, char *s)
 {
 	u16 orig_x = x;
-	register flip = x % 2;
+	int flip = x % 2;
 	while(*s)
 	{
 		if (*s == '\n')

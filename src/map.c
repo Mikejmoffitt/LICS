@@ -356,7 +356,7 @@ void map_draw_diffs(u16 moved, fix16 dx, fix16 dy)
 
 void map_dma(void)
 {
-	for (register i = 0; i < map_dma_queue_depth; i++)
+	for (unsigned int i = 0; i < map_dma_queue_depth; i++)
 	{
 		VDP_doVRamDMA(map_dma_src_queue[i],
 			map_dma_dest_queue[i],

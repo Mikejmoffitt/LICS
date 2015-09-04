@@ -18,7 +18,7 @@ void cube_dma_tiles(void)
 
 void cubes_init(void)
 {
-	for (register i = 0; i < CUBES_NUM; i++)
+	for (int i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		c->state = CUBE_STATE_INACTIVE;
@@ -38,7 +38,7 @@ static void cube_move(cube *c)
 
 void cubes_run(player *pl)
 {
-	for (register i = 0; i < CUBES_NUM; i++)
+	for (int i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
@@ -90,7 +90,7 @@ void cubes_run(player *pl)
 
 void cubes_draw(void)
 {
-	for (register i = 0; i < CUBES_NUM; i++)
+	for (int i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
@@ -146,7 +146,7 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 
 void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 {
-	for (register i = 0; i < CUBES_NUM; i++)
+	for (int i = 0; i < CUBES_NUM; i++)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)

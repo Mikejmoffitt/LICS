@@ -15,7 +15,8 @@ void particles_dma_tiles(void)
 
 void particles_init(void)
 {
-	for (register i = 0; i < PARTICLES_NUM; i++)
+	unsigned int i = PARTICLES_NUM;
+	while(i--)
 	{
 		particles[i].active = 0; 
 	}
@@ -23,7 +24,7 @@ void particles_init(void)
 
 void particles_run(void)
 {
-	for (register i = 0; i < PARTICLES_NUM; i++)
+	for (unsigned int i = 0; i < PARTICLES_NUM; i++)
 	{
 		if (particles[i].active)
 		{
@@ -47,7 +48,7 @@ void particles_run(void)
 
 void particles_draw(void)
 {
-	for (register i = 0; i < PARTICLES_NUM; i++)
+	for (unsigned int i = 0; i < PARTICLES_NUM; i++)
 	{
 		if (!particles[i].active)
 		{
@@ -172,7 +173,7 @@ void particles_draw(void)
 
 void particle_spawn(u16 x, u16 y, u16 type)
 {
-	for (register i = 0; i < PARTICLES_NUM; i++)
+	for (unsigned int i = 0; i < PARTICLES_NUM; i++)
 	{	
 		if (!particles[i].active)
 		{

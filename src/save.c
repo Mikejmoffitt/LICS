@@ -6,7 +6,7 @@ void save_write(void)
 {
 	SRAM_enable();
 	u16 *sf = (u16 *)&sram;
-	for (register i = 0; i < (sizeof(save_file) / sizeof(u16)); i++)
+	for (unsigned int i = 0; i < (sizeof(save_file) / sizeof(u16)); i++)
 	{
 		SRAM_writeWord(i * 2, sf[i]);
 	}
@@ -17,7 +17,7 @@ void save_load(void)
 {
 	SRAM_enableRO();
 	u16 *sf = (u16 *)&sram;
-	for (register i = 0; i < (sizeof(save_file) / sizeof(u16)); i++)
+	for (unsigned int i = 0; i < (sizeof(save_file) / sizeof(u16)); i++)
 	{
 		sf[i] = SRAM_readWord(i * 2);
 	}
@@ -31,7 +31,7 @@ void save_load(void)
 void save_clear(void)
 {
 	u16 *sf = (u16 *)&sram;
-	for (register i = 0; i < (sizeof(save_file) / sizeof(u16)); i++)
+	for (unsigned int i = 0; i < (sizeof(save_file) / sizeof(u16)); i++)
 	{
 		sf[i] = 0;
 	}	
