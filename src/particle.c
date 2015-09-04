@@ -18,13 +18,18 @@ void particles_init(void)
 	unsigned int i = PARTICLES_NUM;
 	while(i--)
 	{
+		if (i == PARTICLES_NUM)
+		{
+			VDP_setPaletteColor(0,0x00E);
+		}
 		particles[i].active = 0; 
 	}
 }
 
 void particles_run(void)
 {
-	for (unsigned int i = 0; i < PARTICLES_NUM; i++)
+	unsigned int i = PARTICLES_NUM;
+	while(i--)
 	{
 		if (particles[i].active)
 		{
@@ -48,7 +53,8 @@ void particles_run(void)
 
 void particles_draw(void)
 {
-	for (unsigned int i = 0; i < PARTICLES_NUM; i++)
+	unsigned int i = PARTICLES_NUM;
+	while(i--)
 	{
 		if (!particles[i].active)
 		{
@@ -173,7 +179,8 @@ void particles_draw(void)
 
 void particle_spawn(u16 x, u16 y, u16 type)
 {
-	for (unsigned int i = 0; i < PARTICLES_NUM; i++)
+	unsigned int i = PARTICLES_NUM;
+	while(i--)
 	{	
 		if (!particles[i].active)
 		{

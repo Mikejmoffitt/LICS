@@ -13,7 +13,7 @@
 #define PARTICLE_TYPE_FIZZLERED 2
 #define PARTICLE_TYPE_EXPLOSION 3
 
-#define PARTICLES_NUM 12
+#define PARTICLES_NUM 16
 
 typedef struct particle particle;
 struct particle

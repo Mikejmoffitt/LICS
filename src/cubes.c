@@ -59,31 +59,31 @@ void cubes_run(player *pl)
 		}
 		else if (c->state != CUBE_STATE_IDLE)
 		{
-			cube_move(c);
-		}
-
-		// Basic collision with Plane A
-		if (c->state != CUBE_STATE_FIZZLE)
-		{
-			if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
-				map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) || 
-				map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) || 
-				map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP)) 
+			// Collison is processed a frame late intentionally to mimic the
+			// original game's behavior. 
+			if (c->state != CUBE_STATE_FIZZLE)
 			{
-				if (c->type != CUBE_GREEN)
+				if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
+					map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) || 
+					map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) || 
+					map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP)) 
 				{
-					c->dx = 0;
-					c->dy = 7;
-					if (c->type == CUBE_RED)
+					if (c->type != CUBE_GREEN)
 					{
-						c->state = CUBE_STATE_EXPLODE;
-					}
-					else
-					{
-						c->state = CUBE_STATE_FIZZLE;
+						c->dx = 0;
+						c->dy = 7;
+						if (c->type == CUBE_RED)
+						{
+							c->state = CUBE_STATE_EXPLODE;
+						}
+						else
+						{
+							c->state = CUBE_STATE_FIZZLE;
+						}
 					}
 				}
 			}
+			cube_move(c);
 		}
 	}
 }
