@@ -11,7 +11,7 @@
 // Moslty just set the sprite table address cache
 void sprites_init(void);
 // DMA up to spr_num, reset next_sprite
-void sprites_dma(register spr_num);
+void sprites_dma(u32 spr_num);
 
 // DMA up to next_sprite without passing it
 void sprites_dma_simple(void);

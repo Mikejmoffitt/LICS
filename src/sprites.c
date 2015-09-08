@@ -10,9 +10,9 @@ void sprites_init(void)
 	next_spr = 0;
 }
 
-void sprites_dma(register spr_num)
+void sprites_dma(u32 spr_num)
 {
-	VDP_doVRamDMA(sprite_table,sprite_addr,spr_num << 2);
+	VDP_doVRamDMA((u32)sprite_table,sprite_addr,spr_num << 2);
 }
 
 void sprites_clamp_link(u8 num)
@@ -31,7 +31,7 @@ void sprites_dma_simple()
 	}
 	// Terminate the list at the last sprite
 	sprites_clamp_link(next_spr - 1);
-	VDP_doVRamDMA(sprite_table,sprite_addr,(u16)(next_spr << 2));
+	VDP_doVRamDMA((u32)sprite_table,sprite_addr,(u16)(next_spr << 2));
 	next_spr = 0;
 }
 

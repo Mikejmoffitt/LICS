@@ -10,12 +10,12 @@ u16 system_osc;
 static _voidCallback *v_int(void)
 {
 	vbl_active = 1;
-	return;
+	return NULL;
 }
 
 static _voidCallback *h_int(void)
 {
-	return;
+	return NULL;
 }
 
 void system_init(void)
@@ -25,8 +25,8 @@ void system_init(void)
 	SYS_disableInts();
 	VDP_setHInterrupt(1);
 	VDP_setHIntCounter(223 - 6);
-	SYS_setVIntCallback(v_int);
-	SYS_setHIntCallback(h_int);
+	SYS_setVIntCallback((_voidCallback *)v_int);
+	SYS_setHIntCallback((_voidCallback *)h_int);
 	SYS_enableInts();
 
 	// Set up basic VDP settings

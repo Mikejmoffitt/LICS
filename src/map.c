@@ -73,7 +73,7 @@ map_file *map_by_id(u8 num)
 {
 	for (int i = 0; i < 255; i++)
 	{
-		map_file *tf = maplist[i];
+		map_file *tf = (map_file *)maplist[i];
 		// List termination; room not found
 		if (!tf)
 		{
@@ -359,26 +359,26 @@ void map_dma(void)
 	for (unsigned int i = 0; i < map_dma_queue_depth; i++)
 	{
 		VDP_doVRamDMA(map_dma_src_queue[i],
-			map_dma_dest_queue[i],
-			map_dma_len_queue[i]);
+			(u32)map_dma_dest_queue[i],
+			(map_dma_len_queue[i]));
 	}
 	map_dma_queue_depth = 0;
 	if (map_dma_h_len[0])
 	{
 		VDP_doDMAEx(VDP_DMA_VRAM,
-			map_dma_h_src_queue,
+			(u32)map_dma_h_src_queue,
 			map_dma_h_dest[0],
 			map_dma_h_len[0],
-			STATE_PLANE_W * 2);
+			(STATE_PLANE_W * 2));
 	}
 	
 	if (map_dma_h_len[1])
 	{
 		VDP_doDMAEx(VDP_DMA_VRAM,
-			&map_dma_h_src_queue[map_dma_h_len[0]],
+			(u32)&map_dma_h_src_queue[map_dma_h_len[0]],
 			map_dma_h_dest[1],
 			map_dma_h_len[1],
-			STATE_PLANE_W * 2);
+			(STATE_PLANE_W * 2));
 		map_dma_h_len[1] = 0;
 	}
 	map_dma_h_len[0] = 0;

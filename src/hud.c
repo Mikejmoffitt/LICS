@@ -6,7 +6,7 @@
 
 void hud_dma_tiles(void)
 {
-	VDP_doVRamDMA(gfx_hud,HUD_VRAM_SLOT * 32, HUD_VRAM_LEN * 16);
+	VDP_doVRamDMA((u32)gfx_hud,HUD_VRAM_SLOT * 32, HUD_VRAM_LEN * 16);
 }
 
 void hud_draw_health(u16 max, u16 val)

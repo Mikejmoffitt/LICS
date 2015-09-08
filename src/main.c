@@ -13,6 +13,7 @@
 #include "save.h"
 #include "cubes.h"
 #include "particles.h"
+#include "hud.h"
 
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
@@ -41,7 +42,7 @@ void room_setup(player *pl)
 
 	// First graphical commit
 	state_update_scroll(px, py);
-	player_draw(&pl);
+	player_draw(pl);
 	state_dma_scroll();
 	system_wait_v();
 	system_wait_v();

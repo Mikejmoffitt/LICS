@@ -2,7 +2,7 @@
 
 void col_init(void)
 {
-	VDP_doVRamDMA(gfx_font,32*COL_VRAM_SLOT,16 * COL_VRAM_LEN);
+	VDP_doVRamDMA((u32)gfx_font,32*COL_VRAM_SLOT,16 * COL_VRAM_LEN);
 
 	VDP_setHorizontalScroll(PLAN_B,4);
 	VDP_setVerticalScroll(PLAN_B,16);

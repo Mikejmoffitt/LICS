@@ -22,7 +22,7 @@ static u16 cp_restore_cnt;
 
 static void player_set_pal(void)
 {
-	VDP_doCRamDMA(pal_lyle, 32 * PLAYER_PALNUM, 16);
+	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
 }
 
 void player_init(player *pl)
@@ -78,13 +78,13 @@ void player_dma_setup(player *pl)
 	}
 	
 	lyle_dma_len = (offset >= 120) ? (9 * 16) : (6 * 16);
-	lyle_dma_src = gfx_lyle + (32 * offset);
+	lyle_dma_src = (u32)(gfx_lyle + (32 * offset));
 	lyle_dma_dest = PLAYER_VRAM_SLOT * 32;
 }
 
 void player_dma(player *pl)
 {
-	VDP_doVRamDMA(lyle_dma_src,lyle_dma_dest,lyle_dma_len);
+	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
 void player_input(player *pl)
@@ -278,6 +278,7 @@ void player_jump(player *pl)
 			u16 back_x = (pl->direction == PLAYER_LEFT) ? 
 				(px + PLAYER_CHK_RIGHT + 4) : 
 				(px + PLAYER_CHK_LEFT - 4);
+
 			// Align the cube
 			if (map_collision(back_x, fix32ToInt(pl->y) + PLAYER_CHK_BOTTOM))
 			{
