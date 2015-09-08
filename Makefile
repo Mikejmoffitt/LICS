@@ -128,39 +128,40 @@ out.iso: out.elf_scd
 	$(RM) -f $(SCD_LOADER)/filesystem.bin
 
 %.bin: %.elf
-	$(OBJC) -O binary $< temp.bin
-	dd if=temp.bin of=$@ bs=8k conv=sync
-	$(RM) temp.bin
+	@$(OBJC) -O binary $< temp.bin
+	@dd if=temp.bin of=$@ bs=8k conv=sync
+	@$(RM) temp.bin
 
 %.elf: $(OBJS) $(BOOT_RESOURCES)
-	$(CC) -o $@ $(LINKFLAGS) $(BOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
+	@$(CC) -o $@ $(LINKFLAGS) $(BOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
 
 %.elf_scd: $(OBJS) $(SCDBOOT_RESOURCES)
-	$(CC) -o $@ $(SCDLINKFLAGS) $(SCDBOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
+	@$(CC) -o $@ $(SCDLINKFLAGS) $(SCDBOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
 
 %.o80: %.s80
-	$(ASMZ80) $(Z80FLAGS) -o $@ $<
+	@$(ASMZ80) $(Z80FLAGS) -o $@ $<
 
 %.c: %.o80
-	$(BINTOS) $<
+	@$(BINTOS) $<
 
 %.o: %.c
-	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./color.sh
+	@echo "[ $< ] --> [ $@ ]"
+	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./color.sh
 
 %.o: %.s 
-	$(AS) $(ASFLAGS) $< -o $@
+	@$(AS) $(ASFLAGS) $< -o $@
 
 %.s: %.bmp
-	bintos -bmp $<
+	@bintos -bmp $<
 
 %.rawpcm: %.pcm
-	$(PCMTORAW) $< $@
+	@$(PCMTORAW) $< $@
 
 %.raw: %.wav
-	$(WAVTORAW) $< $@ 16000
+	@$(WAVTORAW) $< $@ 16000
 
 %.pcm: %.wavpcm
-	$(WAVTORAW) $< $@ 22050
+	@$(WAVTORAW) $< $@ 22050
 
 #%.tfc: %.tfd
 #	$(TFMCOM) $<
@@ -169,31 +170,31 @@ out.iso: out.elf_scd
 #	$(ASMZ80) $(FLAGSZ80) $< $@ out.lst
 
 %.s: %.tfd
-	$(BINTOS) -align 32768 $<
+	@$(BINTOS) -align 32768 $<
 
 %.s: %.mvs
-	$(BINTOS) -align 256 $<
+	@$(BINTOS) -align 256 $<
 
 %.s: %.esf
-	$(BINTOS) -align 32768 $<
+	@$(BINTOS) -align 32768 $<
 
 %.s: %.eif
-	$(BINTOS) -align 256 $<
+	@$(BINTOS) -align 256 $<
 
 %.s: %.vgm 
-	$(BINTOS) -align 256 $<
+	@$(BINTOS) -align 256 $<
 
 %.s: %.raw
-	$(BINTOS) -align 256 -sizealign 256 $<
+	@$(BINTOS) -align 256 -sizealign 256 $<
 
 %.s: %.rawpcm
-	$(BINTOS) -align 128 -sizealign 128 -nullfill 136 $<
+	@$(BINTOS) -align 128 -sizealign 128 -nullfill 136 $<
 
 %.s: %.rawpcm
-	$(BINTOS) -align 128 -sizealign 128 -nullfill 136 $<
+	@$(BINTOS) -align 128 -sizealign 128 -nullfill 136 $<
 
 %.s: %.res
-	$(RESCOMP) $< $@
+	@ $(RESCOMP) $< $@ > /dev/null
 
 boot/rom_head.bin: boot/rom_head.o
 	$(LD) $(LINKFLAGS) --oformat binary -o $@ $<
