@@ -129,7 +129,7 @@ out.iso: out.elf_scd
 
 %.bin: %.elf
 	$(OBJC) -O binary $< temp.bin
-	dd if=temp.bin of=$@ bs=8K conv=sync
+	dd if=temp.bin of=$@ bs=8k conv=sync
 	$(RM) temp.bin
 
 %.elf: $(OBJS) $(BOOT_RESOURCES)
@@ -145,7 +145,7 @@ out.iso: out.elf_scd
 	$(BINTOS) $<
 
 %.o: %.c
-	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./gccerc
+	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./color.sh
 
 %.o: %.s 
 	$(AS) $(ASFLAGS) $< -o $@
