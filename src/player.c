@@ -626,7 +626,7 @@ static void player_cube_eval_standing(player *pl, cube *c)
 				new_diff_x = new_diff_x * -1;
 			}
 			// Our new cube is cloesr. Use it.
-			if (new_diff_x > orig_diff_x)
+			if (new_diff_x < orig_diff_x)
 			{
 				pl->on_cube = (void *)c;
 			}

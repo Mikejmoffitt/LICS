@@ -90,7 +90,7 @@ static void cube_on_cube_collisions(cube *c)
 			{
 				c->dy = FZERO;
 			}
-			if (d->type != CUBE_GREEN && c->state != CUBE_STATE_IDLE)
+			if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
 			{
 				cube_destroy(d);
 			}

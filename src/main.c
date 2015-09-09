@@ -21,6 +21,7 @@ u16 debug_bgcol;
 
 void room_setup(player *pl)
 {	
+	int i;
 	// Blank the display
 	VDP_setEnable(0);
 	state_load_room(state.next_id);
@@ -40,8 +41,10 @@ void room_setup(player *pl)
 	cube_dma_tiles();
 	hud_dma_tiles();
 
-	cube_spawn(128,(240 - 33), CUBE_GREEN, CUBE_STATE_IDLE, 0, 0);
-	cube_spawn(128,(240 - 33 - 96), CUBE_BLUE, CUBE_STATE_IDLE, 0, 0);
+	for (i = 0; i < 6; i++)
+	{
+		cube_spawn(128 + (16 * i),(240 - 33), CUBE_RED, CUBE_STATE_IDLE, 0, 0);
+	}
 
 	// First graphical commit
 	state_update_scroll(px, py);
