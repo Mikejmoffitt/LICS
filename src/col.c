@@ -39,7 +39,8 @@ void col_puthex(u16 x, u16 y, u32 val)
 {
 	col_puts40(x,y,"0x");
 	x += 9;
-	for (int i = 8; i != 0; i--)
+	int i = 8;
+	while (i--)
 	{
 		char num[2];
 		num[1] = '\0';

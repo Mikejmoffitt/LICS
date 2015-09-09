@@ -53,6 +53,7 @@ Example values:
 
 #define CUBE_GRAVITY FIX16(0.2)
 
+
 typedef struct cube cube;
 struct cube
 {
@@ -63,6 +64,8 @@ struct cube
 	fix16 dy;
 	u16 type;
 };
+
+extern cube cubes[CUBES_NUM];
 
 void cube_dma_tiles(void);
 void cubes_init(void);

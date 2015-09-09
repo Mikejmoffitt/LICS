@@ -40,13 +40,13 @@ void room_setup(player *pl)
 	cube_dma_tiles();
 	hud_dma_tiles();
 
+	cube_spawn(128,(240 - 33), CUBE_GREEN, CUBE_STATE_IDLE, 0, 0);
+	cube_spawn(128,(240 - 33 - 96), CUBE_BLUE, CUBE_STATE_IDLE, 0, 0);
+
 	// First graphical commit
 	state_update_scroll(px, py);
 	player_draw(pl);
 	state_dma_scroll();
-	system_wait_v();
-	system_wait_v();
-	system_wait_v();
 	system_wait_v();
 	system_wait_v();
 }

@@ -57,6 +57,7 @@ void player_init_soft(player *pl)
 	pl->input = 0;
 	pl->input_prev = 0;
 	pl->cubejump_disable = 0;
+	pl->on_cube = NULL;
 	player_set_pal();
 }
 
@@ -87,7 +88,7 @@ void player_dma(player *pl)
 	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
-void player_input(player *pl)
+static void player_input(player *pl)
 {
 	if (!pl->control_disabled)
 	{
@@ -101,7 +102,7 @@ void player_input(player *pl)
 	}
 }
 
-void player_cp(player *pl)
+static void player_cp(player *pl)
 {
 	// We don't have this power, don't bother
 	if (!sram.have_phantom)
@@ -155,6 +156,9 @@ void player_cp(player *pl)
 					ctype = CUBE_YELLOW;
 					break;
 				case CUBE_YELLOW:
+					ctype = CUBE_GREEN;
+					break;
+				case CUBE_GREEN:
 					ctype = CUBE_PHANTOM;
 					break;
 			}
@@ -170,7 +174,7 @@ void player_cp(player *pl)
 	}
 }
 
-void player_accel(player *pl)
+static void player_accel(player *pl)
 {
 	if (pl->control_disabled)
 	{
@@ -226,7 +230,7 @@ void player_accel(player *pl)
 	}
 }
 
-void player_eval_grounded(player *pl)
+static void player_eval_grounded(player *pl)
 {
 	if (pl->dy < FZERO)
 	{
@@ -247,11 +251,11 @@ void player_eval_grounded(player *pl)
 	}
 }
 
-void player_jump(player *pl)
+static void player_jump(player *pl)
 {
 	// Very small timeout to prevent lyle from cube-jumping so the occasional
 	// normal jump doesn't accidentally become a cube jump off a ledge
-	if (pl->grounded)
+	if (pl->grounded || pl->on_cube)
 	{
 		pl->cubejump_disable = 2;
 	}
@@ -260,7 +264,7 @@ void player_jump(player *pl)
 	if ((pl->input & KEY_C) && !(pl->input_prev & KEY_C))
 	{
 		// Normal jump off the ground
-		if (pl->grounded)
+		if (pl->grounded || pl->on_cube)
 		{
 			goto do_jump;
 		}
@@ -305,7 +309,7 @@ do_jump:
 	return;
 }
 
-void player_toss_cubes(player *pl)
+static void player_toss_cubes(player *pl)
 {
 	if (pl->holding_cube && (pl->input & KEY_B) && (!(pl->input_prev & KEY_B)))
 	{
@@ -355,7 +359,15 @@ void player_toss_cubes(player *pl)
 	}
 }
 
-void player_lift_cubes(player *pl)
+static void player_kick_cubes(player *pl)
+{
+	if (!sram.have_kick)
+	{
+		return;
+	}
+}
+
+static void player_lift_cubes(player *pl)
 {
 	if (!sram.have_lift)
 	{
@@ -363,7 +375,7 @@ void player_lift_cubes(player *pl)
 	}
 }
 
-void player_special_counters(player *pl)
+static void player_special_counters(player *pl)
 {
 	if (pl->throwdown_cnt)
 	{
@@ -395,7 +407,7 @@ void player_special_counters(player *pl)
 	}
 }
 
-static void player_walk_collision(player *pl)
+static void player_bg_horizontal_collision(player *pl)
 {
 	u16 py = fix32ToInt(pl->y);
 	u16 px = fix32ToInt(pl->x);
@@ -427,7 +439,7 @@ static void player_walk_collision(player *pl)
 	}
 }
 
-static void player_vertical_collision(player *pl)
+static void player_bg_vertical_collision(player *pl)
 {
 	u16 py = fix32ToInt(pl->y);
 	u16 px = fix32ToInt(pl->x);
@@ -443,7 +455,8 @@ static void player_vertical_collision(player *pl)
 			py = 8 * (py / 8) - 1;
 			pl->y = intToFix32(py);
 			pl->dy = FZERO;
-			for (int i = 0; i < 8; i++)
+			int i = 8;
+			while (i--)
 			{
 				// Are we still stuck? Move up 8px since the snap didn't quite work right.
 				if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM)) ||
@@ -483,17 +496,158 @@ static void player_vertical_collision(player *pl)
 	}
 }
 
+// Interactions with stationary cubes
 
-void player_move(player *pl)
+static void player_cube_horizontal_collision(player *pl, cube *c)
+{
+	if (c->state == CUBE_STATE_AIR)
+	{
+		return;
+	}
+	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl->x);
+
+	// check we are within appropriate Y bounds
+	if (c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 1 && 
+		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 1)
+	{
+		// Horizontal collision
+		if (pl->dx > FZERO)
+		{
+			if (c->x + CUBE_LEFT >= px) 
+			{
+				px = (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1;
+				pl->x = intToFix32(px);
+				pl->dx = FZERO;
+			}
+		}
+		else if (pl->dx < FZERO)
+		{
+			if (c->x + CUBE_RIGHT <= px) 
+			{
+				px = (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1;
+				pl->x = intToFix32(px);
+				pl->dx = FZERO;
+			}
+		}
+	}
+}
+
+static void player_cube_vertical_collision(player *pl, cube *c)
+{
+	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl->x);
+	px -= fix16ToInt(pl->dx);
+
+	// appropriate X bounds
+	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
+		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT)
+	{
+		// Vertical collision
+		// "Am I now stuck with my feet in a cube?"
+		if (pl->dy > FZERO)
+		{
+			if (py + PLAYER_CHK_BOTTOM >= c->y + CUBE_TOP && py + PLAYER_CHK_TOP < c->y + CUBE_BOTTOM)
+			{
+				// Snap to the cube
+				py = c->y + CUBE_TOP - PLAYER_CHK_BOTTOM - 1;
+				pl->y = intToFix32(py);
+				pl->dy = FZERO;
+			}
+		}
+		else if (pl->dy < FZERO)
+		{
+			// "Am I now stuck with my head in the cube?"
+			if (py + PLAYER_CHK_TOP< c->y + CUBE_BOTTOM)
+			{
+				py = c->y + CUBE_BOTTOM - PLAYER_CHK_TOP + 1;
+				pl->y = intToFix32(py);
+				if (pl->dy < PLAYER_CEILING_VECY)
+				{
+					pl->dy = PLAYER_CEILING_VECY;
+				}
+			}
+		}
+	}
+}
+
+static void player_cube_eval_standing(player *pl, cube *c)
+{
+	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl->x);
+	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
+		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT && 
+		py + PLAYER_CHK_BOTTOM + 1>= c->y + CUBE_TOP)
+	{
+		// Already standing on a cube? Determine which cube is closer and
+		// use that cube as the "standing-on cube" reference for lifting.
+		if (pl->on_cube)
+		{
+			// Get X distance difference for new and old cubes
+			cube *oc = (cube *)(pl->on_cube);
+			s16 orig_diff_x = px - oc->x;
+			s16 new_diff_x = px - c->x;
+			// Make absolute values
+			if (orig_diff_x < 0)
+			{
+				orig_diff_x = orig_diff_x * -1;
+			}
+			if (new_diff_x < 0)
+			{
+				new_diff_x = new_diff_x * -1;
+			}
+			// Our new cube is cloesr. Use it.
+			if (new_diff_x > orig_diff_x)
+			{
+				pl->on_cube = (void *)c;
+			}
+			// Otherwise, the previous remains.
+		}
+		else
+		{
+			pl->on_cube = (void *)c;
+		}
+	}
+}
+
+static void player_cube_collision(player *pl)
+{
+	u16 px = (u16)fix32ToInt(pl->x);
+	u16 py = (u16)fix32ToInt(pl->y);
+	int i = CUBES_NUM;
+	while (i--)
+	{
+		cube *c = &cubes[i];
+		// Don't bother with collision checks if it's an inactive cube
+		if (c->state == CUBE_STATE_INACTIVE)
+		{
+			continue;
+		}
+		// Cube overlaps player boundaries, it's a collision
+		else if (c->state == CUBE_STATE_IDLE && 
+			c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT + 1 && 
+			c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT - 1&& 
+			c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM + 1 && 
+			c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 1)
+		{
+			player_cube_vertical_collision(pl, c);
+			player_cube_horizontal_collision(pl, c);
+			player_cube_eval_standing(pl, c);
+		}
+	}
+}
+
+static void player_move(player *pl)
 {
 	// Do movement	
 	pl->x = fix32Add(pl->x,fix16ToFix32(pl->dx));
 	pl->y = fix32Add(pl->y,fix16ToFix32(pl->dy));
 
-	player_vertical_collision(pl);
-	player_walk_collision(pl);
-
+	pl->on_cube = NULL;
+	player_bg_vertical_collision(pl);
+	player_bg_horizontal_collision(pl);
 	player_eval_grounded(pl);
+	player_cube_collision(pl);
 
 	// In the air, gravity is affected by the player holding jump or not
 	if (!pl->grounded)
@@ -514,13 +668,13 @@ void player_move(player *pl)
 	}
 }
 
-void player_calc_anim(player *pl)
+static void player_calc_anim(player *pl)
 {
 	if (pl->invuln_cnt && (system_osc % 8 > 3))
 	{
 		return;
 	}
-	if (pl->grounded)
+	if (pl->grounded || pl->on_cube)
 	{
 		pl->anim_cnt++;
 		if (pl->anim_cnt == PLAYER_ANIMSPEED * 4)
@@ -558,7 +712,7 @@ void player_calc_anim(player *pl)
 		return;
 	}
 	
-	if (pl->grounded)
+	if (pl->grounded || pl->on_cube)
 	{
 		if (!(pl->input & (KEY_LEFT | KEY_RIGHT))) // Standing
 		{
@@ -640,6 +794,7 @@ void player_run(player *pl)
 	player_accel(pl);
 	player_jump(pl);
 	player_move(pl);
+	player_kick_cubes(pl);
 	player_toss_cubes(pl);
 	player_lift_cubes(pl);
 	player_cp(pl);

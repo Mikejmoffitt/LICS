@@ -17,8 +17,8 @@ SCD_LOADER = scd/LukeProjectCD
 
 OPTION =
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc
-CCFLAGS = $(OPTION) -m68000 -std=c99 -O2 -c -fomit-frame-pointer -fno-builtin
-HWCCFLAGS = $(OPTION) -m68000 -std=c99 -O2 -c -fomit-frame-pointer -fno-builtin
+CCFLAGS = $(OPTION) -m68000 -O2 -c -fomit-frame-pointer -fno-builtin
+HWCCFLAGS = $(OPTION) -m68000  -O2 -c -fomit-frame-pointer -fno-builtin
 Z80FLAGS = -vb2
 ASFLAGS = -m68000 --register-prefix-optional
 #LIBS =  -L$(GENDEV)/m68k-elf/lib -L$(GENDEV)/m68k-elf/lib/gcc/m68k-elf/4.8.2 -L$(GENDEV)/m68k-elf/m68k-elf/lib -lmd -lc -lgcc -lnosys -lm 
@@ -145,11 +145,8 @@ out.iso: out.elf_scd
 	@$(BINTOS) $<
 
 %.o: %.c
-	@echo "[ $< ] --> [ $@ ]"
-	@mkdir -p asmout/
-	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./color.sh
-	@$(CC) $(CCFLAGS) $(INCS) -fverbose-asm -c $< -S 2>&1 > /dev/null
-	@mv *.s asmout/
+	@echo ">- $<"
+	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null
 
 %.o: %.s 
 	@$(AS) $(ASFLAGS) $< -o $@

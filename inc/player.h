@@ -77,6 +77,7 @@ struct player
 {
 	// Lyle physics vars
 	fix32 x, y;
+	void *on_cube;
 	fix16 dx, dy;
 	u16 grounded;
 	u16 direction;

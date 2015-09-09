@@ -8,7 +8,7 @@
 #include "map.h"
 #include "particles.h"
 
-static cube cubes[CUBES_NUM];
+cube cubes[CUBES_NUM];
 
 void cube_dma_tiles(void)
 {
@@ -18,27 +18,88 @@ void cube_dma_tiles(void)
 
 void cubes_init(void)
 {
-	for (int i = 0; i < CUBES_NUM; i++)
+	int i = CUBES_NUM;
+	while (i--)
 	{
 		cube *c = &cubes[i];
 		c->state = CUBE_STATE_INACTIVE;
 	}
 }
 
+static void cube_destroy(cube *c)
+{
+	c->dx = 0;
+	c->dy = 7;
+	if (c->type == CUBE_RED)
+	{
+		c->state = CUBE_STATE_EXPLODE;
+	}
+	else
+	{
+		c->state = CUBE_STATE_FIZZLE;
+	}
+}
+
 static void cube_move(cube *c)
 {
+	// Y movement only applies to an airborn cube
 	if (c->state == CUBE_STATE_AIR)
 	{	
 		c->y += fix16ToInt(c->dy);
 		c->dy = fix16Add(c->dy, CUBE_GRAVITY);
 	}
 	c->x += c->dx;
+	// Check for cube out of bounds
+	if (c->x + CUBE_LEFT > state.current_room->w * STATE_SC_W || 
+		c->x + CUBE_RIGHT < 0 ||
+		c->y + CUBE_TOP > state.current_room->h * STATE_SC_H || 
+		c->y + CUBE_BOTTOM < 0)
+	{
+		c->state = CUBE_STATE_INACTIVE;
+		c->x = -32;
+		c->y = -32;
+	}
+}
 
+static void cube_on_cube_collisions(cube *c)
+{
+	int i = CUBES_NUM;
+	while (i--)
+	{
+		cube *d = &cubes[i];
+		if (d->state == CUBE_STATE_INACTIVE || d == c)
+		{
+			continue;
+		}
+		if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
+			c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
+			c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
+			c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
+		{
+			if (c->type != CUBE_GREEN)
+			{
+				cube_destroy(c);
+			}
+			else if (c->dy != FZERO)
+			{
+				c->dy = FZERO;
+			}
+			if (d->type != CUBE_GREEN)
+			{
+				cube_destroy(d);
+			}
+			else if (d->dy != FZERO)
+			{
+				d->dy = FZERO;
+			}
+		}
+	}
 }
 
 void cubes_run(player *pl)
 {
-	for (int i = 0; i < CUBES_NUM; i++)
+	int i = CUBES_NUM;
+	while (i--)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
@@ -70,27 +131,24 @@ void cubes_run(player *pl)
 				{
 					if (c->type != CUBE_GREEN)
 					{
-						c->dx = 0;
-						c->dy = 7;
-						if (c->type == CUBE_RED)
-						{
-							c->state = CUBE_STATE_EXPLODE;
-						}
-						else
-						{
-							c->state = CUBE_STATE_FIZZLE;
-						}
+						cube_destroy(c);
 					}
 				}
 			}
 			cube_move(c);
+			if (c->state == CUBE_STATE_AIR ||
+				c->state == CUBE_STATE_KICKED)
+			{
+				cube_on_cube_collisions(c);
+			}
 		}
 	}
 }
 
 void cubes_draw(void)
 {
-	for (int i = 0; i < CUBES_NUM; i++)
+	int i = CUBES_NUM;
+	while (i--)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
@@ -146,7 +204,8 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 
 void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 {
-	for (int i = 0; i < CUBES_NUM; i++)
+	int i = CUBES_NUM;
+	while (i--)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
@@ -157,7 +216,7 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 			c->dx = dx;
 			c->dy = dy;
 			c->type = type;
-			return;
+			break;
 		}
 	}
 }

@@ -71,7 +71,8 @@ void map_load_tileset(u8 num)
 // Maps are referred to by number so we never have to call them by name
 map_file *map_by_id(u8 num)
 {
-	for (int i = 0; i < 255; i++)
+	int i;
+	for (i = 0; i < 255; i++)
 	{
 		map_file *tf = (map_file *)maplist[i];
 		// List termination; room not found
@@ -91,6 +92,7 @@ map_file *map_by_id(u8 num)
 
 void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 {
+	int i;
 	// Useful values for sourcing and plotting
 	// Map width, in tiles * 2 (actual address in VRAM)
 	u16 map_width = state.current_room->w * (2 * (STATE_SC_W / 8));
@@ -133,7 +135,7 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 	map_dma_h_len[0] = 0;
 	map_dma_h_len[1] = 0;
 
-	for (int i = 0; i < STATE_PLANE_H; i++)
+	for (i = 0; i < STATE_PLANE_H; i++)
 	{
 		map_dma_h_src_queue[i] = *((u16 *)dma_src);
 		dma_src += map_width;
@@ -250,6 +252,7 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 
 void map_draw_full(u16 cam_x, u16 cam_y)
 {
+	int y = 0;
 	// Useful values for sourcing and plotting
 	// Map width, in tiles * 2 (actual address in VRAM)
 	u16 map_width = state.current_room->w * (2 * (STATE_SC_W / 8));
@@ -304,7 +307,7 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 		dma_dest[0] = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
 	}
 
-	for (int y = 0; y < STATE_PLANE_H - 2; y++)
+	for (y = 0; y < STATE_PLANE_H - 2; y++)
 	{		
 		// DMA 1
 //		VDP_doVRamDMA(dma_src[0],VDP_getAPlanAddress() + dma_dest[0],dma_len[0]);
@@ -356,7 +359,8 @@ void map_draw_diffs(u16 moved, fix16 dx, fix16 dy)
 
 void map_dma(void)
 {
-	for (unsigned int i = 0; i < map_dma_queue_depth; i++)
+	unsigned int i = map_dma_queue_depth;
+	while (i--)
 	{
 		VDP_doVRamDMA(map_dma_src_queue[i],
 			(u32)map_dma_dest_queue[i],

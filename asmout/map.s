@@ -52,10 +52,10 @@ map_dma_queue:
 	move.w map_dma_queue_depth,%d0	| map_dma_queue_depth, map_dma_queue_depth.0
 	cmp.w #96,%d0	|, map_dma_queue_depth.0
 	jeq .L1	|
-	moveq #0,%d1	| D.2916
-	move.w %d0,%d1	| map_dma_queue_depth.0, D.2916
-	move.l %d1,%a0	| D.2916, tmp40
-	add.l %d1,%a0	| D.2916, tmp40
+	moveq #0,%d1	| D.2915
+	move.w %d0,%d1	| map_dma_queue_depth.0, D.2915
+	move.l %d1,%a0	| D.2915, tmp40
+	add.l %d1,%a0	| D.2915, tmp40
 	move.l %a0,%a2	| tmp40, tmp41
 	add.l #map_dma_src_queue,%a2	|, tmp41
 	move.l 12(%sp),(%a2,%a0.l)	| src, map_dma_src_queue
@@ -158,13 +158,13 @@ map_by_id:
 	jeq .L25	|
 	cmp.b 33(%a0),%d0	| tf_5->id, num
 	jne .L18	|
-	move.l %a0,%d0	| tf, D.2933
+	move.l %a0,%d0	| tf, D.2932
 	rts
 .L25:
 	clr.l 4(%sp)	|
 	jra map_by_id	|
 .L21:
-	move.l #mapdata_roomzero,%d0	|, D.2933
+	move.l #mapdata_roomzero,%d0	|, D.2932
 	rts
 	.size	map_by_id, .-map_by_id
 	.align	2
@@ -186,26 +186,26 @@ map_draw_horizontal:
 	jeq .L34	|
 	move.w #80,%a0	|, iftmp.3
 .L28:
-	lsr.l #3,%d1	|, D.2968
+	lsr.l #3,%d1	|, D.2967
 	moveq #63,%d3	|,
-	and.l %d3,%d1	|, D.2968
-	move.l %d2,%d3	| cam_y, D.2968
-	lsl.l #3,%d3	|, D.2968
-	and.l #1984,%d3	|, D.2968
-	add.l %d1,%d3	| D.2968, D.2968
-	add.w %d3,%d3	| D.2968, dma_dest
+	and.l %d3,%d1	|, D.2967
+	move.l %d2,%d3	| cam_y, D.2967
+	lsl.l #3,%d3	|, D.2967
+	and.l #1984,%d3	|, D.2967
+	add.l %d1,%d3	| D.2967, D.2967
+	add.w %d3,%d3	| D.2967, dma_dest
 	lsr.w #3,%d2	|, src_ycomp
 	muls.w %d4,%d2	| map_width, src_ycomp
-	and.l #65535,%d2	|, D.2970
-	move.l state+4,%a3	| state.current_map, D.2970
-	add.l %d2,%a3	| D.2970, D.2970
+	and.l #65535,%d2	|, D.2969
+	move.l state+4,%a3	| state.current_map, D.2969
+	add.l %d2,%a3	| D.2969, D.2969
 	add.w %a0,%d0	| iftmp.3, src_xcomp
-	and.l #65535,%d0	|, D.2970
-	add.l %d0,%a3	| D.2970, dma_src
+	and.l #65535,%d0	|, D.2969
+	add.l %d0,%a3	| D.2969, dma_src
 	tst.w %d5	| right_side
 	jeq .L29	|
 	moveq #23,%d0	|,
-	cmp.l %d1,%d0	| D.2968,
+	cmp.l %d1,%d0	| D.2967,
 	jge .L39	|
 	add.w #-48,%d3	|, dma_dest
 .L29:
@@ -215,20 +215,20 @@ map_draw_horizontal:
 	move.w %d0,map_dma_h_dest	|, map_dma_h_dest
 	clr.w map_dma_h_len	| map_dma_h_len
 	clr.w map_dma_h_len+2	| map_dma_h_len
-	and.l #65535,%d4	|, D.2970
+	and.l #65535,%d4	|, D.2969
 	lea map_dma_h_src_queue,%a2	|, ivtmp.58
-	clr.w %d0	| D.2967
+	clr.w %d0	| D.2966
 	clr.w %d5	| current_dma
-	moveq #0,%d1	| D.2968
+	moveq #0,%d1	| D.2967
 	lea map_dma_h_len,%a4	|, tmp130
 	lea map_dma_h_dest,%a6	|, tmp132
 .L33:
 	move.w (%a3),(%a2)+	| *dma_src.4_48, MEM[base: _67, offset: 0B]
-	add.l %d4,%a3	| D.2970, dma_src
-	move.l %d1,%a0	| D.2968, tmp121
-	add.l %d1,%a0	| D.2968, tmp121
-	addq.w #1,%d0	|, D.2967
-	move.w %d0,(%a4,%a0.l)	| D.2967, map_dma_h_len
+	add.l %d4,%a3	| D.2969, dma_src
+	move.l %d1,%a0	| D.2967, tmp121
+	add.l %d1,%a0	| D.2967, tmp121
+	addq.w #1,%d0	|, D.2966
+	move.w %d0,(%a4,%a0.l)	| D.2966, map_dma_h_len
 	move.w %d3,%d2	| dma_dest, dma_dest
 	add.w #128,%d2	|, dma_dest
 	cmp.w #4095,%d2	|, dma_dest
@@ -237,16 +237,16 @@ map_draw_horizontal:
 	cmp.l #map_dma_h_src_queue+64,%a2	|, ivtmp.58
 	jeq .L27	|
 .L41:
-	move.l %d1,%d0	| D.2968, tmp128
-	add.l %d1,%d0	| D.2968, tmp128
-	move.w (%a4,%d0.l),%d0	| map_dma_h_len, D.2967
+	move.l %d1,%d0	| D.2967, tmp128
+	add.l %d1,%d0	| D.2967, tmp128
+	move.w (%a4,%d0.l),%d0	| map_dma_h_len, D.2966
 	move.w %d2,%d3	| dma_dest, dma_dest
 	move.w (%a3),(%a2)+	| *dma_src.4_48, MEM[base: _67, offset: 0B]
-	add.l %d4,%a3	| D.2970, dma_src
-	move.l %d1,%a0	| D.2968, tmp121
-	add.l %d1,%a0	| D.2968, tmp121
-	addq.w #1,%d0	|, D.2967
-	move.w %d0,(%a4,%a0.l)	| D.2967, map_dma_h_len
+	add.l %d4,%a3	| D.2969, dma_src
+	move.l %d1,%a0	| D.2967, tmp121
+	add.l %d1,%a0	| D.2967, tmp121
+	addq.w #1,%d0	|, D.2966
+	move.w %d0,(%a4,%a0.l)	| D.2966, map_dma_h_len
 	move.w %d3,%d2	| dma_dest, dma_dest
 	add.w #128,%d2	|, dma_dest
 	cmp.w #4095,%d2	|, dma_dest
@@ -255,10 +255,10 @@ map_draw_horizontal:
 	add.w #-4096,%d2	|, dma_dest
 	addq.w #1,%d5	|, current_dma
 	jsr (%a5)	| tmp131
-	moveq #0,%d1	| D.2968
-	move.w %d5,%d1	| current_dma, D.2968
-	move.l %d1,%a0	| D.2968, tmp125
-	add.l %d1,%a0	| D.2968, tmp125
+	moveq #0,%d1	| D.2967
+	move.w %d5,%d1	| current_dma, D.2967
+	move.l %d1,%a0	| D.2967, tmp125
+	add.l %d1,%a0	| D.2967, tmp125
 	add.w %d2,%d0	| dma_dest,
 	move.w %d0,(%a6,%a0.l)	|, map_dma_h_dest
 	cmp.l #map_dma_h_src_queue+64,%a2	|, ivtmp.58
@@ -277,11 +277,11 @@ map_draw_horizontal:
 	move.w %d0,map_dma_h_dest	|, map_dma_h_dest
 	clr.w map_dma_h_len	| map_dma_h_len
 	clr.w map_dma_h_len+2	| map_dma_h_len
-	and.l #65535,%d4	|, D.2970
+	and.l #65535,%d4	|, D.2969
 	lea map_dma_h_src_queue,%a2	|, ivtmp.58
-	clr.w %d0	| D.2967
+	clr.w %d0	| D.2966
 	clr.w %d5	| current_dma
-	moveq #0,%d1	| D.2968
+	moveq #0,%d1	| D.2967
 	lea map_dma_h_len,%a4	|, tmp130
 	lea map_dma_h_dest,%a6	|, tmp132
 	jra .L33	|
@@ -291,113 +291,114 @@ map_draw_horizontal:
 	.type	map_draw_vertical, @function
 map_draw_vertical:
 	movem.l #16184,-(%sp)	|,
-	move.l 40(%sp),%d2	| cam_x, cam_x
-	move.l 44(%sp),%d5	| cam_y, cam_y
-	move.w 50(%sp),%d0	| bottom_side, bottom_side
-	move.l state,%a0	| state.current_room, state.current_room
+	move.l 40(%sp),%d1	| cam_x, cam_x
+	move.l 44(%sp),%d2	| cam_y, cam_y
+	move.w 50(%sp),%a0	| bottom_side, bottom_side
+	move.l state,%a1	| state.current_room, state.current_room
 	clr.w %d4	| map_width
-	move.b 35(%a0),%d4	| _18->w, map_width
+	move.b 35(%a1),%d4	| _18->w, map_width
 	muls.w #80,%d4	|, map_width
-	move.w %d2,%d1	|, plot_x
-	and.w #511,%d1	|, plot_x
-	lsr.w #3,%d1	|, plot_x
-	move.w %d5,%d3	|, plot_y
+	move.w %d1,%d0	|, plot_x
+	and.w #511,%d0	|, plot_x
+	lsr.w #3,%d0	|, plot_x
+	move.w %d2,%d3	|, plot_y
 	and.w #255,%d3	|, plot_y
 	lsr.w #3,%d3	|, plot_y
-	lsr.w #3,%d5	|, src_ycomp
-	muls.w %d4,%d5	| map_width, src_ycomp
-	and.l #65535,%d5	|, D.2990
-	move.l state+4,%a2	| state.current_map, D.2990
-	add.l %d5,%a2	| D.2990, D.2990
-	lsr.w #3,%d2	|, src_xcomp
-	add.w %d2,%d2	| src_xcomp, src_xcomp
-	and.l #65535,%d2	|, D.2990
-	add.l %d2,%a2	| D.2990, dma_src_0
-	moveq #0,%d5	| D.2991
-	move.w %d1,%d5	| plot_x, D.2991
-	moveq #22,%d2	|,
-	cmp.l %d5,%d2	| D.2991,
+	lsr.w #3,%d2	|, src_ycomp
+	muls.w %d4,%d2	| map_width, src_ycomp
+	moveq #0,%d5	| D.2989
+	move.w %d2,%d5	| src_ycomp, D.2989
+	add.l state+4,%d5	| state.current_map, D.2989
+	lsr.w #3,%d1	|, src_xcomp
+	add.w %d1,%d1	| src_xcomp, src_xcomp
+	and.l #65535,%d1	|, D.2989
+	add.l %d1,%d5	| D.2989, dma_src_0
+	moveq #0,%d2	| D.2990
+	move.w %d0,%d2	| plot_x, D.2990
+	moveq #22,%d1	|,
+	cmp.l %d2,%d1	| D.2990,
 	jge .L44	|
-	move.b #64,%d2	|,
-	sub.w %d1,%d2	| plot_x,
-	move.w %d2,%a3	|, dma_len_0
-	moveq #0,%d2	| D.2991
-	move.w %d3,%d2	| plot_y, D.2991
-	lsl.l #6,%d2	|, D.2991
-	add.l %d5,%d2	| D.2991, D.2991
-	add.w %d2,%d2	| D.2991, dma_dest_0
-	move.w %d1,%d5	| plot_x, dma_len_1
-	add.w #-23,%d5	|, dma_len_1
-	moveq #0,%d7	| dma_len_0
-	move.w %a3,%d7	| dma_len_0, dma_len_0
-	add.l %d7,%d7	| dma_len_0, D.2991
-	add.l %a2,%d7	| dma_src_0, dma_src_1
-	move.w %d3,%d6	| plot_y, dma_dest_1
-	lsl.w #7,%d6	|, dma_dest_1
-	tst.w %d0	| bottom_side
+	moveq #64,%d7	|, dma_len_0
+	sub.w %d0,%d7	| plot_x, dma_len_0
+	moveq #0,%d1	| D.2990
+	move.w %d3,%d1	| plot_y, D.2990
+	lsl.l #6,%d1	|, D.2990
+	add.l %d1,%d2	| D.2990, D.2990
+	add.w %d2,%d2	| D.2990, dma_dest_0
+	move.w %d0,%d6	| plot_x, dma_len_1
+	add.w #-23,%d6	|, dma_len_1
+	moveq #0,%d0	| dma_len_0
+	move.w %d7,%d0	| dma_len_0, dma_len_0
+	add.l %d0,%d0	| dma_len_0, D.2990
+	move.l %d0,%a3	| D.2990, dma_src_1
+	add.l %d5,%a3	| dma_src_0, dma_src_1
+	lsl.w #7,%d3	|, dma_dest_1
+	move.w %a0,%d0	| bottom_side,
 	jne .L69	|
 .L46:
-	lea VDP_getAPlanAddress,%a4	|, tmp145
-	jsr (%a4)	| tmp145
-	move.w map_dma_queue_depth,%d3	| map_dma_queue_depth, map_dma_queue_depth.0
-	cmp.w #96,%d3	|, map_dma_queue_depth.0
+	lea VDP_getAPlanAddress,%a2	|, tmp145
+	jsr (%a2)	| tmp145
+	move.w map_dma_queue_depth,%d4	| map_dma_queue_depth, map_dma_queue_depth.0
+	cmp.w #96,%d4	|, map_dma_queue_depth.0
 	jeq .L51	|
-	moveq #0,%d1	| D.2991
-	move.w %d3,%d1	| map_dma_queue_depth.0, D.2991
-	move.l %d1,%a0	| D.2991, tmp130
-	add.l %d1,%a0	| D.2991, tmp130
+	moveq #0,%d1	| D.2990
+	move.w %d4,%d1	| map_dma_queue_depth.0, D.2990
+	move.l %d1,%a0	| D.2990, tmp130
+	add.l %d1,%a0	| D.2990, tmp130
 	move.l %a0,%a1	| tmp130, tmp131
 	add.l #map_dma_src_queue,%a1	|, tmp131
-	move.l %a2,(%a1,%a0.l)	| dma_src_0, map_dma_src_queue
+	move.l %d5,(%a1,%a0.l)	| dma_src_0, map_dma_src_queue
 	lea map_dma_dest_queue,%a1	|, tmp132
-	add.w %d2,%d0	| dma_dest_0, D.2988
-	move.w %d0,(%a0,%a1.l)	| D.2988, map_dma_dest_queue
+	add.w %d2,%d0	| dma_dest_0, D.2987
+	move.w %d0,(%a0,%a1.l)	| D.2987, map_dma_dest_queue
 	lea map_dma_len_queue,%a1	|, tmp134
-	move.w %a3,(%a0,%a1.l)	| dma_len_0, map_dma_len_queue
-	addq.w #1,%d3	|, map_dma_queue_depth.0
-	move.w %d3,map_dma_queue_depth	| map_dma_queue_depth.0, map_dma_queue_depth
+	move.w %d7,(%a0,%a1.l)	| dma_len_0, map_dma_len_queue
+	addq.w #1,%d4	|, map_dma_queue_depth.0
+	move.w %d4,map_dma_queue_depth	| map_dma_queue_depth.0, map_dma_queue_depth
 .L51:
-	tst.w %d5	| dma_len_1
+	tst.w %d6	| dma_len_1
 	jne .L70	|
 .L43:
 	movem.l (%sp)+,#7420	|,
 	rts
 .L44:
-	and.l #65535,%d3	|, D.2991
-	lsl.l #6,%d3	|, D.2991
-	move.l %d5,%d2	| D.2991, D.2991
-	add.l %d3,%d2	| D.2991, D.2991
-	add.w %d2,%d2	| D.2991, dma_dest_0
-	clr.w %d5	| dma_len_1
-	move.w #41,%a3	|, dma_len_0
-	tst.w %d0	| bottom_side
+	and.l #65535,%d3	|, D.2990
+	lsl.l #6,%d3	|, D.2990
+	add.l %d3,%d2	| D.2990, D.2990
+	add.w %d2,%d2	| D.2990, dma_dest_0
+	sub.l %a3,%a3	| dma_src_1
+	clr.w %d3	| dma_dest_1
+	clr.w %d6	| dma_len_1
+	moveq #41,%d7	|, dma_len_0
+	move.w %a0,%d0	| bottom_side,
 	jeq .L46	|
 	jra .L69	|
 .L70:
-	jsr (%a4)	| tmp145
-	add.w %d6,%d0	| dma_dest_1, D.2988
+	jsr (%a2)	| tmp145
+	add.w %d3,%d0	| dma_dest_1, D.2987
 	move.w map_dma_queue_depth,%d1	| map_dma_queue_depth, map_dma_queue_depth.0
 	cmp.w #96,%d1	|, map_dma_queue_depth.0
 	jeq .L43	|
-	moveq #0,%d2	| D.2991
-	move.w %d1,%d2	| map_dma_queue_depth.0, D.2991
-	move.l %d2,%a0	| D.2991, tmp138
-	add.l %d2,%a0	| D.2991, tmp138
+	moveq #0,%d2	| D.2990
+	move.w %d1,%d2	| map_dma_queue_depth.0, D.2990
+	move.l %d2,%a0	| D.2990, tmp138
+	add.l %d2,%a0	| D.2990, tmp138
 	move.l %a0,%a1	| tmp138, tmp139
 	add.l #map_dma_src_queue,%a1	|, tmp139
-	move.l %d7,(%a1,%a0.l)	| dma_src_1, map_dma_src_queue
+	move.l %a3,(%a1,%a0.l)	| dma_src_1, map_dma_src_queue
 	lea map_dma_dest_queue,%a1	|, tmp140
-	move.w %d0,(%a0,%a1.l)	| D.2988, map_dma_dest_queue
+	move.w %d0,(%a0,%a1.l)	| D.2987, map_dma_dest_queue
 	lea map_dma_len_queue,%a1	|, tmp142
-	move.w %d5,(%a0,%a1.l)	| dma_len_1, map_dma_len_queue
+	move.w %d6,(%a0,%a1.l)	| dma_len_1, map_dma_len_queue
 	addq.w #1,%d1	|, map_dma_queue_depth.0
 	move.w %d1,map_dma_queue_depth	| map_dma_queue_depth.0, map_dma_queue_depth
 	movem.l (%sp)+,#7420	|,
 	rts
 .L69:
-	move.w %d4,%d3	| map_width,
-	mulu.w #28,%d3	|, D.2990
-	add.l %d3,%a2	| D.2990, dma_src_0
+	move.w %d4,%d1	| map_width,
+	mulu.w #28,%d1	|,
+	move.l %d1,%a2	|, D.2989
+	add.l %d1,%d5	| D.2989, dma_src_0
 	lea VDP_getScreenHeight,%a4	|, tmp144
 	jsr (%a4)	| tmp144
 	cmp.w #240,%d0	|,
@@ -408,34 +409,34 @@ map_draw_vertical:
 	jls .L49	|
 	and.w #4095,%d2	|, dma_dest_0
 .L49:
-	tst.w %d5	| dma_len_1
+	tst.w %d6	| dma_len_1
 	jeq .L46	|
 	jsr (%a4)	| tmp144
 	cmp.w #240,%d0	|,
 	jeq .L71	|
 .L50:
-	add.l %d3,%d7	| D.2990, dma_src_1
-	move.w %d6,%d0	| dma_dest_1, dma_dest_1
+	add.l %a2,%a3	| D.2989, dma_src_1
+	move.w %d3,%d0	| dma_dest_1, dma_dest_1
 	add.w #3584,%d0	|, dma_dest_1
 	cmp.w #4095,%d0	|, dma_dest_1
 	jls .L55	|
-	add.w #-512,%d6	|, dma_dest_1
+	add.w #-512,%d3	|, dma_dest_1
 	jra .L46	|
 .L47:
 	moveq #0,%d0	| map_width
 	move.w %d4,%d0	| map_width, map_width
-	add.l %d0,%d0	| map_width, D.2991
-	add.l %d0,%a2	| D.2991, dma_src_0
+	add.l %d0,%d0	| map_width, D.2990
+	add.l %d0,%d5	| D.2990, dma_src_0
 	add.w #3840,%d2	|, dma_dest_0
 	jra .L48	|
 .L71:
 	and.l #65535,%d4	|, map_width
-	add.l %d4,%d4	| map_width, D.2991
-	add.l %d4,%d7	| D.2991, dma_src_1
-	add.w #256,%d6	|, dma_dest_1
+	add.l %d4,%d4	| map_width, D.2990
+	add.l %d4,%a3	| D.2990, dma_src_1
+	add.w #256,%d3	|, dma_dest_1
 	jra .L50	|
 .L55:
-	move.w %d0,%d6	| dma_dest_1, dma_dest_1
+	move.w %d0,%d3	| dma_dest_1, dma_dest_1
 	jra .L46	|
 	.size	map_draw_vertical, .-map_draw_vertical
 	.align	2
@@ -460,35 +461,35 @@ map_draw_full:
 	lsr.w #3,%d5	|, plot_x
 	and.w #255,%d6	|, plot_y
 	lsr.w #3,%d6	|, plot_y
-	moveq #0,%d2	| D.3008
-	move.w %d5,%d2	| plot_x, D.3008
+	moveq #0,%d2	| D.3007
+	move.w %d5,%d2	| plot_x, D.3007
 	moveq #22,%d3	|,
-	cmp.l %d2,%d3	| D.3008,
+	cmp.l %d2,%d3	| D.3007,
 	jge .L74	|
 	move.b #64,%d3	|,
 	sub.w %d5,%d3	| plot_x,
 	move.w %d3,50(%sp)	|, %sfp
-	moveq #0,%d3	| D.3010
-	move.w %d1,%d3	| src_ycomp, D.3010
-	add.l state+4,%d3	| state.current_map, D.3010
-	and.l #65535,%d0	|, D.3010
-	add.l %d0,%d3	| D.3010, dma_src$0
-	moveq #0,%d0	| D.3008
-	move.w %d6,%d0	| plot_y, D.3008
-	lsl.l #6,%d0	|, D.3008
-	move.l %d2,%a1	| D.3008, D.3008
-	add.l %d0,%a1	| D.3008, D.3008
+	moveq #0,%d3	| D.3009
+	move.w %d1,%d3	| src_ycomp, D.3009
+	add.l state+4,%d3	| state.current_map, D.3009
+	and.l #65535,%d0	|, D.3009
+	add.l %d0,%d3	| D.3009, dma_src$0
+	moveq #0,%d0	| D.3007
+	move.w %d6,%d0	| plot_y, D.3007
+	lsl.l #6,%d0	|, D.3007
+	move.l %d2,%a1	| D.3007, D.3007
+	add.l %d0,%a1	| D.3007, D.3007
 	move.w %a1,%d7	|, dma_dest$0
-	add.w %a1,%d7	| D.3008, dma_dest$0
+	add.w %a1,%d7	| D.3007, dma_dest$0
 	add.w #-23,%d5	|, dma_len$1
 	moveq #0,%d0	| dma_len$0
 	move.w 50(%sp),%d0	| %sfp, dma_len$0
-	add.l %d0,%d0	| dma_len$0, D.3008
-	add.l %d3,%d0	| dma_src$0, D.3008
-	move.l %d0,46(%sp)	| D.3008, %sfp
+	add.l %d0,%d0	| dma_len$0, D.3007
+	add.l %d3,%d0	| dma_src$0, D.3007
+	move.l %d0,46(%sp)	| D.3007, %sfp
 	lsl.w #7,%d6	|, dma_dest$1
-	and.l #65535,%d4	|, D.3010
-	moveq #30,%d2	|, D.3011
+	and.l #65535,%d4	|, D.3009
+	moveq #30,%d2	|, D.3010
 	lea VDP_getAPlanAddress,%a2	|, tmp133
 	lea map_dma_src_queue,%a5	|, tmp134
 	lea map_dma_dest_queue,%a4	|, tmp135
@@ -499,14 +500,14 @@ map_draw_full:
 	move.w map_dma_queue_depth,%d7	| map_dma_queue_depth, map_dma_queue_depth.0
 	cmp.w #96,%d7	|, map_dma_queue_depth.0
 	jeq .L76	|
-	moveq #0,%d1	| D.3008
-	move.w %d7,%d1	| map_dma_queue_depth.0, D.3008
-	add.l %d1,%d1	| D.3008, tmp119
+	moveq #0,%d1	| D.3007
+	move.w %d7,%d1	| map_dma_queue_depth.0, D.3007
+	add.l %d1,%d1	| D.3007, tmp119
 	move.l %d1,%a1	| tmp119, tmp120
 	add.l %d1,%a1	| tmp119, tmp120
 	move.l %d3,(%a1,%a5.l)	| ivtmp.85, map_dma_src_queue
-	add.w %a6,%d0	| dma_dest$0, D.3007
-	move.w %d0,(%a4,%d1.l)	| D.3007, map_dma_dest_queue
+	add.w %a6,%d0	| dma_dest$0, D.3006
+	move.w %d0,(%a4,%d1.l)	| D.3006, map_dma_dest_queue
 	move.w 50(%sp),(%a3,%d1.l)	| %sfp, map_dma_len_queue
 	addq.w #1,%d7	|, map_dma_queue_depth.0
 	move.w %d7,map_dma_queue_depth	| map_dma_queue_depth.0, map_dma_queue_depth
@@ -519,9 +520,9 @@ map_draw_full:
 .L77:
 	tst.w %d5	| dma_len$1
 	jne .L94	|
-	subq.l #1,%d2	|, D.3011
-	add.l %d4,%d3	| D.3010, ivtmp.85
-	tst.l %d2	| D.3011
+	subq.l #1,%d2	|, D.3010
+	add.l %d4,%d3	| D.3009, ivtmp.85
+	tst.l %d2	| D.3010
 	jne .L92	|
 .L73:
 	movem.l (%sp)+,#31996	|,
@@ -533,54 +534,54 @@ map_draw_full:
 	moveq #96,%d1	|,
 	cmp.w %a0,%d1	| map_dma_queue_depth.0,
 	jeq .L79	|
-	moveq #0,%d1	| D.3008
-	move.w %a0,%d1	| map_dma_queue_depth.0, D.3008
-	add.l %d1,%d1	| D.3008, tmp127
+	moveq #0,%d1	| D.3007
+	move.w %a0,%d1	| map_dma_queue_depth.0, D.3007
+	add.l %d1,%d1	| D.3007, tmp127
 	move.l %d1,%a1	| tmp127, tmp128
 	add.l %d1,%a1	| tmp127, tmp128
 	move.l 46(%sp),(%a1,%a5.l)	| %sfp, map_dma_src_queue
-	add.w %d6,%d0	| dma_dest$1, D.3007
-	move.w %d0,(%a4,%d1.l)	| D.3007, map_dma_dest_queue
+	add.w %d6,%d0	| dma_dest$1, D.3006
+	move.w %d0,(%a4,%d1.l)	| D.3006, map_dma_dest_queue
 	move.w %d5,(%a3,%d1.l)	| dma_len$1, map_dma_len_queue
 	addq.w #1,%a0	|, map_dma_queue_depth.0
 	move.w %a0,map_dma_queue_depth	| map_dma_queue_depth.0, map_dma_queue_depth
 .L79:
-	add.l %d4,46(%sp)	| D.3010, %sfp
+	add.l %d4,46(%sp)	| D.3009, %sfp
 	move.w %d6,%d0	| dma_dest$1, dma_dest$1
 	add.w #128,%d0	|, dma_dest$1
 	cmp.w #4095,%d0	|, dma_dest$1
 	jls .L82	|
 	add.w #-3968,%d6	|, dma_dest$1
-	subq.l #1,%d2	|, D.3011
-	add.l %d4,%d3	| D.3010, ivtmp.85
-	tst.l %d2	| D.3011
+	subq.l #1,%d2	|, D.3010
+	add.l %d4,%d3	| D.3009, ivtmp.85
+	tst.l %d2	| D.3010
 	jne .L92	|
 	jra .L73	|
 .L82:
 	move.w %d0,%d6	| dma_dest$1, dma_dest$1
-	subq.l #1,%d2	|, D.3011
-	add.l %d4,%d3	| D.3010, ivtmp.85
-	tst.l %d2	| D.3011
+	subq.l #1,%d2	|, D.3010
+	add.l %d4,%d3	| D.3009, ivtmp.85
+	tst.l %d2	| D.3010
 	jne .L92	|
 	jra .L73	|
 .L74:
-	moveq #0,%d3	| D.3010
-	move.w %d1,%d3	| src_ycomp, D.3010
-	add.l state+4,%d3	| state.current_map, D.3010
-	and.l #65535,%d0	|, D.3010
-	add.l %d0,%d3	| D.3010, dma_src$0
-	and.l #65535,%d6	|, D.3008
-	lsl.l #6,%d6	|, D.3008
-	move.l %d2,%a1	| D.3008, D.3008
-	add.l %d6,%a1	| D.3008, D.3008
+	moveq #0,%d3	| D.3009
+	move.w %d1,%d3	| src_ycomp, D.3009
+	add.l state+4,%d3	| state.current_map, D.3009
+	and.l #65535,%d0	|, D.3009
+	add.l %d0,%d3	| D.3009, dma_src$0
+	and.l #65535,%d6	|, D.3007
+	lsl.l #6,%d6	|, D.3007
+	move.l %d2,%a1	| D.3007, D.3007
+	add.l %d6,%a1	| D.3007, D.3007
 	move.w %a1,%d7	|, dma_dest$0
-	add.w %a1,%d7	| D.3008, dma_dest$0
+	add.w %a1,%d7	| D.3007, dma_dest$0
 	clr.l 46(%sp)	| %sfp
 	clr.w %d6	| dma_dest$1
 	clr.w %d5	| dma_len$1
 	move.w #41,50(%sp)	|, %sfp
-	and.l #65535,%d4	|, D.3010
-	moveq #30,%d2	|, D.3011
+	and.l #65535,%d4	|, D.3009
+	moveq #30,%d2	|, D.3010
 	lea VDP_getAPlanAddress,%a2	|, tmp133
 	lea map_dma_src_queue,%a5	|, tmp134
 	lea map_dma_dest_queue,%a4	|, tmp135
@@ -628,22 +629,22 @@ map_draw_diffs:
 	ext.l %d0	| tmp64
 	neg.l %d0	| tmp64
 	move.l %d0,-(%sp)	| tmp64,
-	moveq #0,%d0	| D.3019
-	move.w state+10,%d0	| state.cam_y, D.3019
-	move.l %d0,-(%sp)	| D.3019,
-	move.w state+8,%d0	| state.cam_x, D.3019
-	move.l %d0,-(%sp)	| D.3019,
+	moveq #0,%d0	| D.3018
+	move.w state+10,%d0	| state.cam_y, D.3018
+	move.l %d0,-(%sp)	| D.3018,
+	move.w state+8,%d0	| state.cam_x, D.3018
+	move.l %d0,-(%sp)	| D.3018,
 	jsr map_draw_vertical	|
 	lea (12,%sp),%sp	|,
 	btst #0,%d2	|, moved
 	jeq .L96	|
 	jra .L109	|
 .L107:
-	moveq #0,%d0	| D.3019
-	move.w state+10,%d0	| state.cam_y, D.3019
-	move.l %d0,-(%sp)	| D.3019,
-	move.w state+8,%d0	| state.cam_x, D.3019
-	move.l %d0,-(%sp)	| D.3019,
+	moveq #0,%d0	| D.3018
+	move.w state+10,%d0	| state.cam_y, D.3018
+	move.l %d0,-(%sp)	| D.3018,
+	move.w state+8,%d0	| state.cam_x, D.3018
+	move.l %d0,-(%sp)	| D.3018,
 	jsr map_draw_full	|
 	clr.b state+155	| state.fresh_room
 	addq.l #8,%sp	|,
@@ -664,25 +665,25 @@ map_dma:
 	moveq #0,%d2	| i
 	lea VDP_doDMA,%a5	|, tmp79
 .L116:
-	moveq #0,%d0	| D.3047
-	move.w (%a4)+,%d0	| MEM[base: _44, offset: 0B], D.3047
-	move.l %d0,-(%sp)	| D.3047,
-	move.w (%a3)+,%d0	| MEM[base: _45, offset: 0B], D.3047
-	move.l %d0,-(%sp)	| D.3047,
+	moveq #0,%d0	| D.3046
+	move.w (%a4)+,%d0	| MEM[base: _44, offset: 0B], D.3046
+	move.l %d0,-(%sp)	| D.3046,
+	move.w (%a3)+,%d0	| MEM[base: _45, offset: 0B], D.3046
+	move.l %d0,-(%sp)	| D.3046,
 	move.l (%a2)+,-(%sp)	| MEM[base: _46, offset: 0B],
 	clr.l -(%sp)	|
 	jsr (%a5)	| tmp79
 	addq.l #1,%d2	|, i
-	moveq #0,%d0	| D.3045
-	move.w map_dma_queue_depth,%d0	| map_dma_queue_depth, D.3045
+	moveq #0,%d0	| D.3044
+	move.w map_dma_queue_depth,%d0	| map_dma_queue_depth, D.3044
 	lea (16,%sp),%sp	|,
-	cmp.l %d0,%d2	| D.3045, i
+	cmp.l %d0,%d2	| D.3044, i
 	jcs .L116	|
 .L115:
 	clr.w map_dma_queue_depth	| map_dma_queue_depth
-	move.w map_dma_h_len,%d0	| map_dma_h_len, D.3046
+	move.w map_dma_h_len,%d0	| map_dma_h_len, D.3045
 	jne .L122	|
-	move.w map_dma_h_len+2,%d0	| map_dma_h_len, D.3046
+	move.w map_dma_h_len+2,%d0	| map_dma_h_len, D.3045
 	jne .L123	|
 .L117:
 	clr.w map_dma_h_len	| map_dma_h_len
@@ -690,13 +691,13 @@ map_dma:
 	rts
 .L123:
 	pea 128.w	|
-	move.w %d0,-(%sp)	| D.3046,
+	move.w %d0,-(%sp)	| D.3045,
 	clr.w -(%sp)	|
-	moveq #0,%d0	| D.3047
-	move.w map_dma_h_dest+2,%d0	| map_dma_h_dest, D.3047
-	move.l %d0,-(%sp)	| D.3047,
-	move.w map_dma_h_len,%d0	| map_dma_h_len, D.3047
-	add.l %d0,%d0	| D.3047, tmp74
+	moveq #0,%d0	| D.3046
+	move.w map_dma_h_dest+2,%d0	| map_dma_h_dest, D.3046
+	move.l %d0,-(%sp)	| D.3046,
+	move.w map_dma_h_len,%d0	| map_dma_h_len, D.3046
+	add.l %d0,%d0	| D.3046, tmp74
 	add.l #map_dma_h_src_queue,%d0	|, tmp74
 	move.l %d0,-(%sp)	| tmp74,
 	clr.l -(%sp)	|
@@ -708,16 +709,16 @@ map_dma:
 	rts
 .L122:
 	pea 128.w	|
-	move.w %d0,-(%sp)	| D.3046,
+	move.w %d0,-(%sp)	| D.3045,
 	clr.w -(%sp)	|
-	moveq #0,%d0	| D.3047
-	move.w map_dma_h_dest,%d0	| map_dma_h_dest, D.3047
-	move.l %d0,-(%sp)	| D.3047,
+	moveq #0,%d0	| D.3046
+	move.w map_dma_h_dest,%d0	| map_dma_h_dest, D.3046
+	move.l %d0,-(%sp)	| D.3046,
 	pea map_dma_h_src_queue	|
 	clr.l -(%sp)	|
 	jsr VDP_doDMAEx	|
 	lea (20,%sp),%sp	|,
-	move.w map_dma_h_len+2,%d0	| map_dma_h_len, D.3046
+	move.w map_dma_h_len+2,%d0	| map_dma_h_len, D.3045
 	jeq .L117	|
 	jra .L123	|
 	.size	map_dma, .-map_dma
@@ -730,11 +731,11 @@ map_collision:
 	move.b 35(%a0),%d0	| _4->w, check_addr
 	muls.w #40,%d0	|, check_addr
 	move.l 8(%sp),%d1	| py, py
-	lsr.w #3,%d1	|, D.3053
-	muls.w %d1,%d0	| D.3053, check_addr
+	lsr.w #3,%d1	|, D.3052
+	muls.w %d1,%d0	| D.3052, check_addr
 	move.l 4(%sp),%d1	| px, px
-	lsr.w #3,%d1	|, D.3053
-	add.w %d1,%d0	| D.3053, check_addr
+	lsr.w #3,%d1	|, D.3052
+	add.w %d1,%d0	| D.3052, check_addr
 	and.l #65535,%d0	|, check_addr
 	move.l state+4,%a0	| state.current_map, state.current_map
 	add.l %d0,%a0	| check_addr, state.current_map

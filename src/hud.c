@@ -11,12 +11,13 @@ void hud_dma_tiles(void)
 
 void hud_draw_health(u16 max, u16 val)
 {
+	unsigned int i = 1;
 	// HP icon
 	sprite_put(HUD_HP_X, HUD_HP_Y, SPRITE_SIZE(2,2), 
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + 4));
 
 	// Build the bar
-	for (unsigned int i = 1; i < max + 1; i++)
+	for (i = 1; i < max + 1; i++)
 	{
 		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + (val > i ? 8 : 10));
 			sprite_put(HUD_HP_X, HUD_HP_Y + 8 + (8 * i),
@@ -27,6 +28,7 @@ void hud_draw_health(u16 max, u16 val)
 
 void hud_draw_cp(u16 val)
 {
+	unsigned int i = HUD_CP_BAR_HEIGHT / 8;
 	u16 euro_mod = 240 - VDP_getScreenHeight();
 	// CP icon
 	sprite_put(HUD_CP_X, HUD_CP_Y - euro_mod, SPRITE_SIZE(2,2), 
@@ -45,7 +47,7 @@ void hud_draw_cp(u16 val)
 	sprite_put(HUD_CP_X, HUD_CP_Y - 2 - euro_mod, SPRITE_SIZE(2,1),
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 1, 0, HUD_VRAM_SLOT + 12));
 	// Build center of bar
-	for (unsigned int i = 0; i < (HUD_CP_BAR_HEIGHT / 8); i++)
+	while (i--)
 	{
 		// Default to "full" tile
 		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, system_osc & 1, HUD_VRAM_SLOT + 14);
