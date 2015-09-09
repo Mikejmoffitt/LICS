@@ -40,6 +40,12 @@ static void cube_destroy(cube *c)
 	}
 }
 
+void cube_delete(cube *c)
+{
+	c->type == NULL;
+	c->state = CUBE_STATE_INACTIVE;
+}
+
 static void cube_move(cube *c)
 {
 	// Y movement only applies to an airborn cube
@@ -67,7 +73,7 @@ static void cube_on_cube_collisions(cube *c)
 	while (i--)
 	{
 		cube *d = &cubes[i];
-		if (d->state == CUBE_STATE_INACTIVE || d == c)
+		if (d->state == CUBE_STATE_INACTIVE || d->state == CUBE_STATE_FIZZLE || d == c)
 		{
 			continue;
 		}
@@ -76,7 +82,7 @@ static void cube_on_cube_collisions(cube *c)
 			c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
 			c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
 		{
-			if (c->type != CUBE_GREEN)
+			if (c->type != CUBE_GREEN && c->state != CUBE_STATE_IDLE)
 			{
 				cube_destroy(c);
 			}
@@ -84,7 +90,7 @@ static void cube_on_cube_collisions(cube *c)
 			{
 				c->dy = FZERO;
 			}
-			if (d->type != CUBE_GREEN)
+			if (d->type != CUBE_GREEN && c->state != CUBE_STATE_IDLE)
 			{
 				cube_destroy(d);
 			}

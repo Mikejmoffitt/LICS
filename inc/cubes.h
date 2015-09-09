@@ -69,6 +69,7 @@ extern cube cubes[CUBES_NUM];
 
 void cube_dma_tiles(void);
 void cubes_init(void);
+void cube_delete(cube *c);
 void cubes_run(player *pl);
 void cubes_draw(void);
 void cube_draw_single(u16 x, u16 y, u16 type);

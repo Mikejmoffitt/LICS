@@ -180,7 +180,10 @@ static void player_accel(player *pl)
 	{
 		return;
 	}
-
+	if (pl->lift_cnt)
+	{
+		return;
+	}
 	// walking right and left
 	if (pl->input & KEY_RIGHT)
 	{
@@ -258,6 +261,11 @@ static void player_jump(player *pl)
 	if (pl->grounded || pl->on_cube)
 	{
 		pl->cubejump_disable = 2;
+	}
+
+	if (pl->lift_cnt)
+	{
+		return;
 	}
 
 	// C key pressed, negative edge (1 -> 0)
@@ -372,6 +380,27 @@ static void player_lift_cubes(player *pl)
 	if (!sram.have_lift)
 	{
 		return;
+	}	// In the middle of doing something that voids this ability
+	if (pl->hurt_cnt || pl->action_cnt)
+	{
+		return;
+	}
+	if (pl->on_cube && pl->lift_cnt == 0 && pl->input & KEY_B && !(pl->input_prev & KEY_B))
+	{	
+		pl->lift_cnt = PLAYER_LIFT_TIME + 1;
+		pl->dx = FZERO;
+	}
+	if (pl->lift_cnt == 1 && pl->on_cube)
+	{
+		cube *c = (cube *)pl->on_cube;
+		pl->holding_cube = c->type;
+		cube_delete(c);
+
+		// Re-implement the MMF version bug where you can jump while lifting
+		if (pl->input & KEY_C)
+		{
+			pl->dy = PLAYER_JUMP_DY;
+		}
 	}
 }
 
@@ -757,7 +786,7 @@ void player_draw(player *pl)
 	}
 	u16 size;
 	s16 yoff;
-	s16 xoff = 0;
+	s16 xoff = (pl->lift_cnt ? (pl->lift_cnt / 2) % 2 : 0);
 	if (pl->anim_frame < 0x10)
 	{
 		size = SPRITE_SIZE(2,3);
@@ -792,11 +821,11 @@ void player_run(player *pl)
 {
 	player_input(pl);
 	player_accel(pl);
-	player_jump(pl);
-	player_move(pl);
 	player_kick_cubes(pl);
 	player_toss_cubes(pl);
 	player_lift_cubes(pl);
+	player_jump(pl);
+	player_move(pl);
 	player_cp(pl);
 	player_eval_grounded(pl);
 	player_calc_anim(pl);
