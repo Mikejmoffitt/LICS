@@ -16,7 +16,7 @@ RESCOMP= rescomp
 SCD_LOADER = scd/LukeProjectCD
 
 OPTION =
-INCS = -I. -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc
+INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc
 CCFLAGS = $(OPTION) -m68000 -std=c99 -O2 -c -fomit-frame-pointer -fno-builtin
 HWCCFLAGS = $(OPTION) -m68000 -std=c99 -O2 -c -fomit-frame-pointer -fno-builtin
 Z80FLAGS = -vb2
@@ -146,7 +146,10 @@ out.iso: out.elf_scd
 
 %.o: %.c
 	@echo "[ $< ] --> [ $@ ]"
+	@mkdir -p asmout/
 	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null | ./color.sh
+	@$(CC) $(CCFLAGS) $(INCS) -fverbose-asm -c $< -S 2>&1 > /dev/null
+	@mv *.s asmout/
 
 %.o: %.s 
 	@$(AS) $(ASFLAGS) $< -o $@
