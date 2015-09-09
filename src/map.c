@@ -86,6 +86,7 @@ map_file *map_by_id(u8 num)
 			return tf;
 		}
 	}
+	return NULL;
 }
 
 void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
@@ -108,9 +109,6 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 	// What is the position of the tile shown at cam_x, cam_y?
 	u16 plot_x = (cam_x % (STATE_PLANE_W * 8))/8;
 	u16 plot_y = (cam_y % (STATE_PLANE_H * 8))/8;
-
-	// DMA transfer length
-	u16 dma_len = 1;
 
 	// Copy destination
 	u16 dma_dest = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
@@ -200,6 +198,8 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 	{
 		dma_len_0 = vis_width + 1;
 		dma_dest_0 = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
+		dma_src_1 = 0;
+		dma_dest_1 = 0;
 		dma_len_1 = 0;
 	}
 
