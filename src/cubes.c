@@ -10,6 +10,9 @@
 
 cube cubes[CUBES_NUM];
 
+static void cube_move(cube *c);
+static void cube_on_cube_collisions(cube *c);
+
 void cube_dma_tiles(void)
 {
 	VDP_doVRamDMA((u32)gfx_cubes, CUBE_VRAM_SLOT * 32,CUBE_VRAM_LEN * 16);
@@ -90,27 +93,34 @@ static void cube_on_cube_collisions(cube *c)
 		{
 			continue;
 		}
-		if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
-			c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
-			c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
-			c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
+		if (c->type != CUBE_GREEN)
 		{
-			if (c->type != CUBE_GREEN && c->state != CUBE_STATE_IDLE)
+			if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
+				c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
+				c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
+				c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
 			{
-				cube_destroy(c);
+				if (c->type != CUBE_GREEN && c->state != CUBE_STATE_IDLE)
+				{
+					cube_destroy(c);
+				}
+				else if (c->dy != FZERO)
+				{
+					c->dy = FZERO;
+				}
+				if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
+				{
+					cube_destroy(d);
+				}
+				else if (d->dy != FZERO)
+				{
+					d->dy = FZERO;
+				}
 			}
-			else if (c->dy != FZERO)
-			{
-				c->dy = FZERO;
-			}
-			if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
-			{
-				cube_destroy(d);
-			}
-			else if (d->dy != FZERO)
-			{
-				d->dy = FZERO;
-			}
+		}
+		else
+		{
+			
 		}
 	}
 }

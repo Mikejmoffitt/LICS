@@ -5,12 +5,11 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/util/tm2"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/lyle.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/particles.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/inside1.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside2.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/font.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/lyle.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside1.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/cubes.bin"/>
 </settings>

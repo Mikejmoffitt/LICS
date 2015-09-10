@@ -20,6 +20,25 @@ static u16 ctype;
 
 static u16 cp_restore_cnt;
 
+static void player_set_pal(void);
+static void player_input(player *pl); 
+static void player_cp(player *pl);
+static void player_accel(player *pl);
+static void player_eval_grounded(player *pl);
+static void player_jump(player *pl);
+static void player_toss_cubes(player *pl);
+static void player_kick_cube(player *pl, cube *c);
+static void player_lift_cubes(player *pl);
+static void player_special_counters(player *pl);
+static void player_bg_horizontal_collision(player *pl);
+static void player_bg_vertical_collision(player *pl);
+static void player_cube_horizontal_collision(player *pl, cube *c);
+static void player_cube_vertical_collision(player *pl, cube *c);
+static void player_cube_eval_standing(player *pl, cube *c);
+static void player_cube_collision(player *pl);
+static void player_move(player *pl);
+static void player_calc_anim(player *pl);
+
 static void player_set_pal(void)
 {
 	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
