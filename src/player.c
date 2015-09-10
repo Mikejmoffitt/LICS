@@ -388,7 +388,8 @@ static void player_toss_cubes(player *pl)
 
 static void player_kick_cube(player *pl, cube *c)
 {
-	if (c->state != CUBE_STATE_IDLE || !(pl->grounded || pl->on_cube))
+	if (c->state != CUBE_STATE_IDLE || !(pl->grounded || pl->on_cube) || 
+		pl->action_cnt)
 	{
 		return;
 	}
@@ -405,12 +406,14 @@ static void player_kick_cube(player *pl, cube *c)
 			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = CUBE_KICK_DX;
+			pl->action_cnt = PLAYER_ACTION_LIFT;
 		}
 		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1)
 		{
 			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = (CUBE_KICK_DX * -1);
+			pl->action_cnt = PLAYER_ACTION_LIFT;
 		}
 	}
 }
@@ -428,6 +431,7 @@ static void player_lift_cubes(player *pl)
 	if (pl->on_cube && pl->lift_cnt == 0 && pl->input & KEY_B && !(pl->input_prev & KEY_B))
 	{	
 		pl->lift_cnt = PLAYER_LIFT_TIME + 1;
+		pl->action_cnt = PLAYER_ACTION_LIFT;
 		pl->dx = FZERO;
 	}
 	if (pl->lift_cnt == 1 && pl->on_cube)
@@ -441,6 +445,7 @@ static void player_lift_cubes(player *pl)
 		{
 			pl->dy = PLAYER_JUMP_DY;
 		}
+		pl->action_cnt = PLAYER_ACTION_LIFT;
 	}
 }
 
