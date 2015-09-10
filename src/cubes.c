@@ -55,6 +55,19 @@ static void cube_move(cube *c)
 		c->dy = fix16Add(c->dy, CUBE_GRAVITY);
 	}
 	c->x += c->dx;
+	if (c->state == CUBE_STATE_KICKED)
+	{
+		// in free air, change to an air cube and fall straight down
+		if (!map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM + 1) &&
+			!map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM + 1))
+		{
+			c->dx = FZERO;
+			c->state = CUBE_STATE_AIR;
+			c->dy = FZERO;
+			// lock to grid
+			c->x = (c->x / 8) * 8;
+		}
+	}
 	// Check for cube out of bounds
 	if (c->x + CUBE_LEFT > state.current_room->w * STATE_SC_W || 
 		c->x + CUBE_RIGHT < 0 ||
@@ -163,17 +176,17 @@ void cubes_draw(void)
 		}
 		else if (c->state == CUBE_STATE_FIZZLE)
 		{
-			particle_spawn(c->x, c->y, PARTICLE_TYPE_FIZZLE);
+			particle_spawn(c->x, c->y - 8, PARTICLE_TYPE_FIZZLE);
 			continue;
 		}
 		else if (c->state == CUBE_STATE_FIZZLERED)
 		{
-			particle_spawn(c->x, c->y, PARTICLE_TYPE_FIZZLERED);
+			particle_spawn(c->x, c->y - 8, PARTICLE_TYPE_FIZZLERED);
 			continue;
 		}
 		else if (c->state == CUBE_STATE_EXPLODE)
 		{
-			particle_spawn(c->x, c->y, PARTICLE_TYPE_EXPLOSION);
+			particle_spawn(c->x, c->y - 8, PARTICLE_TYPE_EXPLOSION);
 			continue;
 		}
 		s16 cx = c->x - state.cam_x + CUBE_LEFT;

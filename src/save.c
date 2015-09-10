@@ -48,6 +48,7 @@ void save_clear(void)
 	sram.have_cheap_phantom = 1;
 	sram.have_jump = 1;
 	sram.have_lift = 1;
+	sram.have_kick = 1;
 
 	sram.opt_interlace = SAVE_OPT_INTERLACE_NORMAL;
 	sram.opt_ctrlscheme = SAVE_OPT_CTRL_NORMAL;

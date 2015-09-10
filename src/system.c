@@ -37,7 +37,7 @@ void system_init(void)
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
 	sprites_init();
-
+	save_clear();
 	save_load();
 	// Allow holding A + Start to change scan modes
 	if ((pad_read(0) & KEY_A) || (pad_read(0) & KEY_START))

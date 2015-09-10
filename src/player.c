@@ -367,11 +367,32 @@ static void player_toss_cubes(player *pl)
 	}
 }
 
-static void player_kick_cubes(player *pl)
+static void player_kick_cube(player *pl, cube *c)
 {
-	if (!sram.have_kick)
+	if (c->state != CUBE_STATE_IDLE || !(pl->grounded || pl->on_cube))
 	{
 		return;
+	}
+	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl->x);
+	// check we are within appropriate Y bounds
+	if ((pl->input & KEY_B) && !(pl->input_prev & KEY_B) &&
+		c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 1 && 
+		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 8)
+	{
+		// Just touching the left side of it
+		if (px == (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1)
+		{
+			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
+			c->state = CUBE_STATE_KICKED;
+			c->dx = CUBE_KICK_DX;
+		}
+		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1)
+		{
+			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
+			c->state = CUBE_STATE_KICKED;
+			c->dx = (CUBE_KICK_DX * -1);
+		}
 	}
 }
 
@@ -413,6 +434,10 @@ static void player_special_counters(player *pl)
 	if (pl->throw_cnt)
 	{
 		pl->throw_cnt--;
+	}
+	if (pl->kick_cnt)
+	{
+		pl->kick_cnt--;
 	}
 	if (pl->lift_cnt)
 	{
@@ -662,6 +687,7 @@ static void player_cube_collision(player *pl)
 			player_cube_vertical_collision(pl, c);
 			player_cube_horizontal_collision(pl, c);
 			player_cube_eval_standing(pl, c);
+			player_kick_cube(pl, c);
 		}
 	}
 }
@@ -821,7 +847,6 @@ void player_run(player *pl)
 {
 	player_input(pl);
 	player_accel(pl);
-	player_kick_cubes(pl);
 	player_toss_cubes(pl);
 	player_lift_cubes(pl);
 	player_jump(pl);

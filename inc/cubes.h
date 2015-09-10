@@ -14,6 +14,8 @@
 #define CUBE_LEFT -8
 #define CUBE_RIGHT 7
 
+#define CUBE_KICK_DX 3
+
 /* Cube type descriptions */
 #define CUBE_BLUE 0x0100
 #define CUBE_PHANTOM 0x0200
