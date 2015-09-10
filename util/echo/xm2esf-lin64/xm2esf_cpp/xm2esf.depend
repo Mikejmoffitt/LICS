@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1318901001 source:c:\users\oerg866\desktop\consoleprogs\xm2esf\main.cpp
+	<iostream>
+	<string>
+
+1329529214 source:d:\users\oerg866.oergwin7\desktop\consoleprogs\xm2esf\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<string.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<errno.h>
+	<stdint.h>
+	<sys/types.h>
+	<dirent.h>
+	<stdlib.h>
+	<errno.h>
+	<sstream>
+	<functional>
+	<cctype>
+	<algorithm>
+	<math.h>
+

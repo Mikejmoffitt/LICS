@@ -1,0 +1,134 @@
+xm2esf changelog                    MM-DD-YYYY
+                                
+== <xm2esf 1.00 RC3> ============== 10-02-2012
+
+- Fixed an issue with the wrong or uninitialized note data as base on portamentos with note-on on the same row
+- added license
+- Fixed major crash, hang and memory corruption issue, potentially crashing the OS, producing garbled output, etc
+
+! Compiler changed to FreeBASIC 0.24
+! Linux version added for xm2esf, loadxm and esfopt
+
+(xm2esfgui for linux coming soon)
+
+== <xm2esf 1.00 RC2> ============== 09-28-2012
+
+- Fixed Portamento up / down
+- Fixed new notes not triggereing when effects 1xx and 2xx are on the same row 
+- Fixed reset volume on note-on
+- Fixed conditions for resetting volume on note-on
+- Fixed current note value getting updated for 2xx but not 1xx
+- Fixed terrible mistakes in portamento 3xx code..... 
+  The checks weren't working, the conditions were wrong, 
+  I'm surprised portamentos even worked in the first place
+- Removed silly hacks 
+- Fixed portamentos incorrectly carrying on from a non-slide effect (like arpeggio, vibrato, etc.), 
+  taking previous, perhaps uninitialized data as base note
+- Fixed program hangs after conversion
+- Fixed volume slide effect value actually being ignored
+- Fixed volume slide behavior
+- Optimized Arpeggio code
+- Optimized and fusioned portamento code
+- New note code optimized a bit
+- Remember & reload instruments when looping
+- Fixed pitch related effects not carrying on after empty rows inbetween
+- PSG frequencies get initialized by generating them on the fly, instead of loading from an external file
+
+== <xm2esf 1.00 RC> =============== 11-24-2011
+
+- Fixed PSG Vibrato not working
+- Fixed PSG Arpeggio not working
+- Fixed PSG Portamento not working
+- Fixed PSG Frequency conversion
+- Fixed PSG noise slide
+- Fixed Portamento spawning a Note-On
+- Fixed Vibrato preventing a Note-On
+- Fixed improper PSG noise handling
+
+== <xm2esf BETA 0.98.1> =========== 10-16-2011
+
+- Massively optimized note-on code
+
+== <xm2esf BETA 0.98> ============= 10-16-2011
+
+- Fixed duplicate handling of new notes
+- Improved commenting/readability
+- Fixed "Portamento Up" only working with a new note on the same row
+- Added support for XM effect 0x0F (Set speed)
+
+== <xm2esf BETA 0.97.8b> ========== 10-14-2011
+
+- Reverted/fixed last version, because everything was, in fact, broken...
+
+== <xm2esf BETA 0.97.9> =========== 10-13-2011
+
+- Improved code reliability
+- Improved code readability
+- Massively optimized Note-On code
+
+== <xm2esf BETA 0.97.8> =========== 10-13-2011
+
+- Fixed XIF loader actually always hanging in an endless loop, because a statement converted
+  to lower-case cannot have an uppercase "I" in it ....
+- Fixed volume bug when new instrument gets loaded
+
+
+== <xm2esf BETA 0.97.4> =========== 10-13-2011
+
+- Improved XIF loader
+- Fixed XIF loader getting stuck and hanging the program in an endless loop
+  when settings-category tags were spelt in lower/uppercase
+- Fixed PSG3 being handled twice in one statement in the XIF parser
+
+== <xm2esf BETA 0.97.3> =========== 10-13-2011
+
+- Removed slight oversight (useless DEBUG TRACE, which actually did nothing at all...)
+
+== <xm2esf BETA 0.97.2> =========== 10-13-2011
+
+- Fixed noise pitch setting from XIF-file getting ignored
+
+== <xm2esf BETA 0.97.1> =========== 10-13-2011
+
+- Improved error handler
+- Small construction changes and cleanup
+- Relocated variable initialization
+- Commenting and code readability improved
+
+== <xm2esf  ALPHA 0.97> =========== 10-12-2011
+
+- Output works, ESF streams are playable (albeit still with major issues)
+- First release
+- removed "hours logged"
+- created ZIP package with current snapshot incase something goes HORRIBLY wrong
+- First version that actually compiled and ran through!
+
+== <xm2esf  ALPHA 0.89> =========== 10-11-2011
+
+- discarded Freebasic test
+
+== <xm2esf  PRE ALPHA 0.01.27> ==== 08-12-2011
+
+- more effects conceptated, some in depth handling
+
+== <xm2esf  PRE ALPHA 0.00.57> ==== 08-10-2011
+
+- XIF parser finished
+- Conversion loop
+- Rudimentary effect handler
+- Rudimentary row handler (note-on, etc.)
+
+== <xm2esf  PRE ALPHA 0.00.00> ==== 08-08-2011
+
+- Conversion loop started....
+- Few effect concepts, nothing else yet
+
+== <xm2esf  0.00> ================= 07-31-2011
+
+- XIF parser for instrument assignments and pitch
+- placeholder for conversion loop
+
+== <xm2esf  0.00> ================= 07-29-2011
+
+- basic XIF parser for first section
+- fillers for everything else
