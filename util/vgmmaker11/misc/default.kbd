@@ -1,0 +1,248 @@
+;------------------------------------------------------------------------------
+; keyboard layout file
+;------------------------------------------------------------------------------
+;
+; You can use combination of any single key with optional Shift and/or Ctrl
+; per action and up to three alternative combinations. Alt key also can be
+; used, but it is not recommended, because it conflicts with Windows menu
+; system. Use + to separate keys in one combination and , to separate
+; alternative combinations.
+;
+; Key names (parser is not case-sensitive):
+;
+;   Key(s):             Name(s):
+;
+;   Escape              Escape, Esc
+;   F1..F24             F1..F24
+;   PrintScreen/SysRq   PrnScr, PrintScreen, Snapshot
+;   Scroll Lock         Scroll, ScrollLock
+;   Pause/Break         Pause, Break
+;
+;   ~ key               ~, Tilda, OEM3
+;   1..9, 0             1..9, 0
+;   - _ key             Minus
+;   + = key             Plus
+;   | \ key             \, BackSlash, OEM5
+;   Backspace           Back, Backspace
+;
+;   Tab                 Tab
+;   [ { key             [, {
+;   ] } key             ], }
+;   Enter               Enter
+;
+;   Caps Lock           CapsLock
+;   : ; key             :, ;
+;   " ' key             ", Quote
+;
+;   Shift               Shift
+;   , < key             Comma, <
+;   . > key             Period, >
+;   / ? key             /, ?, Slash
+;
+;   Ctrl                Control, Ctrl
+;   Left Win key        LWin
+;   Alt                 Alt
+;   Space               Space
+;   Right Win key       RWin
+;   Apps key            Apps
+;
+;   A..Z                A..Z
+;
+;   Insert              Ins, Insert
+;   Delete              Del, Delete
+;   Home                Home
+;   End                 End
+;   Page Up             PageUp, PgUp
+;   Page Down           PageDown, PgDown
+;   Cursor left         Left
+;   Cursor right        Right
+;   Cursor up           Up
+;   Cursor down         Down
+;
+;   Num Lock            NumLock
+;   Numpad /            NumDiv
+;   Numpad *            NumMul
+;   Numpad -            NumSub
+;   Numpad +            NumAdd
+;   numpad .            Decimal, NumDec
+;   Numpad 0..9         Num0..Num9
+;
+;------------------------------------------------------------------------------
+
+
+;the editor displays this string as name of the keyboard layout
+
+layoutName=Default Layout
+
+
+;------------------------------------------------------------------------------
+; note keys
+;------------------------------------------------------------------------------
+
+noteC-0=Z           ;current octave
+noteC#0=S
+noteD-0=X
+noteD#0=D
+noteE-0=C
+noteF-0=V
+noteF#0=G
+noteG-0=B
+noteG#0=H
+noteA-0=N
+noteA#0=J
+noteB-0=M
+
+noteC-1=Q,comma     ;current octave+1
+noteC#1=2,L
+noteD-1=W,period
+noteD#1=3,:
+noteE-1=E,slash
+noteF-1=R
+noteF#1=5
+noteG-1=T
+noteG#1=6
+noteA-1=Y
+noteA#1=7
+noteB-1=U
+
+noteC-2=I           ;current octave+2
+noteC#2=9
+noteD-2=O
+noteD#2=0
+noteE-2=P
+noteF-2=[
+noteF#2=plus
+noteG-2=]
+noteG#2=\
+noteA-2=
+noteA#2=
+noteB-2=
+
+noteOff=a,1			;key off
+
+setOctave1=num1		;select octave
+setOctave2=num2
+setOctave3=num3
+setOctave4=num4
+setOctave5=num5
+setOctave6=num6
+setOctave7=num7
+setOctave8=num8
+
+;------------------------------------------------------------------------------
+; general keys
+;------------------------------------------------------------------------------
+
+genOpenMod=ctrl+O       ;open module
+genSaveMod=ctrl+S       ;save module
+genPlayAll=F5           ;play module from start
+genPlayCur=F6           ;play module from current order position
+genPlayPtn=F8           ;play current pattern in loop
+genStop=esc             ;stop play
+genReset=shift+esc      ;reset FM synth
+genMuteFM1=ctrl+num1    ;mute channel FM1
+genMuteFM2=ctrl+num2    ;mute channel FM2
+genMuteFM3=ctrl+num3    ;mute channel FM3
+genMuteFM4=ctrl+num4    ;mute channel FM4
+genMuteFM5=ctrl+num5    ;mute channel FM5
+genMuteFM6=ctrl+num6    ;mute channel FM6
+genMutePSG1=ctrl+num7   ;mute channel PSG1
+genMutePSG2=ctrl+num8   ;mute channel PSG2
+genMutePSG3=ctrl+num9   ;mute channel PSG3
+genMutePSG4=ctrl+num0   ;mute channel PSG4
+genMuteAll=ctrl+minus   ;mute all channels
+genSoloMode=ctrl+numdec ;solo mode
+genToPtnEdit=F1         ;to pattern editor
+genToInsEdit=F2         ;to instrument editor
+genToSampleEdit=F3      ;to sample settings
+genToInfo=F4            ;to information editor
+genUndo=ctrl+Z			;undo
+genRedo=ctrl+Y			;redo
+
+;------------------------------------------------------------------------------
+; keys for pattern editor
+;------------------------------------------------------------------------------
+
+ptnSelectAll=ctrl+A     ;select whole pattern
+ptnSelectChn=ctrl+L     ;select whole current channel
+ptnUnselect=ctrl+U      ;unselect all
+ptnCut=ctrl+X           ;cut block
+ptnCopy=ctrl+C          ;copy block
+ptnPaste=ctrl+V         ;paste block
+ptnPasteOver=ctrl+B     ;paste block over
+ptnDelete=ctrl+D        ;delete block
+ptnToOrder=ctrl+up      ;switch to order-list
+ptnTransSemiUp=ctrl+R   ;transpose semitone up
+ptnTransSemiDown=ctrl+F ;transpose semitone down
+ptnTransOctUp=ctrl+T    ;transpose octave up
+ptnTransOctDown=ctrl+G  ;transpose octave down
+ptnAssignInstr=ctrl+I   ;assign instrument
+
+ptnAutoStepInc=~        ;increment autostep
+ptnAutoStepDec=Ctrl+~   ;decrement autostep
+ptnAutoStep0=Ctrl+0     ;autostep=0
+ptnAutoStep1=Ctrl+1     ;autostep=1
+ptnAutoStep2=Ctrl+2     ;autostep=2
+ptnAutoStep3=Ctrl+3     ;autostep=3
+ptnAutoStep4=Ctrl+4     ;autostep=4
+ptnAutoStep5=Ctrl+5     ;autostep=5
+ptnAutoStep6=Ctrl+6     ;autostep=6
+ptnAutoStep7=Ctrl+7     ;autostep=7
+ptnAutoStep8=Ctrl+8     ;autostep=8
+ptnAutoStep9=Ctrl+9     ;autostep=9
+
+ptnCurUp=up             ;cursor up
+ptnCurDown=down         ;cursor down
+ptnCurLeft=left         ;cursor left
+ptnCurRight=right       ;cursor right
+ptnPageUp=pageup        ;cursor page up
+ptnPageDown=pagedown    ;cursor page down
+ptnHome=home            ;cursor to first line
+ptnEnd=end              ;cursor to last line
+ptnOrdPrev=ctrl+pageup  ;move to prev order
+ptnOrdNext=ctrl+pagedown;move to next order
+ptnNextChan=tab         ;next channel
+ptnPrevChan=ctrl+tab    ;prev channel
+
+ptnDelNote=back         ;delete note
+ptnDelLine=ctrl+back    ;delete line
+ptnInsNote=insert       ;insert note
+ptnInsLine=ctrl+insert  ;insert line
+
+ptnPlay=enter           ;play pattern from current line (hold to play)
+ptnPlayLoop=ctrl+enter  ;play pattern in loop
+
+ptnClrField=delete      ;clear current field
+ptnClrNote=ctrl+space   ;clear note (all fields)
+ptnClrLine=ctrl+delete  ;clear line
+
+ptnSelectKey=shift      ;hold to select block
+
+ptnPatternNext=numadd   ;next pattern
+ptnPatternPrev=numsub   ;prev pattern
+ptnInstrNext=nummul     ;next instrument
+ptnInstrPrev=numdiv     ;prev instrument
+
+ptnInpRepeat=space      ;repeat last value
+ptnPlayNote=4           ;play current note
+ptnPlayLine=8           ;play current line
+
+ptnPrevFxColumn=ctrl+[	;prev effect column
+ptnNextFxColumn=ctrl+]	;next effect column
+
+ptnEditSong=ctrl+m      ;edit song mode toggle
+
+;------------------------------------------------------------------------------
+; keys for order list editor
+;------------------------------------------------------------------------------
+
+ordInsertSame=insert        ;insert position with same pattern
+ordInsertCopy=insert+shift  ;insert copy of current pattern
+ordInsertNew=insert+ctrl    ;insert new pattern
+ordDelete=delete            ;delete position
+ordLoopPosition=L           ;set loop position
+ordToPattern=ctrl+up,ctrl+down,enter    ;switch to pattern editor
+ordPatternInc=up			;increase pattern number
+ordPatternDec=down			;decrease pattern number
+ordMovePrev=ctrl+left		;move current position to prev
+ordMoveNext=ctrl+right		;move current position to next

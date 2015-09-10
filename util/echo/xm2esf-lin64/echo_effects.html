@@ -1,0 +1,288 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<HTML>
+<HEAD>
+	
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 3.4  (Win32)">
+	<META NAME="CREATED" CONTENT="20120206;1160306">
+	<META NAME="CHANGED" CONTENT="0;0">
+	
+	<STYLE>
+		<!-- 
+		BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Arial"; font-size:x-small }
+		 -->
+	</STYLE>
+	
+</HEAD>
+
+<BODY TEXT="#000000">
+<TABLE FRAME=VOID CELLSPACING=0 COLS=5 RULES=NONE BORDER=0>
+	<COLGROUP><COL WIDTH=139><COL WIDTH=139><COL WIDTH=263><COL WIDTH=314><COL WIDTH=1540></COLGROUP>
+	<TBODY>
+		<TR>
+			<TD WIDTH=139 HEIGHT=18 ALIGN=LEFT>Echo implications</TD>
+			<TD WIDTH=139 ALIGN=LEFT>Mnemonic </TD>
+			<TD WIDTH=263 ALIGN=LEFT>Name </TD>
+			<TD WIDTH=314 ALIGN=LEFT>Parameter(s) </TD>
+			<TD WIDTH=1540 ALIGN=LEFT>Description </TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Standard FT2 effects</TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>0xy</TD>
+			<TD ALIGN=LEFT>Arpegio</TD>
+			<TD ALIGN=LEFT>1st halftone, 2nd halftone</TD>
+			<TD ALIGN=LEFT>First tick the note is played, the next tick &mdash; note + x halftones, the next tick &mdash; note + y halftones, then repeat from the beguinning. For instance: C-1 037: first is played C1, then C1 + 3 ht = Eb1, then &mdash; C1 + 7 ht = G1 and then again C1 and so on...</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>1xx/2xx*</TD>
+			<TD ALIGN=LEFT>Portamento up/down</TD>
+			<TD ALIGN=LEFT>Speed</TD>
+			<TD ALIGN=LEFT>This command is used to slide the sample pitch up or down. This is done using the speed value. If Amiga frequence table is used, the sliding will be non-linear (the speed depends on the frequency).</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>3xx*</TD>
+			<TD ALIGN=LEFT>Tone portanemto</TD>
+			<TD ALIGN=LEFT>Speed</TD>
+			<TD ALIGN=LEFT>This command is used together with a note, and will slide to its frequency. If glissando mode is set (by E3x command), the frequency will be rounded to the nearest halftone</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>4xy*</TD>
+			<TD ALIGN=LEFT>Vibrato</TD>
+			<TD ALIGN=LEFT>Rate, depth</TD>
+			<TD ALIGN=LEFT>Adds (frequency) vibrato to the channel with a specified rate and speed. Set vibrato mode command (E4x) can be used to change the vibrato waveform (see below).</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible</TD>
+			<TD ALIGN=LEFT>5xy*</TD>
+			<TD ALIGN=LEFT>Tone portamento + volume slide</TD>
+			<TD ALIGN=LEFT>Up speed, down speed (see volume slide (Axy))</TD>
+			<TD ALIGN=LEFT>This command execute both tone portamento and volume slide. The speed is used for the volume slide.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible</TD>
+			<TD ALIGN=LEFT>6xy*</TD>
+			<TD ALIGN=LEFT>Vibrato + volume slide</TD>
+			<TD ALIGN=LEFT>Up speed, down speed (see volume slide (Axy))</TD>
+			<TD ALIGN=LEFT>This command execute both tone portamento and volume slide. The speed is used for the volume slide.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible</TD>
+			<TD ALIGN=LEFT>7xy*</TD>
+			<TD ALIGN=LEFT>Tremolo</TD>
+			<TD ALIGN=LEFT>Rate, depth</TD>
+			<TD ALIGN=LEFT>The same like vibrato (4xy) but affects the sound amplitude rather then the frequency.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>00, 80, FF Done</TD>
+			<TD ALIGN=LEFT>8xy</TD>
+			<TD ALIGN=LEFT>Set panning position</TD>
+			<TD ALIGN=LEFT>Position</TD>
+			<TD ALIGN=LEFT>0x00 &mdash; leftmost, 0xff &mdash; rightmost.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>NOT POSSIBLE</TD>
+			<TD ALIGN=LEFT>9xx</TD>
+			<TD ALIGN=LEFT>Sample offset</TD>
+			<TD ALIGN=LEFT>Offset</TD>
+			<TD ALIGN=LEFT>This command should be used together with a note. The sample will be played from (offset * 0x100) instead of zero. </TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>Axy*</TD>
+			<TD ALIGN=LEFT>Volume slide</TD>
+			<TD ALIGN=LEFT>Up speed, down speed</TD>
+			<TD ALIGN=LEFT>Slides the current volume up or down. Either up speed or down speed should be zero</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>NOT POSSIBLE</TD>
+			<TD ALIGN=LEFT>Bxx</TD>
+			<TD ALIGN=LEFT>Position jump</TD>
+			<TD ALIGN=LEFT>Position</TD>
+			<TD ALIGN=LEFT>This command will cause jump to the selected song postion and play pattern from the beginning</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>Cxx</TD>
+			<TD ALIGN=LEFT>Set volume</TD>
+			<TD ALIGN=LEFT>Volume</TD>
+			<TD ALIGN=LEFT>Sets the current volume of the track where the command is, just like volume column. The volume should not be greater than 0x40</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Only D00 Done!</TD>
+			<TD ALIGN=LEFT>Dxx</TD>
+			<TD ALIGN=LEFT>Pattern break</TD>
+			<TD ALIGN=LEFT>Pattern position</TD>
+			<TD ALIGN=LEFT>This command will cause jump to the next pattern and play from the selected position</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>NOT POSSIBLE</TD>
+			<TD ALIGN=LEFT>E0x</TD>
+			<TD ALIGN=LEFT>Set filter mode (Amiga only)</TD>
+			<TD ALIGN=LEFT>Mode</TD>
+			<TD ALIGN=LEFT>I don't have Amiga so I can say nothing about how this command works.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible</TD>
+			<TD ALIGN=LEFT>E1x/E2x*</TD>
+			<TD ALIGN=LEFT>Fine portamento up/down</TD>
+			<TD ALIGN=LEFT>Speed</TD>
+			<TD ALIGN=LEFT>This command works as portamento up/down, but the sliding occurs only one time per line.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Unnecessary</TD>
+			<TD ALIGN=LEFT>E3x</TD>
+			<TD ALIGN=LEFT>Set glissando mode</TD>
+			<TD ALIGN=LEFT>Mode</TD>
+			<TD ALIGN=LEFT>If mode = 1, the resulting frequency after implementing this command will be rounded to the nearest halftone.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Posible, but unlikely</TD>
+			<TD ALIGN=LEFT>E4x</TD>
+			<TD ALIGN=LEFT>Set vibrato mode</TD>
+			<TD ALIGN=LEFT>Mode</TD>
+			<TD ALIGN=LEFT>Mode: 0 &mdash; sine, 1 &mdash; ramp down, 2 &mdash; square. If you add 4 to the mode, the waveform will not be retrigged when a new instrument is played</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>NOT POSSIBLE</TD>
+			<TD ALIGN=LEFT>E5x</TD>
+			<TD ALIGN=LEFT>Set fine-tune</TD>
+			<TD ALIGN=LEFT>Tune</TD>
+			<TD ALIGN=LEFT>This command should be used together with a note. It will cause another fine-tune value to be used.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible but unlikely</TD>
+			<TD ALIGN=LEFT>E6x</TD>
+			<TD ALIGN=LEFT>Pattern loop</TD>
+			<TD ALIGN=LEFT>Count</TD>
+			<TD ALIGN=LEFT>If count is zero, the beginning of the loop will be specified. When a non-zero value is used, the pattern will be looped from a loop start by a given number of times.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible but unlikely</TD>
+			<TD ALIGN=LEFT>E7x</TD>
+			<TD ALIGN=LEFT>Set tremolo mode</TD>
+			<TD ALIGN=LEFT>Mode</TD>
+			<TD ALIGN=LEFT>See E4x (set vibrato control), but for the tremolo waveform.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible and TODO!</TD>
+			<TD ALIGN=LEFT>E9x</TD>
+			<TD ALIGN=LEFT>Retrig note</TD>
+			<TD ALIGN=LEFT>Interval</TD>
+			<TD ALIGN=LEFT>Retrigs note with the specified interval.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible, but unlikely</TD>
+			<TD ALIGN=LEFT>EAx/EBx*</TD>
+			<TD ALIGN=LEFT>Fine volume slide up/down</TD>
+			<TD ALIGN=LEFT>Speed</TD>
+			<TD ALIGN=LEFT>This command works as usual volume slide up/down, but the sliding occurs only one time per line.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible and TODO!</TD>
+			<TD ALIGN=LEFT>ECx</TD>
+			<TD ALIGN=LEFT>Note cut</TD>
+			<TD ALIGN=LEFT>Tick</TD>
+			<TD ALIGN=LEFT>Cut the note at the specified tick. Note that it will only set the volume to zero, and the sample will still be played.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible and TODO!</TD>
+			<TD ALIGN=LEFT>EDx</TD>
+			<TD ALIGN=LEFT>Note delay</TD>
+			<TD ALIGN=LEFT>Ticks</TD>
+			<TD ALIGN=LEFT>This command will delay the note by the selected number of ticks.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible, but unlikely</TD>
+			<TD ALIGN=LEFT>EEx</TD>
+			<TD ALIGN=LEFT>Pattern delay</TD>
+			<TD ALIGN=LEFT>Lines</TD>
+			<TD ALIGN=LEFT>This command will delay pattern by the selected number of tracker lines</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Done</TD>
+			<TD ALIGN=LEFT>Fxx</TD>
+			<TD ALIGN=LEFT>Set speed</TD>
+			<TD ALIGN=LEFT>Speed or BPM</TD>
+			<TD ALIGN=LEFT>This command will set the speed or BPM value of the song. If value is less than 0x20, the speed will be changed. Othervise, the BPM value will be changed.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Difficult and unlikely</TD>
+			<TD ALIGN=LEFT>Gxx</TD>
+			<TD ALIGN=LEFT>Set global volume</TD>
+			<TD ALIGN=LEFT>Volume</TD>
+			<TD ALIGN=LEFT>Sets the global volume. The value should not exceed 0x40.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Difficult and unlikely</TD>
+			<TD ALIGN=LEFT>Hxy*</TD>
+			<TD ALIGN=LEFT>Global volume slide</TD>
+			<TD ALIGN=LEFT>Up speed, down speed</TD>
+			<TD ALIGN=LEFT>Works exactly as volume slide, but it slides the global volume instead.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>NOT APPLICABLE</TD>
+			<TD ALIGN=LEFT>Lxx</TD>
+			<TD ALIGN=LEFT>Set envelope position</TD>
+			<TD ALIGN=LEFT>Position</TD>
+			<TD ALIGN=LEFT>Changes the envelope position (measured in ticks, as in the instrument editor).</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>NOT POSSIBLE</TD>
+			<TD ALIGN=LEFT>Pxy</TD>
+			<TD ALIGN=LEFT>Panning slide</TD>
+			<TD ALIGN=LEFT>Right speed, left speed</TD>
+			<TD ALIGN=LEFT>Slides the panning position. Works like the volume slide.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possibly, but unlikely</TD>
+			<TD ALIGN=LEFT>Rxy*</TD>
+			<TD ALIGN=LEFT>Extended retrig</TD>
+			<TD ALIGN=LEFT>Volume change, interval</TD>
+			<TD ALIGN=LEFT>This is an extended version of the retrig command. Volume is changed according to the following table: </TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Possible and TODO!</TD>
+			<TD ALIGN=LEFT>Txy</TD>
+			<TD ALIGN=LEFT>Tremor</TD>
+			<TD ALIGN=LEFT> On time, off time</TD>
+			<TD ALIGN=LEFT> This effect will set the volume to zero during off time number of ticks, and then restore the volume back during ofn time number of ticks.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT>Difficult and unlikely</TD>
+			<TD ALIGN=LEFT>X1x/X2x*</TD>
+			<TD ALIGN=LEFT>Extra fine portamento up/down</TD>
+			<TD ALIGN=LEFT>Speed</TD>
+			<TD ALIGN=LEFT>Works like fine portamento up/down, but the speed will be divided by four.</TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+		</TR>
+		<TR>
+			<TD HEIGHT=18 ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT><BR></TD>
+			<TD ALIGN=LEFT>Detailed info courtesy of <A HREF="http://metamorph0sis.nm.ru/xmeffects.html">http://metamorph0sis.nm.ru/xmeffects.html</A></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<!-- ************************************************************************** -->
+</BODY>
+
+</HTML>

@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1320279063 source:c:\users\oerg866\desktop\consoleprogs\xm2esf\esfopt\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<sys/stat.h>
+	<sys/types.h>
+	<errno.h>
+	<stdint.h>
+	<sys/types.h>
+	<dirent.h>
+	<stdlib.h>
+
+1320284230 source:d:\users\oerg866.oergwin7\desktop\consoleprogs\xm2esf\esfopt\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<sys/stat.h>
+	<sys/types.h>
+	<errno.h>
+	<stdint.h>
+	<sys/types.h>
+	<dirent.h>
+	<stdlib.h>
+
+1349222576 source:d:\backups\new fucking pc fuck yeeeessssssssssss\user direktorrryyyyeeee\desktop\consoleprogs\xm2esf\esfopt\main.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<sys/stat.h>
+	<sys/types.h>
+	<errno.h>
+	<stdint.h>
+	<sys/types.h>
+	<dirent.h>
+	<stdlib.h>
+

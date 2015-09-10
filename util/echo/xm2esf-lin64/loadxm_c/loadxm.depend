@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1189864956 source:c:\users\oerg866\desktop\consoleprogs\xm2esf\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1318894201 source:c:\users\oerg866\desktop\consoleprogs\xm2esf\loadxm.c
+	<stdio.h>
+	<stdlib.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<unistd.h>
+	<string.h>
+	<errno.h>
+	<stdint.h>
+	<sys/types.h>
+	<dirent.h>
+
