@@ -524,7 +524,7 @@ static void player_bg_vertical_collision(player *pl)
 	px -= fix16ToInt(pl->dx);
 	// Vertical collision
 	// "Am I now stuck with my feet in the ground?"
-	if (pl->dy >= FZERO)
+	if (pl->dy > FZERO)
 	{
 		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM)) ||
 			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM)))
