@@ -60,8 +60,8 @@ typedef struct cube cube;
 struct cube
 {
 	u16 state;
-	u16 x;
-	u16 y;
+	s16 x;
+	s16 y;
 	s16 dx;
 	fix16 dy;
 	u16 type;

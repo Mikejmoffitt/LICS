@@ -45,7 +45,7 @@ static void cube_destroy(cube *c)
 
 void cube_delete(cube *c)
 {
-	c->type == NULL;
+	c->type = NULL;
 	c->state = CUBE_STATE_INACTIVE;
 }
 
