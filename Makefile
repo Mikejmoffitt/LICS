@@ -98,6 +98,9 @@ regen: lyle.bin
 fusion: lyle.bin
 	@exec util/Fusion $< 2> /dev/null
 
+kega: lyle.bin
+	/Applications/Kega\ Fusion.app/Contents/MacOS/Kega\ Fusion $< 2> /dev/null
+
 test: lyle.bin
 	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
 

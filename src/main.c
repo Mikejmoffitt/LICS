@@ -43,7 +43,7 @@ void room_setup(player *pl)
 
 	for (i = 0; i < 6; i++)
 	{
-		cube_spawn(128 + (32 * i),(240 - 33), CUBE_BLUE, CUBE_STATE_IDLE, 0, 0);
+		cube_spawn(128 + (32 * i),(240 - 33 + 8), CUBE_BLUE, CUBE_STATE_IDLE, 0, 0);
 	}
 
 	// First graphical commit
