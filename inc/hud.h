@@ -1,3 +1,6 @@
+// hud.h
+// The HP / CP indicators on the left side of the screen
+
 #ifndef HUD_H
 #define HUD_H
 

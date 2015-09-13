@@ -1,3 +1,9 @@
+// sprites.h
+// Michael Moffitt
+// Routines for abstracting away sprite placement into a cache in main memory,
+// which is then transferred to VRAM during the vertical blank using DMA.
+// Unless sprites are placed manually, priority is determinde by the order in
+// which sprites have been drawn.
 #ifndef SPRITES_H
 #define SPRITES_H
 

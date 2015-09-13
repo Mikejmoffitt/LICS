@@ -1,3 +1,5 @@
+// cubes.h
+// The objects Lyle can spawn or pick up to attack enemies with
 #ifndef CUBES_H
 #define CUBES_H
 
@@ -37,7 +39,7 @@ Example values:
 */
 
 
-#define CUBE_YELLOW_DOUBLE 0x10
+#define CUBE_YELLOW_DOUBLE 0x01
 #define CUBE_YELLOW_CP 0x20
 // Lower nybble gives it an ID (which CP orb?)
 #define CUBE_YELLOW_CPORB 0x40

@@ -1,3 +1,6 @@
+// particle.h
+// Sparkles, fizzles and explosions. A limited number exist at a time.
+
 #ifndef PARTICLES_H
 #define PARTICLES_H
 

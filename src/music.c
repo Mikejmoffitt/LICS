@@ -14,10 +14,10 @@ static const u8 *test_instrument_set[] =
 void music_play(u16 num)
 {
 	// load instrument set into echo
-	echo_init(test_instrument_set);
+	echo_init((void *)test_instrument_set);
 	
 	// Play the track
-	echo_play_bgm(&bgm_bgm1);
+	echo_play_bgm((void *)&bgm_bgm1);
 	
 	(void)num;
 }

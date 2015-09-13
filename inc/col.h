@@ -1,3 +1,6 @@
+// col.h
+// 80-line and 40-line string printing for printing basic debug information
+
 #ifndef COL_H
 #define COL_H
 #include <genesis.h>
