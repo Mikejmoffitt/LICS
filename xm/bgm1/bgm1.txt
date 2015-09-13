@@ -1,0 +1,3 @@
+XM2 --> FM0 (bass)
+XM5 --> FM1 (chords)
+XM9 --> FM2 (lead)

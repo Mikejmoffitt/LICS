@@ -14,6 +14,7 @@
 #include "cubes.h"
 #include "particles.h"
 #include "hud.h"
+#include "music.h"
 
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
@@ -120,6 +121,7 @@ void room_loop(void)
 int main(void)
 {
 	system_init();
+	music_play(0);
 	room_loop();
 	return 0;	
 }
