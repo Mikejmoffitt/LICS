@@ -29,7 +29,7 @@ Box collision determines generally if there is a collision
 if (cube at all touches a solid background)
 	if (tile below center of tube is solid) and (dx != 0)
 		if (dy > 2) and (tile inside X center of cube is nonsolid)
-			dy = dy - (0.28 * dy);
+			dy = 0.72 * dy;
 			count--;
 		else if (dy <= 2) and (count is > 1)
 			dy = -2;

@@ -125,6 +125,69 @@ static void cube_on_cube_collisions(cube *c)
 	}
 }
 
+// This is a very awkward transcription of the MMF implementation's cube 
+// physics, which I'd like to rewrite once it makes sense
+// - moffitt 9/13/15
+static void cube_bg_collision(cube *c)
+{
+	if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
+		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) || 
+		map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) || 
+		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP)) 
+	{
+		// Cubes that get destryed on impact
+		if (c->type != CUBE_GREEN)
+		{
+			cube_destroy(c);
+		}
+		else
+		{
+			// We are bouncing on the ground
+			if (map_collision(c->x, c->y + CUBE_BOTTOM) && c->dx != FZERO)
+			{
+				// Cube has ended up substantially in the ground
+				if (c->dy >= CUBE_BOUNCE_CUTOFF && map_collision(c->x, c->y))
+				{
+					c->dy = fix16Mul(CUBE_BOUNCE_COEF, c->dy);
+					if (c->bounce_count)
+					{
+						c->bounce_count--;
+					}
+				}
+				else if (c->bounce_count > 1 && c->dy <= CUBE_BOUNCE_CUTOFF)
+				{
+					c->dy = FIX16(2.0);
+					if (c->bounce_count)
+					{
+						c->bounce_count--;
+					}
+				}
+				else if (c->bounce_count <= 1)
+				{
+					c->state = CUBE_STATE_IDLE;
+					c->x = (c->x / 8) * 8;
+					c->y = (c->y / 8) * 8;
+					c->dy = 0;
+				}
+
+				// Ceiling collisoin
+				if (c->dx != FZERO && map_collision(c->x, c->y + CUBE_TOP))
+				{
+					c->dy = CUBE_CEILING_DY;
+				}
+
+				// if a cube is in a wall??
+				if (c->dx != FZERO && map_collision(c->x, c->y))
+				{
+					c->dx = fix16Mul(FIX16(-1.0), c->dx);
+					c->bounce_count = 1;
+					c->dy = FIX16(3.0);
+				}
+			}
+		}
+	}
+}
+
 void cubes_run(player *pl)
 {
 	int i = CUBES_NUM;
@@ -153,16 +216,7 @@ void cubes_run(player *pl)
 			// original game's behavior. 
 			if (c->state != CUBE_STATE_FIZZLE)
 			{
-				if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
-					map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) || 
-					map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) || 
-					map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP)) 
-				{
-					if (c->type != CUBE_GREEN)
-					{
-						cube_destroy(c);
-					}
-				}
+				cube_bg_collision(c);
 			}
 			cube_move(c);
 			if (c->state == CUBE_STATE_AIR ||
@@ -245,6 +299,7 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 			c->dx = dx;
 			c->dy = dy;
 			c->type = type;
+			c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
 			break;
 		}
 	}

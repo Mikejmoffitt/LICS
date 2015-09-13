@@ -18,6 +18,8 @@
 
 #define CUBE_KICK_DX 3
 
+#define CUBE_BOUNCE_COUNT_INIT 2
+
 /* Cube type descriptions */
 #define CUBE_BLUE 0x0100
 #define CUBE_PHANTOM 0x0200
@@ -55,8 +57,11 @@ Example values:
 #define CUBE_STATE_EXPLODE 6
 #define CUBE_FIZZLE_TIME 7
 
+// Cube physics constants
 #define CUBE_GRAVITY FIX16(0.2)
-
+#define CUBE_BOUNCE_COEF FIX16(0.72)
+#define CUBE_BOUNCE_CUTOFF FIX16(2.0)
+#define CUBE_CEILING_DY FIX16(3.0)
 
 typedef struct cube cube;
 struct cube
@@ -66,6 +71,7 @@ struct cube
 	s16 y;
 	s16 dx;
 	fix16 dy;
+	u16 bounce_count;
 	u16 type;
 };
 
