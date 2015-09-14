@@ -1,12 +1,5 @@
 @echo off
-
-REM convert WAV files to headerless versions
-echo ---------------------------------------------------------------------
-echo Stripping WAV file headers
-echo ---------------------------------------------------------------------
-FOR %%F IN (xm\samples\*.wav) DO util\riffstrip.exe %%F
-
-REM convert headerless WAV files to EWF format
+REM convert raw 8-bit PCM files to EWF format
 echo ---------------------------------------------------------------------
 echo Converting samples to EWF
 echo ---------------------------------------------------------------------
@@ -34,4 +27,5 @@ echo Beginning xm2esf conversions
 echo ---------------------------------------------------------------------
 cd util
 xm2esf ..\xm\bgm1\bgm1.xif ..\res\bgm\bgm1.esf
+cd ..
 pause 
