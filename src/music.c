@@ -14,6 +14,7 @@ static const void *test_instrument_set[] =
 	(void *)ewf_bassdrum1,
 	(void *)ewf_snare1,
 	(void *)eef_hat,
+	(void *)eef_qdecay,
 	0
 };
 
