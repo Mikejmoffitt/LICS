@@ -13,6 +13,7 @@ static const void *test_instrument_set[] =
 	(void *)eef_flat,
 	(void *)ewf_bassdrum1,
 	(void *)ewf_snare1,
+	(void *)eef_hat,
 	0
 };
 
