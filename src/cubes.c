@@ -66,9 +66,9 @@ static void cube_move(cube *c)
 		{
 			c->dx = FZERO;
 			c->state = CUBE_STATE_AIR;
-			c->dy = FZERO;
+			c->dy = CUBE_GRAVITY;
 			// lock to grid
-			c->x = (c->x / 8) * 8;
+			c->x = ((c->x + 4) / 8) * 8;
 		}
 	}
 	// Check for cube out of bounds
