@@ -181,7 +181,7 @@ static void player_cp(player *pl)
 					ctype = CUBE_PHANTOM;
 					break;
 			}
-			ctype = CUBE_GREEN;
+			ctype = CUBE_PHANTOM;
 			pl->holding_cube = ctype;
 			pl->cp_cnt = 0;
 			pl->cp -= cube_price;
@@ -402,14 +402,16 @@ static void player_kick_cube(player *pl, cube *c)
 		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 8)
 	{
 		// Just touching the left side of it
-		if (px == (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1)
+		if (px == (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1 &&
+			pl->direction == PLAYER_RIGHT)
 		{
 			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = CUBE_KICK_DX;
 			pl->action_cnt = PLAYER_ACTION_LIFT;
 		}
-		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1)
+		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1 &&
+			pl->direction == PLAYER_LEFT)
 		{
 			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
 			c->state = CUBE_STATE_KICKED;
