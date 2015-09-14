@@ -10,8 +10,8 @@ REM convert headerless WAV files to EWF format
 echo ---------------------------------------------------------------------
 echo Converting samples to EWF
 echo ---------------------------------------------------------------------
-util\pcm2ewf.exe xm\samples\snare1.wav.stripped res\ewf\snare1.ewf
-util\pcm2ewf.exe xm\samples\bassdrum1.wav.stripped res\ewf\bassdrum1.ewf
+util\pcm2ewf.exe xm\rawsamples\snare1.raw res\ewf\snare1.ewf
+util\pcm2ewf.exe xm\rawsamples\bassdrum1.raw res\ewf\bassdrum1.ewf
 
 REM convert VGI instruments to EIF instruments
 echo ---------------------------------------------------------------------
