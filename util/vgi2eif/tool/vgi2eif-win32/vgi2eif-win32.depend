@@ -1,0 +1,29 @@
+# depslib dependency file v1.0
+1442126374 source:c:\users\michael moffitt\development\lics\util\vgi2eif\tool\eif.c
+	<stdio.h>
+	"main.h"
+
+1442126374 c:\users\michael moffitt\development\lics\util\vgi2eif\tool\main.h
+	<stdint.h>
+
+1442126374 source:c:\users\michael moffitt\development\lics\util\vgi2eif\tool\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"main.h"
+	"vgi.h"
+	"eif.h"
+
+1442126374 c:\users\michael moffitt\development\lics\util\vgi2eif\tool\vgi.h
+	<stdio.h>
+	"main.h"
+
+1442126374 c:\users\michael moffitt\development\lics\util\vgi2eif\tool\eif.h
+	<stdio.h>
+	"main.h"
+
+1442126374 source:c:\users\michael moffitt\development\lics\util\vgi2eif\tool\vgi.c
+	<stdint.h>
+	<stdio.h>
+	"main.h"
+
