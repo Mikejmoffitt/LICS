@@ -1,4 +1,10 @@
 @echo off
+REM removing old object files
+del out\res\bgm.o
+del out\res\eif.o
+del out\res\eef.o
+del out\res\ewf.o
+
 REM convert raw 8-bit PCM files to EWF format
 echo ---------------------------------------------------------------------
 echo Converting samples to EWF
@@ -12,6 +18,7 @@ REM convert VGI instruments to EIF instruments
 echo ---------------------------------------------------------------------
 echo Converting VGI patches to EIF
 echo ---------------------------------------------------------------------
+util\vgi2eif.exe xm\inst\buzz.vgi res\eif\buzz.eif
 util\vgi2eif.exe xm\inst\bass1.vgi res\eif\bass1.eif
 util\vgi2eif.exe xm\inst\bass2.vgi res\eif\bass2.eif
 util\vgi2eif.exe xm\inst\sqchords1.vgi res\eif\sqchords1.eif

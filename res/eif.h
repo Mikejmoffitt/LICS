@@ -7,5 +7,6 @@ extern const u8 eif_sawlead[30];
 extern const u8 eif_sqchords1[30];
 extern const u8 eif_saw2[30];
 extern const u8 eif_saw2at[30];
+extern const u8 eif_buzz[30];
 
 #endif // _EIF_H_
