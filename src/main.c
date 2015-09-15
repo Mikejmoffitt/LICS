@@ -15,6 +15,7 @@
 #include "particles.h"
 #include "hud.h"
 #include "music.h"
+#include "bg.h"
 
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
@@ -53,6 +54,7 @@ void room_setup(player *pl)
 	state_dma_scroll();
 	system_wait_v();
 	system_wait_v();
+	bg_load(1);
 }
 
 void room_loop(void)
