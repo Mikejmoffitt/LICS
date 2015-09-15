@@ -5,26 +5,31 @@
 #include "eef.h"
 #include "ewf.h"
 
-static const void *test_instrument_set[] =
+static const void *instrument_set[] =
 {
-	(void *)eif_bass1,
-	(void *)eif_sqchords1,
-	(void *)eif_sawlead,
-	(void *)eef_flat,
-	(void *)ewf_bassdrum1,
-	(void *)ewf_snare1,
-	(void *)eef_hat,
-	(void *)eef_qdecay,
+	(void *)eif_bass1,			// 00: FM Bass 1
+	(void *)eif_sqchords1,		// 01: GM Square 1
+	(void *)eif_sawlead,		// 02: GM Saw 1
+	(void *)eef_flat,			// 03: PSG flat 
+	(void *)ewf_bassdrum1,		// 04: PCM bass drum 1
+	(void *)ewf_snare1,			// 05: PCM snare drum 1
+	(void *)eef_hat,			// 06: PSG hihat
+	(void *)eef_qdecay,			// 07: PSG quick hit
+	(void *)ewf_hat1,			// 08: PCM hihat 1
+	(void *)ewf_snare2,			// 09: PCM snare drum 2
+	(void *)eif_bass2,			// 0A: FM Bass 2
+	(void *)eif_saw2,			// 0B: FM Saw 2
+	(void *)eif_saw2at,			// 0C: FM Saw 2 (att)
 	0
 };
 
 void music_play(u16 num)
 {
 	// load instrument set into echo
-	echo_init((void *)test_instrument_set);
+	echo_init((void *)instrument_set);
 	
 	// Play the track
-	echo_play_bgm((void *)&bgm_bgm1);
+	echo_play_bgm((void *)&bgm_bgm2);
 	
 	(void)num;
 }
