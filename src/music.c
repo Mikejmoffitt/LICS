@@ -22,6 +22,7 @@ static const void *instrument_set[] =
 	(void *)eif_bass2,			// 0A: FM Bass 2
 	(void *)eif_saw2,			// 0B: FM Saw 2
 	(void *)eif_saw2at,			// 0C: FM Saw 2 (att)
+	(void *)eif_buzz,			// 0D: FM Buzz
 	0
 };
 
