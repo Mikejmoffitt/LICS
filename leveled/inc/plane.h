@@ -41,6 +41,9 @@ void plane_draw_map(u32 x, u32 y);
 // Draw tiles at x, y in the buffer
 void plane_draw_vram(u32 x, u32 y);
 
+// Show list of elements
+void plane_draw_object_list(u32 x, u32 y);
+
 // Calculate max camera X and Y
 void plane_scroll_limits(u32 *x, u32 *y);
 

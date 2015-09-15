@@ -17,6 +17,7 @@
 
 #define WINDOW_MAP 0
 #define WINDOW_VRAM 1
+#define WINDOW_OBJ 2
 
 // Editor state variables
 extern u32 display_w;

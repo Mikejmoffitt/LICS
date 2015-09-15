@@ -224,6 +224,24 @@ void plane_draw_vram(u32 x, u32 y)
 	al_draw_text(font,al_map_rgb(255,255,255),x, y + CHR_H - 3 + TILESIZE,0,selmsg);
 }
 
+void plane_draw_object_list(u32 x, u32 y)
+{
+	ALLEGRO_COLOR col = (active_window == WINDOW_VRAM) ? 
+		al_map_rgb(PLANE_BORDER_COLOR) : 
+		al_map_rgb(PLANE_INACTIVE_COLOR);
+
+	al_set_target_bitmap(main_buffer);
+	// Put a border around the VRAM window
+	al_draw_rectangle(x - 4, y - 4, 
+		x + (CHR_W) + 4, y + (CHR_H) + 4,
+		col,PLANE_BORDER_THICKNESS);
+
+	// Draw the VRAM dump
+	al_draw_bitmap(fg_chr,x,y,0);
+
+
+
+}
 // Input handling routines
 
 void plane_handle_mouse(void)
