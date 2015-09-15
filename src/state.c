@@ -1,6 +1,5 @@
 #include "state.h"
-
-#include "col.h"
+#include "bg.h"
 
 gamestate state;
 
@@ -138,11 +137,13 @@ u16 state_update_scroll(u16 px, u16 py)
 	if (state.cam_y != sy_memo)
 	{
 		state_scroll_fgy(state.cam_y);
+		bg_scroll_y(state.cam_y);
 	}
 
 	if (state.cam_x != sx_memo)
 	{
 		state_scroll_fgx(state.cam_x);
+		bg_scroll_x(state.cam_x);
 	}
 
 	return (state.xscroll_cmd ? STATE_MOVED_X : 0) | (state.yscroll_cmd ? STATE_MOVED_Y : 0);
@@ -167,6 +168,7 @@ void state_dma_scroll(void)
 	{
 		VDP_setVerticalScroll(PLAN_A, state.yscroll_vals[0]);
 	}
+	bg_dma_scroll();
 }
 
 // Watch for the player entering/exiting a room.

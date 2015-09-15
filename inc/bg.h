@@ -6,6 +6,8 @@
 #include <genesis.h>
 
 void bg_load(u16 num);
-void bg_scroll(u16 camx, u16 camy);
+void bg_scroll_x(u16 amt);
+void bg_scroll_y(u16 amt);
+void bg_dma_scroll(void);
 
 #endif
