@@ -2,7 +2,7 @@
 # FROM DAT OERG866 YEYEYE
 FILE "C:\Users\Michael Moffitt\Development\LICS\xm\bgm2\bgm2.xm"
 TYPE BGM LOOP
-TEMPO 7
+TEMPO 6
 PSG 0
 NOISE 0
 FM 3
@@ -15,7 +15,7 @@ PCMC 6
 1 A
 2 4
 3 9
-4 6
+4 8
 5 B
 6 B
 7 2
