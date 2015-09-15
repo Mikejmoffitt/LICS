@@ -53,7 +53,6 @@ void room_setup(player *pl)
 	state_dma_scroll();
 	system_wait_v();
 	system_wait_v();
-	music_play(0);
 }
 
 void room_loop(void)
@@ -68,6 +67,7 @@ void room_loop(void)
 	while (1)
 	{
 		room_setup(&pl);
+		music_play(state.next_id);
 		state.next_id++;
 		u16 px;
 		u16 py;

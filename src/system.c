@@ -3,6 +3,7 @@
 #include "sprites.h"
 #include "mpad.h"
 #include "save.h"
+#include "music.h"
 
 static vu16 vbl_active;
 u16 system_osc;
@@ -53,6 +54,9 @@ void system_init(void)
 	{
 		VDP_setScanMode(INTERLACED_NONE);
 	}
+
+	// Set up echo engine
+	music_init();
 
 }
 

@@ -2,6 +2,6 @@
 #define _BGM_H_
 
 extern const u8 bgm_bgm1[41978];
-extern const u8 bgm_bgm2[21468];
+extern const u8 bgm_bgm2[21470];
 
 #endif // _BGM_H_

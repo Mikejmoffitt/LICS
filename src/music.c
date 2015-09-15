@@ -5,6 +5,8 @@
 #include "eef.h"
 #include "ewf.h"
 
+static u16 current_bgm;
+
 static const void *instrument_set[] =
 {
 	(void *)eif_bass1,			// 00: FM Bass 1
@@ -23,13 +25,39 @@ static const void *instrument_set[] =
 	0
 };
 
-void music_play(u16 num)
+static const void *bgm_set[] = 
+{
+	0,
+	(void *)bgm_bgm1,			// Alone in the dark
+	(void *)bgm_bgm2,			// Moskito
+	0
+};
+
+void music_init(void)
 {
 	// load instrument set into echo
 	echo_init((void *)instrument_set);
-	
-	// Play the track
-	echo_play_bgm((void *)&bgm_bgm2);
-	
-	(void)num;
+	current_bgm = 0;
+}
+
+// Track 0 is no music
+void music_play(u16 num)
+{
+	if (num)
+	{
+		if (num == current_bgm)
+		{
+			return;
+		}
+
+		// Play the track
+		void *bgm_ptr = (void *)bgm_set[num];
+
+		echo_play_bgm(bgm_ptr);
+		current_bgm = num;
+	}
+	else
+	{
+		echo_stop_bgm();
+	}
 }

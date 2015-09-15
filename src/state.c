@@ -95,7 +95,7 @@ u16 state_update_scroll(u16 px, u16 py)
 {
 	state.xscroll_cmd = 0;
 	state.yscroll_cmd = 0;
-	py -= 12; // Offset by half of lyle's height
+	py -= 16; // Offset by half of lyle's height plus a bit
 	// Horizontal scrolling
 	if (!state.hs_en)
 	{
