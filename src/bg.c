@@ -4,23 +4,38 @@
 #include "vramslots.h"
 #include "bgmaps.h"
 #include "state.h"
+#include "bgcoefs.h"
+
+static u16 current_bg;
 
 static u16 bg_xscroll_vals[STATE_PLANE_H];
 static u16 bg_yscroll_vals[STATE_PLANE_W / 2];
 static u16 bg_xscroll_cmd;
 static u16 bg_yscroll_cmd;
 
+/* BG scroll coefficient tables */
+
+static const fix16 *xcoeff_table[] = 
+{
+	0,
+	bgcoef_bg1,
+};
+
 void bg_load(u16 num)
 {
+	if (num == current_bg)
+	{
+		return;
+	}
 	VDP_doCRamDMA((u32)pal_bg1, 32 * BG_PALNUM, 16);
 	VDP_doVRamDMA((u32)gfx_bg1, 32 * BG_VRAM_SLOT, 64 * 16);
 	VDP_doVRamDMA((u32)map_bg1, VDP_getBPlanAddress(), 64 * 32);
+	current_bg = num;
 }
 
 void bg_scroll_x(u16 amt)
 {
 	amt = amt * -1;
-	amt = amt / 2;
 	if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
 	{
 		bg_xscroll_vals[0] = amt;
@@ -31,7 +46,7 @@ void bg_scroll_x(u16 amt)
 		int i = STATE_PLANE_H;
 		while (i--)
 		{
-			bg_xscroll_vals[i] = amt;
+			bg_xscroll_vals[i] = amt >> xcoeff_table[current_bg][i];
 		}
 		bg_xscroll_cmd = STATE_SCROLL_DMA;
 	}
