@@ -37,7 +37,6 @@ struct gamestate
 	map_file *current_room;
 	u8 *current_map;
 	u16 cam_x, cam_y;
-	u16 current_music;
 	u16 next_id;
 	u16 next_entrance;
 	u16 vs_en;

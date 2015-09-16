@@ -6,6 +6,27 @@ gamestate state;
 static s16 sx_memo;
 static s16 sy_memo;
 
+static void state_config_scrolling(void)
+{
+	state.vs_en = (state.current_room->h != 1);
+	state.hs_en = (state.current_room->w != 1);
+	// 1 x many rooms - 2tile V scroll
+	if (state.current_room->w == 1 && state.current_room->h != 1)
+	{
+		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_2TILE);
+	}
+	// many x 1 rooms - tile H scroll
+	else if (state.current_room->w > 1 && state.current_room->h == 1)
+	{
+		VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
+	}
+	// 1x1, or many x many rooms - just plane scroll
+	else
+	{
+		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+	}
+}
+
 // Set up a room by the specified ID.
 void state_load_room(u8 roomnum)
 {
@@ -21,30 +42,12 @@ void state_load_room(u8 roomnum)
 	state.current_map = (u8 *)&(state.current_room->map_data);
 	state.fresh_room = 1;
 
-	if (state.current_music != state.current_room->music)
-	{
-		state.current_music = state.current_room->music;
-		// Play music if it isn't already
-	}
 	state.current_id = roomnum;
 
-	// Set scrolling scheme
+	state_config_scrolling();
+	bg_load(state.current_room->background);
 
-	state.vs_en = (state.current_room->h != 1);
-	state.hs_en = (state.current_room->w != 1);
-
-	if (state.current_room->w == 1 && state.current_room->h == 1)
-	{
-		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
-	}
-	else if (state.current_room->w == 1 && state.current_room->h != 1)
-	{
-		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_2TILE);
-	}
-	else
-	{
-		VDP_setScrollingMode(HSCROLL_TILE, VSCROLL_PLANE);
-	}
+	music_play(state.current_room->music);
 }
 
 // Set the entire H scroll foreground table to amt

@@ -14,7 +14,7 @@ static const void *instrument_set[] =
 	(void *)eif_sawlead,		// 02: GM Saw 1
 	(void *)eef_flat,			// 03: PSG flat 
 	(void *)ewf_bassdrum1,		// 04: PCM bass drum 1
-	(void *)ewf_snare1,			// 05: PCM snare drum 1
+	(void *)ewf_snare2,			// 05: PCM snare drum 1
 	(void *)eef_hat,			// 06: PSG hihat
 	(void *)eef_qdecay,			// 07: PSG quick hit
 	(void *)ewf_hat1,			// 08: PCM hihat 1

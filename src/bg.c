@@ -14,31 +14,59 @@ static u16 bg_xscroll_cmd;
 static u16 bg_yscroll_cmd;
 
 /* BG scroll coefficient tables */
-
-static const fix16 *xcoeff_table[] = 
+static const fix16 *coeff_tables[] = 
 {
 	0,
 	bgcoef_bg1,
+	bgcoef_bg2,
 };
 
+// Set up the called-upon BG number's tiles, palette, and mapping
 void bg_load(u16 num)
 {
 	if (num == current_bg)
 	{
 		return;
 	}
-	VDP_doCRamDMA((u32)pal_bg1, 32 * BG_PALNUM, 16);
-	VDP_doVRamDMA((u32)gfx_bg1, 32 * BG_VRAM_SLOT, 64 * 16);
-	VDP_doVRamDMA((u32)map_bg1, VDP_getBPlanAddress(), 64 * 32);
+	u32 pal_src;
+	u32 gfx_src;
+	u16 gfx_len;
+	u32 map_src;
+	switch (num)
+	{
+		default:
+		case 1:
+			pal_src = (u32)pal_bg1;
+			gfx_src = (u32)gfx_bg1;
+			map_src = (u32)map_bg1;
+			gfx_len = 64 * 16;
+			break;
+		case 2:
+			pal_src = (u32)pal_bg2;
+			gfx_src = (u32)gfx_bg2;
+			map_src = (u32)map_bg2;
+			gfx_len = 32 * 16;
+			break;
+	}
+	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 16);
+	VDP_doVRamDMA(gfx_src, 32 * BG_VRAM_SLOT, gfx_len);
+	VDP_doVRamDMA(map_src, VDP_getBPlanAddress(), 64 * 32);
 	current_bg = num;
 }
 
 void bg_scroll_x(u16 amt)
 {
-	amt = amt * -1;
+	if (state.current_room->w == 1)
+	{
+		amt = 0;
+	}
+	else
+	{
+		amt = amt * -1;
+	}
 	if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
 	{
-		bg_xscroll_vals[0] = amt;
+		bg_xscroll_vals[0] = amt >> coeff_tables[current_bg][0];
 		bg_xscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else
@@ -46,7 +74,7 @@ void bg_scroll_x(u16 amt)
 		int i = STATE_PLANE_H;
 		while (i--)
 		{
-			bg_xscroll_vals[i] = amt >> xcoeff_table[current_bg][i];
+			bg_xscroll_vals[i] = amt >> coeff_tables[current_bg][i];
 		}
 		bg_xscroll_cmd = STATE_SCROLL_DMA;
 	}
@@ -54,10 +82,14 @@ void bg_scroll_x(u16 amt)
 
 void bg_scroll_y(u16 amt)
 {
-	amt = amt / 2;
-	if (VDP_getVerticalScrollingMode() == VSCROLL_PLANE)
+	if (!state.vs_en)
 	{
-		bg_yscroll_vals[0] = amt;
+		bg_yscroll_vals[0] = 16;
+		bg_yscroll_cmd = STATE_SCROLL_SINGLE;
+	}
+	else if (VDP_getVerticalScrollingMode() == VSCROLL_PLANE)
+	{
+		bg_yscroll_vals[0] = amt >> coeff_tables[current_bg][0];
 		bg_yscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else
@@ -65,11 +97,10 @@ void bg_scroll_y(u16 amt)
 		int i = STATE_PLANE_W / 2;
 		while (i--)
 		{
-			bg_yscroll_vals[i] = amt;
+			bg_yscroll_vals[i] = amt >> coeff_tables[current_bg][i];
 		}
 		bg_yscroll_cmd = STATE_SCROLL_DMA;
 	}
-
 }
 
 // Transfer scrolling information to VRAM as needed
