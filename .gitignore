@@ -21,7 +21,8 @@ src/*.swp
 
 out/out.bin
 out.bin
-
+util/TEMP
+util/TEMP/*
 # Shared objects (inc. Windows DLLs)
 *.so
 *.so.*
