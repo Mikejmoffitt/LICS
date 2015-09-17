@@ -58,8 +58,8 @@ void bg_scroll_x(u16 amt)
 {
 	if (!state.hs_en)
 	{
-		bg_scroll_vals[0] = 0;
-		bg_scroll_cmd = STATE_SCROLL_SINGLE;
+		bg_xscroll_vals[0] = 0;
+		bg_xscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
 	{
