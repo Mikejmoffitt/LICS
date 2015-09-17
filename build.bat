@@ -1,1 +1,1 @@
-make -f winmake
+%GDK_WIN%\bin\make -f winmake
