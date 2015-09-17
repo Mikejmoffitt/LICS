@@ -27,6 +27,8 @@ void sprites_dma_simple()
 	// No sprites placed, don't bother
 	if (next_spr == 0)
 	{
+		// Place a dummy sprite invisibly
+		sprite_put(-64,-64,0,0);
 		return;
 	}
 	// Terminate the list at the last sprite
