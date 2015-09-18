@@ -1,5 +1,6 @@
 #include "state.h"
 #include "bg.h"
+#include "music.h"
 
 gamestate state;
 
