@@ -181,7 +181,7 @@ static void player_cp(player *pl)
 					ctype = CUBE_PHANTOM;
 					break;
 			}
-			ctype = CUBE_PHANTOM;
+			ctype = CUBE_GREEN;
 			pl->holding_cube = ctype;
 			pl->cp_cnt = 0;
 			pl->cp -= cube_price;
@@ -639,7 +639,7 @@ static void player_cube_vertical_collision(player *pl, cube *c)
 		else if (pl->dy < FZERO)
 		{
 			// "Am I now stuck with my head in the cube?"
-			if (py + PLAYER_CHK_TOP< c->y + CUBE_BOTTOM)
+			if (py + PLAYER_CHK_TOP< c->y + CUBE_BOTTOM && py + PLAYER_CHK_BOTTOM > c->y + CUBE_BOTTOM)
 			{
 				py = c->y + CUBE_BOTTOM - PLAYER_CHK_TOP + 1;
 				pl->y = intToFix32(py);

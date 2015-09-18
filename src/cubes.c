@@ -83,8 +83,37 @@ static void cube_move(cube *c)
 	}
 }
 
+static void cube_degrade_dx(cube *c)
+{
+	if (c->dx > 0)
+	{
+		c->dx--;
+	}
+	else if (c->dx < 0)
+	{
+		c->dx++;
+	}
+}
+
+static void cube_clamp_dx(cube *c)
+{
+	if (c->dx > 0)
+	{
+		c->dx = CUBE_ON_CUBE_DX;
+	}
+	else if (c->dx < 0)
+	{
+		c->dx = CUBE_ON_CUBE_DX * -1;
+	}
+}
+
 static void cube_on_cube_collisions(cube *c)
 {
+	if (c->cube_col_timeout)
+	{
+		c->cube_col_timeout--;
+		return;
+	}
 	int i = CUBES_NUM;
 	while (i--)
 	{
@@ -100,7 +129,7 @@ static void cube_on_cube_collisions(cube *c)
 				c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
 				c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
 			{
-				if (c->type != CUBE_GREEN && c->state != CUBE_STATE_IDLE)
+				if (c->state != CUBE_STATE_IDLE)
 				{
 					cube_destroy(c);
 				}
@@ -120,14 +149,130 @@ static void cube_on_cube_collisions(cube *c)
 		}
 		else
 		{
-			
+			if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
+				c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
+				c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
+				c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
+			{
+				if (c->state != CUBE_STATE_IDLE)
+				{
+					if (c->dx == FZERO)
+					{
+						c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
+					}
+					else
+					{
+						cube_clamp_dx(c);
+					}
+					c->dy = CUBE_ON_CUBE_DY;
+					c->cube_col_timeout = CUBE_COL_T;
+				}
+				else if (c->dy != FZERO)
+				{
+					c->dy = FZERO;
+				}
+				if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
+				{
+					cube_destroy(d);
+				}
+				else if (d->dy != FZERO)
+				{
+					d->dy = FZERO;
+				}
+			}
 		}
 	}
 }
 
-// This is a very awkward transcription of the MMF implementation's cube 
-// physics, which I'd like to rewrite once it makes sense
-// - moffitt 9/13/15
+static void cube_eval_stopmoving(cube *c)
+{
+	if (c->bounce_count == 0 && c->dx == 0)
+	{
+		c->dy = FZERO;
+		c->y = ((c->y / 8) * 8) - 1;
+		c->state = CUBE_STATE_IDLE;
+	}
+	else if (c->bounce_count == 0)
+	{
+		c->bounce_count = 1;
+	}
+
+	if (c->dx == 0 && c->dy > CUBE_BOUNCE_CUTOFF)
+	{
+		c->bounce_count--;
+	}
+	else
+	{
+		c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
+	}
+}
+
+static void cube_do_ground_recoil(cube *c)
+{
+	// First push the cube out of the ground if it's stuck
+	c->y = (c->y / 8) * 8;
+	unsigned int i = CUBE_MAX_GROUND_PUSH;
+	while (i--)
+	{
+		u16 gnd_chk[2];
+		gnd_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM);
+		gnd_chk[1] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM);
+		/*
+		// If we're still stuck in the ground...
+		if (gnd_chk[0] || gnd_chk[1])
+		{
+			// ... push upwards by 8px and we'll try again.
+			c->y = c->y - 8;
+		}
+		else
+		{
+			// Not lodged in the ground, we're fine.
+			break;
+		}	
+		*/
+	}
+	c->dy = fix16Mul(c->dy, CUBE_BOUNCE_COEF);
+	c->dy = c->dy - (c->dy + c->dy);
+	cube_degrade_dx(c);
+	cube_eval_stopmoving(c);
+}
+
+static void cube_bg_bounce_ground(cube *c)
+{	
+	// Check the left and right bottom corners of the cube respectively
+	u16 gnd_chk[2];
+	gnd_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM);
+	gnd_chk[1] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM);
+	// Both left and right test passes for being on the ground
+	if (gnd_chk[0] && gnd_chk[1])
+	{
+		cube_do_ground_recoil(c);
+	}
+	else if (gnd_chk[0] || gnd_chk[1])
+	{
+		// One edge is missing. Check the center.
+		u16 cnt_chk = map_collision(c->x, c->y + CUBE_BOTTOM);
+		// Center checks out, do a normal bounce
+		if (cnt_chk)
+		{
+			cube_do_ground_recoil(c);
+		}
+		// Center didn't check out. Align it to the wall it's partially on.
+		else
+		{
+			if (gnd_chk[0])
+			{
+				c->x = ((c->x + 8) / 8) * 8;
+			}
+			else
+			{
+				c->x = ((c->x - 2) / 8) * 8;
+			}
+			return;
+		}
+	}
+}
+
 static void cube_bg_collision(cube *c)
 {
 	if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
@@ -142,47 +287,9 @@ static void cube_bg_collision(cube *c)
 		}
 		else
 		{
-			// We are bouncing on the ground
-			if (map_collision(c->x, c->y + CUBE_BOTTOM) && c->dx != FZERO)
+			if (c->dy > FZERO)
 			{
-				// Cube has ended up substantially in the ground
-				if (c->dy >= CUBE_BOUNCE_CUTOFF && map_collision(c->x, c->y))
-				{
-					c->dy = fix16Mul(CUBE_BOUNCE_COEF, c->dy);
-					if (c->bounce_count)
-					{
-						c->bounce_count--;
-					}
-				}
-				else if (c->bounce_count > 1 && c->dy <= CUBE_BOUNCE_CUTOFF)
-				{
-					c->dy = FIX16(2.0);
-					if (c->bounce_count)
-					{
-						c->bounce_count--;
-					}
-				}
-				else if (c->bounce_count <= 1)
-				{
-					c->state = CUBE_STATE_IDLE;
-					c->x = (c->x / 8) * 8;
-					c->y = (c->y / 8) * 8;
-					c->dy = 0;
-				}
-
-				// Ceiling collisoin
-				if (c->dx != FZERO && map_collision(c->x, c->y + CUBE_TOP))
-				{
-					c->dy = CUBE_CEILING_DY;
-				}
-
-				// if a cube is in a wall??
-				if (c->dx != FZERO && map_collision(c->x, c->y))
-				{
-					c->dx = fix16Mul(FIX16(-1.0), c->dx);
-					c->bounce_count = 1;
-					c->dy = FIX16(3.0);
-				}
+				cube_bg_bounce_ground(c);
 			}
 		}
 	}
@@ -299,6 +406,7 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 			c->dx = dx;
 			c->dy = dy;
 			c->type = type;
+			c->cube_col_timeout = 0;
 			c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
 			break;
 		}
