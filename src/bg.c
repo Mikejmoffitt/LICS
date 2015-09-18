@@ -56,21 +56,19 @@ void bg_load(u16 num)
 
 void bg_scroll_x(u16 amt)
 {
-	if (state.current_room->w == 1)
+	if (!state.hs_en)
 	{
-		amt = 0;
+		bg_xscroll_vals[0] = 0;
+		bg_xscroll_cmd = STATE_SCROLL_SINGLE;
 	}
-	else
+	else if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
 	{
-		amt = amt * -1;
-	}
-	if (VDP_getHorizontalScrollingMode() == HSCROLL_PLANE)
-	{
-		bg_xscroll_vals[0] = amt >> coeff_tables[current_bg][0];
+		bg_xscroll_vals[0] = (amt * -1) >> coeff_tables[current_bg][0];
 		bg_xscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else
 	{
+		amt = amt * -1;
 		int i = STATE_PLANE_H;
 		while (i--)
 		{
