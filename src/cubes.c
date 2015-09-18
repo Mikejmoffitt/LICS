@@ -11,7 +11,13 @@
 cube cubes[CUBES_NUM];
 
 static void cube_move(cube *c);
+static void cube_clamp_dx(cube *c);
+static void cube_degrade_dx(cube *c);
 static void cube_on_cube_collisions(cube *c);
+static void cube_eval_stopmoving(cube *c);
+static void cube_do_ground_recoil(cube *c);
+static void cube_bg_bounce_ground(cube *c);
+static void cube_bg_collision(cube *c);
 
 void cube_dma_tiles(void)
 {
@@ -273,6 +279,31 @@ static void cube_bg_bounce_ground(cube *c)
 	}
 }
 
+static void cube_bg_bounce_others(cube *c)
+{
+	// Check walls
+	u16 side_chk[2];
+	if (c->dx < 0)
+	{
+		side_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP);
+		side_chk[1] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM);
+	}
+	else
+	{
+		side_chk[0] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP);
+		side_chk[1] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM);
+	}
+	if (side_chk[0] || side_chk[1])
+	{
+		c->dx = c->dx * -1;
+		cube_clamp_dx(c);
+		if (side_chk[0])
+		{
+			c->x = (c->x / 8) * 8;
+		}
+	}
+}
+
 static void cube_bg_collision(cube *c)
 {
 	if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
@@ -287,13 +318,23 @@ static void cube_bg_collision(cube *c)
 		}
 		else
 		{
+			if (c->dx != 0)
+			{
+				cube_bg_bounce_others(c);
+			}
 			if (c->dy > FZERO)
 			{
 				cube_bg_bounce_ground(c);
 			}
+			if (c->dy < FZERO)
+			{
+
+			}
 		}
 	}
 }
+
+// Public stuff --------------------------------------------------------------
 
 void cubes_run(player *pl)
 {

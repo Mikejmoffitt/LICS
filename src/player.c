@@ -658,7 +658,8 @@ static void player_cube_eval_standing(player *pl, cube *c)
 	u16 px = fix32ToInt(pl->x);
 	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
 		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT && 
-		py + PLAYER_CHK_BOTTOM + 1>= c->y + CUBE_TOP)
+		py + PLAYER_CHK_BOTTOM + 1>= c->y + CUBE_TOP && 
+		py + PLAYER_CHK_TOP < c->y + CUBE_TOP)
 	{
 		// Already standing on a cube? Determine which cube is closer and
 		// use that cube as the "standing-on cube" reference for lifting.
@@ -707,14 +708,31 @@ static void player_cube_collision(player *pl)
 		// Cube overlaps player boundaries, it's a collision
 		else if (c->state == CUBE_STATE_IDLE && 
 			c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT + 1 && 
-			c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT - 1&& 
+			c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT - 1 && 
 			c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM + 1 && 
-			c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 1)
+			c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 1 )
 		{
 			player_cube_vertical_collision(pl, c);
 			player_cube_horizontal_collision(pl, c);
 			player_cube_eval_standing(pl, c);
 			player_kick_cube(pl, c);
+		}
+
+		// Check for cube bouncing on the fake cube player is holding
+		if (pl->holding_cube)
+		{
+			if (c->state == CUBE_STATE_AIR &&
+				c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT + 1 && 
+				c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT - 1 && 
+				c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 14 && 
+				c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 15 )
+			{
+				if (c->dx == FZERO)
+				{
+					c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
+				}
+				c->dy = CUBE_ON_CUBE_DY;
+			}
 		}
 	}
 }
