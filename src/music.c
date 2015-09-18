@@ -44,12 +44,12 @@ void music_init(void)
 // Track 0 is no music
 void music_play(u16 num)
 {
+	if (num == current_bgm)
+	{
+		return;
+	}
 	if (num)
 	{
-		if (num == current_bgm)
-		{
-			return;
-		}
 
 		// Play the track
 		void *bgm_ptr = (void *)bgm_set[num];
@@ -59,6 +59,7 @@ void music_play(u16 num)
 	}
 	else
 	{
+		current_bgm = 0;
 		echo_stop_bgm();
 	}
 }
