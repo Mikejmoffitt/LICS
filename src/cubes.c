@@ -16,6 +16,8 @@ static void cube_degrade_dx(cube *c);
 static void cube_on_cube_collisions(cube *c);
 static void cube_eval_stopmoving(cube *c);
 static void cube_do_ground_recoil(cube *c);
+static void cube_bg_bounce_sides(cube *c);
+static void cube_bg_bounce_top(cube *c);
 static void cube_bg_bounce_ground(cube *c);
 static void cube_bg_collision(cube *c);
 
@@ -70,7 +72,7 @@ static void cube_move(cube *c)
 		if (!map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM + 1) &&
 			!map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM + 1))
 		{
-			c->dx = FZERO;
+			c->dx = 0;
 			c->state = CUBE_STATE_AIR;
 			c->dy = CUBE_GRAVITY;
 			// lock to grid
@@ -162,13 +164,18 @@ static void cube_on_cube_collisions(cube *c)
 			{
 				if (c->state != CUBE_STATE_IDLE)
 				{
-					if (c->dx == FZERO)
+					if (c->state == CUBE_STATE_KICKED)
 					{
-						c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
+						c->dx = c->dx * -1;
+						c->state = CUBE_STATE_AIR;
+					}
+					if (c->dx)
+					{
+						cube_clamp_dx(c);
 					}
 					else
 					{
-						cube_clamp_dx(c);
+						c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
 					}
 					c->dy = CUBE_ON_CUBE_DY;
 					c->cube_col_timeout = CUBE_COL_T;
@@ -279,7 +286,7 @@ static void cube_bg_bounce_ground(cube *c)
 	}
 }
 
-static void cube_bg_bounce_others(cube *c)
+static void cube_bg_bounce_sides(cube *c)
 {
 	// Check walls
 	u16 side_chk[2];
@@ -301,7 +308,50 @@ static void cube_bg_bounce_others(cube *c)
 		{
 			c->x = (c->x / 8) * 8;
 		}
+		if (c->state == CUBE_STATE_KICKED)
+		{
+			c->state = CUBE_STATE_AIR;
+			c->dy = CUBE_ON_CUBE_DY;
+		}
 	}
+}
+
+static void cube_bg_bounce_top(cube *c)
+{
+	// Check the left and right bottom corners of the cube respectively
+	u16 gnd_chk[2];
+	gnd_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP);
+	gnd_chk[1] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP);
+	// Both left and right test passes for being on the ground
+	if (gnd_chk[0] && gnd_chk[1])
+	{
+		cube_do_ground_recoil(c);
+	}
+	else if (gnd_chk[0] || gnd_chk[1])
+	{
+		// One edge is missing. Check the center.
+		u16 cnt_chk = map_collision(c->x, c->y + CUBE_BOTTOM);
+		// Center checks out, do a normal bounce
+		if (cnt_chk)
+		{
+			c->dy = CUBE_CEILING_DY;
+		}
+		// Center didn't check out. Align it to the wall it's partially on.
+		else
+		{
+			if (gnd_chk[0])
+			{
+				c->x = ((c->x + 8) / 8) * 8;
+			}
+			else
+			{
+				c->x = ((c->x - 2) / 8) * 8;
+			}
+			return;
+		}
+	}
+
+	
 }
 
 static void cube_bg_collision(cube *c)
@@ -320,7 +370,7 @@ static void cube_bg_collision(cube *c)
 		{
 			if (c->dx != 0)
 			{
-				cube_bg_bounce_others(c);
+				cube_bg_bounce_sides(c);
 			}
 			if (c->dy > FZERO)
 			{
@@ -328,7 +378,7 @@ static void cube_bg_collision(cube *c)
 			}
 			if (c->dy < FZERO)
 			{
-
+				cube_bg_bounce_top(c);
 			}
 		}
 	}

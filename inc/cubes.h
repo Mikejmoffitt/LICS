@@ -60,10 +60,6 @@ Example values:
 // -------------- Cube physics constants ------------------------
 // Basics
 #define CUBE_GRAVITY FIX16(0.2)
-#define CUBE_BOUNCE_COEF FIX16(0.35)
-#define CUBE_BOUNCE_CUTOFF FIX16(-1.25)
-#define CUBE_TINYBOUNCE_HACK FIX16(-0.6)
-#define CUBE_CEILING_DY FIX16(3.0)
 
 // Green cube specifics
 #define CUBE_ON_CUBE_DY	FIX16(-3)
@@ -71,6 +67,10 @@ Example values:
 #define CUBE_MAX_GROUND_PUSH 8
 #define CUBE_COL_T 8
 
+#define CUBE_BOUNCE_COEF FIX16(0.35)
+#define CUBE_BOUNCE_CUTOFF FIX16(-1.25)
+#define CUBE_TINYBOUNCE_HACK FIX16(-0.6)
+#define CUBE_CEILING_DY FIX16(3.0)
 typedef struct cube cube;
 struct cube
 {

@@ -181,7 +181,7 @@ static void player_cp(player *pl)
 					ctype = CUBE_PHANTOM;
 					break;
 			}
-			ctype = CUBE_GREEN;
+			ctype = CUBE_PHANTOM;
 			pl->holding_cube = ctype;
 			pl->cp_cnt = 0;
 			pl->cp -= cube_price;
