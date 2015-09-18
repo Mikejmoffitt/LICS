@@ -79,7 +79,7 @@ struct cube
 	s16 y;
 	s16 dx;
 	fix16 dy;
-	u16 bounce_count;
+	s16 bounce_count;
 	u16 cube_col_timeout;
 	u16 type;
 };

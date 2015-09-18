@@ -168,6 +168,7 @@ static void cube_on_cube_collisions(cube *c)
 					{
 						c->dx = c->dx * -1;
 						c->state = CUBE_STATE_AIR;
+						c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
 					}
 					if (c->dx)
 					{
@@ -199,7 +200,7 @@ static void cube_on_cube_collisions(cube *c)
 
 static void cube_eval_stopmoving(cube *c)
 {
-	if (c->bounce_count == 0 && c->dx == 0)
+	if (c->bounce_count <= 0 && c->dx == 0)
 	{
 		c->dy = FZERO;
 		c->y = ((c->y / 8) * 8) - 1;
@@ -220,17 +221,15 @@ static void cube_eval_stopmoving(cube *c)
 	}
 }
 
-static void cube_do_ground_recoil(cube *c)
+static void cube_get_out_of_the_ground(cube *c)
 {
-	// First push the cube out of the ground if it's stuck
-	c->y = (c->y / 8) * 8;
 	unsigned int i = CUBE_MAX_GROUND_PUSH;
 	while (i--)
 	{
 		u16 gnd_chk[2];
 		gnd_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM);
 		gnd_chk[1] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM);
-		/*
+		
 		// If we're still stuck in the ground...
 		if (gnd_chk[0] || gnd_chk[1])
 		{
@@ -242,8 +241,13 @@ static void cube_do_ground_recoil(cube *c)
 			// Not lodged in the ground, we're fine.
 			break;
 		}	
-		*/
 	}
+}
+
+static void cube_do_ground_recoil(cube *c)
+{
+	// First push the cube out of the ground if it's stuck
+	c->y = (c->y / 8) * 8;
 	c->dy = fix16Mul(c->dy, CUBE_BOUNCE_COEF);
 	c->dy = c->dy - (c->dy + c->dy);
 	cube_degrade_dx(c);
@@ -288,6 +292,12 @@ static void cube_bg_bounce_ground(cube *c)
 
 static void cube_bg_bounce_sides(cube *c)
 {
+	// If we're lodged in the ground, then this isn't the time.
+	if (map_collision(c->x, c->y + CUBE_BOTTOM))
+	{
+		return;
+	}
+		
 	// Check walls
 	u16 side_chk[2];
 	if (c->dx < 0)
@@ -312,6 +322,7 @@ static void cube_bg_bounce_sides(cube *c)
 		{
 			c->state = CUBE_STATE_AIR;
 			c->dy = CUBE_ON_CUBE_DY;
+			c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
 		}
 	}
 }
