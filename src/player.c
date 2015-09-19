@@ -306,6 +306,7 @@ static void player_jump(player *pl)
 			// made this happen in the original but this is mimicing what I see
 			// when I play the game.
 			u16 cx = fix32ToInt(pl->x);
+			u16 cy = fix32ToInt(pl->y) - 12;
 			u16 px = fix32ToInt(pl->x);
 			u16 back_x = (pl->direction == PLAYER_LEFT) ? 
 				(px + PLAYER_CHK_RIGHT + 4) : 
@@ -316,10 +317,10 @@ static void player_jump(player *pl)
 			{
 				cx = ((cx + 4) / 8) * 8;
 			}
-		
+			
 			// Generate a cube to throw
 			cube_spawn(cx,
-				fix32ToInt(pl->y) - 12,
+				cy,
 				pl->holding_cube,
 				CUBE_STATE_AIR,
 				0, FIX16(4));
@@ -372,10 +373,23 @@ static void player_toss_cubes(player *pl)
 			cdx = (pl->direction == PLAYER_RIGHT) ? 2 : -2;
 			cdy = FIX16(-2.0);
 		}
+
+		u16 cy = fix32ToInt(pl->y) - 23;
+		u16 cx = fix32ToInt(pl->x);
+
+		// Check if the new cube would be in a wall, and push it down if 
+		// necessary by at most two tiles
+		if (map_collision(cx,cy + CUBE_TOP))
+		{
+			cy += 8;
+		}
+		if (map_collision(cx,cy + CUBE_TOP))
+		{
+			cy += 8;
+		}
 		
 		// Generate a cube to throw
-		cube_spawn(fix32ToInt(pl->x),
-			fix32ToInt(pl->y) - 23,
+		cube_spawn(cx, cy,
 			pl->holding_cube,
 			CUBE_STATE_AIR,
 			cdx, cdy);

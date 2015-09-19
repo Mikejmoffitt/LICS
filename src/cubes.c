@@ -80,14 +80,12 @@ static void cube_move(cube *c)
 		}
 	}
 	// Check for cube out of bounds
-	if (c->x + CUBE_LEFT > state.current_room->w * STATE_SC_W || 
-		c->x + CUBE_RIGHT < 0 ||
-		c->y + CUBE_TOP > state.current_room->h * STATE_SC_H || 
-		c->y + CUBE_BOTTOM < 0)
+	if (c->x + CUBE_RIGHT > state.current_room->w * STATE_SC_W || 
+		c->x + CUBE_LEFT < 0 ||
+		c->y + CUBE_BOTTOM > state.current_room->h * STATE_SC_H || 
+		c->y + CUBE_TOP < 0)
 	{
 		c->state = CUBE_STATE_INACTIVE;
-		c->x = -32;
-		c->y = -32;
 	}
 }
 
@@ -341,7 +339,7 @@ static void cube_bg_bounce_top(cube *c)
 	else if (gnd_chk[0] || gnd_chk[1])
 	{
 		// One edge is missing. Check the center.
-		u16 cnt_chk = map_collision(c->x, c->y + CUBE_BOTTOM);
+		u16 cnt_chk = map_collision(c->x, c->y + CUBE_TOP);
 		// Center checks out, do a normal bounce
 		if (cnt_chk)
 		{
