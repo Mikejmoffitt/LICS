@@ -472,7 +472,16 @@ void cubes_draw(void)
 
 void cube_draw_single(u16 x, u16 y, u16 type)
 {
-	u16 frame = TILE_ATTR_FULL(CUBE_PALNUM, 1, 0, 0, CUBE_VRAM_SLOT);
+	u16 palnum;
+	if (type == CUBE_BLUE || type == CUBE_ORANGE)
+	{
+		palnum = CUBE_ALT_PALNUM;
+	}
+	else
+	{
+		palnum = CUBE_PALNUM;
+	}
+	u16 frame = TILE_ATTR_FULL(palnum, 1, 0, 0, CUBE_VRAM_SLOT);
 	switch (type & 0xF00)
 	{
 		case CUBE_PHANTOM:

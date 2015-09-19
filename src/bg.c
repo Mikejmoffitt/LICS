@@ -48,7 +48,10 @@ void bg_load(u16 num)
 			gfx_len = 32 * 16;
 			break;
 	}
-	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 16);
+	// Only 8 words are loaded for the BG palette, since the other 8 are common
+	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 8);
+	// Load the common 8 words
+	VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
 	VDP_doVRamDMA(gfx_src, 32 * BG_VRAM_SLOT, gfx_len);
 	VDP_doVRamDMA(map_src, VDP_getBPlanAddress(), 64 * 32);
 	current_bg = num;

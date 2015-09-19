@@ -192,7 +192,6 @@ void plane_draw_map(u32 x, u32 y)
 
 void plane_draw_vram(u32 x, u32 y)
 {
-
 	ALLEGRO_COLOR col = (active_window == WINDOW_VRAM) ? 
 		al_map_rgb(PLANE_BORDER_COLOR) : 
 		al_map_rgb(PLANE_INACTIVE_COLOR);
@@ -224,22 +223,78 @@ void plane_draw_vram(u32 x, u32 y)
 	al_draw_text(font,al_map_rgb(255,255,255),x, y + CHR_H - 3 + TILESIZE,0,selmsg);
 }
 
+static int height_for_obj(int objnum)
+{
+
+}
+
+static int width_for_obj(int objnum)
+{
+	switch (objnum)
+	{
+		default:
+		case 1:
+		case 2:
+			return TILESIZE * 2;
+	}
+	return TILESIZE * 2;
+}
+
 void plane_draw_object_list(u32 x, u32 y)
 {
-	ALLEGRO_COLOR col = (active_window == WINDOW_VRAM) ? 
+	ALLEGRO_COLOR col = (active_window == WINDOW_OBJ) ? 
 		al_map_rgb(PLANE_BORDER_COLOR) : 
 		al_map_rgb(PLANE_INACTIVE_COLOR);
 
 	al_set_target_bitmap(main_buffer);
 	// Put a border around the VRAM window
 	al_draw_rectangle(x - 4, y - 4, 
-		x + (CHR_W) + 4, y + (CHR_H) + 4,
+		x + (OBJ_W) + 4, y + (OBJ_H) + 4,
 		col,PLANE_BORDER_THICKNESS);
+	plane_print_label(x, y, col, "Objects");
 
-	// Draw the VRAM dump
-	al_draw_bitmap(fg_chr,x,y,0);
+	// Now render all of the objects
+	for (int i = 0; i < MAP_NUM_OBJS; i++)
+	{
+		map_obj *o = &map_header.objects[i];
+		if (o->type)
+		{
+			int sx, sy;
+			sx = scroll_x * TILESIZE;
+			sy = scroll_y * TILESIZE;
+			if (o->x - sx > 0 && o->x - sx < PLANE_DRAW_W * TILESIZE && 
+				o->y - sy > 0 && o->y - sy < PLANE_DRAW_H * TILESIZE)
+			{
+				int px, py;
+				px = PLANE_DRAW_X + (o->x - sx);
+				py = PLANE_DRAW_Y + (o->y - sy);
+				al_draw_rectangle(px, py, 
 
-
+			
+		}i
+	}
+	for (u32 i = 0; i < PLANE_DRAW_H; i++)
+	{
+		if (i >= map_header.h * 32)
+		{
+			return;
+		}	
+		for (u32 j = 0; j < PLANE_DRAW_W; j++)
+		{
+			if (j >= map_header.w * MAP_WIDTH)
+			{
+				continue;	
+			}	
+			u32 t_idx = j + scroll_x;
+			t_idx += (i + scroll_y) * (MAP_WIDTH * map_header.w);
+			u16 t_choice = map_data[t_idx];
+			// determine coords of tile to pull from tileset from buffer
+			u32 t_x = TILESIZE * (t_choice % CHR_T_W);
+			u32 t_y = TILESIZE * (t_choice/CHR_T_W);
+			al_draw_bitmap_region(chr, t_x, t_y, TILESIZE, TILESIZE, 
+				x + (TILESIZE * j), y + (TILESIZE * i),0);
+		}
+	}
 
 }
 // Input handling routines
@@ -311,11 +366,11 @@ void plane_print_info(void)
 	// Position and selection information
 	char msg[64];
 	sprintf(msg, "Cursor: %d, %d", cursor_x, cursor_y);
-	plane_print_label(8, BUFFER_H - 24, al_map_rgb(255,255,255), msg);
+	plane_print_label(PLANE_DRAW_X, BUFFER_H - 24, al_map_rgb(255,255,255), msg);
 	sprintf(msg, "Scroll: %d, %d", scroll_x, scroll_y);
-	plane_print_label(32, BUFFER_H - 16, al_map_rgb(192,192,192), msg);
+	plane_print_label(PLANE_DRAW_X, BUFFER_H - 16, al_map_rgb(192,192,192), msg);
 	sprintf(msg, "Room Name: %s (#%d)", map_header.name, map_header.id);
-	plane_print_label(8, BUFFER_H - 8, al_map_rgb(255,128,128), msg);
+	plane_print_label(PLANE_DRAW_X, BUFFER_H - 8, al_map_rgb(255,128,128), msg);
 
 	// Settings
 	if (sel_size == SEL_FULL)
@@ -326,7 +381,7 @@ void plane_print_info(void)
 	{
 		sprintf(msg, "Brush size: small (8x8)");
 	}
-	plane_print_label(8, BUFFER_H - 32, al_map_rgb(128,255,128), msg);
+	plane_print_label(PLANE_DRAW_X, BUFFER_H - 32, al_map_rgb(128,255,128), msg);
 }
 
 void plane_scroll_limits(u32 *x, u32 *y)

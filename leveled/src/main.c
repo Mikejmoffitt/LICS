@@ -39,6 +39,7 @@ int main(int argc, char **argv)
 		display_handle_scroll();
 		plane_draw_vram(VRAM_DRAW_X, VRAM_DRAW_Y);
 		plane_draw_map(PLANE_DRAW_X, PLANE_DRAW_Y);
+		plane_draw_object_list(OBJ_DRAW_X, OBJ_DRAW_Y);
 		plane_handle_mouse();
 		plane_handle_io();
 		plane_print_info();

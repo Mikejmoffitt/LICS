@@ -18,6 +18,11 @@
 #define VRAM_DRAW_X 16
 #define VRAM_DRAW_Y 16
 
+#define OBJ_DRAW_X 16
+#define OBJ_DRAW_Y 176
+#define OBJ_W (16 * 8)
+#define OBJ_H (20 * 8)
+
 #define TILESIZE 8
 #define CHR_T_W 16
 #define CHR_T_H 16

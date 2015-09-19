@@ -50,7 +50,7 @@ void hud_draw_cp(u16 val)
 	while (i--)
 	{
 		// Default to "full" tile
-		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, system_osc & 1, HUD_VRAM_SLOT + 14);
+		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + 14);
 		u16 py = HUD_CP_Y - 9 - (i * 8) - euro_mod;
 		if (val == HUD_CP_BAR_HEIGHT)
 		{

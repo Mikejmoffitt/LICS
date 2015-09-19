@@ -173,7 +173,16 @@ void particles_draw(void)
 		{
 			continue;
 		}
-		sprite_put(tx, ty, size, TILE_ATTR_FULL(PARTICLES_PALNUM, 1, 0, 0, gfx));
+		u16 palnum;
+		if (p->type != PARTICLE_TYPE_FIZZLERED && p->type != PARTICLE_TYPE_EXPLOSION)
+		{
+			palnum = PARTICLES_ALT_PALNUM;
+		}
+		else
+		{	
+			palnum = PARTICLES_PALNUM;
+		}
+		sprite_put(tx, ty, size, TILE_ATTR_FULL(palnum, 1, 0, 0, gfx));
 	}
 }
 

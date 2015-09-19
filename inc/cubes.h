@@ -26,6 +26,8 @@
 #define CUBE_GREEN 0x0300
 #define CUBE_RED 0x0400
 #define CUBE_YELLOW 0x0800
+#define CUBE_ORANGE 0x1000
+#define CUBE_SPAWNER 0x2000
 // Yellow cube's lower bytes become a bitfield describing contents
 /*
 
