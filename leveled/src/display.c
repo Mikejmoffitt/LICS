@@ -1,24 +1,24 @@
 #include "display.h"
 
-u32 display_w;
-u32 display_h;
-u32 scroll_x;
-u32 scroll_y;
-u32 scroll_max_x;
-u32 scroll_max_y;
+unsigned int display_w;
+unsigned int display_h;
+unsigned int scroll_x;
+unsigned int scroll_y;
+unsigned int scroll_max_x;
+unsigned int scroll_max_y;
 
-s32 mouse_x;
-s32 mouse_y;
+int mouse_x;
+int mouse_y;
 
-u32 cursor_x;
-u32 cursor_y;
+unsigned int cursor_x;
+unsigned int cursor_y;
 
-u32 active_window;
+unsigned int active_window;
 
-u32 selection;
-u32 sel_size;
+unsigned int selection;
+unsigned int sel_size;
 
-u32 quit;
+unsigned int quit;
 
 ALLEGRO_DISPLAY *display;
 ALLEGRO_BITMAP *main_buffer;
@@ -92,7 +92,7 @@ void display_font_init(void)
 	}
 }
 
-u32 display_init(void)
+unsigned int display_init(void)
 {
 	display_w = BUFFER_W * PRESCALE;
 	display_h = BUFFER_H * PRESCALE;
@@ -207,7 +207,7 @@ void display_handle_scroll(void)
 	}
 }
 
-u32 display_mouse_region(u32 x, u32 y, u32 w, u32 h)
+unsigned int display_mouse_region(unsigned int x, unsigned int y, unsigned int w, unsigned int h)
 {
 	return ((mouse_x > x) && (mouse_x < (x+w)) && (mouse_y > y) && (mouse_y < (y+h)));
 }

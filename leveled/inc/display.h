@@ -20,23 +20,23 @@
 #define WINDOW_OBJ 2
 
 // Editor state variables
-extern u32 display_w;
-extern u32 display_h;
-extern u32 scroll_x;
-extern u32 scroll_y;
-extern u32 scroll_max_x;
-extern u32 scroll_max_y;
+extern unsigned int display_w;
+extern unsigned int display_h;
+extern unsigned int scroll_x;
+extern unsigned int scroll_y;
+extern unsigned int scroll_max_x;
+extern unsigned int scroll_max_y;
 
-extern s32 mouse_x;
-extern s32 mouse_y;
+extern int mouse_x;
+extern int mouse_y;
 
-extern u32 cursor_x;
-extern u32 cursor_y;
+extern unsigned int cursor_x;
+extern unsigned int cursor_y;
 
-extern u32 active_window;
+extern unsigned int active_window;
 
-extern u32 selection;
-extern u32 sel_size;
+extern unsigned int selection;
+extern unsigned int sel_size;
 
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *main_buffer;
@@ -48,7 +48,7 @@ extern ALLEGRO_MOUSE_STATE mousestate;
 extern ALLEGRO_FONT *font;
 extern ALLEGRO_EVENT_QUEUE *queue;
 
-extern u32 quit;
+extern unsigned int quit;
 
 extern char display_title[256];
 
@@ -56,9 +56,9 @@ void display_register_queue(void);
 void display_handle_queue(void);
 void display_update(void);
 void display_font_init(void);
-u32 display_init(void);
+unsigned int display_init(void);
 void display_shutdown(void);
 void display_handle_scroll(void);
-u32 display_mouse_region(u32 x, u32 y, u32 w, u32 h);
+unsigned int display_mouse_region(unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 
 #endif

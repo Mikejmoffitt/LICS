@@ -225,7 +225,14 @@ void plane_draw_vram(u32 x, u32 y)
 
 static int height_for_obj(int objnum)
 {
-
+	switch (objnum)
+	{
+		default:
+		case 1:
+		case 2:
+			return TILESIZE * 2;
+	}
+	return TILESIZE * 2;
 }
 
 static int width_for_obj(int objnum)
@@ -269,33 +276,12 @@ void plane_draw_object_list(u32 x, u32 y)
 				px = PLANE_DRAW_X + (o->x - sx);
 				py = PLANE_DRAW_Y + (o->y - sy);
 				al_draw_rectangle(px, py, 
-
-			
-		}i
-	}
-	for (u32 i = 0; i < PLANE_DRAW_H; i++)
-	{
-		if (i >= map_header.h * 32)
-		{
-			return;
-		}	
-		for (u32 j = 0; j < PLANE_DRAW_W; j++)
-		{
-			if (j >= map_header.w * MAP_WIDTH)
-			{
-				continue;	
-			}	
-			u32 t_idx = j + scroll_x;
-			t_idx += (i + scroll_y) * (MAP_WIDTH * map_header.w);
-			u16 t_choice = map_data[t_idx];
-			// determine coords of tile to pull from tileset from buffer
-			u32 t_x = TILESIZE * (t_choice % CHR_T_W);
-			u32 t_y = TILESIZE * (t_choice/CHR_T_W);
-			al_draw_bitmap_region(chr, t_x, t_y, TILESIZE, TILESIZE, 
-				x + (TILESIZE * j), y + (TILESIZE * i),0);
+					px + width_for_obj(o->type),
+					py + height_for_obj(o->type),
+					al_map_rgb(255,255,255),
+					2);
 		}
 	}
-
 }
 // Input handling routines
 

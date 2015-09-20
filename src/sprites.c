@@ -1,6 +1,6 @@
 #include "sprites.h"
 
-static u8 next_spr;
+static u16 next_spr;
 static u16 sprite_addr;
 static u16 sprite_table[NUM_SPRITES * 4];
 
@@ -37,7 +37,7 @@ void sprites_dma_simple()
 	next_spr = 0;
 }
 
-void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link)
+static inline void spr_set(u8 link, s16 x, s16 y, u8 size, u16 attr, u8 num)
 {
 	// Sprite table only holds 80 sprites
 	if (num >= NUM_SPRITES)
@@ -54,10 +54,14 @@ void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link)
 	*addr = 128 + x;
 }
 
+void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link)
+{
+	spr_set(link, x, y, size, attr, num);
+}
+
 void sprite_put(s16 x, s16 y, u8 size, u16 attr)
 {
-	sprite_set(next_spr,x,y,size,attr,next_spr+1);
-	next_spr++;
+	spr_set(next_spr, x, y, size, attr, next_spr++);
 }
 
 u8 sprites_get_next_sprite(void)
