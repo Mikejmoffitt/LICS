@@ -26,12 +26,20 @@ util\vgi2eif.exe xm\inst\sawlead.vgi res\eif\sawlead.eif
 util\vgi2eif.exe xm\inst\saw2.vgi res\eif\saw2.eif
 util\vgi2eif.exe xm\inst\saw2at.vgi res\eif\saw2at.eif
 
-REM Now for the actual arrangements
+REM Sound effects
 echo ---------------------------------------------------------------------
 echo Beginning xm2esf conversions
 echo ---------------------------------------------------------------------
 cd util
+xm2esf ..\xm\sfx\sfx_jump.xif ..\res\sfx\jump.esf
+xm2esf ..\xm\sfx\sfx_walk1.xif ..\res\sfx\walk1.esf
+xm2esf ..\xm\sfx\sfx_walk2.xif ..\res\sfx\walk2.esf
+
+REM Now for the BGM
+
 xm2esf ..\xm\bgm1\bgm1.xif ..\res\bgm\bgm1.esf
 xm2esf ..\xm\bgm2\bgm2.xif ..\res\bgm\bgm2.esf
+
+REM clean up the working dir (oh god)
 cd ..
 pause 

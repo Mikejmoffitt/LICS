@@ -4,6 +4,7 @@
 #include "eif.h"
 #include "eef.h"
 #include "ewf.h"
+#include "sfx.h"
 
 static u16 current_bgm;
 
@@ -62,4 +63,23 @@ void music_play(u16 num)
 		current_bgm = 0;
 		echo_stop_bgm();
 	}
+}
+
+void playsound(u16 snd)
+{
+	void *src;
+	switch (snd)
+	{
+		default:
+		case 0:
+			src = (void *)sfx_jump;
+			break;
+		case 1:
+			src = (void *)sfx_walk1;
+			break;
+		case 2:
+			src = (void *)sfx_walk2;
+			break;
+	}
+	echo_play_sfx(src);
 }

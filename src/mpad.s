@@ -3,7 +3,7 @@
 	.type	pad_read, @function
 pad_read:
 	move.l	d2,-(sp)
-	move.l	8(sp),d0
+	move.l	8(sp), d0
 	cmpi.w	#1, d0	/* Check for pad presence */
 	bhi		no_pad
 	add.w	d0, d0 /* Double d0 to get offset by 2 for each pad to read */
