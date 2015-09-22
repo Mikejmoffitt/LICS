@@ -14,11 +14,12 @@ static u16 bg_xscroll_cmd;
 static u16 bg_yscroll_cmd;
 
 /* BG scroll coefficient tables */
-static const fix16 *coeff_tables[] = 
+static const s16 *coeff_tables[] = 
 {
 	0,
 	bgcoef_bg1,
 	bgcoef_bg2,
+	bgcoef_bg3,
 };
 
 // Set up the called-upon BG number's tiles, palette, and mapping
@@ -28,9 +29,13 @@ void bg_load(u16 num)
 	{
 		return;
 	}
+	// Source data for CRAM palette (first 8 entries)
 	u32 pal_src;
+	// Source data for VRAM tiles
 	u32 gfx_src;
+	// Number of tiles
 	u16 gfx_len;
+	// Source data for graphics mapping
 	u32 map_src;
 	switch (num)
 	{
@@ -39,15 +44,23 @@ void bg_load(u16 num)
 			pal_src = (u32)pal_bg1;
 			gfx_src = (u32)gfx_bg1;
 			map_src = (u32)map_bg1;
-			gfx_len = 64 * 16;
+			gfx_len = 64;
 			break;
 		case 2:
 			pal_src = (u32)pal_bg2;
 			gfx_src = (u32)gfx_bg2;
 			map_src = (u32)map_bg2;
-			gfx_len = 32 * 16;
+			gfx_len = 32;
+			break;
+		case 3:
+			pal_src = (u32)pal_bg3;
+			gfx_src = (u32)gfx_bg3;
+			map_src = (u32)map_bg3;
+			gfx_len = 16;
 			break;
 	}
+	// Multiply length by 16 for number of words per tile
+	gfx_len = gfx_len << 4;
 	// Only 8 words are loaded for the BG palette, since the other 8 are common
 	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 8);
 	// Load the common 8 words

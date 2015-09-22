@@ -9,5 +9,6 @@ BIN gfx_outside2 "gfx/outside2.bin" 2 2 0
 
 BIN gfx_bg1 "gfx/bg1.bin" 2 2 0
 BIN gfx_bg2 "gfx/bg2.bin" 2 2 0
+BIN gfx_bg3 "gfx/bg3.bin" 2 2 0
 
 BIN gfx_font "gfx/font.bin" 2 2 0
