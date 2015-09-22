@@ -8,7 +8,9 @@
 #include "types.h"
 #include "mdgfx.h"
 #include "display.h"
+#include "objects.h"
 #include "map.h"
+#include "state.h"
 
 #define PLANE_DRAW_X 160
 #define PLANE_DRAW_Y 16
@@ -19,9 +21,9 @@
 #define VRAM_DRAW_Y 16
 
 #define OBJ_DRAW_X 16
-#define OBJ_DRAW_Y 176
+#define OBJ_DRAW_Y 168
 #define OBJ_W (16 * 8)
-#define OBJ_H (20 * 8)
+#define OBJ_H (24 * 8)
 
 #define TILESIZE 8
 #define CHR_T_W 16

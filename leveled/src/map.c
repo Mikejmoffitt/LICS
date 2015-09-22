@@ -138,5 +138,6 @@ void map_load()
 		printf("[map] Sprite Pal: %d\n",map_header.sprite_palette);
 		printf("[map] Background: %d\n",map_header.background);
 		fclose(f);
+		map_header.objects[0].type = 1;
 	}
 }

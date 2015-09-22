@@ -24,7 +24,7 @@ void system_init(void)
 	VDP_init();
 	// Configure interrupts
 	SYS_disableInts();
-	VDP_setHInterrupt(1);
+	VDP_setHInterrupt(0);
 	VDP_setHIntCounter(223 - 6);
 	SYS_setVIntCallback((_voidCallback *)v_int);
 	SYS_setHIntCallback((_voidCallback *)h_int);

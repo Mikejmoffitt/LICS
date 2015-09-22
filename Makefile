@@ -197,7 +197,7 @@ out.iso: out.elf_scd
 	@$(BINTOS) -align 128 -sizealign 128 -nullfill 136 $<
 
 %.s: %.res
-	@ $(RESCOMP) $< $@ > /dev/null
+	@ $(RESCOMP) $< $@
 
 boot/rom_head.bin: boot/rom_head.o
 	$(LD) $(LINKFLAGS) --oformat binary -o $@ $<

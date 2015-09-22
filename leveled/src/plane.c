@@ -247,6 +247,39 @@ static int width_for_obj(int objnum)
 	return TILESIZE * 2;
 }
 
+const char *string_for_obj(int objnum)
+{
+	const char *names[] = {
+		"(null)",
+		"Entrance",
+		"Cube",
+		0
+	};
+	return names[objnum];
+}
+
+static void plane_object_window(u32 x, u32 y)
+{
+	for (int i = 0; i < OBJ_H / TILESIZE; i++)
+	{
+		unsigned int idx = i + obj_list_scroll;
+		if (idx >= MAP_NUM_OBJS)
+		{
+			break;
+		}
+		map_obj *o = &map_header.objects[i];
+
+		ALLEGRO_COLOR col = (o->type) ? al_map_rgb(255,255,255) : al_map_rgb(80,80,80);
+
+		plane_print_label(x, y + (i * TILESIZE), col, string_for_obj(o->type));
+		if (obj_list_selected == idx)
+		{
+			al_draw_filled_rectangle(x, y + (i * TILESIZE) - 9, x + (OBJ_W), (y + TILESIZE) - 10, 
+			al_map_rgba(0,96,255,0));
+		}
+	}
+}
+
 void plane_draw_object_list(u32 x, u32 y)
 {
 	ALLEGRO_COLOR col = (active_window == WINDOW_OBJ) ? 
@@ -269,19 +302,21 @@ void plane_draw_object_list(u32 x, u32 y)
 			int sx, sy;
 			sx = scroll_x * TILESIZE;
 			sy = scroll_y * TILESIZE;
-			if (o->x - sx > 0 && o->x - sx < PLANE_DRAW_W * TILESIZE && 
-				o->y - sy > 0 && o->y - sy < PLANE_DRAW_H * TILESIZE)
+			int px, py;
+			px = PLANE_DRAW_X + o->x - sx;
+			py = PLANE_DRAW_Y + o->y - sy;
+			if (px > 0 && px < PLANE_DRAW_W * TILESIZE && 
+				py > 0 && py < PLANE_DRAW_H * TILESIZE)
 			{
-				int px, py;
-				px = PLANE_DRAW_X + (o->x - sx);
-				py = PLANE_DRAW_Y + (o->y - sy);
 				al_draw_rectangle(px, py, 
 					px + width_for_obj(o->type),
 					py + height_for_obj(o->type),
-					al_map_rgb(255,255,255),
+					al_map_rgba(255,255,255,128),
 					2);
+			}
 		}
 	}
+	plane_object_window(x, y + TILESIZE);
 }
 // Input handling routines
 
@@ -328,6 +363,7 @@ void plane_handle_mouse(void)
 			al_set_window_title(display, display_title);
 		}
 	}
+	// Mouse is in the VRAM region
 	else if (display_mouse_region(VRAM_DRAW_X,VRAM_DRAW_Y,CHR_W,CHR_H))
 	{
 		active_window = WINDOW_VRAM;
@@ -343,6 +379,11 @@ void plane_handle_mouse(void)
 			}
 			selection = sel_x + (CHR_T_W * sel_y);
 		}
+	}
+	// Mouse is in the object list region
+	else if (display_mouse_region(OBJ_DRAW_X, OBJ_DRAW_Y, OBJ_W, OBJ_H))
+	{
+		active_window = WINDOW_OBJ;
 	}
 
 }

@@ -1,11 +1,11 @@
 #include "player.h"
-
+#include "sfx.h"
 #include "gfx.h"
 #include "pal.h"
 #include "mpad.h"
 #include "vramslots.h"
 #include "sprites.h"
-
+#include "music.h"
 #include "state.h"
 #include "save.h"
 #include "system.h"
@@ -119,6 +119,7 @@ static void player_input(player *pl)
 		pl->input = 0;
 		pl->input_prev = 0;
 	}
+	echo_play_sfx((void *)sfx_walk1);
 }
 
 static void player_cp(player *pl)
@@ -181,7 +182,7 @@ static void player_cp(player *pl)
 					ctype = CUBE_PHANTOM;
 					break;
 			}
-//			ctype = CUBE_PHANTOM;
+			ctype = CUBE_GREEN;
 			pl->holding_cube = ctype;
 			pl->cp_cnt = 0;
 			pl->cp -= cube_price;
@@ -334,6 +335,7 @@ static void player_jump(player *pl)
 	return;
 do_jump:
 	pl->dy = PLAYER_JUMP_DY;
+	playsound(SFX_JUMP);
 	// Play SFX
 	return;
 }

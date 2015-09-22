@@ -14,8 +14,11 @@
 
 #define NUM_SPRITES 80
 
+u16 sprites_get_addr(void);
+
 // Moslty just set the sprite table address cache
 void sprites_init(void);
+
 // DMA up to spr_num, reset next_sprite
 void sprites_dma(u32 spr_num);
 
