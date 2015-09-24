@@ -4,6 +4,7 @@
 #include "mpad.h"
 #include "save.h"
 #include "music.h"
+#include "cdaudio.h"
 
 static vu16 vbl_active;
 u16 system_osc;
@@ -28,6 +29,7 @@ void system_init(void)
 	VDP_setHIntCounter(223 - 6);
 	SYS_setVIntCallback((_voidCallback *)v_int);
 	SYS_setHIntCallback((_voidCallback *)h_int);
+	SYS_setInterruptMaskLevel(0);
 	SYS_enableInts();
 
 	// Set up basic VDP settings
@@ -55,8 +57,9 @@ void system_init(void)
 		VDP_setScanMode(INTERLACED_NONE);
 	}
 
-	// Set up echo engine
+	// Set up sound stuff engine
 	music_init();
+	cdaudio_init();
 
 }
 

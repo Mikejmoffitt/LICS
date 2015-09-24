@@ -16,6 +16,7 @@
 #include "hud.h"
 #include "music.h"
 #include "bg.h"
+#include "cdaudio.h"
 
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
@@ -62,7 +63,7 @@ void room_loop(void)
 	state.current_id = 64;
 
 	player pl;
-	
+
 	player_init(&pl);
 	// Game is in progress
 	while (1)

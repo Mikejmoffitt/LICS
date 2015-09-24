@@ -1,6 +1,7 @@
 #include "state.h"
 #include "bg.h"
 #include "music.h"
+#include "cdaudio.h"
 
 gamestate state;
 
@@ -48,7 +49,14 @@ void state_load_room(u8 roomnum)
 	state_config_scrolling();
 	bg_load(state.current_room->background);
 
-	music_play(state.current_room->music);
+	if (cdaudio_is_active())
+	{
+		cdaudio_play_loop(state.current_room->music);
+	}
+	else
+	{
+		music_play(state.current_room->music);
+	}
 }
 
 // Set the entire H scroll foreground table to amt

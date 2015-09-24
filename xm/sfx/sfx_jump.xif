@@ -2,13 +2,13 @@
 # FROM DAT OERG866 YEYEYE
 FILE "..\xm\sfx\jump.xm"
 TYPE SFX NOLOOP
-TEMPO 4
-PSG 1
+TEMPO 1
+PSG 0
 NOISE 0
-FM 0
-PSG0 0
+FM 1
+FM0 1
 [Instruments]
-1 7
+1 0
 2 0
 3 0
 4 0
@@ -137,7 +137,7 @@ PSG0 0
 127 0
 128 0
 [Pitch]
-PSG0 -36
+FM0 0
 [Volume]
-PSG0 64
+FM0 32
 [END]
