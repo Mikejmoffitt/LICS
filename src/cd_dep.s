@@ -25,3 +25,12 @@ set_sr:
         move.l  4(sp),d1
         move.w  d1,sr
         rts
+
+		.global segacd_gen_lvl2
+segacd_gen_lvl2:
+        lea     0xA12000,a0
+        move.w  (a0),d0
+        ori.w   #0x0100,d0
+        move.w  d0,(a0)
+        rte
+

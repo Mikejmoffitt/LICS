@@ -6,12 +6,20 @@
 #include "music.h"
 #include "cdaudio.h"
 
+extern void segacd_gen_lvl2(void);
+
 static vu16 vbl_active;
 u16 system_osc;
 
 static _voidCallback *v_int(void)
 {
 	vbl_active = 1;
+	// Poke Sega CD if we're doing that
+	if (segacd_bios_addr)
+	{
+		volatile unsigned short *reg = (volatile unsigned short *)SEGACD_REG_CPU;
+		*reg |= 0x0100;
+	}
 	return NULL;
 }
 

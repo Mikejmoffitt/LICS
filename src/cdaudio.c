@@ -12,14 +12,11 @@
 #define SCD_BIOSLOC_2 0x416000
 #define SCD_BIOSLOC_3 0x41AD00
 
-extern uint32_t vblank_vector;
-extern uint32_t gen_lvl2;
-
 extern unsigned int Sub_Start;
 extern unsigned int Sub_End;
 extern void Kos_Decomp(volatile unsigned char *src, volatile unsigned char *dst);
 
-static volatile unsigned char *bios_loc;
+volatile unsigned char *segacd_bios_addr;
 
 static char ack;
 
@@ -126,7 +123,7 @@ static int decompress_bios(void)
 	memset((void *)0x420000, 0, 0x20000);
 
 	// Decompress BIOS here
-	Kos_Decomp(bios_loc, (unsigned char *)0x420000);
+	Kos_Decomp(segacd_bios_addr, (unsigned char *)0x420000);
 
 	// Copy program to program RAM
 	memcpy((void *)0x426000, &Sub_Start, (int)&Sub_End - (int)&Sub_Start);
@@ -149,8 +146,8 @@ static void start_subcpu(void)
 		*(volatile unsigned char *)(0xA12001) = 0x01;
 	}
 
-//	*(unsigned int *)(&vblank_vector) = (unsigned int)&gen_lvl2;
-//	set_sr(0x2000);
+	// Enable level 2 interrupts on sub-CPU to poke it during vblank
+	*(volatile unsigned char *)(0xA12000) = 0x8000;
 
 	// Wait for the sub-CPU to set sub comm port to indicate it is
 	// alive and working correctly
@@ -176,8 +173,8 @@ static void start_subcpu(void)
 
 int cdaudio_init(void)
 {
-	bios_loc = check_hardware();
-	if (!bios_loc)
+	segacd_bios_addr = check_hardware();
+	if (!segacd_bios_addr)
 	{
 		return 0;
 	}
@@ -185,7 +182,7 @@ int cdaudio_init(void)
 	subcpu_setup();
 	if (!decompress_bios())
 	{
-		bios_loc = 0;
+		segacd_bios_addr = 0;
 		return 0;
 	}
 	start_subcpu();
@@ -194,7 +191,7 @@ int cdaudio_init(void)
 
 void cdaudio_play_once(unsigned char trk)
 {
-	if (!bios_loc)
+	if (!segacd_bios_addr)
 	{
 		return;
 	}
@@ -220,7 +217,7 @@ void cdaudio_pause(void)
 
 }
 
-int cdaudio_is_active(void)
+inline int cdaudio_is_active(void)
 {
-	return (bios_loc) ? 1 : 0;
+	return (segacd_bios_addr) ? 1 : 0;
 }
