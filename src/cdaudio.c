@@ -15,6 +15,7 @@
 extern unsigned int Sub_Start;
 extern unsigned int Sub_End;
 extern void Kos_Decomp(volatile unsigned char *src, volatile unsigned char *dst);
+extern short set_sr(short new_sr);
 
 volatile unsigned char *segacd_bios_addr;
 
@@ -24,9 +25,8 @@ static char wait_cmd_ack(void)
 {
 	char ack = 0;
 
-	while (!ack)
+	while (*(volatile unsigned char *)(0xA1200F) == 0)
 	{
-		ack = *(volatile unsigned char *)(0xA1200F);
 	}
 	return ack;
 }
@@ -134,6 +134,21 @@ static int decompress_bios(void)
 	return 1;
 }
 
+void cdaudio_check_disc(void)
+{
+	do_cmd_blocking('C');
+	ack = wait_cmd_ack();
+	*(volatile unsigned char *)0xA1200E = 0x00;
+}
+
+inline void wait(int iterations)
+{
+	while (iterations--)
+	{
+		// Do nothing
+	}
+}
+
 static void start_subcpu(void)
 {
 	*(volatile unsigned char *)(0xA1200E) = 0x00; // Clear main comm port
@@ -148,27 +163,33 @@ static void start_subcpu(void)
 
 	// Enable level 2 interrupts on sub-CPU to poke it during vblank
 	*(volatile unsigned char *)(0xA12000) = 0x8000;
+	set_sr(0x2000);
 
 	// Wait for the sub-CPU to set sub comm port to indicate it is
 	// alive and working correctly
 	while (*(volatile char *)(0xA1200F) != 'I')
 	{
 		// Show cool junk while we wait
-		VDP_setPaletteColor(0, GET_HVCOUNTER);
 		static int timeout = 0;
 		timeout++;
 
-		if (timeout > 1000000)
+		if (timeout > 2000000)
 		{
 			return;
 		}
 	}
 
+	// Wait for sub-CPU being ready to receive commands
 	while (*(volatile char *)(0xA1200F) != 0x00)
 	{
-
-		VDP_setPaletteColor(0,0x0EE);
+		VDP_setPaletteColor(0,GET_HVCOUNTER);
 	}
+
+	wait(300);
+
+	cdaudio_check_disc();
+
+	wait(100);
 }
 
 int cdaudio_init(void)
@@ -191,10 +212,6 @@ int cdaudio_init(void)
 
 void cdaudio_play_once(unsigned char trk)
 {
-	if (!segacd_bios_addr)
-	{
-		return;
-	}
 	*(volatile unsigned short *)(0xA12010) = (unsigned short)trk;
 	*(volatile unsigned char *)(0xA12012) = 0x00;
 	do_cmd_blocking('P');
@@ -204,12 +221,14 @@ void cdaudio_play_once(unsigned char trk)
 
 void cdaudio_play_loop(unsigned char trk)
 {
-
+	
 }
 
 void cdaudio_stop(void)
 {
-
+	do_cmd_blocking('S');
+	ack = wait_cmd_ack();
+	*(unsigned char *)0xA1200E = 0x00;
 }
 
 void cdaudio_pause(void)
