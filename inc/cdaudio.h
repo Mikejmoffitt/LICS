@@ -53,7 +53,6 @@
 extern volatile uint8_t *segacd_bios_addr;
 
 int16_t cdaudio_init(void);
-int16_t cdaudio_get_status(void);
 
 // Playback functions. Returns non-zero when the play command worked.
 // Will return zero if there is no disc, or the tray is open.

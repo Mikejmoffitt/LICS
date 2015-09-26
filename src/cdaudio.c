@@ -7,11 +7,23 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define WANT_LOGGING 1
+#define WANT_LOGGING 0
 
 #ifndef WANT_LOGGING
 #define WANT_LOGGING 0
 #endif
+
+typedef struct cd_info cd_info;
+struct cd_info
+{
+	uint16_t bios_stat;
+	uint8_t first_tno;
+	uint8_t last_tno;
+	uint8_t drv_vers;
+	uint8_t flag;
+};
+
+static cd_info info;
 
 /* ----- Hardware access utils ----- */
 volatile uint8_t *segacd_bios_addr;
@@ -30,11 +42,11 @@ static volatile int8_t *reg_comm_w = (volatile uint8_t *)(SEGACD_REG_COMM);
 static volatile uint16_t *track_w = (volatile uint16_t *)SEGACD_TRACK_W;
 static volatile uint16_t *pmode_w = (volatile uint16_t *)SEGACD_PMODE_W;
 
-static volatile uint16_t *bios_stat = (volatile uint16_t *)SEGACD_BIOS_STAT;
-static volatile uint8_t *first_tno = (volatile uint8_t *)SEGACD_FIRST_TNO;
-static volatile uint8_t *last_tno = (volatile uint8_t *)SEGACD_LAST_TNO;
-static volatile uint8_t *drv_vers = (volatile uint8_t *)SEGACD_DRV_VERS;
-static volatile uint8_t *flag = (volatile uint8_t *)SEGACD_FLAG;
+static volatile uint16_t *bios_stat_ptr = (volatile uint16_t *)SEGACD_BIOS_STAT;
+static volatile uint8_t *first_tno_ptr = (volatile uint8_t *)SEGACD_FIRST_TNO;
+static volatile uint8_t *last_tno_ptr = (volatile uint8_t *)SEGACD_LAST_TNO;
+static volatile uint8_t *drv_vers_ptr = (volatile uint8_t *)SEGACD_DRV_VERS;
+static volatile uint8_t *flag_ptr = (volatile uint8_t *)SEGACD_FLAG;
 
 static void log(const char *s)
 {
@@ -62,6 +74,11 @@ static inline char comm_read(void)
 	return *reg_comm_r;
 }
 
+static inline int16_t cdaudio_get_status(void)
+{
+	return (info.bios_stat >> 8);
+}
+
 // Block until sub-CPU bus is requested
 static inline void bus_req(void)
 {
@@ -76,13 +93,10 @@ static int8_t wait_cmd_ack(void)
 {
 	int8_t ack = 0;
 
-	log("Waiting on ACK...");
 	while (!ack)
 	{
 		ack = comm_read();
 	}
-
-	log("Got ACK");
 
 	return ack;
 }
@@ -210,33 +224,49 @@ void cdaudio_check_disc(void)
 	comm_write(SEGACD_CMD_ACK);
 }
 
-// Wait until the player is done reading the TOC or scanning
-static void wait_for_read(void)
+
+static char get_disc_info(void)
 {
+	char ack;
+	wait_do_cmd('D');
+	ack = wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
+	info.bios_stat = *bios_stat_ptr;
+	info.first_tno = *first_tno_ptr;
+	info.last_tno = *last_tno_ptr;
+	info.drv_vers = *drv_vers_ptr;
+	info.flag = *flag_ptr;
+	return ack;
+}
+// Wait until the player is done reading the TOC or scanning
+static void wait_for_ready(void)
+{
+	log("Waiting for drive to be ready");
 	int8_t ack;
 	int8_t ok = 0;
 	while (!ok)
 	{
-		wait_do_cmd('D');
-		ack = wait_cmd_ack();
-		comm_write(SEGACD_CMD_ACK);
+		ack = get_disc_info();
 		if (ack == 'D')
 		{
 			switch (cdaudio_get_status())
 			{
 				case SEGACD_STAT_SCANNING:
 				case SEGACD_STAT_READINGTOC:
-					log("Not ready to play yet");
 					ok = 0;
 					break;
 				default:
+					if (info.bios_stat & 0x8000)
+					{
+						ok = 0;
+						break;
+					}
 					ok = 1;
 					break;
 			}
 		}
-		delay(1000);
+		delay(10000);
 	}
-	delay(10000);	
 }
 
 static void start_subcpu(void)
@@ -276,8 +306,6 @@ static void start_subcpu(void)
 		__asm__("nop");
 	}
 	log("CPU is ready.");
-
-	delay(100);
 }
 
 int16_t cdaudio_init(void)
@@ -297,74 +325,57 @@ int16_t cdaudio_init(void)
 	start_subcpu();
 	cdaudio_check_disc();
 
-	// First time get disc info
-	wait_do_cmd('D');
-	wait_cmd_ack();
-	comm_write(SEGACD_CMD_ACK);
-	wait_for_read();
+	get_disc_info();
+	wait_for_ready();
 	return 1;
 }
 
-int16_t cdaudio_get_status(void)
-{
-	return (*bios_stat >> 8);
-}
-
-int16_t cdaudio_play_once(uint16_t trk)
+static inline uint16_t cdaudio_playtrack(uint16_t trk)
 {
 	int8_t ack;
 
 	cdaudio_check_disc();
-	wait_for_read();
-	wait_do_cmd('D');
-	wait_cmd_ack();
-	comm_write(SEGACD_CMD_ACK);
+	get_disc_info();
+
 	if (cdaudio_get_status() == SEGACD_STAT_NODISC ||
 	    cdaudio_get_status() == SEGACD_STAT_OPEN ||
-		trk > *last_tno)
+		trk > info.last_tno ||
+		trk < info.first_tno)
 	{
 		return 0;
 	}
 
 	*track_w = trk;
-	*pmode_w = SEGACD_PLAYMODE_ONCE;
 	wait_do_cmd('P');
 	ack = wait_cmd_ack();
 	comm_write(SEGACD_CMD_ACK);
 	return 1;
+}
+
+/* ----- User functions ----- */
+
+int16_t cdaudio_play_once(uint16_t trk)
+{
+	*pmode_w = SEGACD_PLAYMODE_ONCE;
+	return cdaudio_playtrack(trk);
 }
 
 int16_t cdaudio_play_loop(uint16_t trk)
 {
-	int8_t ack;
-
-	cdaudio_check_disc();
-	wait_for_read();
-	wait_do_cmd('D');
-	wait_cmd_ack();
-	comm_write(SEGACD_CMD_ACK);
-	if (cdaudio_get_status() == SEGACD_STAT_NODISC ||
-	    cdaudio_get_status() == SEGACD_STAT_OPEN ||
-		trk > *last_tno)
-	{
-		VDP_setPaletteColor(0xF,0xEEE);
-		return 0;
-	}
-
-	*track_w = trk;
 	*pmode_w = SEGACD_PLAYMODE_LOOP;
-	wait_do_cmd('P');
-	ack = wait_cmd_ack();
-	comm_write(SEGACD_CMD_ACK);
-	return 1;
+	return cdaudio_playtrack(trk);
 }
 
 void cdaudio_stop(void)
 {
-	int8_t ack;
-	wait_do_cmd('S');
-	ack = wait_cmd_ack();
-	comm_write(SEGACD_CMD_ACK);
+	if (cdaudio_is_active())
+	{
+		int8_t ack;
+		wait_do_cmd('S');
+		ack = wait_cmd_ack();
+		comm_write(SEGACD_CMD_ACK);
+		delay(10000);
+	}
 }
 
 void cdaudio_pause(void)

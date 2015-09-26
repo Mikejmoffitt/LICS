@@ -44,17 +44,15 @@ void room_setup(player *pl)
 	cube_dma_tiles();
 	hud_dma_tiles();
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < 3; i++)
 	{
-		cube_spawn(128 + 8 + (32 * i),(240 - 33), CUBE_GREEN, CUBE_STATE_IDLE, 0, 0);
+		cube_spawn(128 + 8 + (32 * (i+3)),(240 - 33), CUBE_GREEN, CUBE_STATE_IDLE, 0, 0);
 	}
 
 	// First graphical commit
 	state_update_scroll(px, py);
 	player_draw(pl);
 	state_dma_scroll();
-	system_wait_v();
-	system_wait_v();
 }
 
 void room_loop(void)
@@ -112,12 +110,12 @@ void room_loop(void)
 			DEBUG_BGCOL(0x0EE);
 			player_dma(&pl);
 			// Enable the VDP here at the end. This is to hide frame 0
-			VDP_setEnable(1);
 
 			if (pl.input & KEY_A)
 			{
 				pl.cp = 30;
 			}
+			VDP_setEnable(1);
 
 		}
 		while (!state_watch_transitions(px,py,pl.dx,pl.dy));
