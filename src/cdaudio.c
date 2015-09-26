@@ -4,15 +4,14 @@
 
 #include "cdaudio.h"
 #include <genesis.h>
+#include <string.h>
 #include <stdlib.h>
 
-#define SCD_OFFSET 0x6D
+#define WANT_LOGGING 1
 
-#define SCD_BIOSLOC_1 0x415800
-#define SCD_BIOSLOC_2 0x416000
-#define SCD_BIOSLOC_3 0x41AD00
-
-#define DBCOL(c) VDP_setPaletteColor(0,c)
+#ifndef WANT_LOGGING
+#define WANT_LOGGING 0
+#endif
 
 /* ----- Hardware access utils ----- */
 volatile uint8_t *segacd_bios_addr;
@@ -27,6 +26,29 @@ static volatile uint16_t *reg_hint = (volatile uint16_t *)SEGACD_REG_HINT;
 static volatile uint16_t *reg_stopwatch = (volatile uint16_t *)SEGACD_REG_STOPWATCH;
 static volatile int8_t *reg_comm_r = (volatile int8_t *)(SEGACD_REG_COMM + 1);
 static volatile int8_t *reg_comm_w = (volatile uint8_t *)(SEGACD_REG_COMM);
+
+static volatile uint16_t *track_w = (volatile uint16_t *)SEGACD_TRACK_W;
+static volatile uint16_t *pmode_w = (volatile uint16_t *)SEGACD_PMODE_W;
+
+static volatile uint16_t *bios_stat = (volatile uint16_t *)SEGACD_BIOS_STAT;
+static volatile uint8_t *first_tno = (volatile uint8_t *)SEGACD_FIRST_TNO;
+static volatile uint8_t *last_tno = (volatile uint8_t *)SEGACD_LAST_TNO;
+static volatile uint8_t *drv_vers = (volatile uint8_t *)SEGACD_DRV_VERS;
+static volatile uint8_t *flag = (volatile uint8_t *)SEGACD_FLAG;
+
+static void log(const char *s)
+{
+	if (WANT_LOGGING)
+	{
+		static int y = 0;
+		VDP_drawText(s, 1, y);
+		y++;
+		if (y > 27)
+		{
+			y = 0;
+		}
+	}
+}
 
 // Write to writeonly COMM port; upper 8 bits
 static inline void comm_write(int8_t msg)
@@ -54,10 +76,13 @@ static int8_t wait_cmd_ack(void)
 {
 	int8_t ack = 0;
 
+	log("Waiting on ACK...");
 	while (!ack)
 	{
 		ack = comm_read();
 	}
+
+	log("Got ACK");
 
 	return ack;
 }
@@ -74,6 +99,7 @@ static void wait_do_cmd(int8_t cmd)
 
 static inline void wait_cpu_running(void)
 {
+	log("Waiting for Sub-CPU to run");
 	while ((*reg_cpu & 0x0001) == 0)
 	{
 		*reg_cpu = (*reg_cpu & 0xFF00) | 0x01;
@@ -95,7 +121,7 @@ static int32_t memcmp(const volatile void *s1, const volatile void *s2, int32_t 
 	return 0;
 }
 
-static inline void wait(int32_t iterations)
+static inline void delay(int32_t iterations)
 {
 	while (iterations--)
 	{
@@ -111,6 +137,7 @@ static inline void wait(int32_t iterations)
 static volatile uint8_t *check_hardware(void)
 {
 	volatile uint8_t *bios;
+	log("Checking for CD Hardware");
 
 	bios = (volatile uint8_t *)SCD_BIOSLOC_1;
 	if (memcmp(bios + SCD_OFFSET, "SEGA", 4))
@@ -137,6 +164,7 @@ static volatile uint8_t *check_hardware(void)
 static void reset_gate_array(void)
 {
 	volatile uint8_t *loc2;
+	log("Resetting gate array and sub-CPU");
 	loc2 = (volatile uint8_t *)0xA12001;
 
 	*reg_mem = 0xFF00;
@@ -148,11 +176,13 @@ static void reset_gate_array(void)
 // Reset Sub-CPU and req bus
 static void subcpu_setup(void)
 {
+	log("Setting up Sub-CPU (busreq)");
 	bus_req();
 }
 
 static int32_t decompress_bios(void)
 {
+	log("Decompressing BIOS");
 	// Configure for writing
 	*reg_mem = 0x0002;
 	
@@ -166,10 +196,6 @@ static int32_t decompress_bios(void)
 	memcpy((void *)SEGACD_PROGRAM_OFF, &Sub_Start, (int)&Sub_End - (int)&Sub_Start);
 	if (memcmp((void *)SEGACD_PROGRAM_OFF, &Sub_Start, (int)&Sub_End - (int)&Sub_Start))
 	{
-		while(1)
-		{
-			DBCOL(0x00E);
-		}
 		return 0;
 	}
 	return 1;
@@ -177,30 +203,55 @@ static int32_t decompress_bios(void)
 
 void cdaudio_check_disc(void)
 {
+	log("Checking disc... ");
 	int8_t ack;
 	wait_do_cmd('C');
-	DBCOL(0xEEE);
 	ack = wait_cmd_ack();
-	DBCOL(0x624);
-	comm_write(0x00);
+	comm_write(SEGACD_CMD_ACK);
+}
+
+// Wait until the player is done reading the TOC or scanning
+static void wait_for_read(void)
+{
+	int8_t ack;
+	int8_t ok = 0;
+	while (!ok)
+	{
+		wait_do_cmd('D');
+		ack = wait_cmd_ack();
+		comm_write(SEGACD_CMD_ACK);
+		if (ack == 'D')
+		{
+			switch (cdaudio_get_status())
+			{
+				case SEGACD_STAT_SCANNING:
+				case SEGACD_STAT_READINGTOC:
+					log("Not ready to play yet");
+					ok = 0;
+					break;
+				default:
+					ok = 1;
+					break;
+			}
+		}
+		delay(1000);
+	}
+	delay(10000);	
 }
 
 static void start_subcpu(void)
 {
-	comm_write(0x00); // Clear main comm port
+	log("Starting Sub-CPU");
+	comm_write(SEGACD_CMD_ACK); // Clear main comm port
 	*reg_mem = 0x2A01;
-	// *(volatile uint8_t *)(0xA12002) = 0x2A; // Write-protect up to 0x05400
-	// *(volatile uint8_t *)(0xA12001) = 0x01; // Clear bus req
-	
-	DBCOL(0xEEE);
 
 	// Wait for the sub-CPU to be running
 	wait_cpu_running();
 
-	DBCOL(0x080);
 
 	// Enable level 2 interrupts on sub-CPU to poke it during vblank
 
+	log("Enabling level 2 interrupts on sub-CPU");
 	*reg_cpu = (*reg_cpu & 0xEFFF) | SEGACD_CPU_IEN_MASK;
 	set_sr(0x2000);
 
@@ -210,7 +261,6 @@ static void start_subcpu(void)
 	{
 		// Show cool junk while we wait
 		static int32_t timeout = 0;
-		DBCOL(timeout);
 		timeout++;
 
 		if (timeout > 2000000)
@@ -218,19 +268,19 @@ static void start_subcpu(void)
 			return;
 		}
 	}
-	DBCOL(0x048);
+	log("Got signal from Sub-CPU, waiting for ready...");
 
 	// Wait for sub-CPU being ready to receive commands
 	while (comm_read() != 0x00)
 	{
 		__asm__("nop");
 	}
-	DBCOL(0xE62);
+	log("CPU is ready.");
 
-	wait(100);
+	delay(100);
 }
 
-int32_t cdaudio_init(void)
+int16_t cdaudio_init(void)
 {
 	segacd_bios_addr = check_hardware();
 	if (!segacd_bios_addr)
@@ -246,23 +296,67 @@ int32_t cdaudio_init(void)
 	}
 	start_subcpu();
 	cdaudio_check_disc();
-	DBCOL(0x68E);
+
+	// First time get disc info
+	wait_do_cmd('D');
+	wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
+	wait_for_read();
 	return 1;
 }
 
-void cdaudio_play_once(uint8_t trk)
+int16_t cdaudio_get_status(void)
 {
-	int8_t ack;
-	*(volatile uint16_t *)(SEGACD_TRACK_W) = (uint16_t)trk;
-	*(volatile uint8_t *)(SEGACD_PMODE_W) = 0x00;
-	wait_do_cmd('P');
-	ack = wait_cmd_ack();
-	comm_write(0x00);
+	return (*bios_stat >> 8);
 }
 
-void cdaudio_play_loop(uint8_t trk)
+int16_t cdaudio_play_once(uint16_t trk)
 {
-	
+	int8_t ack;
+
+	cdaudio_check_disc();
+	wait_for_read();
+	wait_do_cmd('D');
+	wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
+	if (cdaudio_get_status() == SEGACD_STAT_NODISC ||
+	    cdaudio_get_status() == SEGACD_STAT_OPEN ||
+		trk > *last_tno)
+	{
+		return 0;
+	}
+
+	*track_w = trk;
+	*pmode_w = SEGACD_PLAYMODE_ONCE;
+	wait_do_cmd('P');
+	ack = wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
+	return 1;
+}
+
+int16_t cdaudio_play_loop(uint16_t trk)
+{
+	int8_t ack;
+
+	cdaudio_check_disc();
+	wait_for_read();
+	wait_do_cmd('D');
+	wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
+	if (cdaudio_get_status() == SEGACD_STAT_NODISC ||
+	    cdaudio_get_status() == SEGACD_STAT_OPEN ||
+		trk > *last_tno)
+	{
+		VDP_setPaletteColor(0xF,0xEEE);
+		return 0;
+	}
+
+	*track_w = trk;
+	*pmode_w = SEGACD_PLAYMODE_LOOP;
+	wait_do_cmd('P');
+	ack = wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
+	return 1;
 }
 
 void cdaudio_stop(void)
@@ -270,12 +364,14 @@ void cdaudio_stop(void)
 	int8_t ack;
 	wait_do_cmd('S');
 	ack = wait_cmd_ack();
-	comm_write(0x00);
+	comm_write(SEGACD_CMD_ACK);
 }
 
 void cdaudio_pause(void)
 {
-
+	wait_do_cmd('Z');
+	wait_cmd_ack();
+	comm_write(SEGACD_CMD_ACK);
 }
 
 inline int32_t cdaudio_is_active(void)

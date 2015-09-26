@@ -5,6 +5,7 @@
 #include "eef.h"
 #include "ewf.h"
 #include "sfx.h"
+#include "cdaudio.h"
 
 static u16 current_bgm;
 
@@ -51,17 +52,34 @@ void music_play(u16 num)
 	}
 	if (num)
 	{
-
-		// Play the track
-		void *bgm_ptr = (void *)bgm_set[num];
-
-		echo_play_bgm(bgm_ptr);
+		if (cdaudio_is_active())
+		{
+			cdaudio_stop();
+		}
+		echo_stop_bgm();
+		if (cdaudio_is_active() && cdaudio_play_loop(num))
+		{
+			// Try playing with CD first
+		}
+		else
+		{
+			// Play the track with Echo
+			void *bgm_ptr = (void *)bgm_set[num];
+			echo_play_bgm(bgm_ptr);
+		}
 		current_bgm = num;
 	}
 	else
 	{
 		current_bgm = 0;
-		echo_stop_bgm();
+		if (cdaudio_is_active())
+		{
+			cdaudio_stop();
+		}
+		else
+		{
+			echo_stop_bgm();
+		}
 	}
 }
 

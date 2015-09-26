@@ -70,6 +70,10 @@ void room_loop(void)
 	{
 		room_setup(&pl);
 		state.next_id++;
+		if (state.next_id == 4)
+		{
+			state.next_id = 0;
+		}
 		u16 px;
 		u16 py;
 		do
@@ -112,7 +116,6 @@ void room_loop(void)
 
 			if (pl.input & KEY_A)
 			{
-				cdaudio_stop();
 				pl.cp = 30;
 			}
 
