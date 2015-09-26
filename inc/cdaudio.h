@@ -11,13 +11,24 @@
 #define SEGACD_REG_STOPWATCH 0xA1200C
 #define SEGACD_REG_COMM 0xA1200E
 
-extern volatile unsigned char *segacd_bios_addr;
+#define SEGACD_TRACK_W 0xA12010
+#define SEGACD_PMODE_W 0xA12012
 
-int cdaudio_init(void);
-void cdaudio_play_once(unsigned char trk);
-void cdaudio_play_loop(unsigned char trk);
+#define SEGACD_PROGRAM_ADDR 0x420000
+#define SEGACD_PROGRAM_OFF 0x426000
+#define SEGACD_PROGRAM_LEN 0x20000
+
+#define SEGACD_CPU_IEN_MASK 0x8000
+
+#include <genesis.h>
+
+extern volatile uint8_t *segacd_bios_addr;
+
+int32_t cdaudio_init(void);
+void cdaudio_play_once(uint8_t trk);
+void cdaudio_play_loop(uint8_t trk);
 void cdaudio_stop(void);
 void cdaudio_pause(void);
-int cdaudio_is_active(void);
+int32_t cdaudio_is_active(void);
 
 #endif

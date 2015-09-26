@@ -112,6 +112,7 @@ void room_loop(void)
 
 			if (pl.input & KEY_A)
 			{
+				cdaudio_stop();
 				pl.cp = 30;
 			}
 

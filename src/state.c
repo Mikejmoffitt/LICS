@@ -51,7 +51,7 @@ void state_load_room(u8 roomnum)
 
 	if (cdaudio_is_active())
 	{
-		cdaudio_play_once(3);
+		cdaudio_play_once(state.current_room->music);
 	}
 	else
 	{
