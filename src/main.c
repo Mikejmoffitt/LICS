@@ -117,6 +117,8 @@ void room_loop(void)
 			}
 			VDP_setEnable(1);
 
+			// For an external pixel bus use 0x0B bit 6
+
 		}
 		while (!state_watch_transitions(px,py,pl.dx,pl.dy));
 	}

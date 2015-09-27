@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define WANT_LOGGING 0
+#define WANT_LOGGING 1 
 
 #ifndef WANT_LOGGING
 #define WANT_LOGGING 0
@@ -40,7 +40,7 @@ static volatile int8_t *reg_comm_r = (volatile int8_t *)(SEGACD_REG_COMM + 1);
 static volatile int8_t *reg_comm_w = (volatile uint8_t *)(SEGACD_REG_COMM);
 
 static volatile uint16_t *track_w = (volatile uint16_t *)SEGACD_TRACK_W;
-static volatile uint16_t *pmode_w = (volatile uint16_t *)SEGACD_PMODE_W;
+static volatile uint8_t *pmode_w = (volatile uint8_t *)SEGACD_PMODE_W;
 
 static volatile uint16_t *bios_stat_ptr = (volatile uint16_t *)SEGACD_BIOS_STAT;
 static volatile uint8_t *first_tno_ptr = (volatile uint8_t *)SEGACD_FIRST_TNO;
@@ -330,7 +330,7 @@ int16_t cdaudio_init(void)
 	return 1;
 }
 
-static inline uint16_t cdaudio_playtrack(uint16_t trk)
+static inline uint16_t cdaudio_playtrack(uint16_t trk, uint8_t mode)
 {
 	int8_t ack;
 
@@ -346,6 +346,7 @@ static inline uint16_t cdaudio_playtrack(uint16_t trk)
 	}
 
 	*track_w = trk;
+	*pmode_w = mode;
 	wait_do_cmd('P');
 	ack = wait_cmd_ack();
 	comm_write(SEGACD_CMD_ACK);
@@ -356,14 +357,12 @@ static inline uint16_t cdaudio_playtrack(uint16_t trk)
 
 int16_t cdaudio_play_once(uint16_t trk)
 {
-	*pmode_w = SEGACD_PLAYMODE_ONCE;
-	return cdaudio_playtrack(trk);
+	return cdaudio_playtrack(trk, SEGACD_PLAYMODE_ONCE);
 }
 
 int16_t cdaudio_play_loop(uint16_t trk)
 {
-	*pmode_w = SEGACD_PLAYMODE_LOOP;
-	return cdaudio_playtrack(trk);
+	return cdaudio_playtrack(trk, SEGACD_PLAYMODE_LOOP);
 }
 
 void cdaudio_stop(void)
