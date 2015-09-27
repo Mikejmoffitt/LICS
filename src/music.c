@@ -46,7 +46,6 @@ void music_init(void)
 // Track 0 is no music
 void music_play(u16 num)
 {
-	int i;
 	if (num == current_bgm)
 	{
 		return;
@@ -58,7 +57,7 @@ void music_play(u16 num)
 			cdaudio_stop();
 		}
 		echo_stop_bgm();
-		if (cdaudio_is_active() && cdaudio_play_loop(num + 3))
+		if (cdaudio_is_active() && cdaudio_play_loop(num))
 		{
 			// Try playing with CD first
 		}

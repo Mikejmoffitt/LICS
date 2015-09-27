@@ -219,6 +219,7 @@ static void cube_eval_stopmoving(cube *c)
 	}
 }
 
+/*
 static void cube_get_out_of_the_ground(cube *c)
 {
 	unsigned int i = CUBE_MAX_GROUND_PUSH;
@@ -240,7 +241,7 @@ static void cube_get_out_of_the_ground(cube *c)
 			break;
 		}	
 	}
-}
+}*/
 
 static void cube_do_ground_recoil(cube *c)
 {

@@ -2,7 +2,6 @@
 #include "sfx.h"
 #include "gfx.h"
 #include "pal.h"
-#include "mpad.h"
 #include "vramslots.h"
 #include "sprites.h"
 #include "music.h"
@@ -112,7 +111,7 @@ static void player_input(player *pl)
 	if (!pl->control_disabled)
 	{
 		pl->input_prev = pl->input;
-		pl->input = pad_read(0);
+		pl->input = JOY_readJoypad(JOY_1);
 	}
 	else
 	{
@@ -149,7 +148,7 @@ static void player_cp(player *pl)
 	// Spawning of the cube; are we not holding one, and can afford one?
 	if (!pl->holding_cube && pl->cp >= cube_price)
 	{
-		if (pl->input & KEY_B)
+		if (pl->input & BUTTON_B)
 		{
 			pl->cp_cnt++;
 		}
@@ -205,19 +204,19 @@ static void player_accel(player *pl)
 		return;
 	}
 	// walking right and left
-	if (pl->input & KEY_RIGHT)
+	if (pl->input & BUTTON_RIGHT)
 	{
 		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);
 		pl->direction = PLAYER_RIGHT;
 	}
-	else if (pl->input & KEY_LEFT)
+	else if (pl->input & BUTTON_LEFT)
 	{
 		pl->dx = fix16Sub(pl->dx,PLAYER_X_ACCEL);
 		pl->direction = PLAYER_LEFT;
 	}
 
 	// deceleration
-	if (pl->dx > FZERO && !(pl->input & (KEY_RIGHT | KEY_LEFT)))
+	if (pl->dx > FZERO && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
 		pl->dx = fix16Sub(pl->dx,PLAYER_X_DECEL);	
 		// Don't decel into the other direction
@@ -226,7 +225,7 @@ static void player_accel(player *pl)
 			pl->dx = FZERO;
 		}
 	}
-	else if (pl->dx < FZERO && !(pl->input & (KEY_RIGHT | KEY_LEFT)))
+	else if (pl->dx < FZERO && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
 		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);				
 		// Don't decel into the other direction
@@ -237,7 +236,7 @@ static void player_accel(player *pl)
 	}
 
 	// If dy/dx is almost zero, make it zero
-	if (pl->dx > FIX16(-0.1) && pl->dx < FIX16(0.1) && !(pl->input & (KEY_RIGHT | KEY_LEFT)))
+	if (pl->dx > FIX16(-0.1) && pl->dx < FIX16(0.1) && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
 		pl->dx = FZERO;
 	}
@@ -289,7 +288,7 @@ static void player_jump(player *pl)
 	}
 
 	// C key pressed, negative edge (1 -> 0)
-	if ((pl->input & KEY_C) && !(pl->input_prev & KEY_C))
+	if ((pl->input & BUTTON_C) && !(pl->input_prev & BUTTON_C))
 	{
 		// Normal jump off the ground
 		if (pl->grounded || pl->on_cube)
@@ -341,30 +340,30 @@ do_jump:
 
 static void player_toss_cubes(player *pl)
 {
-	if (pl->holding_cube && (pl->input & KEY_B) && (!(pl->input_prev & KEY_B)))
+	if (pl->holding_cube && (pl->input & BUTTON_B) && (!(pl->input_prev & BUTTON_B)))
 	{
 		s16 cdx;
 		fix16 cdy;
 		// Holding down; do a short toss
-		if (pl->input & (KEY_DOWN))
+		if (pl->input & (BUTTON_DOWN))
 		{
 			cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
 			cdy = FIX16(-2.0);
 		}
 		// Holding up; toss straight up
-		else if (pl->input & KEY_UP)
+		else if (pl->input & BUTTON_UP)
 		{
 			cdx = 0;
 			cdy = FIX16(-5.0);
 		}
 		// Throw with direction right
-		else if (pl->input & KEY_RIGHT && pl->direction == PLAYER_RIGHT)
+		else if (pl->input & BUTTON_RIGHT && pl->direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
 			cdy = FIX16(-1.0);
 		}
 		// Left
-		else if (pl->input & KEY_LEFT && pl->direction == PLAYER_LEFT)
+		else if (pl->input & BUTTON_LEFT && pl->direction == PLAYER_LEFT)
 		{
 			cdx = -4;
 			cdy = FIX16(-1.0);
@@ -412,7 +411,7 @@ static void player_kick_cube(player *pl, cube *c)
 	u16 py = fix32ToInt(pl->y);
 	u16 px = fix32ToInt(pl->x);
 	// check we are within appropriate Y bounds
-	if ((pl->input & KEY_B) && !(pl->input_prev & KEY_B) &&
+	if ((pl->input & BUTTON_B) && !(pl->input_prev & BUTTON_B) &&
 		c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 1 && 
 		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 8)
 	{
@@ -446,7 +445,7 @@ static void player_lift_cubes(player *pl)
 	{
 		return;
 	}
-	if (pl->on_cube && pl->lift_cnt == 0 && pl->input & KEY_B && !(pl->input_prev & KEY_B))
+	if (pl->on_cube && pl->lift_cnt == 0 && pl->input & BUTTON_B && !(pl->input_prev & BUTTON_B))
 	{	
 		pl->lift_cnt = PLAYER_LIFT_TIME + 1;
 		pl->action_cnt = PLAYER_ACTION_LIFT;
@@ -459,7 +458,7 @@ static void player_lift_cubes(player *pl)
 		cube_delete(c);
 
 		// Re-implement the MMF version bug where you can jump while lifting
-		if (pl->input & KEY_C)
+		if (pl->input & BUTTON_C)
 		{
 			pl->dy = PLAYER_JUMP_DY;
 		}
@@ -768,7 +767,7 @@ static void player_move(player *pl)
 	if (!pl->grounded)
 	{
 		// The jump holding only affects gravity on the way up, though
-		if ((pl->input & KEY_C) && pl->dy < FZERO)
+		if ((pl->input & BUTTON_C) && pl->dy < FZERO)
 		{
 			pl->dy = fix16Add(pl->dy,PLAYER_Y_ACCEL_WEAK);
 		}
@@ -829,7 +828,7 @@ static void player_calc_anim(player *pl)
 	
 	if (pl->grounded || pl->on_cube)
 	{
-		if (!(pl->input & (KEY_LEFT | KEY_RIGHT))) // Standing
+		if (!(pl->input & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
 		{
 			pl->anim_frame = 0x00;
 		}

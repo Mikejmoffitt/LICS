@@ -43,8 +43,8 @@ struct gamestate
 	u16 hs_en;
 	u16 xscroll_cmd;
 	u16 yscroll_cmd;
-	u16 xscroll_vals[STATE_PLANE_H];
-	u16 yscroll_vals[STATE_PLANE_W / 2];
+	s16 xscroll_vals[STATE_PLANE_H];
+	s16 yscroll_vals[STATE_PLANE_W / 2];
 	u8 current_id;
 	u8 fresh_room;
 };

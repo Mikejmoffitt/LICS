@@ -1,5 +1,4 @@
 #include <genesis.h>
-#include "mpad.h"
 #include "sprites.h"
 #include "player.h"
 #include "system.h"
@@ -57,6 +56,7 @@ void room_setup(player *pl)
 
 void room_loop(void)
 {
+	u16 duh;
 	state.next_id = 1;
 	state.current_id = 64;
 
@@ -95,6 +95,20 @@ void room_loop(void)
 			particles_draw();
 			player_draw(&pl);
 			cubes_draw();
+
+			duh = pl.input;
+			for (int i = 0; i < 12; i++)
+			{
+				if (duh & 1)
+				{
+					//sprite_put(128 - (8 * i), 64, SPRITE_SIZE(1,1), 4);
+				}
+				else
+				{
+					//sprite_put(128 - (8 * i), 80, SPRITE_SIZE(1,1), 5);
+				}
+				duh = duh >> 1;
+			}
 			
 			/* Wait for VBlank. */
 			DEBUG_BGCOL(0x000);
@@ -111,9 +125,9 @@ void room_loop(void)
 			player_dma(&pl);
 			// Enable the VDP here at the end. This is to hide frame 0
 
-			if (pl.input & KEY_START)
+			if (pl.input & BUTTON_START)
 			{
-				if (!(pl.input & KEY_UP))
+				if (!(pl.input & BUTTON_UP))
 				{
 					cdaudio_pause();
 				}
@@ -123,7 +137,7 @@ void room_loop(void)
 				}
 				pl.cp = 30;
 			}
-			if (pl.input & (KEY_Z | KEY_X | KEY_Y))
+			if (pl.input & BUTTON_X)
 			{
 				VDP_setPaletteColor(0,0xEEE);
 			}

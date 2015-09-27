@@ -61,7 +61,8 @@ void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link)
 
 void sprite_put(s16 x, s16 y, u8 size, u16 attr)
 {
-	spr_set(next_spr, x, y, size, attr, next_spr++);
+	spr_set(next_spr + 1, x, y, size, attr, next_spr);
+	next_spr++;
 }
 
 u8 sprites_get_next_sprite(void)

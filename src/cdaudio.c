@@ -37,7 +37,7 @@ static volatile uint16_t *reg_mem = (volatile uint16_t *)SEGACD_REG_MEM;
 static volatile uint16_t *reg_hint = (volatile uint16_t *)SEGACD_REG_HINT;
 static volatile uint16_t *reg_stopwatch = (volatile uint16_t *)SEGACD_REG_STOPWATCH;
 static volatile int8_t *reg_comm_r = (volatile int8_t *)(SEGACD_REG_COMM + 1);
-static volatile int8_t *reg_comm_w = (volatile uint8_t *)(SEGACD_REG_COMM);
+static volatile int8_t *reg_comm_w = (volatile int8_t *)(SEGACD_REG_COMM);
 
 static volatile uint16_t *track_w = (volatile uint16_t *)SEGACD_TRACK_W;
 static volatile uint8_t *pmode_w = (volatile uint8_t *)SEGACD_PMODE_W;
@@ -82,7 +82,7 @@ static inline int16_t cdaudio_get_status(void)
 // Block until sub-CPU bus is requested
 static inline void bus_req(void)
 {
-	while (*reg_cpu & 0x0002 == 0)
+	while ((*reg_cpu & 0x0002) == 0)
 	{
 		*reg_cpu = (*reg_cpu & 0xFF00) | 0x02;
 	}
@@ -218,9 +218,8 @@ static int32_t decompress_bios(void)
 void cdaudio_check_disc(void)
 {
 	log("Checking disc... ");
-	int8_t ack;
 	wait_do_cmd('C');
-	ack = wait_cmd_ack();
+	wait_cmd_ack();
 	comm_write(SEGACD_CMD_ACK);
 }
 
@@ -309,6 +308,8 @@ static void start_subcpu(void)
 
 int16_t cdaudio_init(void)
 {
+	(void)reg_hint;
+	(void)reg_stopwatch;
 	segacd_bios_addr = check_hardware();
 	if (!segacd_bios_addr)
 	{
@@ -331,8 +332,6 @@ int16_t cdaudio_init(void)
 
 static inline uint16_t cdaudio_playtrack(uint16_t trk, uint8_t mode)
 {
-	int8_t ack;
-
 	cdaudio_check_disc();
 	get_disc_info();
 
@@ -347,7 +346,7 @@ static inline uint16_t cdaudio_playtrack(uint16_t trk, uint8_t mode)
 	*track_w = trk;
 	*pmode_w = mode;
 	wait_do_cmd('P');
-	ack = wait_cmd_ack();
+	wait_cmd_ack();
 	comm_write(SEGACD_CMD_ACK);
 	return 1;
 }
@@ -368,9 +367,8 @@ void cdaudio_stop(void)
 {
 	if (cdaudio_is_active())
 	{
-		int8_t ack;
 		wait_do_cmd('S');
-		ack = wait_cmd_ack();
+		wait_cmd_ack();
 		comm_write(SEGACD_CMD_ACK);
 	}
 }

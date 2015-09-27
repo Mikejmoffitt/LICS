@@ -105,8 +105,8 @@ struct player
 	u16 cp;
 
 	// Hold last gamepad state
-	u8 input;
-	u8 input_prev;
+	u16 input;
+	u16 input_prev;
 };
 
 // Init function for Lyle's variables

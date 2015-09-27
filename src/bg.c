@@ -8,8 +8,8 @@
 
 static u16 current_bg;
 
-static u16 bg_xscroll_vals[STATE_PLANE_H];
-static u16 bg_yscroll_vals[STATE_PLANE_W / 2];
+static s16 bg_xscroll_vals[STATE_PLANE_H];
+static s16 bg_yscroll_vals[STATE_PLANE_W / 2];
 static u16 bg_xscroll_cmd;
 static u16 bg_yscroll_cmd;
 

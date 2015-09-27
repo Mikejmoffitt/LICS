@@ -82,6 +82,6 @@ void map_draw_diffs(u16 movedi, fix16 dx, fix16 dy);
 void map_dma(void);
 
 // What is at this spot on the map (background)?
-inline u16 map_collision(u16 x, u16 y);
+u16 map_collision(u16 x, u16 y);
 
 #endif

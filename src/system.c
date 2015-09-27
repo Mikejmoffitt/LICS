@@ -1,7 +1,6 @@
 #include "system.h"
 // ----------------
 #include "sprites.h"
-#include "mpad.h"
 #include "save.h"
 #include "music.h"
 #include "cdaudio.h"
@@ -51,7 +50,7 @@ void system_init(void)
 	save_clear();
 	save_load();
 	// Allow holding A + Start to change scan modes
-	if ((pad_read(0) & KEY_A) || (pad_read(0) & KEY_START))
+	if ((JOY_readJoypad(JOY_1) & BUTTON_A) || (JOY_readJoypad(JOY_1) & BUTTON_START))
 	{
 		sram.opt_interlace = (sram.opt_interlace == SAVE_OPT_INTERLACE_ENABLED) ? (SAVE_OPT_INTERLACE_NORMAL) : (SAVE_OPT_INTERLACE_ENABLED);
 		save_write();
