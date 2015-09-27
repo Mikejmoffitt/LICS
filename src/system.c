@@ -5,8 +5,6 @@
 #include "music.h"
 #include "cdaudio.h"
 
-extern void segacd_gen_lvl2(void);
-
 static vu16 vbl_active;
 u16 system_osc;
 
