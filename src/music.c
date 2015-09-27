@@ -58,7 +58,7 @@ void music_play(u16 num)
 			cdaudio_stop();
 		}
 		echo_stop_bgm();
-		if (cdaudio_is_active() && cdaudio_play_loop(num))
+		if (cdaudio_is_active() && cdaudio_play_loop(num + 3))
 		{
 			// Try playing with CD first
 		}

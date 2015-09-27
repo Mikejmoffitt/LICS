@@ -70,7 +70,7 @@ void room_loop(void)
 		state.next_id++;
 		if (state.next_id == 4)
 		{
-			state.next_id = 0;
+			state.next_id = 1;
 		}
 		u16 px;
 		u16 py;
@@ -111,9 +111,21 @@ void room_loop(void)
 			player_dma(&pl);
 			// Enable the VDP here at the end. This is to hide frame 0
 
-			if (pl.input & KEY_A)
+			if (pl.input & KEY_START)
 			{
+				if (!(pl.input & KEY_UP))
+				{
+					cdaudio_pause();
+				}
+				else
+				{
+					cdaudio_resume();
+				}
 				pl.cp = 30;
+			}
+			if (pl.input & (KEY_Z | KEY_X | KEY_Y))
+			{
+				VDP_setPaletteColor(0,0xEEE);
 			}
 			VDP_setEnable(1);
 

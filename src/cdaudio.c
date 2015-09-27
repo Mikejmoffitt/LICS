@@ -265,7 +265,6 @@ static void wait_for_ready(void)
 					break;
 			}
 		}
-		delay(10000);
 	}
 }
 
@@ -373,15 +372,31 @@ void cdaudio_stop(void)
 		wait_do_cmd('S');
 		ack = wait_cmd_ack();
 		comm_write(SEGACD_CMD_ACK);
-		delay(10000);
 	}
 }
 
 void cdaudio_pause(void)
 {
-	wait_do_cmd('Z');
-	wait_cmd_ack();
-	comm_write(SEGACD_CMD_ACK);
+	get_disc_info();
+	
+	if (cdaudio_get_status() == SEGACD_STAT_PLAYING)
+	{
+		wait_do_cmd('Z');
+		wait_cmd_ack();
+		comm_write(SEGACD_CMD_ACK);
+	}
+}
+
+void cdaudio_resume(void)
+{
+	get_disc_info();
+	
+	if (cdaudio_get_status() == SEGACD_STAT_PAUSED)
+	{
+		wait_do_cmd('Z');
+		wait_cmd_ack();
+		comm_write(SEGACD_CMD_ACK);
+	}
 }
 
 inline int32_t cdaudio_is_active(void)
