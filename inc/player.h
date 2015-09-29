@@ -32,7 +32,10 @@
 #define PLAYER_LIFT_TIME 15
 
 #define PLAYER_HURT_TIME 30
+#define PLAYER_HURT_TIMEOUT 20
 #define PLAYER_INVULN_TIME 80
+#define PLAYER_HURT_DX_R FIX16(-3.0);
+#define PLAYER_HURT_DX_L FIX16(3.0);
 
 #define PLAYER_MAX_CP 30
 #define PLAYER_CP_RESTORE_PERIOD 250
@@ -127,6 +130,8 @@ void player_run(player *pl);
 // Update entry in sprite table cache
 void player_draw(player *pl);
 
+// Damage the player
+void player_get_hurt(player *pl);
 
 #endif
 

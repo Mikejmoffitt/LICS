@@ -20,7 +20,8 @@ static u16 ctype;
 static u16 cp_restore_cnt;
 
 static void player_set_pal(void);
-static void player_input(player *pl); 
+static void player_eval_control_en(player *pl);
+static void player_read_pad(player *pl); 
 static void player_cp(player *pl);
 static void player_accel(player *pl);
 static void player_eval_grounded(player *pl);
@@ -42,6 +43,18 @@ static void player_entrance_coll(player *pl);
 static void player_set_pal(void)
 {
 	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
+}
+
+static void player_eval_control_en(player *pl)
+{
+	if (pl->hurt_cnt > 0 || pl->hp == 0)
+	{
+		pl->control_disabled = 1;
+	}
+	else
+	{
+		pl->control_disabled = 0;
+	}
 }
 
 void player_init(player *pl)
@@ -107,7 +120,7 @@ void player_dma(player *pl)
 	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
-static void player_input(player *pl)
+static void player_read_pad(player *pl)
 {
 	if (!pl->control_disabled)
 	{
@@ -196,25 +209,6 @@ static void player_cp(player *pl)
 
 static void player_accel(player *pl)
 {
-	if (pl->control_disabled)
-	{
-		return;
-	}
-	if (pl->lift_cnt)
-	{
-		return;
-	}
-	// walking right and left
-	if (pl->input & BUTTON_RIGHT)
-	{
-		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);
-		pl->direction = PLAYER_RIGHT;
-	}
-	else if (pl->input & BUTTON_LEFT)
-	{
-		pl->dx = fix16Sub(pl->dx,PLAYER_X_ACCEL);
-		pl->direction = PLAYER_LEFT;
-	}
 
 	// deceleration
 	if (pl->dx > FZERO && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
@@ -236,6 +230,23 @@ static void player_accel(player *pl)
 		}
 	}
 
+
+	if (pl->control_disabled || pl->lift_cnt)
+	{
+		return;
+	}
+
+	// walking right and left
+	if (pl->input & BUTTON_RIGHT)
+	{
+		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);
+		pl->direction = PLAYER_RIGHT;
+	}
+	else if (pl->input & BUTTON_LEFT)
+	{
+		pl->dx = fix16Sub(pl->dx,PLAYER_X_ACCEL);
+		pl->direction = PLAYER_LEFT;
+	}
 	// If dy/dx is almost zero, make it zero
 	if (pl->dx > FIX16(-0.1) && pl->dx < FIX16(0.1) && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
@@ -721,16 +732,23 @@ static void player_cube_collision(player *pl)
 			continue;
 		}
 		// Cube overlaps player boundaries, it's a collision
-		else if (c->state == CUBE_STATE_IDLE && 
+		else if (
 			c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT + 1 && 
 			c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT - 1 && 
 			c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM + 1 && 
 			c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 1 )
 		{
-			player_cube_vertical_collision(pl, c);
-			player_cube_horizontal_collision(pl, c);
-			player_cube_eval_standing(pl, c);
-			player_kick_cube(pl, c);
+			if (c->state == CUBE_STATE_IDLE)
+			{
+				player_cube_vertical_collision(pl, c);
+				player_cube_horizontal_collision(pl, c);
+				player_cube_eval_standing(pl, c);
+				player_kick_cube(pl, c);
+			}
+			else if (c->state == CUBE_STATE_AIR && pl->throw_cnt == 0 && pl->kick_cnt == 0 && pl->throwdown_cnt == 0)
+			{
+				player_get_hurt(pl);
+			}
 		}
 
 		// Check for cube bouncing on the fake cube player is holding
@@ -739,7 +757,7 @@ static void player_cube_collision(player *pl)
 			if (c->state == CUBE_STATE_AIR &&
 				c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT + 1 && 
 				c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT - 1 && 
-				c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 14 && 
+				c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 24 && 
 				c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 15 )
 			{
 				if (c->dx == FZERO)
@@ -785,10 +803,6 @@ static void player_move(player *pl)
 
 static void player_calc_anim(player *pl)
 {
-	if (pl->invuln_cnt && (system_osc % 8 > 3))
-	{
-		return;
-	}
 	if (pl->grounded || pl->on_cube)
 	{
 		pl->anim_cnt++;
@@ -801,71 +815,88 @@ static void player_calc_anim(player *pl)
 	{
 		pl->anim_cnt = 0;
 	}
-	if (pl->throw_cnt > 0)
+	if (pl->invuln_cnt && (system_osc % 8 > 3))
 	{
-		pl->anim_frame = 0x16;
 		return;
 	}
-	else if (pl->throwdown_cnt > 0)
+	if (pl->hp == 0)
 	{
-		pl->anim_frame = 0x07;
-		return;
-	}
-	else if (pl->kick_cnt > 0)
-	{
-		pl->anim_frame = 0x17;
-		return;
-	}
-	else if (pl->lift_cnt > 0)
-	{
-		pl->anim_frame = 0x05;
-		return;
-	}
-	else if (pl->hurt_cnt > 0)
-	{
-		pl->anim_frame = 0x06;	
-		return;
-	}
-	
-	if (pl->grounded || pl->on_cube)
-	{
-		if (!(pl->input & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
-		{
-			pl->anim_frame = 0x00;
-		}
-		else // Walking cycle
-		{
-			if (pl->anim_cnt < PLAYER_ANIMSPEED)
-			{
-				pl->anim_frame = 0x02;
-			}
-			else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 2))
-			{
-				pl->anim_frame = 0x03;
-			}
-			else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 3))
-			{
-				pl->anim_frame = 0x02;
-			}
-			else
-			{
-				pl->anim_frame = 0x01;
-			}
-		}
+		pl->anim_frame = 0x0F;
 	}
 	else
 	{
-		pl->anim_frame = 0x04;
-	}
-	if ((pl->cp_cnt > PLAYER_CUBE_FX) || pl->holding_cube)
-	{
-		// Offset to arms-up version
-		pl->anim_frame += 0x08;
+		if (pl->throw_cnt > 0)
+		{
+			pl->anim_frame = 0x16;
+			return;
+		}
+		else if (pl->throwdown_cnt > 0)
+		{
+			pl->anim_frame = 0x07;
+			return;
+		}
+		else if (pl->kick_cnt > 0)
+		{
+			pl->anim_frame = 0x17;
+			return;
+		}
+		else if (pl->lift_cnt > 0)
+		{
+			pl->anim_frame = 0x05;
+			return;
+		}
+		else if (pl->hurt_cnt > 0)
+		{
+			pl->anim_frame = 0x06;	
+			return;
+		}
+		
+		if (pl->grounded || pl->on_cube)
+		{
+			if (!(pl->input & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
+			{
+				pl->anim_frame = 0x00;
+			}
+			else // Walking cycle
+			{
+				if (pl->anim_cnt < PLAYER_ANIMSPEED)
+				{
+					pl->anim_frame = 0x02;
+				}
+				else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 2))
+				{
+					pl->anim_frame = 0x03;
+				}
+				else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 3))
+				{
+					pl->anim_frame = 0x02;
+				}
+				else
+				{
+					pl->anim_frame = 0x01;
+				}
+			}
+		}
+		else
+		{
+			pl->anim_frame = 0x04;
+		}
+		if ((pl->cp_cnt > PLAYER_CUBE_FX) || pl->holding_cube)
+		{
+			// Offset to arms-up version
+			pl->anim_frame += 0x08;
+		}
 	}
 }
 
 void player_draw(player *pl)
 {
+
+	// Draw a cube he is holding
+	if (pl->holding_cube)
+	{
+		cube_draw_single(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + PLAYER_DRAW_TOP - 15, pl->holding_cube);
+	}
 	if (pl->invuln_cnt && (system_osc % 8 > 3))
 	{
 		return;
@@ -895,12 +926,6 @@ void player_draw(player *pl)
 		fix32ToInt(pl->y) + yoff - state.cam_y, 
 		size, 
 		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
-
-	// Draw a cube he is holding
-	if (pl->holding_cube)
-	{
-		cube_draw_single(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + PLAYER_DRAW_TOP - 15, pl->holding_cube);
-	}
 }
 
 static void player_entrance_coll(player *pl)
@@ -928,7 +953,8 @@ static void player_entrance_coll(player *pl)
 
 void player_run(player *pl)
 {
-	player_input(pl);
+	player_eval_control_en(pl);
+	player_read_pad(pl);
 	player_accel(pl);
 	player_toss_cubes(pl);
 	player_lift_cubes(pl);
@@ -942,4 +968,28 @@ void player_run(player *pl)
 	player_special_counters(pl);
 }
 
+void player_get_hurt(player *pl)
+{
+	if (pl->hurt_cnt < PLAYER_HURT_TIME - PLAYER_HURT_TIMEOUT)
+	{
+		pl->dy = PLAYER_JUMP_DY;
+		if (pl->direction == PLAYER_RIGHT)
+		{
+			pl->dx = PLAYER_HURT_DX_R;
+		}
+		else
+		{
+			pl->dx = PLAYER_HURT_DX_L;
+		}
+	}
+	if (pl->invuln_cnt == 0)
+	{
+		pl->hurt_cnt = PLAYER_HURT_TIME;
+		pl->invuln_cnt = PLAYER_INVULN_TIME;
 
+		if (pl->hp > 0)
+		{
+			pl->hp--;
+		}
+	}
+}
