@@ -915,12 +915,6 @@ static void player_entrance_coll(player *pl)
 			continue;
 		}
 		entrance *e = &(state.entrances[i]);
-		if (e->x - state.cam_x > -16 && e->x - state.cam_x < 320)
-		{
-			sprite_put(e->x - state.cam_x, e->y - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 1, 0, 0, 1328 + i));
-			sprite_put(e->x - state.cam_x, e->y - state.cam_y + 8, SPRITE_SIZE(1,1), TILE_ATTR_FULL(2, 1, 0, 0, 1328 + e->to_roomid));
-			sprite_put(e->x - state.cam_x, e->y - state.cam_y + 16, SPRITE_SIZE(1,1), TILE_ATTR_FULL(2, 1, 0, 0, 1328 + e->to_num));
-		}
 		if ((e->x + ENTRANCE_CHK_LEFT < px + PLAYER_CHK_RIGHT) &&
 			(e->x + ENTRANCE_CHK_RIGHT > px + PLAYER_CHK_LEFT) && 
 			(e->y + ENTRANCE_CHK_TOP < py + PLAYER_CHK_BOTTOM) &&
@@ -930,8 +924,6 @@ static void player_entrance_coll(player *pl)
 			state.next_entrance = e->to_num;
 		}
 	}
-	sprite_put(32, 16, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 1, 0, 0, 1328 + state.next_id));
-	sprite_put(32, 24, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 1, 0, 0, 1328 + state.next_entrance));
 }
 
 void player_run(player *pl)
