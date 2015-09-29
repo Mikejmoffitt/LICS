@@ -10,18 +10,17 @@ Also handles some object list functions.
 
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128
+#define MAP_NUM_ROOM_PTRS 16
 
 #define MAP_SET_OUTSIDE1 0
 #define MAP_SET_OUTSIDE2 1
 #define MAP_SET_INSIDE1 2
 
 #define MAP_OBJ_NULL 0
-#define MAP_OBJ_SPAWN 1
+#define MAP_OBJ_ENTRANCE 1
 #define MAP_OBJ_CUBE 2
 
 // In the object list for the map, only the four main fields are defined
-
-#define MAP_OBJ_LIST_SIZE (4 * 2);
 
 typedef struct map_list_obj map_list_obj;
 struct map_list_obj

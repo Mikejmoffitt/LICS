@@ -128,8 +128,6 @@ void player_run(player *pl);
 void player_draw(player *pl);
 
 
-
-
 #endif
 
 

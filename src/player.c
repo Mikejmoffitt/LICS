@@ -37,6 +37,7 @@ static void player_cube_eval_standing(player *pl, cube *c);
 static void player_cube_collision(player *pl);
 static void player_move(player *pl);
 static void player_calc_anim(player *pl);
+static void player_entrance_coll(player *pl);
 
 static void player_set_pal(void)
 {
@@ -902,6 +903,37 @@ void player_draw(player *pl)
 	}
 }
 
+static void player_entrance_coll(player *pl)
+{
+	u16 i = STATE_NUM_ENTRANCES;
+	u16 px = fix32ToInt(pl->x);
+	u16 py = fix32ToInt(pl->y);
+	while (i--)
+	{
+		if (i == 0)
+		{
+			continue;
+		}
+		entrance *e = &(state.entrances[i]);
+		if (e->x - state.cam_x > -16 && e->x - state.cam_x < 320)
+		{
+			sprite_put(e->x - state.cam_x, e->y - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 1, 0, 0, 1328 + i));
+			sprite_put(e->x - state.cam_x, e->y - state.cam_y + 8, SPRITE_SIZE(1,1), TILE_ATTR_FULL(2, 1, 0, 0, 1328 + e->to_roomid));
+			sprite_put(e->x - state.cam_x, e->y - state.cam_y + 16, SPRITE_SIZE(1,1), TILE_ATTR_FULL(2, 1, 0, 0, 1328 + e->to_num));
+		}
+		if ((e->x + ENTRANCE_CHK_LEFT < px + PLAYER_CHK_RIGHT) &&
+			(e->x + ENTRANCE_CHK_RIGHT > px + PLAYER_CHK_LEFT) && 
+			(e->y + ENTRANCE_CHK_TOP < py + PLAYER_CHK_BOTTOM) &&
+			(e->y + ENTRANCE_CHK_BOTTOM > py + PLAYER_CHK_TOP))
+		{
+			state.next_id = e->to_roomid;
+			state.next_entrance = e->to_num;
+		}
+	}
+	sprite_put(32, 16, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 1, 0, 0, 1328 + state.next_id));
+	sprite_put(32, 24, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 1, 0, 0, 1328 + state.next_entrance));
+}
+
 void player_run(player *pl)
 {
 	player_input(pl);
@@ -913,6 +945,7 @@ void player_run(player *pl)
 	player_cp(pl);
 	player_eval_grounded(pl);
 	player_calc_anim(pl);
+	player_entrance_coll(pl);
 	player_dma_setup(pl);
 	player_special_counters(pl);
 }

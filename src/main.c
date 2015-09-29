@@ -23,16 +23,16 @@ u16 debug_bgcol;
 
 void room_setup(player *pl)
 {	
-	int i;
 	// Blank the display
 	VDP_setEnable(0);
-	state_load_room(state.next_id);
-	player_init_soft(pl);
-	particles_init();
 	cubes_init();
+	particles_init();
+	player_init_soft(pl);
+
+	state_load_room(state.next_id);
 	// First entry to a room needs some extra processing
-	pl->y = intToFix32(64);
-	pl->x = intToFix32(64);
+	pl->x = state_get_entrance_x();
+	pl->y = state_get_entrance_y();
 
 	u16 px = fix32ToInt(pl->x);
 	u16 py = fix32ToInt(pl->y);
@@ -42,11 +42,6 @@ void room_setup(player *pl)
 	particles_dma_tiles();
 	cube_dma_tiles();
 	hud_dma_tiles();
-
-	for (i = 0; i < 3; i++)
-	{
-		cube_spawn(128 + 8 + (32 * (i+3)),(240 - 33), CUBE_GREEN, CUBE_STATE_IDLE, 0, 0);
-	}
 
 	// First graphical commit
 	state_update_scroll(px, py);
@@ -58,6 +53,7 @@ void room_loop(void)
 {
 	u16 duh;
 	state.next_id = 1;
+	state.next_entrance = 0;
 	state.current_id = 64;
 
 	player pl;
@@ -67,11 +63,6 @@ void room_loop(void)
 	while (1)
 	{
 		room_setup(&pl);
-		state.next_id++;
-		if (state.next_id == 4)
-		{
-			state.next_id = 1;
-		}
 		u16 px;
 		u16 py;
 		do
@@ -125,22 +116,6 @@ void room_loop(void)
 			player_dma(&pl);
 			// Enable the VDP here at the end. This is to hide frame 0
 
-			if (pl.input & BUTTON_START)
-			{
-				if (!(pl.input & BUTTON_UP))
-				{
-					cdaudio_pause();
-				}
-				else
-				{
-					cdaudio_resume();
-				}
-				pl.cp = 30;
-			}
-			if (pl.input & BUTTON_X)
-			{
-				VDP_setPaletteColor(0,0xEEE);
-			}
 			VDP_setEnable(1);
 
 			// For an external pixel bus use 0x0B bit 6

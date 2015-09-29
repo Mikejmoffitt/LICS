@@ -1,11 +1,62 @@
 #include "state.h"
 #include "bg.h"
 #include "music.h"
+#include "cubes.h"
+#include "player.h"
 
 gamestate state;
 
 static s16 sx_memo;
 static s16 sy_memo;
+
+static inline entrance *state_entrance_by_num(u16 num)
+{
+	return &state.entrances[num];
+	/*
+	u16 i = STATE_NUM_ENTRANCES;
+	while (i--)
+	{
+		if (state.entrances[i].num == num)
+		{
+			return &(state.entrances[i]);
+		}
+	}
+	return &state.entrances[0];*/
+}
+
+// Go through the object list, doing whatever setup is required
+static void state_parse_objects(void)
+{
+	u16 i = STATE_NUM_ENTRANCES;
+	while (i--)
+	{
+		state.entrances[i].x = 65535;
+		state.entrances[i].y = 65535;
+	}
+	i = MAP_NUM_OBJS;
+	map_list_obj *o = &(state.current_room->objects[0]);
+	entrance *e;
+	while (i--)
+	{
+		o = &(state.current_room->objects[i]);
+		switch (o->type)
+		{
+			default:
+			case MAP_OBJ_NULL:
+				continue;
+			case MAP_OBJ_ENTRANCE:
+				e = &state.entrances[o->data & 0x000F];
+				e->x = o->x;
+				e->y = o->y; 
+				e->to_num = (o->data & 0x00F0) >> 4;
+				e->to_roomid = (o->data & 0xFF00) >> 8;
+				break;
+			case MAP_OBJ_CUBE:
+				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
+				break;
+		}
+	}
+}
 
 static void state_config_scrolling(void)
 {
@@ -47,6 +98,7 @@ void state_load_room(u8 roomnum)
 
 	state_config_scrolling();
 	bg_load(state.current_room->background);
+	state_parse_objects();
 
 	music_play(state.current_room->music);
 }
@@ -173,6 +225,16 @@ void state_dma_scroll(void)
 		VDP_setVerticalScroll(PLAN_A, state.yscroll_vals[0]);
 	}
 	bg_dma_scroll();
+}
+
+fix32 state_get_entrance_x(void)
+{
+	return (intToFix32(state_entrance_by_num(state.next_entrance)->x - PLAYER_CHK_LEFT));
+}
+
+fix32 state_get_entrance_y(void)
+{
+	return (intToFix32(state_entrance_by_num(state.next_entrance)->y + 31));
 }
 
 // Watch for the player entering/exiting a room.

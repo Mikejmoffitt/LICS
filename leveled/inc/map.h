@@ -19,6 +19,15 @@
 #define MAP_MAX_WIDTH 24
 #define MAP_MAX_HEIGHT 24
 
+#define OBJ_NULL 0
+#define OBJ_ROOMPTR 1
+#define OBJ_CUBE 2
+
+// ROOM POINTER NOTES
+// Lowest nybble is the room pointer ID  
+// Seocnd-lowest nybble is the room pointer ID to point to
+// High byte is the room to point to
+
 /* -------------- Object Types --------------
 
 0x0000 NULL
@@ -74,6 +83,7 @@ extern const char *map_fname;
 extern uint16_t *map_data;
 extern map_file map_header;
 
+void map_data_interview(void);
 void map_new(void);
 void map_save(void);
 void map_load(void);
