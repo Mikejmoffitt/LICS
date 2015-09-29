@@ -263,9 +263,65 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 			sprintf(dat2," ");
 			break;
 		case OBJ_ROOMPTR:
-			sprintf(desc,"Entrance / exit redirector     [RR-T-P]");
-			sprintf(dat1,"(this ptr) -> (room, ptr)   Raw: 0x%04X",o->data);
-			sprintf(dat2, "    (%1X)    ->   (%2X, %X)",(o->data & 0x000F),((o->data & 0xFF00) >> 8),(o->data & 0x00F0) >> 4);
+			sprintf(desc,"This Ptr is #%X (LSN)",o->data & 0x000F);
+			sprintf(dat1,"Points to room %02X (MSB)     Raw: 0x%04X",(o->data & 0xFF00) >> 8,o->data);
+			sprintf(dat2,"          door #%X",(o->data & 0x00F0) >> 4);
+			break;
+		case OBJ_CUBE:
+			sprintf(dat1,"                            Raw: 0x%04X",o->data);
+			sprintf(dat2,"");
+			if (o->data == 0x0100)
+			{
+				sprintf(desc,"Blue Cube (destructable)");
+			}
+			else if (o->data == 0x0200)
+			{
+				sprintf(desc,"Phantom Cube (don't place)");
+			}
+			else if (o->data == 0x0300)
+			{
+				sprintf(desc,"Green Cube (bouncy)");
+			}
+			else if (o->data == 0x0400)
+			{
+				sprintf(desc,"Red Cube (explody)");
+			}
+			else if (o->data == 0x1000)
+			{
+				sprintf(desc,"Orange Cube (big)");
+			}
+			else if (o->data == 0x2000)
+			{
+				sprintf(desc,"Spawner");
+			}
+			else if ((o->data & 0x0F00) == 0x0800)
+			{
+				sprintf(desc,"Yellow Cube (item)");
+				if ((o->data & 0x00FF) == 0x00)
+				{
+					sprintf(dat2,"HP UP");
+				}
+				else if ((o->data & 0x00FF) == 0x01)
+				{
+					sprintf(dat2,"HP UP 2X");
+				}
+				else if ((o->data & 0x00FF) == 0x20)
+				{
+					sprintf(dat2,"CP UP");
+				}
+				else if ((o->data & 0x00FF) == 0x21)
+				{
+					sprintf(dat2,"CP UP 2X");
+				}
+				else if ((o->data & 0x00F0) == 0x40)
+				{
+					sprintf(dat2,"CP ORB #%X",o->data & 0x000F);
+				}
+				else if ((o->data & 0x00F0) == 0x80)
+				{
+					sprintf(dat2,"HP ORB #%X",o->data & 0x000F);
+				}
+			}
 			break;
 	}
 

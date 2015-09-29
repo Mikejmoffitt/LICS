@@ -46,6 +46,8 @@ static void player_set_pal(void)
 
 void player_init(player *pl)
 {
+	pl->dx = FZERO;
+	pl->dy = FZERO;
 	pl->x = FZERO32;
 	pl->y = FZERO32;
 	pl->direction = PLAYER_RIGHT;
@@ -57,8 +59,6 @@ void player_init(player *pl)
 
 void player_init_soft(player *pl)
 {
-	pl->dx = FZERO;
-	pl->dy = FZERO;
 	pl->grounded = 0;
 	
 	pl->anim_cnt = 0;

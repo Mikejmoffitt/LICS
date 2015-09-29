@@ -229,7 +229,7 @@ void state_dma_scroll(void)
 
 fix32 state_get_entrance_x(void)
 {
-	return (intToFix32(state_entrance_by_num(state.next_entrance)->x - PLAYER_CHK_LEFT));
+	return (intToFix32(state_entrance_by_num(state.next_entrance)->x + 8));
 }
 
 fix32 state_get_entrance_y(void)
