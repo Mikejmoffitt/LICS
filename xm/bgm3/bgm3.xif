@@ -146,11 +146,11 @@ PCMC 6
 127 0E
 128 0E
 [Pitch]
-FM1 -12
-FM2 -12
-FM3 -12
-FM4 -12
-FM5 -12
+FM1 -8
+FM2 -8
+FM3 -8
+FM4 -8
+FM5 -8
 [Volume]
 FM1 64
 FM2 64
