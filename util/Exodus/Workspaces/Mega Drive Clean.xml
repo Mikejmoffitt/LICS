@@ -1,0 +1,30 @@
+﻿<Workspace>
+	<ModuleRelationships>
+		<Module ModuleID="0" SystemClassName="SegaMegaDrive" ModuleClassName="SegaMegaDrive" ModuleInstanceName="MD1600">
+			<ExportConnector ConnectorClassName="ControlPort" ConnectorInstanceName="Control Port 1" />
+			<ExportConnector ConnectorClassName="ControlPort" ConnectorInstanceName="Control Port 2" />
+			<ExportConnector ConnectorClassName="ControlPort" ConnectorInstanceName="Control Port 3" />
+			<ExportConnector ConnectorClassName="CartridgePort" ConnectorInstanceName="Cartridge Port" />
+			<ExportConnector ConnectorClassName="ExpansionPort" ConnectorInstanceName="Expansion Port" />
+		</Module>
+		<Module ModuleID="1" SystemClassName="SegaMegaDrive" ModuleClassName="Control6" ModuleInstanceName="Generic 6-Button Controller">
+			<ImportConnector ExportingModuleID="0" ConnectorClassName="ControlPort" ConnectorInstanceNameLocal="Control Port" ConnectorInstanceNameRemote="Control Port 1" />
+		</Module>
+		<Module ModuleID="2" SystemClassName="SegaMegaDrive" ModuleClassName="ROMLoader" ModuleInstanceName="Generic ROM Loader" />
+	</ModuleRelationships>
+	<ViewLayout>
+		<MainWindowState SizeX="800" SizeY="600" Maximized="0">
+			<MainDockedWindow ActiveHostedWindowID="1">
+				<HostedContentWindows>
+					<HostedWindow WindowID="1" ViewType="Dockable" WindowTitle="VDP - Image Window" />
+				</HostedContentWindows>
+			</MainDockedWindow>
+			<FloatingWindows />
+		</MainWindowState>
+		<ViewPresenterState ViewPresenterGroupName="VDPDebugMenu" ViewPresenterName="Image" Target="Device" DeviceInstanceName="VDP" ModuleID="0">
+			<ViewState>
+				<WindowState WindowID="1" />
+			</ViewState>
+		</ViewPresenterState>
+	</ViewLayout>
+</Workspace>

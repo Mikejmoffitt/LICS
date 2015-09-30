@@ -1,0 +1,447 @@
+﻿<Module xmlns="http://www.exodusemulator.com/Schema/ExodusSchema.xsd" SystemClassName="SegaMegaDrive" ModuleClassName="SegaMegaDrive" ModuleInstanceName="MD1600" ModuleDisplayName="Mega Drive" ManufacturerCode="SEGA" ManufacturerDisplayName="Sega" ProductionYear="1989">
+
+	<!-- Device Objects -->
+	<Device DeviceName="S315-5313"     InstanceName="VDP" />
+	<Device DeviceName="M68000"        InstanceName="Main 68000" />
+	<Device DeviceName="RAM16Variable" InstanceName="RAM" MemoryEntryCount="0x8000" />
+	<Device DeviceName="YM2612"        InstanceName="YM2612" />
+	<Device DeviceName="SN76489"       InstanceName="PSG" />
+	<Device DeviceName="RAM8"          InstanceName="Z80 RAM" MemoryEntryCount="0x2000" />
+	<Device DeviceName="Z80"           InstanceName="Z80" />
+	<Device DeviceName="A10000"        InstanceName="MD IO" />
+	<Device DeviceName="MDBusArbiter"  InstanceName="Bus Arbiter" />
+	<Device DeviceName="ROM16"         InstanceName="Boot ROM" MemoryEntryCount="0x2000" />
+	<!-- Note that hardware tests have shown that the VRAM does NOT power on initialized to all 0. From a cold boot on a non-TMSS system,
+	the VRAM appears as though it has been initialized with the repeating pattern specified below. CRAM and VSRAM appear with 0EEE and 07FF
+	in all slots, respectively. Sometimes random bits in each one can end up clear, but the general pattern is all bits set. -->
+	<!-- ##TODO## Perform hardware tests to determine how the sprite cache is initialized on power on. Most likely, it is initialized with
+	all bits set. -->
+	<Device DeviceName="TimedBufferIntDevice" InstanceName="VDP - VRAM" MemoryEntryCount="0x10000" RepeatData="1" BinaryDataPresent="1">00000000FFFFFFFFFFFFFFFF00000000</Device>
+	<Device DeviceName="TimedBufferIntDevice" InstanceName="VDP - CRAM" MemoryEntryCount="0x80" RepeatData="1" BinaryDataPresent="1">0EEE</Device>
+	<Device DeviceName="TimedBufferIntDevice" InstanceName="VDP - VSRAM" MemoryEntryCount="0x50" KeepLatestBufferCopy="True" RepeatData="1" BinaryDataPresent="1">07FF</Device>
+	<Device DeviceName="TimedBufferIntDevice" InstanceName="VDP - SpriteCache" MemoryEntryCount="0x140" />
+
+	<!-- Bus Objects -->
+	<BusInterface Name="M68kBus" AddressBusWidth="24" DataBusWidth="16" />
+	<BusInterface Name="Z80Bus" AddressBusWidth="16" DataBusWidth="8" />
+	<BusInterface Name="ControlPortBus" />
+
+	<!-- Line Group Objects -->
+	<BusInterface.DefineLineGroup BusInterfaceName="ControlPortBus" LineGroupName="Control Port 1 Lines" />
+	<BusInterface.DefineLineGroup BusInterfaceName="ControlPortBus" LineGroupName="Control Port 2 Lines" />
+	<BusInterface.DefineLineGroup BusInterfaceName="ControlPortBus" LineGroupName="Control Port 3 Lines" />
+	<BusInterface.DefineLineGroup BusInterfaceName="M68kBus" LineGroupName="Cartridge Port Lines" />
+	<BusInterface.DefineLineGroup BusInterfaceName="M68kBus" LineGroupName="Expansion Port Lines" />
+
+	<!-- Clock Objects -->
+	<ClockSource Name="MCLK" ClockType="Direct" InitialValue="53203400" /> <!-- MCLK input to VDP (53.203400 PAL, 53.634165 NTSC) -->
+	<ClockSource Name="VCLK" ClockType="Divider" /> <!-- CLK1 output from VDP, CLK input to M68K, 0M input to YM2612, VCLK on cartridge port. -->
+	<ClockSource Name="ZCLK" ClockType="Divider" /> <!-- CLK0 output from VDP, CLK input to Z80, CLOCK input to embedded PSG. -->
+	<ClockSource.SetInputClockSource InputClockSourceName="MCLK" TargetClockSourceName="VCLK" />
+	<ClockSource.SetInputClockSource InputClockSourceName="MCLK" TargetClockSourceName="ZCLK" />
+	<Device.ReferenceClockSource DeviceInstanceName="VDP" ClockSourceName="ZCLK" ReferenceName="CLK0" />
+	<Device.ReferenceClockSource DeviceInstanceName="VDP" ClockSourceName="VCLK" ReferenceName="CLK1" />
+
+	<!-- Clock Mappings -->
+	<BusInterface.MapClockSource BusInterfaceName="M68kBus" ClockSourceName="MCLK" DeviceInstanceName="VDP" TargetClockLine="MCLK" />
+	<BusInterface.MapClockSource BusInterfaceName="M68kBus" ClockSourceName="VCLK" DeviceInstanceName="Main 68000" TargetClockLine="CLK" />
+	<BusInterface.MapClockSource BusInterfaceName="M68kBus" ClockSourceName="ZCLK" DeviceInstanceName="PSG" TargetClockLine="CLOCK" />
+	<BusInterface.MapClockSource BusInterfaceName="Z80Bus" ClockSourceName="ZCLK" DeviceInstanceName="Z80" TargetClockLine="CLK" />
+	<BusInterface.MapClockSource BusInterfaceName="Z80Bus" ClockSourceName="VCLK" DeviceInstanceName="YM2612" TargetClockLine="0M" />
+
+	<!-- Exported Connectors -->
+	<System.ExportConnector BusInterfaceName="ControlPortBus" ConnectorClassName="ControlPort" ConnectorInstanceName="Control Port 1" />
+	<System.ExportConnector BusInterfaceName="ControlPortBus" ConnectorClassName="ControlPort" ConnectorInstanceName="Control Port 2" />
+	<System.ExportConnector BusInterfaceName="ControlPortBus" ConnectorClassName="ControlPort" ConnectorInstanceName="Control Port 3" />
+	<System.ExportConnector BusInterfaceName="M68kBus" ConnectorClassName="CartridgePort" ConnectorInstanceName="Cartridge Port" />
+	<System.ExportConnector BusInterfaceName="M68kBus" ConnectorClassName="ExpansionPort" ConnectorInstanceName="Expansion Port" />
+
+	<!-- Exported Bus Interfaces -->
+	<System.ExportBusInterface ConnectorInstanceName="Control Port 1" BusInterfaceName="ControlPortBus" ImportName="BusInterface" >
+		<ExportLineGroup LineGroupName="Control Port 1 Lines" ImportName="Control Port Lines" />
+	</System.ExportBusInterface>
+	<System.ExportBusInterface ConnectorInstanceName="Control Port 2" BusInterfaceName="ControlPortBus" ImportName="BusInterface" >
+		<ExportLineGroup LineGroupName="Control Port 2 Lines" ImportName="Control Port Lines" />
+	</System.ExportBusInterface>
+	<System.ExportBusInterface ConnectorInstanceName="Control Port 3" BusInterfaceName="ControlPortBus" ImportName="BusInterface" >
+		<ExportLineGroup LineGroupName="Control Port 3 Lines" ImportName="Control Port Lines" />
+	</System.ExportBusInterface>
+	<System.ExportBusInterface ConnectorInstanceName="Cartridge Port" BusInterfaceName="M68kBus" ImportName="BusInterface" >
+		<ExportLineGroup LineGroupName="Cartridge Port Lines" ImportName="Cartridge Port Lines" />
+	</System.ExportBusInterface>
+	<System.ExportBusInterface ConnectorInstanceName="Expansion Port" BusInterfaceName="M68kBus" ImportName="BusInterface" >
+		<ExportLineGroup LineGroupName="Expansion Port Lines" ImportName="Expansion Port Lines" />
+	</System.ExportBusInterface>
+
+	<!-- Exported Clock Sources -->
+	<System.ExportClockSource ConnectorInstanceName="Cartridge Port" ClockSourceName="VCLK" ImportName="VCLK" />
+
+	<!-- Device References -->
+	<Device.ReferenceDevice DeviceInstanceName="VDP" TargetInstanceName="VDP - VRAM" ReferenceName="VRAM" />
+	<Device.ReferenceDevice DeviceInstanceName="VDP" TargetInstanceName="VDP - CRAM" ReferenceName="CRAM" />
+	<Device.ReferenceDevice DeviceInstanceName="VDP" TargetInstanceName="VDP - VSRAM" ReferenceName="VSRAM" />
+	<Device.ReferenceDevice DeviceInstanceName="VDP" TargetInstanceName="VDP - SpriteCache" ReferenceName="SpriteCache" />
+	<Device.ReferenceDevice DeviceInstanceName="VDP" TargetInstanceName="PSG" ReferenceName="PSG" />
+
+	<!-- Bus References -->
+	<Device.ReferenceBus DeviceInstanceName="Bus Arbiter" BusInterfaceName="M68kBus" ReferenceName="M68000Bus" />
+	<Device.ReferenceBus DeviceInstanceName="Bus Arbiter" BusInterfaceName="Z80Bus" ReferenceName="Z80Bus" />
+	<Device.ReferenceBus DeviceInstanceName="Main 68000" BusInterfaceName="M68kBus" ReferenceName="BusInterface" />
+	<Device.ReferenceBus DeviceInstanceName="VDP" BusInterfaceName="M68kBus" ReferenceName="BusInterface" />
+	<Device.ReferenceBus DeviceInstanceName="Z80" BusInterfaceName="Z80Bus" ReferenceName="BusInterface" />
+	<Device.ReferenceBus DeviceInstanceName="MD IO" BusInterfaceName="M68kBus" ReferenceName="BusInterface" />
+	<Device.ReferenceBus DeviceInstanceName="MD IO" BusInterfaceName="ControlPortBus" ReferenceName="ControlPortBus" />
+
+	<!-- Device Dependencies -->
+	<Device.SetDependentDevice DeviceInstanceName="Z80" TargetInstanceName="Main 68000" />
+	<!-- ##TODO## We may unfortunately end up needing this when we correctly implement the bus arbiter. Since the
+	M68000 can request the Z80 bus, and often will when working with IO ports, and the Z80 requests the M68000
+	bus when performing banked memory access, and accessing the VDP, it seems the only way to correctly emulate
+	these cases, without opening ourselves up to the possibility of many rollback events, is to run the M68000
+	and Z80 in lock-step. -->
+	<!-- ##NOTE## We've turned on lock-step execution for the M68000 and Z80, and it isn't too bad really. It
+	seems this really is the only way to solve all synchronization issues between these two processors, so this is
+	just the way it will have to be. -->
+	<Device.SetDependentDevice DeviceInstanceName="Main 68000" TargetInstanceName="Z80" />
+	<Device.SetDependentDevice DeviceInstanceName="Main 68000" TargetInstanceName="VDP" />
+	<Device.SetDependentDevice DeviceInstanceName="Z80" TargetInstanceName="VDP" />
+
+	<!-- System CE Line Definitions -->
+	<!-- ##TODO## Setup rules which allow mutually exclusive lines to be defined here. A lot of these lines cannot be asserted at the
+	same time, but the system doesn't know that when setting up line mappings, which can force valid mappings to require additional
+	line restrictions to be specified in order for the system to accept them. -->
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="LDS"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="UDS"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="R/W"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="AS"   BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="FC"   BitCount="3" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="FCCPUSpace" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="RMWCycleInProgress" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="RMWCycleFirstOperation" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="CE0"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="BootROM" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="ROM"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="ASEL" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="FDC"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="FDWR" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="TIME" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="IO"   BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="EOE"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="NOE"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="LWR"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="UWR"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="CAS0" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="RAS0" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="OE0"  BitCount="1" />
+	<!-- ##TODO## Implement the CAS2 and RAS2 CE lines -->
+	<!-- <BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="CAS2" BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="M68kBus" LineName="RAS2" BitCount="1" /> -->
+	<BusInterface.DefineCELineMemory BusInterfaceName="Z80Bus" LineName="ZRD"   BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="Z80Bus" LineName="ZWR"   BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="Z80Bus" LineName="ZRAM"  BitCount="1" />
+	<BusInterface.DefineCELineMemory BusInterfaceName="Z80Bus" LineName="SOUND" BitCount="1" />
+
+	<!-- M68K CE Line Mappings -->
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="UDS" DeviceLineName="UDS" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="LDS" DeviceLineName="LDS" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="R/W" DeviceLineName="R/W" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="AS" DeviceLineName="AS" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="FC" DeviceLineName="FC" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="FCCPUSpace" DeviceLineName="FCCPUSpace" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="RMWCycleInProgress" DeviceLineName="RMWCycleInProgress" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Main 68000" BusLineName="RMWCycleFirstOperation" DeviceLineName="RMWCycleFirstOperation" />
+
+	<!-- Z80 CE Line Mappings -->
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="Z80Bus" DeviceInstanceName="Z80" BusLineName="ZRD" DeviceLineName="RD" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="Z80Bus" DeviceInstanceName="Z80" BusLineName="ZWR" DeviceLineName="WR" />
+
+	<!-- Bus Arbiter CE Line Mappings -->
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="UDS" DeviceLineName="UDS" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="LDS" DeviceLineName="LDS" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="R/W" DeviceLineName="R/W" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="OE0" DeviceLineName="OE0" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="CE0" DeviceLineName="CE0" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="BootROM" DeviceLineName="BootROM" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="ROM" DeviceLineName="ROM" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="ASEL" DeviceLineName="ASEL" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="FDC" DeviceLineName="FDC" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="FDWR" DeviceLineName="FDWR" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="TIME" DeviceLineName="TIME" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="IO" DeviceLineName="IO" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="EOE" DeviceLineName="EOE" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" BusLineName="NOE" DeviceLineName="NOE" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="Z80Bus" DeviceInstanceName="Bus Arbiter" BusLineName="SOUND" DeviceLineName="SOUND" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="Z80Bus" DeviceInstanceName="Bus Arbiter" BusLineName="ZRAM" DeviceLineName="ZRAM" />
+
+	<!-- VDP CE Line Mappings -->
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="UDS" DeviceLineName="UDS" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="LDS" DeviceLineName="LDS" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="R/W" DeviceLineName="R/W" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="AS" DeviceLineName="AS" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="RMWCycleInProgress" DeviceLineName="RMWCycleInProgress" />
+	<BusInterface.MapCELineInputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="RMWCycleFirstOperation" DeviceLineName="RMWCycleFirstOperation" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="UDS" DeviceLineName="UDS" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="LDS" DeviceLineName="LDS" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="R/W" DeviceLineName="R/W" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="AS" DeviceLineName="AS" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="UWR" DeviceLineName="UWR" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="LWR" DeviceLineName="LWR" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="CAS0" DeviceLineName="CAS0" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="RAS0" DeviceLineName="RAS0" />
+	<BusInterface.MapCELineOutputMemory BusInterfaceName="M68kBus" DeviceInstanceName="VDP" BusLineName="OE0" DeviceLineName="OE0" />
+
+	<!-- VDP Line Mappings -->
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="VDP" TargetDeviceInstanceName="Main 68000" SourceLine="IPL" TargetLine="IPL" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="VDP" TargetDeviceInstanceName="Z80" SourceLine="INT" TargetLine="INT" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="VDP" TargetDeviceInstanceName="Main 68000" SourceLine="BR" TargetLine="BR" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Main 68000" TargetDeviceInstanceName="VDP" SourceLine="BG" TargetLine="BG" />
+
+	<!-- Interrupt Vector Acquisition Mappings -->
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="Main 68000" SourceLine="VPA" TargetLine="VPA" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="VDP" SourceLine="INTAK" TargetLine="INTAK" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="1" CELineConditions="FCCPUSpace=1, FC=111" AddressLineFilter="????1111 ???????? ????000?" MemoryMapSize="0x10" AddressMask="0x00000F" AddressDiscardLowerBitCount="1" />
+
+	<!-- Bus Arbiter Line Mappings-->
+	<BusInterface.MapLine BusInterfaceName="Z80Bus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="Z80" SourceLine="ZRES" TargetLine="RESET" />
+	<BusInterface.MapLine BusInterfaceName="Z80Bus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="Z80" SourceLine="ZBR" TargetLine="BUSREQ" />
+	<BusInterface.MapLine BusInterfaceName="Z80Bus" SourceDeviceInstanceName="Z80" TargetDeviceInstanceName="Bus Arbiter" SourceLine="BUSACK" TargetLine="ZBAK" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="Main 68000" SourceLine="BR" TargetLine="BR" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="VDP" TargetDeviceInstanceName="Bus Arbiter" SourceLine="BR" TargetLine="BR" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Main 68000" TargetDeviceInstanceName="Bus Arbiter" SourceLine="BG" TargetLine="BG" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="VDP" SourceLine="SRES" TargetLine="RESET" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="Main 68000" SourceLine="VRES" TargetLine="RESET" />
+	<BusInterface.MapLine BusInterfaceName="M68kBus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="Main 68000" SourceLine="HALT" TargetLine="HALT" />
+	<BusInterface.MapLine BusInterfaceName="Z80Bus" SourceDeviceInstanceName="Bus Arbiter" TargetDeviceInstanceName="YM2612" SourceLine="ZRES" TargetLine="IC" />
+
+	<!-- Control Port 1 Line Mappings -->
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_D0" TargetLine="D0" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_D1" TargetLine="D1" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_D2" TargetLine="D2" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_D3" TargetLine="D3" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_TL" TargetLine="TL" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_TR" TargetLine="TR" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 1 Lines" SourceLine="PORT1_TH" TargetLine="TH" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D0" TargetLine="PORT1_D0" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D1" TargetLine="PORT1_D1" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D2" TargetLine="PORT1_D2" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D3" TargetLine="PORT1_D3" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TL" TargetLine="PORT1_TL" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TR" TargetLine="PORT1_TR" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 1 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TH" TargetLine="PORT1_TH" DeclaringPartialMappingTemplate="1" />
+
+	<!-- Control Port 2 Line Mappings -->
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_D0" TargetLine="D0" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_D1" TargetLine="D1" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_D2" TargetLine="D2" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_D3" TargetLine="D3" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_TL" TargetLine="TL" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_TR" TargetLine="TR" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 2 Lines" SourceLine="PORT2_TH" TargetLine="TH" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D0" TargetLine="PORT2_D0" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D1" TargetLine="PORT2_D1" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D2" TargetLine="PORT2_D2" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D3" TargetLine="PORT2_D3" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TL" TargetLine="PORT2_TL" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TR" TargetLine="PORT2_TR" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 2 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TH" TargetLine="PORT2_TH" DeclaringPartialMappingTemplate="1" />
+
+	<!-- Control Port 3 Line Mappings -->
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_D0" TargetLine="D0" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_D1" TargetLine="D1" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_D2" TargetLine="D2" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_D3" TargetLine="D3" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_TL" TargetLine="TL" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_TR" TargetLine="TR" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceDeviceInstanceName="MD IO" TargetLineGroupName="Control Port 3 Lines" SourceLine="PORT3_TH" TargetLine="TH" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D0" TargetLine="PORT3_D0" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D1" TargetLine="PORT3_D1" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D2" TargetLine="PORT3_D2" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="D3" TargetLine="PORT3_D3" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TL" TargetLine="PORT3_TL" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TR" TargetLine="PORT3_TR" DeclaringPartialMappingTemplate="1" />
+	<BusInterface.MapLine SourceLineGroupName="Control Port 3 Lines" TargetDeviceInstanceName="MD IO" SourceLine="TH" TargetLine="PORT3_TH" DeclaringPartialMappingTemplate="1" />
+
+	<!-- Control Port 1 Line Pull-ups -->
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_D0" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_D1" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_D2" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_D3" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_TL" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_TR" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT1_TH" Value="1" />
+
+	<!-- Control Port 2 Line Pull-ups -->
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_D0" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_D1" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_D2" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_D3" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_TL" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_TR" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT2_TH" Value="1" />
+
+	<!-- Control Port 3 Line Pull-ups -->
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_D0" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_D1" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_D2" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_D3" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_TL" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_TR" Value="1" />
+	<BusInterface.UnmappedLineState DeviceInstanceName="MD IO" TargetLine="PORT3_TH" Value="1" />
+
+	<!-- M68K Bus Mappings -->
+
+	<!-- Z80 Memory Space Access (0xA00000-0xA0FFFF) -->
+	<!-- ##TODO## Reference interfaces by a name, not numerically. -->
+	<!-- 16-bit Z80 bus access -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="2" CELineConditions="UDS=1, LDS=1" MemoryMapBase="0xA00000" MemoryMapSize="0x10000" />
+	<!-- 8-bit Z80 bus access on even bytes -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="2" CELineConditions="UDS=1, LDS=0" MemoryMapBase="0xA00000" MemoryMapSize="0x10000" />
+	<!-- 8-bit Z80 bus access on odd bytes -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="2" CELineConditions="UDS=0, LDS=1" MemoryMapBase="0xA00000" MemoryMapSize="0x10000" InterfaceOffset="1" />
+
+	<!-- System Registers (0xA10000-0xA1FFFF) -->
+	<!-- ##TODO## Supposedly, only addresses 0xA10000-0xA1001F are valid, but the CE line is reportedly asserted from
+	0xA10000-0xA100FF, so I believe testing will show one of these to be false. -->
+	<!-- ##TODO## Due to the mirrored output in the high and low bytes when reading from the IO ports, we have reason
+	to believe it is effectively on the Z80 bus. Check whether we need to own the Z80 bus in order to access the IO
+	ports. -->
+	<!-- ##NOTE## Further investigation has shown that the M68K doesn't need to own the Z80 bus when accessing the IO
+	ports, but if it doesn't, and the Z80 attempts an M68K banked access at the same time, a timing issue occurs, and
+	the Z80 access fails. See official docs, Addendum 3. This shows us that the IO ports are really halfway between
+	both buses, which is possible, seeing as the IO chip works with the bus arbiter to bridge the buses. -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="MD IO" CELineConditions="IO=1, R/W=1" MemoryMapBase="0xA10000" MemoryMapSize="0x20" AddressDiscardLowerBitCount="1" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="MD IO" CELineConditions="IO=1, R/W=0, LWR=1" MemoryMapBase="0xA10000" MemoryMapSize="0x20" AddressDiscardLowerBitCount="1" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="6" MemoryMapBase="0xA11000" MemoryMapSize="0x100" DataLineMapping="[08]" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="7" MemoryMapBase="0xA11100" MemoryMapSize="0x100" DataLineMapping="[08]" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="8" MemoryMapBase="0xA11200" MemoryMapSize="0x100" DataLineMapping="[08]" />
+
+	<!-- VDP (0xC00000-0xDFFFFF) -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="VDP" AddressLineFilter="110??000 ???????? 00000000" MemoryMapSize="0x20" AddressMask="0x00001F" AddressDiscardLowerBitCount="1" />
+
+	<!-- Work RAM (0xE00000-0xFFFFFF) -->
+	<!-- Note that the use of the actual WE and OE inputs for RAM access on read and write is critical, in order
+	to correctly emulate the behaviour of the Mega Drive when executing the M68000 TAS instruction. The write stage
+	of this instruction is ignored on the Mega Drive, because the VDP only calculates its output CE lines when the
+	AS line is first asserted. Since the AS line remains asserted during both the read and write stages of the TAS
+	instruction, the LWR and UWR lines are not asserted during the write phase, so the write doesn't end up going
+	to RAM. See the CE line output implementation in the VDP core for more info. -->
+	<!-- 16-bit RAM access -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="RAM" InterfaceNumber="2" CELineConditions="FCCPUSpace=0, RAS0=1, R/W=1, EOE=1, NOE=1" AddressLineFilter="111????? 00000000 00000000" MemoryMapSize="0x10000" AddressDiscardLowerBitCount="1" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="RAM" InterfaceNumber="2" CELineConditions="FCCPUSpace=0, RAS0=1, R/W=0, UWR=1, LWR=1" AddressLineFilter="111????? 00000000 00000000" MemoryMapSize="0x10000" AddressDiscardLowerBitCount="1" />
+	<!-- 8-bit RAM write on even bytes -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="RAM" InterfaceNumber="1" CELineConditions="FCCPUSpace=0, RAS0=1, R/W=1, EOE=1, NOE=0" AddressLineFilter="111????? 00000000 00000000" MemoryMapSize="0x10000" DataLineMapping="[15][14][13][12][11][10][09][08]" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="RAM" InterfaceNumber="1" CELineConditions="FCCPUSpace=0, RAS0=1, R/W=0, UWR=1, LWR=0" AddressLineFilter="111????? 00000000 00000000" MemoryMapSize="0x10000" DataLineMapping="[15][14][13][12][11][10][09][08]" />
+	<!-- 8-bit RAM write on odd bytes -->
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="RAM" InterfaceNumber="1" CELineConditions="FCCPUSpace=0, RAS0=1, R/W=1, EOE=0, NOE=1" AddressLineFilter="111????? 00000000 00000000" MemoryMapSize="0x10000" DataLineMapping="[07][06][05][04][03][02][01][00]" InterfaceOffset="1" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="RAM" InterfaceNumber="1" CELineConditions="FCCPUSpace=0, RAS0=1, R/W=0, UWR=0, LWR=1" AddressLineFilter="111????? 00000000 00000000" MemoryMapSize="0x10000" DataLineMapping="[07][06][05][04][03][02][01][00]" InterfaceOffset="1" />
+
+	<!-- Z80 Bus mappings -->
+	<BusInterface.MapDevice BusInterfaceName="Z80Bus" DeviceInstanceName="Z80 RAM" CELineConditions="ZRAM=1" MemoryMapBase="0x0000" MemoryMapSize="0x4000" AddressMask="0x1FFF" />
+	<BusInterface.MapDevice BusInterfaceName="Z80Bus" DeviceInstanceName="YM2612" CELineConditions="SOUND=1" MemoryMapBase="0x4000" MemoryMapSize="0x2000" AddressMask="0x0003" />
+	<BusInterface.MapDevice BusInterfaceName="Z80Bus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="5" MemoryMapBase="0x6000" MemoryMapSize="0x100" DataLineMapping="[00]" />
+	<BusInterface.MapDevice BusInterfaceName="Z80Bus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="3" MemoryMapBase="0x7F00" MemoryMapSize="0x100" />
+	<BusInterface.MapDevice BusInterfaceName="Z80Bus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="4" MemoryMapBase="0x8000" MemoryMapSize="0x8000" />
+
+	<!-- Default views to open. This specifies which debug windows are open by default when the user first loads the system. -->
+	<System.OpenView Target="Device" DeviceInstanceName="VDP" ViewGroupName="VDPDebugMenu" ViewName="Image"/>
+
+	<!-- TMSS Security Device -->
+	<System.DefineEmbeddedROM EmbeddedROMName="Boot ROM" TargetDeviceInstanceName="Boot ROM" InterfaceNumber="0" ROMRegionSize="0x2000" ROMEntryBitCount="16" />
+	<Device.ReferenceDevice DeviceInstanceName="Bus Arbiter" TargetInstanceName="Boot ROM" ReferenceName="BootROM" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="9" MemoryMapBase="0xA14000" MemoryMapSize="0x100" DataLineMapping="[08]" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Bus Arbiter" InterfaceNumber="10" MemoryMapBase="0xA14100" MemoryMapSize="0x100" DataLineMapping="[08]" />
+	<BusInterface.MapDevice BusInterfaceName="M68kBus" DeviceInstanceName="Boot ROM" CELineConditions="FCCPUSpace=0, CE0=0, BootROM=1" MemoryMapBase="0x0" MemoryMapSize="0x400000" AddressDiscardLowerBitCount="1" />
+
+	<!-- System Lines -->
+	<System.DefineSystemLine Name="NTSC" Width="1" />
+	<System.DefineSystemLine Name="JAP"  Width="1" />
+	<System.DefineSystemLine Name="DISK" Width="1" />
+	<System.DefineSystemLine Name="CART" Width="1" />
+	<System.DefineSystemLine Name="WRES" Width="1" />
+	<System.DefineSystemLine Name="ActivateTMSS" Width="1" />
+	<System.DefineSystemLine Name="ActivateBootROM" Width="1" />
+	<System.DefineSystemLine Name="HWVersion" Width="4" />
+
+	<!-- Default System Line States -->
+	<System.SetLineState SystemLineName="NTSC" Value="1" />
+	<System.SetLineState SystemLineName="JAP"  Value="0" />
+	<System.SetLineState SystemLineName="DISK" Value="0" />
+	<System.SetLineState SystemLineName="CART" Value="0" />
+	<System.SetLineState SystemLineName="WRES" Value="0" />
+	<System.SetLineState SystemLineName="ActivateTMSS" Value="0" />
+	<System.SetLineState SystemLineName="ActivateBootROM" Value="0" />
+	<System.SetLineState SystemLineName="HWVersion" Value="0" />
+
+	<!-- System Line Mappings -->
+	<System.MapSystemLine SourceSystemLineName="NTSC" TargetDeviceInstanceName="VDP"         TargetLine="PAL" XORMask="1" />
+	<System.MapSystemLine SourceSystemLineName="CART" TargetDeviceInstanceName="Bus Arbiter" TargetLine="CART" />
+	<System.MapSystemLine SourceSystemLineName="NTSC" TargetDeviceInstanceName="MD IO"       TargetLine="NTSC" />
+	<System.MapSystemLine SourceSystemLineName="JAP"  TargetDeviceInstanceName="MD IO"       TargetLine="JAP" />
+	<System.MapSystemLine SourceSystemLineName="DISK" TargetDeviceInstanceName="MD IO"       TargetLine="DISK" />
+	<System.MapSystemLine SourceSystemLineName="WRES" TargetDeviceInstanceName="Bus Arbiter" TargetLine="WRES" />
+	<System.MapSystemLine SourceSystemLineName="ActivateTMSS" TargetDeviceInstanceName="Bus Arbiter" TargetLine="ActivateTMSS" />
+	<System.MapSystemLine SourceSystemLineName="ActivateBootROM" TargetDeviceInstanceName="Bus Arbiter" TargetLine="ActivateBootROM" />
+	<System.MapSystemLine SourceSystemLineName="HWVersion" TargetDeviceInstanceName="MD IO" TargetLine="HWVersion" />
+
+	<!-- Exported System Lines -->
+	<System.ExportSystemLine ConnectorInstanceName="Cartridge Port" SystemLineName="CART" ImportName="CART" />
+	<System.ExportSystemLine ConnectorInstanceName="Expansion Port" SystemLineName="DISK" ImportName="DISK" />
+
+	<!-- System Soft Reset Setting -->
+	<System.Setting Name="Soft Reset" ToggleSetting="True" SettingChangeLeadInRandomTimeRangeBegin="100000000" SettingChangeLeadInRandomTimeRangeEnd="250000000" ToggleSettingAutoRevert="True" ToggleSettingAutoRevertRandomTimeRangeBegin="100000000" ToggleSettingAutoRevertRandomTimeRangeEnd="250000000">
+		<System.Setting.Option Name="On" ToggleSettingOnOption="True">
+			<System.SetLineState SystemLineName="WRES" Value="1" />
+		</System.Setting.Option>
+		<System.Setting.Option Name="Off" Default="True">
+			<System.SetLineState SystemLineName="WRES" Value="0" />
+		</System.Setting.Option>
+	</System.Setting>
+
+	<!-- System Region Setting -->
+	<System.Setting Name="Region">
+		<System.Setting.Option Name="U" DisplayName="North America" Default="True">
+			<System.SetClockFrequency TargetClockName="MCLK" ClockType="Direct" Value="53634165" />
+			<System.SetLineState SystemLineName="NTSC" Value="1" />
+			<System.SetLineState SystemLineName="JAP"  Value="0" />
+		</System.Setting.Option>
+		<System.Setting.Option Name="E" DisplayName="Europe">
+			<System.SetClockFrequency TargetClockName="MCLK" ClockType="Direct" Value="53203400" />
+			<System.SetLineState SystemLineName="NTSC" Value="0" />
+			<System.SetLineState SystemLineName="JAP"  Value="0" />
+		</System.Setting.Option>
+		<System.Setting.Option Name="J" DisplayName="Japan">
+			<System.SetClockFrequency TargetClockName="MCLK" ClockType="Direct" Value="53634165" />
+			<System.SetLineState SystemLineName="NTSC" Value="1" />
+			<System.SetLineState SystemLineName="JAP"  Value="1" />
+		</System.Setting.Option>
+		<System.Setting.Option Name="JPAL" DisplayName="Japan PAL (Unused)">
+			<System.SetClockFrequency TargetClockName="MCLK" ClockType="Direct" Value="53203400" />
+			<System.SetLineState SystemLineName="NTSC" Value="0" />
+			<System.SetLineState SystemLineName="JAP"  Value="1" />
+		</System.Setting.Option>
+	</System.Setting>
+
+	<!-- System TMSS Setting -->
+	<System.Setting Name="TMSS">
+		<System.Setting.Option Name="Boot ROM with VDP Lockout">
+			<System.SetLineState SystemLineName="ActivateTMSS" Value="1" />
+			<System.SetLineState SystemLineName="ActivateBootROM" Value="1" />
+			<System.SetLineState SystemLineName="HWVersion" Value="1" />
+		</System.Setting.Option>
+		<System.Setting.Option Name="Boot ROM without VDP Lockout" Default="True">
+			<System.SetLineState SystemLineName="ActivateTMSS" Value="0" />
+			<System.SetLineState SystemLineName="ActivateBootROM" Value="1" />
+			<System.SetLineState SystemLineName="HWVersion" Value="1" />
+		</System.Setting.Option>
+		<System.Setting.Option Name="None">
+			<System.SetLineState SystemLineName="ActivateTMSS" Value="0" />
+			<System.SetLineState SystemLineName="ActivateBootROM" Value="0" />
+			<System.SetLineState SystemLineName="HWVersion" Value="0" />
+		</System.Setting.Option>
+	</System.Setting>
+
+	<!-- Exported System Settings -->
+	<System.ExportSystemSetting ConnectorInstanceName="Cartridge Port" SystemSettingName="Region" ImportName="Region" />
+	<System.ExportSystemSetting ConnectorInstanceName="Expansion Port" SystemSettingName="Region" ImportName="Region" />
+
+</Module>

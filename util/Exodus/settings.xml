@@ -1,0 +1,15 @@
+﻿<Settings>
+	<ModulesPath>Modules</ModulesPath>
+	<SavestatesPath>Savestates</SavestatesPath>
+	<PersistentStatePath>PersistentState</PersistentStatePath>
+	<WorkspacesPath>Workspaces</WorkspacesPath>
+	<CapturesPath>Captures</CapturesPath>
+	<AssembliesPath>Plugins</AssembliesPath>
+	<DefaultSystem>MegaDriveTestSystemNoBios.xml</DefaultSystem>
+	<DefaultWorkspace>Mega Drive Clean.xml</DefaultWorkspace>
+	<EnableThrottling>1</EnableThrottling>
+	<RunWhenProgramModuleLoaded>1</RunWhenProgramModuleLoaded>
+	<EnablePersistentState>1</EnablePersistentState>
+	<LoadWorkspaceWithDebugState>1</LoadWorkspaceWithDebugState>
+	<ShowDebugConsole>0</ShowDebugConsole>
+</Settings>

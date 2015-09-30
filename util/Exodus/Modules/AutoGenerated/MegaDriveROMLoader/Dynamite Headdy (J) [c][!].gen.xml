@@ -1,0 +1,10 @@
+﻿<Module SystemClassName="SegaMegaDrive" ModuleClassName="Dynamite Headdy (J) [c][!].gen" ModuleInstanceName="Dynamite Headdy (J) [c][!].gen" ProgramModule="1">
+	<System.ImportConnector ConnectorClassName="CartridgePort" ConnectorInstanceName="Cartridge Port" />
+	<System.ImportBusInterface ConnectorInstanceName="Cartridge Port" BusInterfaceName="BusInterface" ImportName="BusInterface" />
+	<System.ImportSystemLine ConnectorInstanceName="Cartridge Port" SystemLineName="CART" ImportName="CART" />
+	<Device DeviceName="ROM16" InstanceName="ROM" BinaryDataPresent="1" SeparateBinaryData="1">C:\Users\Moffitt\Desktop\Dynamite Headdy (J) [c][!].gen</Device>
+	<BusInterface.MapDevice BusInterfaceName="BusInterface" DeviceInstanceName="ROM" CELineConditions="FCCPUSpace=0, CE0=1" MemoryMapBase="000000" MemoryMapSize="200000" AddressMask="3FFFFF" AddressDiscardLowerBitCount="1" />
+	<System.SetLineState SystemLineName="CART" Value="1" />
+	<System.ImportSystemSetting ConnectorInstanceName="Cartridge Port" SystemSettingName="Region" ImportName="Region" />
+	<System.SelectSettingOption SettingName="Region" OptionName="J" />
+</Module>
