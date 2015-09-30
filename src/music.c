@@ -28,8 +28,8 @@ static const void *instrument_set[] =
 	(void *)eif_buzztar,        // 0E: FM Buzztar
 	(void *)eif_buzztarc1,      // 0F: FM Buzztar (decay)
 	(void *)eif_drone,          // 10: FM Drone
-	(void *)eif_unsettling,	    // 10: FM Unsettling
-	(void *)ewf_snare3,         // 11: PCM snare drum 3 (quiet)
+	(void *)eif_unsettling,	    // 11: FM Unsettling
+	(void *)ewf_snare3,         // 12: PCM snare drum 3 (quiet)
 	0
 };
 
