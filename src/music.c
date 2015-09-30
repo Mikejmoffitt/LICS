@@ -11,28 +11,34 @@ static u16 current_bgm;
 
 static const void *instrument_set[] =
 {
-	(void *)eif_bass1,			// 00: FM Bass 1
-	(void *)eif_sqchords1,		// 01: GM Square 1
-	(void *)eif_sawlead,		// 02: GM Saw 1
-	(void *)eef_flat,			// 03: PSG flat 
-	(void *)ewf_bassdrum1,		// 04: PCM bass drum 1
-	(void *)ewf_snare1,			// 05: PCM snare drum 1
-	(void *)eef_hat,			// 06: PSG hihat
-	(void *)eef_qdecay,			// 07: PSG quick hit
-	(void *)ewf_hat1,			// 08: PCM hihat 1
-	(void *)ewf_snare2,			// 09: PCM snare drum 2
-	(void *)eif_bass2,			// 0A: FM Bass 2
-	(void *)eif_saw2,			// 0B: FM Saw 2
-	(void *)eif_saw2at,			// 0C: FM Saw 2 (att)
-	(void *)eif_buzz,			// 0D: FM Buzz
+	(void *)eif_bass1,          // 00: FM Bass 1
+	(void *)eif_sqchords1,      // 01: GM Square 1
+	(void *)eif_sawlead,        // 02: GM Saw 1
+	(void *)eef_flat,           // 03: PSG flat 
+	(void *)ewf_bassdrum1,      // 04: PCM bass drum 1
+	(void *)ewf_snare1,	        // 05: PCM snare drum 1
+	(void *)eef_hat,            // 06: PSG hihat
+	(void *)eef_qdecay,         // 07: PSG quick hit
+	(void *)ewf_hat1,           // 08: PCM hihat 1
+	(void *)ewf_snare2,         // 09: PCM snare drum 2
+	(void *)eif_bass2,          // 0A: FM Bass 2
+	(void *)eif_saw2,           // 0B: FM Saw 2
+	(void *)eif_saw2at,         // 0C: FM Saw 2 (att)
+	(void *)eif_buzz,           // 0D: FM Buzz
+	(void *)eif_buzztar,        // 0E: FM Buzztar
+	(void *)eif_buzztarc1,      // 0F: FM Buzztar (decay)
+	(void *)eif_drone,          // 10: FM Drone
+	(void *)eif_unsettling,	    // 10: FM Unsettling
+	(void *)ewf_snare3,         // 11: PCM snare drum 3 (quiet)
 	0
 };
 
 static const void *bgm_set[] = 
 {
 	0,
-	(void *)bgm_bgm1,			// Alone in the dark
-	(void *)bgm_bgm2,			// Moskito
+	(void *)bgm_bgm1,           // 01: Alone in the dark
+	(void *)bgm_bgm2,           // 02: Moskito
+	(void *)bgm_bgm3,           // 03: Jttimarsu
 	0
 };
 
