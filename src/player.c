@@ -991,5 +991,18 @@ void player_get_hurt(player *pl)
 		{
 			pl->hp--;
 		}
+
+		if (pl->holding_cube)
+		{
+			u16 cx = fix32ToInt(pl->x);
+			u16 cy = fix32ToInt(pl->y) - 12;
+			s16 cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
+			fix16 cdy = FIX16(-3.0);
+			cube_spawn(cx, cy,
+				pl->holding_cube,
+				CUBE_STATE_AIR,
+				cdx, cdy);
+			pl->holding_cube = 0;
+		}
 	}
 }
