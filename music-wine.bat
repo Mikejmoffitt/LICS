@@ -45,6 +45,7 @@ REM Now for the BGM
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm1\bgm1.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm1.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm2\bgm2.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm2.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm3\bgm3.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm3.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\bgm4\bgm4.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm4.esf
 
 REM clean up the working dir (oh god)
 cd ..

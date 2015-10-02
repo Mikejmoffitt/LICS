@@ -45,6 +45,7 @@ REM Now for the BGM
 xm2esf ..\xm\bgm1\bgm1.xif ..\res\bgm\bgm1.esf
 xm2esf ..\xm\bgm2\bgm2.xif ..\res\bgm\bgm2.esf
 xm2esf ..\xm\bgm3\bgm3.xif ..\res\bgm\bgm3.esf
+xm2esf ..\xm\bgm4\bgm4.xif ..\res\bgm\bgm4.esf
 
 REM clean up the working dir (oh god)
 cd ..

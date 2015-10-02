@@ -12,10 +12,10 @@ static u16 current_bgm;
 static const void *instrument_set[] =
 {
 	(void *)eif_bass1,          // 00: FM Bass 1
-	(void *)eif_sqchords1,      // 01: GM Square 1
-	(void *)eif_sawlead,        // 02: GM Saw 1
+	(void *)eif_sqchords1,      // 01: FM Square 1
+	(void *)eif_sawlead,        // 02: FM Saw 1
 	(void *)eef_flat,           // 03: PSG flat 
-	(void *)ewf_bassdrum1,      // 04: PCM bass drum 1
+	(void *)ewf_bassdrum1,      // 04: PCM kick drum 1
 	(void *)ewf_snare1,	        // 05: PCM snare drum 1
 	(void *)eef_hat,            // 06: PSG hihat
 	(void *)eef_qdecay,         // 07: PSG quick hit
@@ -30,6 +30,8 @@ static const void *instrument_set[] =
 	(void *)eif_drone,          // 10: FM Drone
 	(void *)eif_unsettling,	    // 11: FM Unsettling
 	(void *)ewf_snare3,         // 12: PCM snare drum 3 (quiet)
+	(void *)eef_arp1,           // 13: PSG Arp1 
+	(void *)eef_arp2,           // 14: PSG Arp2
 	0
 };
 
@@ -39,6 +41,7 @@ static const void *bgm_set[] =
 	(void *)bgm_bgm1,           // 01: Alone in the dark
 	(void *)bgm_bgm2,           // 02: Moskito
 	(void *)bgm_bgm3,           // 03: Jttimarsu
+	(void *)bgm_bgm4,           // 03: Jttimarsu
 	0
 };
 
