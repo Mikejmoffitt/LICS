@@ -255,6 +255,7 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 void map_draw_full(u16 cam_x, u16 cam_y)
 {
 	int y = 0;
+	u16 num_rows = STATE_PLANE_H;
 	// Useful values for sourcing and plotting
 	// Map width, in tiles * 2 (actual address in VRAM)
 	u16 map_width = state.current_room->w * (2 * (STATE_SC_W / 8));
@@ -309,7 +310,11 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 		dma_dest[0] = (2 * plot_x) + ((STATE_PLANE_W * 2) * plot_y);
 	}
 
-	for (y = 0; y < STATE_PLANE_H - 2; y++)
+	if (VDP_getScreenHeight() == 224)
+	{
+		num_rows -=2;
+	}
+	for (y = 0; y < num_rows; y++)
 	{		
 		// DMA 1
 //		VDP_doVRamDMA(dma_src[0],VDP_getAPlanAddress() + dma_dest[0],dma_len[0]);
