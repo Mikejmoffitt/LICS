@@ -10,5 +10,6 @@ xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_walk2.xif Z:\home\moffitt\Dev
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubetoss.xif Z:\home\moffitt\Development\LICS\res\sfx\cubetoss.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubebounce.xif Z:\home\moffitt\Development\LICS\res\sfx\cubebounce.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_fizzle.xif Z:\home\moffitt\Development\LICS\res\sfx\fizzle.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubespawn.xif Z:\home\moffitt\Development\LICS\res\sfx\cubespawn.esf
 REM clean up the working dir (oh god)
 cd ..

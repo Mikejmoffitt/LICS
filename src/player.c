@@ -165,9 +165,17 @@ static void player_cp(player *pl)
 		if (pl->input & BUTTON_B)
 		{
 			pl->cp_cnt++;
+			if (pl->cp_cnt == PLAYER_CUBE_FX + 1)
+			{
+				playsound(SFX_CUBESPAWN);
+			}
 		}
 		else
 		{
+			if (pl->cp_cnt > PLAYER_CUBE_FX)
+			{
+				stopsound();
+			}
 			pl->cp_cnt = 0;
 		}
 		u16 cube_spawn_period = (sram.have_fast_phantom ? PLAYER_CP_SPAWN_FAST : PLAYER_CP_SPAWN_SLOW);
@@ -204,6 +212,7 @@ static void player_cp(player *pl)
 	if (pl->cp_cnt > PLAYER_CUBE_FX && system_osc % 2)
 	{
 		particle_spawn(fix32ToInt(pl->x), fix32ToInt(pl->y) - 32, PARTICLE_TYPE_SPARKLE);
+
 	}
 }
 

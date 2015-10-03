@@ -99,7 +99,8 @@ static const void *sfx_list[] = {
 	(void *)sfx_walk2,
 	(void *)sfx_cubetoss,
 	(void *)sfx_cubebounce,
-	(void *)sfx_fizzle
+	(void *)sfx_fizzle,
+	(void *)sfx_cubespawn
 };
 
 static const u16 sfx_len[] = {
@@ -108,16 +109,18 @@ static const u16 sfx_len[] = {
 	2,
 	9,
 	7,
-	16
+	16,
+	32
 };
 
 static const u16 sfx_priority[] = {
 	0,
 	0,
 	0,
-	2,
+	3,
 	1,
-	2
+	2,
+	3
 };
 
 void playsound(u16 snd)
@@ -130,6 +133,13 @@ void playsound(u16 snd)
 	sfx_block = sfx_len[snd];
 	sfx_prio = sfx_priority[snd];
 	echo_play_sfx(src);
+}
+
+void stopsound(void)
+{
+	sfx_block = 0;
+	sfx_prio = 0;
+	echo_stop_sfx();
 }
 
 void sfx_counters(void)
