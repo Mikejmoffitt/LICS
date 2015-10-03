@@ -94,7 +94,6 @@ void playsound(u16 snd)
 	void *src;
 	switch (snd)
 	{
-		default:
 		case 0:
 			src = (void *)sfx_jump;
 			break;
@@ -104,6 +103,14 @@ void playsound(u16 snd)
 		case 2:
 			src = (void *)sfx_walk2;
 			break;
+		case 3:
+			src = (void *)sfx_cubetoss;
+			break;
+		case 4:
+			src = (void *)sfx_cubebounce;
+			break;
+		default:
+			return;
 	}
 	echo_play_sfx(src);
 }

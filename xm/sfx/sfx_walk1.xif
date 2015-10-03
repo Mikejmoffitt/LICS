@@ -6,9 +6,9 @@ TEMPO 4
 PSG 1
 NOISE 0
 FM 0
-PSG0 0
+PSG1 1
 [Instruments]
-1 7
+1 6
 2 0
 3 0
 4 0
@@ -137,7 +137,7 @@ PSG0 0
 127 0
 128 0
 [Pitch]
-PSG0 -36
+PSG1 -40
 [Volume]
-PSG0 64
+PSG1 64
 [END]

@@ -45,7 +45,7 @@ static void player_set_pal(void)
 	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
 }
 
-static void player_eval_control_en(player *pl)
+static inline void player_eval_control_en(player *pl)
 {
 	if (pl->hurt_cnt > 0 || pl->hp == 0)
 	{
@@ -207,7 +207,19 @@ static void player_cp(player *pl)
 	}
 }
 
-static void player_accel(player *pl)
+static inline void player_walking_sound(player *pl)
+{
+	if (pl->anim_cnt == (PLAYER_ANIMSPEED * 1) - 1)
+	{
+		playsound(SFX_WALK1);
+	}
+	else if (pl->anim_cnt == (PLAYER_ANIMSPEED * 3) - 1)
+	{
+		playsound(SFX_WALK2);
+	}
+}
+
+static inline void player_accel(player *pl)
 {
 
 	// deceleration
@@ -241,11 +253,13 @@ static void player_accel(player *pl)
 	{
 		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);
 		pl->direction = PLAYER_RIGHT;
+		player_walking_sound(pl);
 	}
 	else if (pl->input & BUTTON_LEFT)
 	{
 		pl->dx = fix16Sub(pl->dx,PLAYER_X_ACCEL);
 		pl->direction = PLAYER_LEFT;
+		player_walking_sound(pl);
 	}
 	// If dy/dx is almost zero, make it zero
 	if (pl->dx > FIX16(-0.1) && pl->dx < FIX16(0.1) && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
@@ -305,6 +319,7 @@ static void player_jump(player *pl)
 		// Normal jump off the ground
 		if (pl->grounded || pl->on_cube)
 		{
+			playsound(SFX_JUMP);
 			goto do_jump;
 		}
 		// Cube jumping, if we have the ability
@@ -338,6 +353,7 @@ static void player_jump(player *pl)
 
 			pl->holding_cube = 0;
 			// Generate cube of right type, throw it down
+			playsound(SFX_CUBETOSS);
 			goto do_jump;
 		}
 	}
@@ -345,7 +361,6 @@ static void player_jump(player *pl)
 	return;
 do_jump:
 	pl->dy = PLAYER_JUMP_DY;
-	// playsound(SFX_JUMP);
 	// Play SFX
 	return;
 }
@@ -406,6 +421,8 @@ static void player_toss_cubes(player *pl)
 			CUBE_STATE_AIR,
 			cdx, cdy);
 
+		playsound(SFX_CUBETOSS);
+
 		// Player response
 		pl->holding_cube = 0;
 		pl->action_cnt = PLAYER_ACTION_THROW;
@@ -435,6 +452,7 @@ static void player_kick_cube(player *pl, cube *c)
 			c->state = CUBE_STATE_KICKED;
 			c->dx = CUBE_KICK_DX;
 			pl->action_cnt = PLAYER_ACTION_LIFT;
+			playsound(SFX_CUBEBOUNCE);
 		}
 		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1 &&
 			pl->direction == PLAYER_LEFT)
@@ -443,6 +461,7 @@ static void player_kick_cube(player *pl, cube *c)
 			c->state = CUBE_STATE_KICKED;
 			c->dx = (CUBE_KICK_DX * -1);
 			pl->action_cnt = PLAYER_ACTION_LIFT;
+			playsound(SFX_CUBEBOUNCE);
 		}
 	}
 }

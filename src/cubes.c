@@ -7,6 +7,7 @@
 #include "player.h"
 #include "map.h"
 #include "particles.h"
+#include "music.h"
 
 cube cubes[CUBES_NUM];
 
@@ -251,6 +252,7 @@ static void cube_do_ground_recoil(cube *c)
 	c->dy = c->dy - (c->dy + c->dy);
 	cube_degrade_dx(c);
 	cube_eval_stopmoving(c);
+	playsound(SFX_CUBEBOUNCE);
 }
 
 static void cube_bg_bounce_ground(cube *c)
@@ -313,6 +315,7 @@ static void cube_bg_bounce_sides(cube *c)
 	{
 		c->dx = c->dx * -1;
 		cube_clamp_dx(c);
+		playsound(SFX_CUBEBOUNCE);
 		if (side_chk[0])
 		{
 			c->x = (c->x / 8) * 8;
@@ -335,7 +338,8 @@ static void cube_bg_bounce_top(cube *c)
 	// Both left and right test passes for being on the ground
 	if (gnd_chk[0] && gnd_chk[1])
 	{
-		cube_do_ground_recoil(c);
+		c->dy = CUBE_CEILING_DY;
+		playsound(SFX_CUBEBOUNCE);
 	}
 	else if (gnd_chk[0] || gnd_chk[1])
 	{
@@ -345,6 +349,7 @@ static void cube_bg_bounce_top(cube *c)
 		if (cnt_chk)
 		{
 			c->dy = CUBE_CEILING_DY;
+			playsound(SFX_CUBEBOUNCE);
 		}
 		// Center didn't check out. Align it to the wall it's partially on.
 		else
@@ -360,8 +365,6 @@ static void cube_bg_bounce_top(cube *c)
 			return;
 		}
 	}
-
-	
 }
 
 static void cube_bg_collision(cube *c)

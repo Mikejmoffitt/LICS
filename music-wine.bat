@@ -39,6 +39,8 @@ cd util
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_jump.xif Z:\home\moffitt\Development\LICS\res\sfx\jump.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_walk1.xif Z:\home\moffitt\Development\LICS\res\sfx\walk1.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_walk2.xif Z:\home\moffitt\Development\LICS\res\sfx\walk2.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubetoss.xif Z:\home\moffitt\Development\LICS\res\sfx\cubetoss.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubebounce.xif Z:\home\moffitt\Development\LICS\res\sfx\cubebounce.esf
 
 REM Now for the BGM
 

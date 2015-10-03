@@ -1,34 +1,23 @@
 # Created by XM2ESFGUI
 # FROM DAT OERG866 YEYEYE
-FILE "..\xm\bgm4\bgm4.xm"
-
-TYPE BGM LOOP
-TEMPO 7
-PSG 2
-NOISE 1
-FM 4
-PCM 1
-
-FM1 1
-FM2 2
-FM3 3
-FM4 4
-PCMC 5
-PSG1 6
-PSG2 7
-PSGN 8
-
+FILE "..\xm\sfx\cubetoss.xm"
+TYPE SFX NOLOOP
+TEMPO 4
+PSG 1
+NOISE 0
+FM 0
+PSG1 1
 [Instruments]
-1 4
-2 5
-3 0E
-4 0B
+1 13
+2 0
+3 0
+4 0
 5 0
-6 06
-7 0F
-8 13
-9 14
-10 10
+6 0
+7 0
+8 0
+9 0
+10 0
 11 0
 12 0
 13 0
@@ -37,7 +26,7 @@ PSGN 8
 16 0
 17 0
 18 0
-19 C
+19 0
 20 0
 21 0
 22 0
@@ -148,19 +137,7 @@ PSGN 8
 127 0
 128 0
 [Pitch]
-FM1 -5
-FM2 -5
-FM3 -5
-FM4 -5
-PSG1 -53
-PSG2 -53
-PSGN 0
+PSG1 -36
 [Volume]
-FM1 58
-FM2 58
-FM3 52
-FM4 48
 PSG1 64
-PSG2 64
-PSGN 64
 [END]
