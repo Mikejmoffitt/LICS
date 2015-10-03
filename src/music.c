@@ -9,6 +9,10 @@
 
 static u16 current_bgm;
 
+// When non-zero, SFX won't play (for a fake priority system) if priority < sfx_prio
+static u16 sfx_block;
+static u16 sfx_prio;
+
 static const void *instrument_set[] =
 {
 	(void *)eif_bass1,          // 00: FM Bass 1
@@ -89,28 +93,53 @@ void music_play(u16 num)
 	}
 }
 
+static const void *sfx_list[] = {
+	(void *)sfx_jump,
+	(void *)sfx_walk1,
+	(void *)sfx_walk2,
+	(void *)sfx_cubetoss,
+	(void *)sfx_cubebounce,
+	(void *)sfx_fizzle
+};
+
+static const u16 sfx_len[] = {
+	2,
+	2,
+	2,
+	9,
+	7,
+	16
+};
+
+static const u16 sfx_priority[] = {
+	0,
+	0,
+	0,
+	2,
+	1,
+	2
+};
+
 void playsound(u16 snd)
 {
-	void *src;
-	switch (snd)
+	if (sfx_block >0 && sfx_priority[snd] < sfx_prio)
 	{
-		case 0:
-			src = (void *)sfx_jump;
-			break;
-		case 1:
-			src = (void *)sfx_walk1;
-			break;
-		case 2:
-			src = (void *)sfx_walk2;
-			break;
-		case 3:
-			src = (void *)sfx_cubetoss;
-			break;
-		case 4:
-			src = (void *)sfx_cubebounce;
-			break;
-		default:
-			return;
+		return;
 	}
+	const void *src = sfx_list[snd];
+	sfx_block = sfx_len[snd];
+	sfx_prio = sfx_priority[snd];
 	echo_play_sfx(src);
+}
+
+void sfx_counters(void)
+{
+	if (sfx_block != 0)
+	{
+		sfx_block--;
+	}
+	else
+	{
+		sfx_prio = 0;
+	}
 }

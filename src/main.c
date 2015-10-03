@@ -101,6 +101,8 @@ void room_loop(void)
 				duh = duh >> 1;
 			}
 			
+			sfx_counters();
+
 			/* Wait for VBlank. */
 			DEBUG_BGCOL(0x000);
 			system_wait_v();

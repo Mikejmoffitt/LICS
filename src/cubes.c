@@ -49,6 +49,7 @@ static void cube_destroy(cube *c)
 	else
 	{
 		c->state = CUBE_STATE_FIZZLE;
+		playsound(SFX_FIZZLE);
 	}
 }
 

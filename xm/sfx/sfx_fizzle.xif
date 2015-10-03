@@ -1,6 +1,6 @@
 # Created by XM2ESFGUI
 # FROM DAT OERG866 YEYEYE
-FILE "..\xm\sfx\cubetoss.xm"
+FILE "..\xm\sfx\fizzle.xm"
 TYPE SFX NOLOOP
 TEMPO 4
 PSG 1
@@ -8,7 +8,7 @@ NOISE 0
 FM 0
 PSG1 1
 [Instruments]
-1 13
+1 3
 2 0
 3 0
 4 0
@@ -137,7 +137,7 @@ PSG1 1
 127 0
 128 0
 [Pitch]
-PSG1 -34
+PSG1 -40
 [Volume]
 PSG1 64
 [END]
