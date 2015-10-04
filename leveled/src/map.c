@@ -11,8 +11,12 @@ void map_data_interview(void)
 	char in_buffer[MAP_NAME_LEN];
 	memset(in_buffer, 0, sizeof(char) * MAP_NAME_LEN);
 
-	printf("\nTileset chioce? (prev == %X)\n>",map_header.tileset);
+	printf("\nRoom ID? (integer)\n>");
 	unsigned int arg;
+	scanf("%d",&arg);
+	map_header.id = arg;
+
+	printf("\nTileset chioce? (prev == %X)\n>",map_header.tileset);
 	scanf("%d",&arg);
 	map_header.tileset = arg;
 
@@ -49,8 +53,6 @@ void map_new(void)
 	memset(map_header.name,0,MAP_NAME_LEN);
 	snprintf(map_header.name,MAP_NAME_LEN - 1,"%s",in_buffer);
 
-	printf("\nRoom ID? (integer)\n>");
-	scanf("%d",(int *)&map_header.id);
 	while (map_header.w == 0 || map_header.w >= MAP_MAX_WIDTH)
 	{
 		printf("\nWidth in %d-column screens? (integer)\n>",MAP_WIDTH);

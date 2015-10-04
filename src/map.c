@@ -36,15 +36,13 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_roomzero,
 	(map_file *)&mapdata_startroom,
 	(map_file *)&mapdata_sidesquare,
-	(map_file *)&mapdata_talltest,
-	(map_file *)&mapdata_bigtest,
-	(map_file *)&mapdata_buttworld,
+	(map_file *)&mapdata_teleroom,
+	(map_file *)&mapdata_lefttall,
 	0
 };
 
 void map_load_tileset(u8 num)
 {
-	// Black the screen first so no funny wrong blocks show up
 	u32 tsrc_ptr;
 	u32 psrc_ptr;
 	switch (num)
@@ -65,6 +63,10 @@ void map_load_tileset(u8 num)
 		case MAP_SET_SANDY1:
 			tsrc_ptr = (u32)gfx_sandy1;
 			psrc_ptr = (u32)pal_sandy1;
+			break;
+		case MAP_SET_TELEPORTER:
+			tsrc_ptr = (u32)gfx_teleporter;
+			psrc_ptr = (u32)pal_teleporter;
 			break;
 	}
 	VDP_doVRamDMA(tsrc_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_VRAM_LEN * 16);

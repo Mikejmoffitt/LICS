@@ -1,0 +1,7 @@
+Tileset names!
+
+0: Outside1
+1: Outside2
+2: Inside1
+3: Sandy1
+4: Teleporter

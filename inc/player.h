@@ -81,6 +81,8 @@ struct player
 {
 	// Lyle physics vars
 	fix32 x, y;
+	// Storage of 'real pixel' position
+	u16 px, py;
 	void *on_cube;
 	fix16 dx, dy;
 	u16 grounded;

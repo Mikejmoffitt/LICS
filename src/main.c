@@ -21,109 +21,95 @@
 
 u16 debug_bgcol;
 
-void room_setup(player *pl)
+player pl;
+
+static inline void loop_logic(void)
+{
+	player_run(&pl);
+	cubes_run(&pl);
+	particles_run();
+	sfx_counters();
+}
+
+static inline void loop_gfx(void)
+{
+	/* BG updates for scrolling */
+	map_draw_diffs(state_update_scroll(pl.px,pl.py),pl.dx,pl.dy);
+
+	/* Place sprites */
+	hud_draw_health(8,pl.hp); 
+	hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
+	player_draw(&pl);
+	particles_draw();
+	cubes_draw();
+}
+
+static inline void loop_dma(void)
+{
+	map_dma();
+	sprites_dma_simple();
+	state_dma_scroll();	
+	player_dma(&pl);
+}
+
+void room_setup(void)
 {	
 	// Blank the display
-	VDP_setEnable(0);
+	system_wait_v();
+
+	VDP_clearPlan(VDP_PLAN_A,1);
+	VDP_waitDMACompletion();
+	VDP_clearPlan(VDP_PLAN_B,1);
+	VDP_waitDMACompletion();
+
 	cubes_init();
 	particles_init();
-	player_init_soft(pl);
+	hud_draw_health(8,pl.hp); 
+	hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
+	sprites_dma_simple();
+	player_init_soft(&pl);
 
 	state_load_room(state.next_id);
 	// First entry to a room needs some extra processing
-	pl->x = state_get_entrance_x();
-	pl->y = state_get_entrance_y();
-
-	u16 px = fix32ToInt(pl->x);
-	u16 py = fix32ToInt(pl->y);
+	pl.x = state_get_entrance_x();
+	pl.y = state_get_entrance_y();
 
 	// One-time graphics DMA parts
 	map_load_tileset(state.current_room->tileset);
 	particles_dma_tiles();
 	cube_dma_tiles();
 	hud_dma_tiles();
+	bg_load(state.current_room->background);
 
 	// First graphical commit
-	state_update_scroll(px, py);
-	player_draw(pl);
-	state_dma_scroll();
+	loop_logic();
+	loop_gfx();
+	loop_dma();
 }
 
 void room_loop(void)
 {
-	u16 duh;
 	state.next_id = 1;
 	state.next_entrance = 0;
 	state.current_id = 64;
-
-	player pl;
 
 	player_init(&pl);
 	// Game is in progress
 	while (1)
 	{
-		room_setup(&pl);
-		u16 px;
-		u16 py;
+		room_setup();
 		do
 		{
 			/* Run one frame of engine logic */
-			DEBUG_BGCOL(0x200);
-			player_run(&pl);
-			DEBUG_BGCOL(0x204);
-			cubes_run(&pl);
-			particles_run();
-			px = fix32ToInt(pl.x);
-			py = fix32ToInt(pl.y);
-			DEBUG_BGCOL(0x8E8);
-
-			/* Updating scroll and sprite caches, drawn top-down */
-			DEBUG_BGCOL(0x444);
-			map_draw_diffs(state_update_scroll(px,py),pl.dx,pl.dy);
-			DEBUG_BGCOL(0x282);
-			hud_draw_health(8,pl.hp); 
-			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
-			particles_draw();
-			player_draw(&pl);
-			cubes_draw();
-
-			duh = pl.input;
-			for (int i = 0; i < 12; i++)
-			{
-				if (duh & 1)
-				{
-					//sprite_put(128 - (8 * i), 64, SPRITE_SIZE(1,1), 4);
-				}
-				else
-				{
-					//sprite_put(128 - (8 * i), 80, SPRITE_SIZE(1,1), 5);
-				}
-				duh = duh >> 1;
-			}
-			
-			sfx_counters();
+			loop_logic();
+			loop_gfx();
 
 			/* Wait for VBlank. */
-			DEBUG_BGCOL(0x000);
 			system_wait_v();
 
-			/* Data hauls ass to VRAM with precious little DMA bandwidth */
-			DEBUG_BGCOL(0x00E);
-			map_dma();
-			DEBUG_BGCOL(0x28E);
-			sprites_dma_simple();
-			DEBUG_BGCOL(0xE0E);
-			state_dma_scroll();	
-			DEBUG_BGCOL(0x0EE);
-			player_dma(&pl);
-			// Enable the VDP here at the end. This is to hide frame 0
-
-			VDP_setEnable(1);
-
-			// For an external pixel bus use 0x0B bit 6
-
+			loop_dma();
 		}
-		while (!state_watch_transitions(px,py,pl.dx,pl.dy));
+		while (!state_watch_transitions(pl.px,pl.py,pl.dx,pl.dy));
 	}
 }
 

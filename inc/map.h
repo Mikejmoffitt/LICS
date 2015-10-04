@@ -16,6 +16,7 @@ Also handles some object list functions.
 #define MAP_SET_OUTSIDE2 1
 #define MAP_SET_INSIDE1 2
 #define MAP_SET_SANDY1 3
+#define MAP_SET_TELEPORTER 4
 
 #define MAP_OBJ_NULL 0
 #define MAP_OBJ_ENTRANCE 1
@@ -69,7 +70,7 @@ struct map_file
 	u8 map_data[1]; 
 };
 
-// DMA a tileset and its associated palette into VRAM and CRAM
+// DMA a tileset into VRAM; prepare for palette
 void map_load_tileset(u8 num);
 
 // Return the map by its ID number

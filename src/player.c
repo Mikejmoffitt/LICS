@@ -63,6 +63,8 @@ void player_init(player *pl)
 	pl->dy = FZERO;
 	pl->x = FZERO32;
 	pl->y = FZERO32;
+	pl->px = 0;
+	pl->py = 0;
 	pl->direction = PLAYER_RIGHT;
 	
 	pl->hp = 5;
@@ -831,6 +833,9 @@ static void player_move(player *pl)
 			pl->dy = PLAYER_DY_MAX;
 		}
 	}
+
+	pl->px = fix32ToInt(pl->x);
+	pl->py = fix32ToInt(pl->y);
 }
 
 static void player_calc_anim(player *pl)

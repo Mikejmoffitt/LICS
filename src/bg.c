@@ -20,6 +20,7 @@ static const s16 *coeff_tables[] =
 	bgcoef_bg1,
 	bgcoef_bg2,
 	bgcoef_bg3,
+	bgcoef_bg4,
 };
 
 // Set up the called-upon BG number's tiles, palette, and mapping
@@ -29,6 +30,8 @@ void bg_load(u16 num)
 	{
 		return;
 	}
+	
+	VDP_clearPlan(VDP_PLAN_B, 1);
 	// Source data for CRAM palette (first 8 entries)
 	u32 pal_src;
 	// Source data for VRAM tiles
@@ -40,6 +43,11 @@ void bg_load(u16 num)
 	switch (num)
 	{
 		default:
+		case 0:
+			current_bg = num;
+			VDP_waitDMACompletion();
+			VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
+			return;
 		case 1:
 			pal_src = (u32)pal_bg1;
 			gfx_src = (u32)gfx_bg1;
@@ -58,15 +66,22 @@ void bg_load(u16 num)
 			map_src = (u32)map_bg3;
 			gfx_len = 16;
 			break;
+		case 4:
+			pal_src = (u32)pal_bg4;
+			gfx_src = (u32)gfx_bg4;
+			map_src = (u32)map_bg4;
+			gfx_len = 8;
+			break;
 	}
 	// Multiply length by 16 for number of words per tile
 	gfx_len = gfx_len << 4;
 	// Only 8 words are loaded for the BG palette, since the other 8 are common
-	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 8);
 	// Load the common 8 words
-	VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
+	VDP_waitDMACompletion();
 	VDP_doVRamDMA(gfx_src, 32 * BG_VRAM_SLOT, gfx_len);
 	VDP_doVRamDMA(map_src, VDP_getBPlanAddress(), 64 * 32);
+	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 8);
+	VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
 	current_bg = num;
 }
 

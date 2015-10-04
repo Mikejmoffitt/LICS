@@ -3,6 +3,9 @@
 #include "music.h"
 #include "cubes.h"
 #include "player.h"
+#include "system.h"
+#include "vramslots.h"
+#include "pal.h"
 
 gamestate state;
 
@@ -90,16 +93,24 @@ void state_load_room(u8 roomnum)
 	state.cam_y = STATE_SCROLL_INVALID;
 	sx_memo = STATE_SCROLL_INVALID;
 	sy_memo = STATE_SCROLL_INVALID;
+
 	state.current_room = map_by_id(roomnum);
 	state.current_map = (u8 *)&(state.current_room->map_data);
 	state.fresh_room = 1;
-
 	state.current_id = roomnum;
 
+	// Let's wait for vblank so changes aren't visible
+
+	system_wait_v();
+
+	// Black the layer first so no funny wrong blocks show up
+	VDP_doCRamDMA((u32)pal_black, MAP_FG_PALNUM * 32, 16);
+	VDP_doCRamDMA((u32)pal_black, BG_PALNUM * 32, 8);
+
 	state_config_scrolling();
-	bg_load(state.current_room->background);
 	state_parse_objects();
 
+	// One more vblank later we can make it all visible
 	music_play(state.current_room->music);
 }
 
@@ -256,7 +267,7 @@ u16 state_watch_transitions(u16 px, u16 py, fix16 dx, fix16 dy)
 	{
 		return 1;
 	}
-	else if ((py > ((state.current_room->h * 240) - STATE_TRANSITION_MARGIN)) && (dx > FZERO))
+	else if ((py > ((state.current_room->h * 240) - STATE_TRANSITION_MARGIN - 8)) && (dx > FZERO))
 	{
 		return 1;
 	}

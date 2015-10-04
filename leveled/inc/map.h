@@ -10,6 +10,7 @@
 #define MAP_SET_OUTSIDE2 1
 #define MAP_SET_INSIDE1 2
 #define MAP_SET_SANDY1 3
+#define MAP_SET_TELEPORTER 4
 
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128
