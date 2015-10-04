@@ -179,6 +179,7 @@ static void cube_on_cube_collisions(cube *c)
 						c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
 					}
 					c->dy = CUBE_ON_CUBE_DY;
+					playsound(SFX_CUBEBOUNCE);
 					c->cube_col_timeout = CUBE_COL_T;
 				}
 				else if (c->dy != FZERO)

@@ -38,6 +38,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_sidesquare,
 	(map_file *)&mapdata_teleroom,
 	(map_file *)&mapdata_lefttall,
+	(map_file *)&mapdata_plantroom,
 	0
 };
 
