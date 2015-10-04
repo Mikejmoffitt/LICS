@@ -81,6 +81,10 @@ void plane_load_fg(void)
 			sprintf(tile,"res/gfx/inside1.bin");
 			sprintf(pal,"res/pal/inside1.pal");
 			break;
+		case MAP_SET_SANDY1:
+			sprintf(tile,"res/gfx/sandy1.bin");
+			sprintf(pal,"res/pal/sandy1.pal");
+			break;
 	}
 
 	printf("Opening %s for tile data...\n",tile);

@@ -44,7 +44,7 @@ void save_clear(void)
 
 	sram.max_hp = SAVE_DEFAULT_HP;
 	sram.have_phantom = 1;
-	sram.have_fast_phantom = 1;
+	sram.have_fast_phantom = 0;
 	sram.have_cheap_phantom = 1;
 	sram.have_jump = 1;
 	sram.have_lift = 1;

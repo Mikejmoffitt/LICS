@@ -2,7 +2,7 @@
 # FROM DAT OERG866 YEYEYE
 FILE "..\xm\sfx\fizzle.xm"
 TYPE SFX NOLOOP
-TEMPO 4
+TEMPO 1
 PSG 1
 NOISE 0
 FM 0
@@ -137,7 +137,7 @@ PSG1 1
 127 0
 128 0
 [Pitch]
-PSG1 -40
+PSG1 -48
 [Volume]
 PSG1 64
 [END]

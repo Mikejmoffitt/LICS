@@ -6,6 +6,7 @@ extern const u8 pal_black[128];
 extern const u8 pal_outside1[32];
 extern const u8 pal_outside2[32];
 extern const u8 pal_inside1[32];
+extern const u8 pal_sandy1[32];
 extern const u8 pal_bg1[32];
 extern const u8 pal_bg2[32];
 extern const u8 pal_bg3[32];

@@ -169,6 +169,10 @@ static void player_cp(player *pl)
 			{
 				playsound(SFX_CUBESPAWN);
 			}
+			else if (pl->cp_cnt == PLAYER_CP_SPAWN_FAST + 1)
+			{
+				playsound(SFX_CUBESPAWN);
+			}
 		}
 		else
 		{

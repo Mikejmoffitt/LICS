@@ -2,7 +2,7 @@
 # FROM DAT OERG866 YEYEYE
 FILE "..\xm\sfx\cubespawn.xm"
 TYPE SFX NOLOOP
-TEMPO 5
+TEMPO 1
 PSG 1
 NOISE 0
 FM 0
@@ -137,7 +137,7 @@ PSG1 1
 127 0
 128 0
 [Pitch]
-PSG1 -49
+PSG1 -50
 [Volume]
 PSG1 64
 [END]
