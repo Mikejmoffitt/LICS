@@ -99,19 +99,8 @@ void state_load_room(u8 roomnum)
 	state.fresh_room = 1;
 	state.current_id = roomnum;
 
-	// Let's wait for vblank so changes aren't visible
-
-	system_wait_v();
-
-	// Black the layer first so no funny wrong blocks show up
-	VDP_doCRamDMA((u32)pal_black, MAP_FG_PALNUM * 32, 16);
-	VDP_doCRamDMA((u32)pal_black, BG_PALNUM * 32, 8);
-
 	state_config_scrolling();
 	state_parse_objects();
-
-	// One more vblank later we can make it all visible
-	music_play(state.current_room->music);
 }
 
 // Set the entire H scroll foreground table to amt

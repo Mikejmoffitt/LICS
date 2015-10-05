@@ -15,7 +15,7 @@
 #include "hud.h"
 #include "music.h"
 #include "bg.h"
-#include "cdaudio.h"
+#include "enemy.h"
 
 #define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
 
@@ -56,17 +56,9 @@ void room_setup(void)
 {	
 	// Blank the display
 	system_wait_v();
-
-	VDP_clearPlan(VDP_PLAN_A,1);
-	VDP_waitDMACompletion();
-	VDP_clearPlan(VDP_PLAN_B,1);
-	VDP_waitDMACompletion();
-
+	VDP_setEnable(0);
 	cubes_init();
 	particles_init();
-	hud_draw_health(8,pl.hp); 
-	hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
-	sprites_dma_simple();
 	player_init_soft(&pl);
 
 	state_load_room(state.next_id);
@@ -80,11 +72,17 @@ void room_setup(void)
 	cube_dma_tiles();
 	hud_dma_tiles();
 	bg_load(state.current_room->background);
+	enemy_init();
 
 	// First graphical commit
 	loop_logic();
 	loop_gfx();
 	loop_dma();
+
+	music_play(state.current_room->music);
+
+	system_wait_v();
+	VDP_setEnable(1);
 }
 
 void room_loop(void)

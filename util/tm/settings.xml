@@ -5,14 +5,14 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_boingo.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_flip.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_metagrub.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/util/tm0"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside1.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside2.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg4.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/sandy1.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg1.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg2.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg3.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/font.bin"/>
 </settings>
