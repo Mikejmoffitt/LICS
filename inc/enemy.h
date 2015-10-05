@@ -6,16 +6,25 @@
 #include "pal.h"
 #include "gfx.h"
 
+#define ENEMIES_NUM 32
+
+#define ENEMY_RIGHT 0
+#define ENEMY_LEFT 1
+
+// Enemy types ---------
 #define ENEMY_NULL 0
 #define ENEMY_METAGRUB 1
 #define ENEMY_FLIP 2
 #define ENEMY_BOINGO 3
+// ---------------------
 
 typedef struct en_header en_header;
+struct en_header
 {
 	// Universal information all enemy objects share
 	u16 active;
 	u16 type;
+	u16 direction;
 	// Real-world position
 	s16 x;
 	s16 y;
@@ -39,8 +48,25 @@ typedef struct en_metagrub en_metagrub;
 struct en_metagrub
 {
 	en_header head;
-	u16 
+	u16 move_cnt; // When == 1, metagrub lurches forwards 
+	fix16 dx;
+	fix16 dy;
+};
 
+typedef struct en_flip en_flip;
+struct en_flip
+{
+	en_header head;
+	u16 move_timer; // Always incrementing; used for sinFix16 lookup
+	u16 flip_cnt; // When == 1, direction switches
+};
+
+typedef struct en_boingo en_boingo;
+struct en_boingo
+{
+	en_header head;
+	u16 move_cnt; // When == 1, boingo jumps at random-ish height in direction
+	fix16 dy;
 };
 
 static const u16 enemy_palnums[] = 
@@ -76,6 +102,11 @@ static const u16 enemy_vram_len[] =
 	0
 };
 
+void enemy_dma_tiles(void);
 void enemy_init(void);
+void enemy_delete(en_generic *e);
+void enemy_run(void);
+void enemy_draw(void);
+en_generic *enemy_place(u16 x, u16 y, u16 type);
 
 #endif

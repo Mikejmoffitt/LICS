@@ -1,6 +1,8 @@
 #include "enemy.h"
 
-void enemy_init(void)
+static en_generic enemies[ENEMIES_NUM];
+
+void enemy_dma_tiles(void)
 {
 	u16 i = 0;
 
@@ -12,5 +14,15 @@ void enemy_init(void)
 	{
 		VDP_doVRamDMA(enemy_vram_src[i], enemy_vram_dest[i], enemy_vram_len[i]);
 		i++;
+	}
+}
+
+void enemy_init(void)
+{
+	u16 i = ENEMIES_NUM;
+	while (i--)
+	{
+		en_generic *e = &enemies[i];
+		e->head.active = 0;
 	}
 }

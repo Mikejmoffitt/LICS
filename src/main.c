@@ -57,6 +57,7 @@ void room_setup(void)
 	system_wait_v();
 	VDP_setEnable(0);
 	cubes_init();
+	enemy_init();
 	particles_init();
 	player_init_soft(&pl);
 
@@ -70,8 +71,8 @@ void room_setup(void)
 	particles_dma_tiles();
 	cube_dma_tiles();
 	hud_dma_tiles();
+	enemy_dma_tiles();
 	bg_load(state.current_room->background);
-	enemy_init();
 
 	// First graphical commit
 	loop_logic();
