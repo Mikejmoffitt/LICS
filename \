@@ -11,7 +11,8 @@
 #define ENEMY_FLIP 2
 #define ENEMY_BOINGO 3
 
-typedef struct en_header en_header;
+typedef struct enemy enemy;
+struct enemy
 {
 	// Universal information all enemy objects share
 	u16 active;
@@ -22,25 +23,8 @@ typedef struct en_header en_header;
 	// For use when drawing; should be pre-calculated during active area
 	u16 attr;
 	u16 size;
-	// Health information
-	u16 hurt_cnt; // When == 1, hp--;
-	u16 hp; // If hp == 0, enemy is destroyed
-};
-
-typedef struct en_generic en_generic;
-struct en_generic
-{
-	en_header head;
 	// Generic data space; more specific casted types will use these
 	u16 data[16];
-};
-
-typedef struct en_metagrub en_metagrub;
-struct en_metagrub
-{
-	en_header head;
-	u16 
-
 };
 
 static const u16 enemy_palnums[] = 
