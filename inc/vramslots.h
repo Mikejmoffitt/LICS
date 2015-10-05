@@ -38,10 +38,6 @@ the length of a 256-tile DMA is only (256 * 16).
 #define BOINGO_VRAM_SLOT (FLIP_VRAM_SLOT + FLIP_VRAM_LEN)
 #define BOINGO_VRAM_LEN 24
 
-#define COL_VRAM_SLOT BG_VRAM_SLOT + 256
-#define COL_VRAM_LEN 256
-
-
 #define MAP_FG_PALNUM 0
 #define BG_PALNUM 1
 #define OBJECTS_PALNUM 2

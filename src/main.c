@@ -8,7 +8,6 @@
 #include "mapdata.h"
 #include "vramslots.h"
 #include "state.h"
-#include "col.h"
 #include "save.h"
 #include "cubes.h"
 #include "particles.h"
@@ -85,7 +84,7 @@ void room_setup(void)
 	VDP_setEnable(1);
 }
 
-void room_loop(void)
+void main_game_loop(void)
 {
 	state.next_id = 1;
 	state.next_entrance = 0;
@@ -114,6 +113,6 @@ void room_loop(void)
 int main(void)
 {
 	system_init();
-	room_loop();
+	main_game_loop();
 	return 0;	
 }
