@@ -38,6 +38,9 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_teleroom,
 	(map_file *)&mapdata_lefttall,
 	(map_file *)&mapdata_plantroom,
+	(map_file *)&mapdata_earlycorridor,
+	(map_file *)&mapdata_cownspikes,
+	(map_file *)&mapdata_liftget,
 	0
 };
 

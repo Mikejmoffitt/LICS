@@ -4,3 +4,6 @@ BIN mapdata_sidesquare "mapdata/sidesquare.bin" 2 2 0
 BIN mapdata_teleroom "mapdata/teleroom.bin" 2 2 0
 BIN mapdata_lefttall "mapdata/lefttall.bin" 2 2 0
 BIN mapdata_plantroom "mapdata/plantroom.bin" 2 2 0
+BIN mapdata_earlycorridor "mapdata/earlycorridor.bin" 2 2 0
+BIN mapdata_cownspikes "mapdata/cownspikes.bin" 2 2 0
+BIN mapdata_liftget "mapdata/liftget.bin" 2 2 0
