@@ -2,21 +2,21 @@
 #define ENEMY_H
 
 #include <genesis.h>
+#include "player.h"
 #include "vramslots.h"
-#include "pal.h"
+#include "enemy_types.h"
 #include "gfx.h"
+#include "pal.h"
 
-#define ENEMIES_NUM 32
+#define ENEMIES_NUM 24
+#define ENEMY_DATA_SIZE 12
 
 #define ENEMY_RIGHT 0
 #define ENEMY_LEFT 1
 
-// Enemy types ---------
-#define ENEMY_NULL 0
-#define ENEMY_METAGRUB 1
-#define ENEMY_FLIP 2
-#define ENEMY_BOINGO 3
-// ---------------------
+#ifndef FZERO
+#define FZERO FIX16(0.0)
+#endif
 
 typedef struct en_header en_header;
 struct en_header
@@ -28,29 +28,14 @@ struct en_header
 	// Real-world position
 	s16 x;
 	s16 y;
+	s16 xoff;
+	s16 yoff;
 	// For use when drawing; should be pre-calculated during active area
 	u16 attr;
 	u16 size;
 	// Health information
-	u16 hurt_cnt; // When == 1, hp--;
+	u16 hurt_cnt; // When it reaches zero, hp--;
 	u16 hp; // If hp == 0, enemy is destroyed
-};
-
-typedef struct en_generic en_generic;
-struct en_generic
-{
-	en_header head;
-	// Generic data space; more specific casted types will use these
-	u16 data[16];
-};
-
-typedef struct en_metagrub en_metagrub;
-struct en_metagrub
-{
-	en_header head;
-	u16 move_cnt; // When == 1, metagrub lurches forwards 
-	fix16 dx;
-	fix16 dy;
 };
 
 typedef struct en_flip en_flip;
@@ -68,6 +53,16 @@ struct en_boingo
 	u16 move_cnt; // When == 1, boingo jumps at random-ish height in direction
 	fix16 dy;
 };
+
+
+typedef struct en_generic en_generic;
+struct en_generic
+{
+	en_header head;
+	// Generic data space; more specific casted types will use these
+	u16 data[ENEMY_DATA_SIZE];
+};
+
 
 static const u16 enemy_palnums[] = 
 {
@@ -102,11 +97,20 @@ static const u16 enemy_vram_len[] =
 	0
 };
 
+// Copy enemy tile and palette data into VRAM/CRAM
 void enemy_dma_tiles(void);
+
+// Clear out enemy structures
 void enemy_init(void);
-void enemy_delete(en_generic *e);
-void enemy_run(void);
+
+// Runs logic for enemies (1 frame's worth)
+void enemy_run(player *pl);
+
+// Renders all enemies as needed
 void enemy_draw(void);
+
+// Puts an enemy on the map. Returns a handle to the placed enemy if valid,
+// and returns NULL if invalid or out of room.
 en_generic *enemy_place(u16 x, u16 y, u16 type);
 
 #endif

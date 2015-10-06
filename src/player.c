@@ -752,7 +752,7 @@ static void player_cube_eval_standing(player *pl, cube *c)
 	}
 }
 
-static void player_cube_collision(player *pl)
+static inline void player_cube_collision(player *pl)
 {
 	u16 px = (u16)fix32ToInt(pl->x);
 	u16 py = (u16)fix32ToInt(pl->y);
@@ -804,7 +804,7 @@ static void player_cube_collision(player *pl)
 	}
 }
 
-static void player_move(player *pl)
+static inline void player_move(player *pl)
 {
 	// Do movement	
 	pl->x = fix32Add(pl->x,fix16ToFix32(pl->dx));
@@ -838,7 +838,7 @@ static void player_move(player *pl)
 	pl->py = fix32ToInt(pl->y);
 }
 
-static void player_calc_anim(player *pl)
+static inline void player_calc_anim(player *pl)
 {
 	if (pl->grounded || pl->on_cube)
 	{
@@ -965,7 +965,7 @@ void player_draw(player *pl)
 		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
 }
 
-static void player_entrance_coll(player *pl)
+static inline void player_entrance_coll(player *pl)
 {
 	u16 i = STATE_NUM_ENTRANCES;
 	u16 px = fix32ToInt(pl->x);
@@ -988,6 +988,14 @@ static void player_entrance_coll(player *pl)
 	}
 }
 
+static inline void player_chk_spikes(player *pl)
+{
+	if (pl->invuln_cnt == 0 && map_hurt(pl->px,pl->py + PLAYER_CHK_BOTTOM))
+	{
+		player_get_hurt(pl);
+	}
+}
+
 void player_run(player *pl)
 {
 	player_eval_control_en(pl);
@@ -997,6 +1005,7 @@ void player_run(player *pl)
 	player_lift_cubes(pl);
 	player_jump(pl);
 	player_move(pl);
+	player_chk_spikes(pl);
 	player_cp(pl);
 	player_eval_grounded(pl);
 	player_calc_anim(pl);

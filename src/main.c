@@ -25,9 +25,11 @@ player pl;
 static inline void loop_logic(void)
 {
 	player_run(&pl);
+	enemy_run(&pl);
 	cubes_run(&pl);
 	particles_run();
 	sfx_counters();
+
 }
 
 static inline void loop_gfx(void)
@@ -39,6 +41,7 @@ static inline void loop_gfx(void)
 	hud_draw_health(8,pl.hp); 
 	hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
 	player_draw(&pl);
+	enemy_draw();
 	particles_draw();
 	cubes_draw();
 }
@@ -76,6 +79,7 @@ void room_setup(void)
 
 	// First graphical commit
 	loop_logic();
+
 	loop_gfx();
 	loop_dma();
 
@@ -83,6 +87,10 @@ void room_setup(void)
 
 	system_wait_v();
 	VDP_setEnable(1);
+
+	enemy_place(128, (240 - 32 - 1), ENEMY_METAGRUB);
+	enemy_place(512, (240 - 32 - 1), ENEMY_METAGRUB);
+	enemy_place(800, (240 - 32 - 1), ENEMY_METAGRUB);
 }
 
 void main_game_loop(void)

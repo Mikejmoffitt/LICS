@@ -59,6 +59,8 @@ struct gamestate
 	u16 cam_x, cam_y;
 	u16 vs_en;
 	u16 hs_en;
+	u16 bound_x;
+	u16 bound_y;
 	u16 xscroll_cmd;
 	u16 yscroll_cmd;
 	s16 xscroll_vals[STATE_PLANE_H];

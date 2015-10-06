@@ -82,7 +82,10 @@ void map_draw_diffs(u16 movedi, fix16 dx, fix16 dy);
 // Commit DMA queue to VRAM
 void map_dma(void);
 
-// What is at this spot on the map (background)?
+// Is this spot solid? (background)
 u16 map_collision(u16 x, u16 y);
+
+// Is this spot going to hurt me? (background)
+u16 map_hurt(u16 x, u16 y);
 
 #endif

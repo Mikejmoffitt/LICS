@@ -99,6 +99,9 @@ void state_load_room(u8 roomnum)
 	state.fresh_room = 1;
 	state.current_id = roomnum;
 
+	state.bound_x = state.current_room->w * 320;
+	state.bound_x = state.current_room->h * 240;
+
 	state_config_scrolling();
 	state_parse_objects();
 }
