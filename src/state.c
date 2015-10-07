@@ -64,6 +64,8 @@ static void state_parse_objects(void)
 				break;
 		}
 	}
+	// Suppress this annoying unused e error until it's actually used
+	(void)e;
 }
 
 static void state_config_scrolling(void)
