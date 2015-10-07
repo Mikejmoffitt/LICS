@@ -11,6 +11,10 @@
 #define ENEMIES_NUM 8
 #define ENEMY_DATA_SIZE 32
 
+#define ENEMY_DISABLED 0
+#define ENEMY_ONSCREEN 1
+#define ENEMY_OFFSCREEN 2
+
 #define ENEMY_RIGHT 0
 #define ENEMY_LEFT 1
 

@@ -15,9 +15,13 @@ static void enemy_player_scan();
 
 static inline void enemy_explode(en_generic *e)
 {
-	e->head.type = ENEMY_NULL;
+	e->head.active = ENEMY_DISABLED;
 	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLE);
-	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x + e->head.width, e->head.y, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x - e->head.width, e->head.y, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x + e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
 }
 
 void enemy_dma_tiles(void)
@@ -44,7 +48,7 @@ void enemy_init(void)
 		en_generic *e = &enemies[i];
 		e->head.type = ENEMY_NULL;
 		e->head.direction = ENEMY_RIGHT;
-		e->head.active = 0;
+		e->head.active = ENEMY_DISABLED;
 		e->head.x = -32;
 		e->head.y = -32;
 		e->head.xoff = 0;
@@ -76,16 +80,20 @@ void enemy_run(void)
 		{
 			return;
 		}
+		if (e->head.active == ENEMY_DISABLED)
+		{
+			continue;
+		}
 		// Enemy must be within 200px of the player to be "alive"
 		else if (e->head.x < pl.px - ENEMY_ACTIVE_DISTANCE ||
 			e->head.x > pl.px + ENEMY_ACTIVE_DISTANCE ||
 			e->head.y < pl.py - ENEMY_ACTIVE_DISTANCE ||
 			e->head.y > pl.py + ENEMY_ACTIVE_DISTANCE)
 		{
-			e->head.active = 0;
+			e->head.active = ENEMY_OFFSCREEN;
 			continue;
 		}
-		e->head.active = 1;
+		e->head.active = ENEMY_ONSCREEN;
 		// Process enemy hurt counter
 		if (e->head.hurt_cnt != 0)
 		{
@@ -131,7 +139,7 @@ void enemy_draw(void)
 			return;
 		}
 		// Not to be drawn
-		else if (e->head.active == 0)
+		else if (e->head.active != ENEMY_ONSCREEN)
 		{
 			continue;
 		}
@@ -150,6 +158,12 @@ void enemy_draw(void)
 		// Calculate screen position
 		s16 ex = e->head.x + e->head.xoff - state.cam_x;
 		s16 ey = e->head.y + e->head.yoff - state.cam_y;
+
+		if (e->head.hurt_cnt > 0)
+		{
+			ex = ex - 2 + GET_HVCOUNTER % 4;
+			ey = ey - 2 + (GET_HVCOUNTER >> 1) % 4;
+		}
 
 		// Check bounds
 		if (ex > -32 && ex < 320 && ey > -32 && ey < 240)
@@ -195,6 +209,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 			e->head.y = y;
 			e->head.type = type;
 			e->head.hurt_cnt = 0;
+			e->head.active = ENEMY_OFFSCREEN;
 			return &enemies[0];
 		}
 	}
@@ -211,7 +226,7 @@ static void enemy_player_scan(void)
 		{
 			return;
 		}
-		else if (e->head.active == 0)
+		else if (e->head.active != ENEMY_ONSCREEN)
 		{
 			continue;
 		}

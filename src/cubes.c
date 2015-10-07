@@ -386,7 +386,7 @@ static void cube_scan_enemies(cube *c)
 		{
 			return;
 		}
-		if (e->head.active == 0)
+		if (e->head.active != ENEMY_ONSCREEN)
 		{
 			continue;
 		}
