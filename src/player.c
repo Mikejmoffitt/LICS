@@ -783,7 +783,12 @@ static inline void player_cube_collision(void)
 			}
 			else if (c->state == CUBE_STATE_AIR && pl.throw_cnt == 0 && pl.kick_cnt == 0 && pl.throwdown_cnt == 0)
 			{
-				player_get_hurt();
+				if (pl.hurt_cnt < PLAYER_HURT_TIME - PLAYER_HURT_TIMEOUT)
+				{
+					player_get_bounced();
+					player_get_hurt();
+				}
+
 			}
 		}
 
@@ -930,7 +935,6 @@ static inline void player_calc_anim(void)
 
 void player_draw(void)
 {
-
 	// Draw a cube he is holding
 	if (pl.holding_cube)
 	{
@@ -1016,22 +1020,24 @@ void player_run(void)
 	player_special_counters();
 }
 
+void player_get_bounced(void)
+{
+	pl.dy = PLAYER_JUMP_DY;
+	if (pl.direction == PLAYER_RIGHT)
+	{
+		pl.dx = PLAYER_HURT_DX_R;
+	}
+	else
+	{
+		pl.dx = PLAYER_HURT_DX_L;
+	}
+}
+
 void player_get_hurt(void)
 {
-	if (pl.hurt_cnt < PLAYER_HURT_TIME - PLAYER_HURT_TIMEOUT)
-	{
-		pl.dy = PLAYER_JUMP_DY;
-		if (pl.direction == PLAYER_RIGHT)
-		{
-			pl.dx = PLAYER_HURT_DX_R;
-		}
-		else
-		{
-			pl.dx = PLAYER_HURT_DX_L;
-		}
-	}
 	if (pl.invuln_cnt == 0)
 	{
+		player_get_bounced();
 		pl.hurt_cnt = PLAYER_HURT_TIME;
 		pl.invuln_cnt = PLAYER_INVULN_TIME;
 
@@ -1053,4 +1059,20 @@ void player_get_hurt(void)
 			pl.holding_cube = 0;
 		}
 	}
+}
+
+void player_set_xy_fix32(fix32 x, fix32 y)
+{
+	pl.x = x;
+	pl.y = y;
+	pl.px = fix32ToInt(x);
+	pl.py = fix32ToInt(y);
+}
+
+void player_set_xy_px(s16 x, s16 y)
+{
+	pl.x = FIX32(x);
+	pl.y = FIX32(y);
+	pl.px = x;
+	pl.py = y;
 }

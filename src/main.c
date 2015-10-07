@@ -77,8 +77,7 @@ void room_setup(void)
 
 	state_load_room(state.next_id);
 	// First entry to a room needs some extra processing
-	pl.x = state_get_entrance_x();
-	pl.y = state_get_entrance_y();
+	player_set_xy_fix32(state_get_entrance_x(), state_get_entrance_y());
 
 	// One-time graphics DMA parts
 	map_load_tileset(state.current_room->tileset);

@@ -36,8 +36,8 @@
 #define PLAYER_HURT_TIME 29
 #define PLAYER_HURT_TIMEOUT 20
 #define PLAYER_INVULN_TIME 79
-#define PLAYER_HURT_DX_R FIX16(-2.0);
-#define PLAYER_HURT_DX_L FIX16(2.0);
+#define PLAYER_HURT_DX_R FIX16(-2.3);
+#define PLAYER_HURT_DX_L FIX16(2.3);
 
 #define PLAYER_MAX_CP 30
 #define PLAYER_CP_RESTORE_PERIOD 250
@@ -135,8 +135,15 @@ void player_run(void);
 // Update entry in sprite table cache
 void player_draw(void);
 
+// The bouncing effect associated with taking damage
+void player_get_bounced(void);
+
 // Damage the player
 void player_get_hurt(void);
+
+// Set coordinates; updates internal pixel-pos ones too
+void player_set_xy_fix32(fix32 x, fix32 y);
+void player_set_xy_px(s16 x, s16 y);
 
 #endif
 

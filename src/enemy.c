@@ -7,11 +7,15 @@
 #include "state.h"
 #include "sprites.h"
 
-static en_generic enemies[ENEMIES_NUM];
+#include "player.h"
+
+en_generic enemies[ENEMIES_NUM];
+
+static void enemy_player_scan();
 
 static inline void enemy_explode(en_generic *e)
 {
-	e->head.active = 0;
+	e->head.type = ENEMY_NULL;
 	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLE);
 	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLE);
 }
@@ -38,9 +42,9 @@ void enemy_init(void)
 	while (i--)
 	{
 		en_generic *e = &enemies[i];
-		e->head.active = 0;
 		e->head.type = ENEMY_NULL;
 		e->head.direction = ENEMY_RIGHT;
+		e->head.active = 0;
 		e->head.x = -32;
 		e->head.y = -32;
 		e->head.xoff = 0;
@@ -49,6 +53,8 @@ void enemy_init(void)
 		e->head.size = SPRITE_SIZE(1,1);
 		e->head.hurt_cnt = 0;
 		e->head.hp = 1;
+		e->head.width = 4;
+		e->head.height = 4;
 
 		j = ENEMY_DATA_SIZE;
 		while (j--)
@@ -64,21 +70,29 @@ void enemy_run(void)
 	while (i--)
 	{
 		en_generic *e = &enemies[i];
+		// Enemies are added in order, only once, so a null enemy type means
+		// this is the end of the list and we can stop processing it.
 		if (e->head.type == ENEMY_NULL)
 		{
-			// return;
+			return;
 		}
-		if (e->head.active == 0)
+		// Enemy must be within 200px of the player to be "alive"
+		else if (e->head.x < pl.px - ENEMY_ACTIVE_DISTANCE ||
+			e->head.x > pl.px + ENEMY_ACTIVE_DISTANCE ||
+			e->head.y < pl.py - ENEMY_ACTIVE_DISTANCE ||
+			e->head.y > pl.py + ENEMY_ACTIVE_DISTANCE)
 		{
+			e->head.active = 0;
 			continue;
 		}
+		e->head.active = 1;
 		// Process enemy hurt counter
 		if (e->head.hurt_cnt != 0)
 		{
 			e->head.hurt_cnt--;
 			if (e->head.hurt_cnt == 0)
 			{
-				if (e->head.hp != 0)
+				if (e->head.hp > 1)
 				{
 					e->head.hp--;
 				}
@@ -87,8 +101,8 @@ void enemy_run(void)
 					enemy_explode(e);
 				}
 			}
-			continue;
 			// Enemies processing damage don't run their processes
+			continue;
 		}
 		// Enemy is valid. Handle it based on type.
 		switch (e->head.type)
@@ -100,6 +114,7 @@ void enemy_run(void)
 				en_anim_metagrub((en_metagrub *)e);
 				break;
 		}
+		enemy_player_scan();
 	}
 }
 
@@ -109,11 +124,19 @@ void enemy_draw(void)
 	while (i--)
 	{	
 		en_generic *e = &enemies[i];
+		// Enemies are added in order, only once, so a null enemy type means
+		// this is the end of the list and we can stop processing it.
 		if (e->head.type == ENEMY_NULL)
 		{
 			return;
 		}
-		if (e->head.active == 0)
+		// Not to be drawn
+		else if (e->head.active == 0)
+		{
+			continue;
+		}
+		// Flashing for hurt counter
+		else if (e->head.hurt_cnt % 4 > 1)
 		{
 			continue;
 		}
@@ -136,7 +159,49 @@ void enemy_draw(void)
 	}
 }
 
+void enemy_get_hurt(en_generic *e)
+{
+	if (e->head.hurt_cnt == 0)
+	{
+		e->head.hurt_cnt = ENEMY_HURT_TIME;
+	}
+}
+
 en_generic *enemy_place(u16 x, u16 y, u16 type)
+{
+	u16 i = ENEMIES_NUM;
+	if (type == ENEMY_NULL)
+	{
+		return NULL;
+	}
+	while (i--)
+	{
+		en_generic *e = &enemies[i];
+		if (e->head.type == ENEMY_NULL)
+		{
+			switch (type)
+			{
+				default:
+				case ENEMY_NULL:
+					return NULL;
+				case ENEMY_METAGRUB:
+					e->head.hp = 1;
+					e->head.width = 6;
+					e->head.height = 8;
+					break;
+			}
+
+			e->head.x = x;
+			e->head.y = y;
+			e->head.type = type;
+			e->head.hurt_cnt = 0;
+			return &enemies[0];
+		}
+	}
+	return NULL;
+}
+
+static void enemy_player_scan(void)
 {
 	u16 i = ENEMIES_NUM;
 	while (i--)
@@ -144,23 +209,19 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 		en_generic *e = &enemies[i];
 		if (e->head.type == ENEMY_NULL)
 		{
-			e->head.x = x;
-			e->head.y = y;
-			e->head.type = type;
+			return;
+		}
+		else if (e->head.active == 0)
+		{
+			continue;
+		}
 
-			e->head.active = 1;
-
-			switch (type)
-			{
-				default:
-					e->head.hp = 1;
-					e->head.xoff = 0;
-					e->head.yoff = 0;
-					e->head.hurt_cnt = 0;
-					break;
-			}
-			return &enemies[0];
+		if (e->head.x - e->head.width <= pl.px + PLAYER_CHK_RIGHT &&
+			e->head.x + e->head.width >= pl.px + PLAYER_CHK_LEFT &&
+			e->head.y - e->head.height <= pl.py + PLAYER_CHK_BOTTOM &&
+			e->head.y >= pl.py + PLAYER_CHK_TOP)
+		{
+			player_get_hurt();
 		}
 	}
-	return NULL;
 }

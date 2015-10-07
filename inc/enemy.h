@@ -4,14 +4,19 @@
 #include <genesis.h>
 #include "vramslots.h"
 #include "enemy_types.h"
+#include "cubes.h"
 #include "gfx.h"
 #include "pal.h"
 
-#define ENEMIES_NUM 24
-#define ENEMY_DATA_SIZE 12
+#define ENEMIES_NUM 8
+#define ENEMY_DATA_SIZE 32
 
 #define ENEMY_RIGHT 0
 #define ENEMY_LEFT 1
+
+#define ENEMY_HURT_TIME 20
+
+#define ENEMY_ACTIVE_DISTANCE 200
 
 #ifndef FZERO
 #define FZERO FIX16(0.0)
@@ -21,14 +26,19 @@ typedef struct en_header en_header;
 struct en_header
 {
 	// Universal information all enemy objects share
-	u16 active;
-	u16 type;
-	u16 direction;
-	// Real-world position
+	u16 active; // should it be drawn this frame?
+	u16 type; // ID specifying which subclass of enemy it is
+	u16 direction; // Right/Left based on directions given above
+	// Real-world position in pixels; center-bottom of enemy
 	s16 x;
 	s16 y;
+	// Offset from origin for rendering ("hot spot")
 	s16 xoff;
 	s16 yoff;
+	// Hitbox info
+	s16 width; // Actually half-width for hitboxes
+	s16 height;
+	// Sprite engine register information
 	// For use when drawing; should be pre-calculated during active area
 	u16 attr;
 	u16 size;
@@ -96,6 +106,9 @@ static const u16 enemy_vram_len[] =
 	0
 };
 
+// Global list of enemies
+extern en_generic enemies[ENEMIES_NUM];
+
 // Copy enemy tile and palette data into VRAM/CRAM
 void enemy_dma_tiles(void);
 
@@ -107,6 +120,9 @@ void enemy_run(void);
 
 // Renders all enemies as needed
 void enemy_draw(void);
+
+// Strike an enemy with a cube
+void enemy_get_hurt(en_generic *e);
 
 // Puts an enemy on the map. Returns a handle to the placed enemy if valid,
 // and returns NULL if invalid or out of room.

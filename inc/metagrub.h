@@ -1,6 +1,7 @@
 #ifndef METAGRUB_H
 #define METAGRUB_H
 
+#include <genesis.h>
 #include "enemy.h"
 #include "enemy_types.h"
 

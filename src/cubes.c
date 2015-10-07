@@ -8,6 +8,7 @@
 #include "map.h"
 #include "particles.h"
 #include "music.h"
+#include "enemy.h"
 
 cube cubes[CUBES_NUM];
 
@@ -222,30 +223,6 @@ static void cube_eval_stopmoving(cube *c)
 	}
 }
 
-/*
-static void cube_get_out_of_the_ground(cube *c)
-{
-	unsigned int i = CUBE_MAX_GROUND_PUSH;
-	while (i--)
-	{
-		u16 gnd_chk[2];
-		gnd_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM);
-		gnd_chk[1] = map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM);
-		
-		// If we're still stuck in the ground...
-		if (gnd_chk[0] || gnd_chk[1])
-		{
-			// ... push upwards by 8px and we'll try again.
-			c->y = c->y - 8;
-		}
-		else
-		{
-			// Not lodged in the ground, we're fine.
-			break;
-		}	
-	}
-}*/
-
 static void cube_do_ground_recoil(cube *c)
 {
 	// First push the cube out of the ground if it's stuck
@@ -399,6 +376,49 @@ static void cube_bg_collision(cube *c)
 	}
 }
 
+static void cube_scan_enemies(cube *c)
+{
+	u16 i = ENEMIES_NUM;
+	while (i--)
+	{
+		en_generic *e = &enemies[i];
+		if (e->head.type == ENEMY_NULL)
+		{
+			return;
+		}
+		if (e->head.active == 0)
+		{
+			continue;
+		}
+		if (e->head.x - e->head.width <= c->x + CUBE_RIGHT &&
+			e->head.x + e->head.width >= c->x + CUBE_LEFT &&
+			e->head.y - e->head.width <= c->y + CUBE_BOTTOM &&
+			e->head.y >= c->y + CUBE_TOP)
+		{
+			enemy_get_hurt(e);
+
+			if (c->type == CUBE_GREEN)
+			{
+				c->state = CUBE_STATE_AIR;
+				c->dy = CUBE_ON_CUBE_DY;
+				if (c->dx == FZERO)
+				{
+					c->dx = (GET_HVCOUNTER % 2) ? 1 : -1;
+				}
+				else
+				{
+					c->dx = c->dx * -1;
+					cube_clamp_dx(c);
+				}
+			}
+			else if (c->state != CUBE_STATE_FIZZLE)
+			{
+				cube_destroy(c);	
+			}
+		}
+	}
+}
+
 // Public stuff --------------------------------------------------------------
 
 void cubes_run(void)
@@ -416,6 +436,7 @@ void cubes_run(void)
 			if (c->dy > 0)
 			{
 				c->dy--;
+				cube_scan_enemies(c);
 			}
 			else
 			{
@@ -427,6 +448,7 @@ void cubes_run(void)
 		{
 			// Collison is processed a frame late intentionally to mimic the
 			// original game's behavior. 
+			cube_scan_enemies(c);
 			if (c->state != CUBE_STATE_FIZZLE)
 			{
 				cube_bg_collision(c);

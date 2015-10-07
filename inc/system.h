@@ -5,6 +5,8 @@
 
 #include <genesis.h>
 
+#define WANT_DEBUG_COLOR
+
 #ifdef WANT_DEBUG_COLOR
 #define DEBUG_BGCOL(x) VDP_setPaletteColor(0,x);
 #else
@@ -20,5 +22,6 @@ extern u16 system_osc;
 void system_init(void);
 void system_wait_v(void);
 void system_set_debug(u16 val);
+void system_debug_cpu_meter(void);
 
 #endif
