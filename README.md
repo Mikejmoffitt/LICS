@@ -26,14 +26,14 @@ These directories are relevant to building the game software:
 +	src/ (source code)
 +	inc/ (headers)
 +	res/ (binary resources)
-+		gfx/ (graphics)
-+		pal/ (palettes)
-+		bgm/ (music)
-+		eif/ (instruments)
-+		eef/ (PSG envelopes)
-+		ewf/ (PCM data)
-+		mapdata/ (rooms/maps)
-+		bgmaps/ (PLANE B background mappings)
++	  gfx/ (graphics)
++	  pal/ (palettes)
++	  bgm/ (music)
++	  eif/ (instruments)
++	  eef/ (PSG envelopes)
++	  ewf/ (PCM data)
++	  mapdata/ (rooms/maps)
++	  bgmaps/ (PLANE B background mappings)
 +	editor (Game room creator for building mapdata
 +	xm/ (XM sound files for converting to BGM or SFX; organized within)
 
@@ -45,7 +45,7 @@ These directories are a product of t
 
 These directories store resources and tools used for creation of game assets:
 +	docs/ (helpful documents and notes on the game's operation and creation)
-+		original-sauce/ (the original Multimedia Fusion game source)
++	  original-sauce/ (the original Multimedia Fusion game source)
 +	leveled/ (level editor project source)
 +	editor (binary of level editor)
 +	font.ttf (font used for level editor)
