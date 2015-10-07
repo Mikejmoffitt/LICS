@@ -115,26 +115,28 @@ struct player
 	u16 input_prev;
 };
 
+extern player pl;
+
 // Init function for Lyle's variables
-void player_init(player *pl);
+void player_init(void);
 
 // For use in-game - don't reset health, cp, etc
-void player_init_soft(player *pl);
+void player_init_soft(void);
 
 // Prepare to possibly copy to VRAM
-void player_dma_setup(player *pl);
+void player_dma_setup(void);
 
 // Copy graphics into VRAM slot
-void player_dma(player *pl);
+void player_dma(void);
 
 // Run player's logic for one frame
-void player_run(player *pl);
+void player_run(void);
 
 // Update entry in sprite table cache
-void player_draw(player *pl);
+void player_draw(void);
 
 // Damage the player
-void player_get_hurt(player *pl);
+void player_get_hurt(void);
 
 #endif
 

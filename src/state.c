@@ -104,11 +104,11 @@ void state_load_room(u8 roomnum)
 	state.fresh_room = 1;
 	state.current_id = roomnum;
 
-	state.bound_x = state.current_room->w * 320;
-	state.bound_x = state.current_room->h * 240;
-
 	state_config_scrolling();
 	state_parse_objects();
+
+	state.bound_x = state.current_room->w * 320;
+	state.bound_y = state.current_room->h * 240;
 }
 
 // Set the entire H scroll foreground table to amt
@@ -154,26 +154,26 @@ static void state_scroll_fgy(s16 amt)
 
 // Update scrolling camera coordinates based on player real-world coords
 // Returns a bitfield describing if the camera moved, and on which axes
-u16 state_update_scroll(u16 px, u16 py)
+u16 state_update_scroll()
 {
 	state.xscroll_cmd = 0;
 	state.yscroll_cmd = 0;
-	py -= 16; // Offset by half of lyle's height plus a bit
+	u16 py = pl.py -16; // Offset by half of lyle's height plus a bit
 	// Horizontal scrolling
 	if (!state.hs_en)
 	{
 		// No need to scroll, single-screen room
 		state.cam_x = 0;
 	}
-	else if (px >= (state.current_room->w * STATE_SC_W) - STATE_SC_SEAMX)
+	else if (pl.px >= (state.current_room->w * STATE_SC_W) - STATE_SC_SEAMX)
 	{
 		// Far right side
 		state.cam_x = (state.current_room->w * STATE_SC_W) - STATE_SC_SEAMX*2;
 	}
-	else if (px > STATE_SC_SEAMX)
+	else if (pl.px > STATE_SC_SEAMX)
 	{	
 		// Between edges
-		state.cam_x = (px - STATE_SC_SEAMX);
+		state.cam_x = (pl.px - STATE_SC_SEAMX);
 	}
 	else
 	{
@@ -246,25 +246,25 @@ fix32 state_get_entrance_y(void)
 }
 
 // Watch for the player entering/exiting a room.
-u16 state_watch_transitions(u16 px, u16 py, fix16 dx, fix16 dy)
+u16 state_watch_transitions()
 {
-	if (dx == FZERO && dy == FZERO)
+	if (pl.dx == FZERO && pl.dy == FZERO)
 	{
 		return 0;
 	}
-	else if ((px < STATE_TRANSITION_MARGIN) && (dx < FZERO))
+	else if ((pl.px < STATE_TRANSITION_MARGIN) && (pl.dx < FZERO))
 	{
 		return 1;
 	}
-	else if ((px > ((state.current_room->w * 320) - STATE_TRANSITION_MARGIN)) && (dx > FZERO))
+	else if ((pl.px > (state.bound_x - STATE_TRANSITION_MARGIN)) && (pl.dx > FZERO))
 	{
 		return 1;
 	}
-	else if ((py < STATE_TRANSITION_MARGIN) && (dy < FZERO))
+	else if ((pl.py < STATE_TRANSITION_MARGIN) && (pl.dy < FZERO))
 	{
 		return 1;
 	}
-	else if ((py > ((state.current_room->h * 240) - STATE_TRANSITION_MARGIN - 8)) && (dx > FZERO))
+	else if ((pl.py > (state.bound_y - STATE_TRANSITION_MARGIN - 8)) && (pl.dy > FZERO))
 	{
 		return 1;
 	}

@@ -58,7 +58,7 @@ void enemy_init(void)
 	}
 }
 
-void enemy_run(player *pl)
+void enemy_run(void)
 {
 	u16 i = ENEMIES_NUM;
 	while (i--)

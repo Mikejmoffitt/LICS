@@ -5,7 +5,6 @@
 
 #include <genesis.h>
 #include "map.h"
-#include "player.h"
 
 #define CUBES_NUM 32
 
@@ -91,7 +90,7 @@ extern cube cubes[CUBES_NUM];
 void cube_dma_tiles(void);
 void cubes_init(void);
 void cube_delete(cube *c);
-void cubes_run(player *pl);
+void cubes_run(void);
 void cubes_draw(void);
 void cube_draw_single(u16 x, u16 y, u16 type);
 void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy);

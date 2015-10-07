@@ -88,7 +88,7 @@ void state_load_room(u8 roomnum);
 //	STATE_MOVED_X
 //	STATE_MOVED_Y
 //	STATE_MOVED_BOTH
-u16 state_update_scroll(u16 px, u16 py);
+u16 state_update_scroll(void);
 
 // Commit scroll table updates
 void state_dma_scroll(void);
@@ -98,6 +98,6 @@ fix32 state_get_entrance_x(void);
 fix32 state_get_entrance_y(void);
 
 // Check if player has reached a screen edge, load new room if needed
-u16 state_watch_transitions(u16 px, u16 py, fix16 dx, fix16 dy);
+u16 state_watch_transitions(void);
 
 #endif

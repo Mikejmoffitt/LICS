@@ -401,7 +401,7 @@ static void cube_bg_collision(cube *c)
 
 // Public stuff --------------------------------------------------------------
 
-void cubes_run(player *pl)
+void cubes_run(void)
 {
 	int i = CUBES_NUM;
 	while (i--)

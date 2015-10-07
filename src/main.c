@@ -20,13 +20,11 @@
 
 u16 debug_bgcol;
 
-player pl;
-
 static inline void loop_logic(void)
 {
-	player_run(&pl);
-	enemy_run(&pl);
-	cubes_run(&pl);
+	player_run();
+	enemy_run();
+	cubes_run();
 	particles_run();
 	sfx_counters();
 
@@ -35,12 +33,15 @@ static inline void loop_logic(void)
 static inline void loop_gfx(void)
 {
 	/* BG updates for scrolling */
-	map_draw_diffs(state_update_scroll(pl.px,pl.py),pl.dx,pl.dy);
+	map_draw_diffs(state_update_scroll());
 
 	/* Place sprites */
-	hud_draw_health(8,pl.hp); 
-	hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
-	player_draw(&pl);
+	hud_draw_health(sram.max_hp,pl.hp);
+	if (sram.have_phantom)
+	{
+		hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
+	}
+	player_draw();
 	enemy_draw();
 	particles_draw();
 	cubes_draw();
@@ -51,7 +52,7 @@ static inline void loop_dma(void)
 	map_dma();
 	sprites_dma_simple();
 	state_dma_scroll();	
-	player_dma(&pl);
+	player_dma();
 }
 
 void room_setup(void)
@@ -62,7 +63,7 @@ void room_setup(void)
 	cubes_init();
 	enemy_init();
 	particles_init();
-	player_init_soft(&pl);
+	player_init_soft();
 
 	state_load_room(state.next_id);
 	// First entry to a room needs some extra processing
@@ -95,7 +96,7 @@ void main_game_loop(void)
 	state.next_entrance = 0;
 	state.current_id = 64;
 
-	player_init(&pl);
+	player_init();
 	// Game is in progress
 	while (1)
 	{
@@ -111,7 +112,7 @@ void main_game_loop(void)
 
 			loop_dma();
 		}
-		while (!state_watch_transitions(pl.px,pl.py,pl.dx,pl.dy));
+		while (!state_watch_transitions());
 	}
 }
 

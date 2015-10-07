@@ -2,7 +2,6 @@
 #define ENEMY_H
 
 #include <genesis.h>
-#include "player.h"
 #include "vramslots.h"
 #include "enemy_types.h"
 #include "gfx.h"
@@ -104,7 +103,7 @@ void enemy_dma_tiles(void);
 void enemy_init(void);
 
 // Runs logic for enemies (1 frame's worth)
-void enemy_run(player *pl);
+void enemy_run(void);
 
 // Renders all enemies as needed
 void enemy_draw(void);

@@ -5,6 +5,7 @@
 #include "vramslots.h"
 #include "mapdata.h"
 #include "state.h"
+#include "player.h"
 
 #define MAP_DMA_QUEUE_MAX 96
 static u32 map_dma_src_queue[MAP_DMA_QUEUE_MAX];
@@ -355,7 +356,7 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 	}
 }
 
-void map_draw_diffs(u16 moved, fix16 dx, fix16 dy)
+void map_draw_diffs(u16 moved)
 {
 	if (state.fresh_room)
 	{
@@ -365,11 +366,11 @@ void map_draw_diffs(u16 moved, fix16 dx, fix16 dy)
 	}
 	if (moved & STATE_MOVED_Y)
 	{
-		map_draw_vertical(state.cam_x, state.cam_y, dy > FIX16(0.0));
+		map_draw_vertical(state.cam_x, state.cam_y, pl.dy > FIX16(0.0));
 	}
 	if (moved & STATE_MOVED_X)
 	{
-		map_draw_horizontal(state.cam_x, state.cam_y, dx > FIX16(0.0));
+		map_draw_horizontal(state.cam_x, state.cam_y, pl.dx > FIX16(0.0));
 	}
 }
 

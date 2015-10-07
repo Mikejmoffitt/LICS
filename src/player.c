@@ -20,84 +20,86 @@ static u16 ctype;
 static u16 cp_restore_cnt;
 
 static void player_set_pal(void);
-static void player_eval_control_en(player *pl);
-static void player_read_pad(player *pl); 
-static void player_cp(player *pl);
-static void player_accel(player *pl);
-static void player_eval_grounded(player *pl);
-static void player_jump(player *pl);
-static void player_toss_cubes(player *pl);
-static void player_kick_cube(player *pl, cube *c);
-static void player_lift_cubes(player *pl);
-static void player_special_counters(player *pl);
-static void player_bg_horizontal_collision(player *pl);
-static void player_bg_vertical_collision(player *pl);
-static void player_cube_horizontal_collision(player *pl, cube *c);
-static void player_cube_vertical_collision(player *pl, cube *c);
-static void player_cube_eval_standing(player *pl, cube *c);
-static void player_cube_collision(player *pl);
-static void player_move(player *pl);
-static void player_calc_anim(player *pl);
-static void player_entrance_coll(player *pl);
+static void player_eval_control_en();
+static void player_read_pad(); 
+static void player_cp(void);
+static void player_accel(void);
+static void player_eval_grounded(void);
+static void player_jump(void);
+static void player_toss_cubes(void);
+static void player_kick_cube(cube *c);
+static void player_lift_cubes(void);
+static void player_special_counters(void);
+static void player_bg_horizontal_collision(void);
+static void player_bg_vertical_collision(void);
+static void player_cube_horizontal_collision(cube *c);
+static void player_cube_vertical_collision(cube *c);
+static void player_cube_eval_standing(cube *c);
+static void player_cube_collision(void);
+static void player_move(void);
+static void player_calc_anim(void);
+static void player_entrance_coll(void);
+
+player pl;
 
 static void player_set_pal(void)
 {
 	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
 }
 
-static inline void player_eval_control_en(player *pl)
+static inline void player_eval_control_en(void)
 {
-	if (pl->hurt_cnt > 0 || pl->hp == 0)
+	if (pl.hurt_cnt > 0 || pl.hp == 0)
 	{
-		pl->control_disabled = 1;
+		pl.control_disabled = 1;
 	}
 	else
 	{
-		pl->control_disabled = 0;
+		pl.control_disabled = 0;
 	}
 }
 
-void player_init(player *pl)
+void player_init(void)
 {
-	pl->dx = FZERO;
-	pl->dy = FZERO;
-	pl->x = FZERO32;
-	pl->y = FZERO32;
-	pl->px = 0;
-	pl->py = 0;
-	pl->direction = PLAYER_RIGHT;
+	pl.dx = FZERO;
+	pl.dy = FZERO;
+	pl.x = FZERO32;
+	pl.y = FZERO32;
+	pl.px = 0;
+	pl.py = 0;
+	pl.direction = PLAYER_RIGHT;
 	
-	pl->hp = 5;
-	pl->cp = 30;
-	player_init_soft(pl);
+	pl.hp = 5;
+	pl.cp = 30;
+	player_init_soft();
 }
 
-void player_init_soft(player *pl)
+void player_init_soft(void)
 {
-	pl->grounded = 0;
+	pl.grounded = 0;
 	
-	pl->anim_cnt = 0;
-	pl->anim_frame = 0;
-	pl->holding_cube = 0;
-	pl->throw_cnt = 0;
-	pl->throwdown_cnt = 0;
-	pl->kick_cnt = 0;
-	pl->lift_cnt = 0;
-	pl->cp_cnt = 0;
-	pl->hurt_cnt = 0;
-	pl->invuln_cnt = 0;
-	pl->action_cnt = 0;
-	pl->control_disabled = 0;
-	pl->input = 0;
-	pl->input_prev = 0;
-	pl->cubejump_disable = 0;
-	pl->on_cube = NULL;
+	pl.anim_cnt = 0;
+	pl.anim_frame = 0;
+	pl.holding_cube = 0;
+	pl.throw_cnt = 0;
+	pl.throwdown_cnt = 0;
+	pl.kick_cnt = 0;
+	pl.lift_cnt = 0;
+	pl.cp_cnt = 0;
+	pl.hurt_cnt = 0;
+	pl.invuln_cnt = 0;
+	pl.action_cnt = 0;
+	pl.control_disabled = 0;
+	pl.input = 0;
+	pl.input_prev = 0;
+	pl.cubejump_disable = 0;
+	pl.on_cube = NULL;
 	player_set_pal();
 }
 
-void player_dma_setup(player *pl)
+void player_dma_setup(void)
 {
-	u16 num = pl->anim_frame;
+	u16 num = pl.anim_frame;
 	u16 offset;
 
 	// Most sprites are just six tiles - 3x2 or 2x3
@@ -117,31 +119,31 @@ void player_dma_setup(player *pl)
 	lyle_dma_dest = PLAYER_VRAM_SLOT * 32;
 }
 
-void player_dma(player *pl)
+void player_dma(void)
 {
 	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
-static void player_read_pad(player *pl)
+static void player_read_pad(void)
 {
-	if (!pl->control_disabled)
+	if (!pl.control_disabled)
 	{
-		pl->input_prev = pl->input;
-		pl->input = JOY_readJoypad(JOY_1);
+		pl.input_prev = pl.input;
+		pl.input = JOY_readJoypad(JOY_1);
 	}
 	else
 	{
-		pl->input = 0;
-		pl->input_prev = 0;
+		pl.input = 0;
+		pl.input_prev = 0;
 	}
 }
 
-static void player_cp(player *pl)
+static void player_cp(void)
 {
 	// We don't have this power, don't bother
 	if (!sram.have_phantom)
 	{
-		pl->cp_cnt = 0;
+		pl.cp_cnt = 0;
 		return;
 	}
 	cp_restore_cnt++;
@@ -149,43 +151,43 @@ static void player_cp(player *pl)
 	if (cp_restore_cnt >= PLAYER_CP_RESTORE_PERIOD)
 	{
 		cp_restore_cnt = 0;
-		if (pl->cp != PLAYER_MAX_CP)
+		if (pl.cp != PLAYER_MAX_CP)
 		{
-			pl->cp++;
+			pl.cp++;
 		}
 	}
 	// In the middle of doing something that voids this ability
-	if (pl->lift_cnt || pl->hurt_cnt || pl->action_cnt)
+	if (pl.lift_cnt || pl.hurt_cnt || pl.action_cnt)
 	{
 		return;
 	}
 	
 	u16 cube_price = (sram.have_cheap_phantom ? PLAYER_CP_SPAWN_CHEAP : PLAYER_CP_SPAWN_PRICE);
 	// Spawning of the cube; are we not holding one, and can afford one?
-	if (!pl->holding_cube && pl->cp >= cube_price)
+	if (!pl.holding_cube && pl.cp >= cube_price)
 	{
-		if (pl->input & BUTTON_B)
+		if (pl.input & BUTTON_B)
 		{
-			pl->cp_cnt++;
-			if (pl->cp_cnt == PLAYER_CUBE_FX + 1)
+			pl.cp_cnt++;
+			if (pl.cp_cnt == PLAYER_CUBE_FX + 1)
 			{
 				playsound(SFX_CUBESPAWN);
 			}
-			else if (pl->cp_cnt == PLAYER_CP_SPAWN_FAST + 1)
+			else if (pl.cp_cnt == PLAYER_CP_SPAWN_FAST + 1)
 			{
 				playsound(SFX_CUBESPAWN);
 			}
 		}
 		else
 		{
-			if (pl->cp_cnt > PLAYER_CUBE_FX)
+			if (pl.cp_cnt > PLAYER_CUBE_FX)
 			{
 				stopsound();
 			}
-			pl->cp_cnt = 0;
+			pl.cp_cnt = 0;
 		}
 		u16 cube_spawn_period = (sram.have_fast_phantom ? PLAYER_CP_SPAWN_FAST : PLAYER_CP_SPAWN_SLOW);
-		if (pl->cp_cnt >= cube_spawn_period)
+		if (pl.cp_cnt >= cube_spawn_period)
 		{
 			switch (ctype)
 			{
@@ -209,152 +211,152 @@ static void player_cp(player *pl)
 					break;
 			}
 			ctype = CUBE_PHANTOM;
-			pl->holding_cube = ctype;
-			pl->cp_cnt = 0;
-			pl->cp -= cube_price;
+			pl.holding_cube = ctype;
+			pl.cp_cnt = 0;
+			pl.cp -= cube_price;
 		}
 	}
 	// Sparkling effect when cube is starting to form
-	if (pl->cp_cnt > PLAYER_CUBE_FX && system_osc % 2)
+	if (pl.cp_cnt > PLAYER_CUBE_FX && system_osc % 2)
 	{
-		particle_spawn(fix32ToInt(pl->x), fix32ToInt(pl->y) - 32, PARTICLE_TYPE_SPARKLE);
+		particle_spawn(fix32ToInt(pl.x), fix32ToInt(pl.y) - 32, PARTICLE_TYPE_SPARKLE);
 
 	}
 }
 
-static inline void player_walking_sound(player *pl)
+static inline void player_walking_sound(void)
 {
-	if (pl->anim_cnt == (PLAYER_ANIMSPEED * 1) - 1)
+	if (pl.anim_cnt == (PLAYER_ANIMSPEED * 1) - 1)
 	{
 		playsound(SFX_WALK1);
 	}
-	else if (pl->anim_cnt == (PLAYER_ANIMSPEED * 3) - 1)
+	else if (pl.anim_cnt == (PLAYER_ANIMSPEED * 3) - 1)
 	{
 		playsound(SFX_WALK2);
 	}
 }
 
-static inline void player_accel(player *pl)
+static inline void player_accel(void)
 {
 
 	// deceleration
-	if (pl->dx > FZERO && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	if (pl.dx > FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
-		pl->dx = fix16Sub(pl->dx,PLAYER_X_DECEL);	
+		pl.dx = fix16Sub(pl.dx,PLAYER_X_DECEL);	
 		// Don't decel into the other direction
-		if (fix16ToInt(pl->dx) < FZERO)
+		if (fix16ToInt(pl.dx) < FZERO)
 		{
-			pl->dx = FZERO;
+			pl.dx = FZERO;
 		}
 	}
-	else if (pl->dx < FZERO && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	else if (pl.dx < FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
-		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);				
+		pl.dx = fix16Add(pl.dx,PLAYER_X_ACCEL);				
 		// Don't decel into the other direction
-		if (pl->dx > FZERO)
+		if (pl.dx > FZERO)
 		{
-			pl->dx = FZERO;
+			pl.dx = FZERO;
 		}
 	}
 
 
-	if (pl->control_disabled || pl->lift_cnt)
+	if (pl.control_disabled || pl.lift_cnt)
 	{
 		return;
 	}
 
 	// walking right and left
-	if (pl->input & BUTTON_RIGHT)
+	if (pl.input & BUTTON_RIGHT)
 	{
-		pl->dx = fix16Add(pl->dx,PLAYER_X_ACCEL);
-		pl->direction = PLAYER_RIGHT;
-		player_walking_sound(pl);
+		pl.dx = fix16Add(pl.dx,PLAYER_X_ACCEL);
+		pl.direction = PLAYER_RIGHT;
+		player_walking_sound();
 	}
-	else if (pl->input & BUTTON_LEFT)
+	else if (pl.input & BUTTON_LEFT)
 	{
-		pl->dx = fix16Sub(pl->dx,PLAYER_X_ACCEL);
-		pl->direction = PLAYER_LEFT;
-		player_walking_sound(pl);
+		pl.dx = fix16Sub(pl.dx,PLAYER_X_ACCEL);
+		pl.direction = PLAYER_LEFT;
+		player_walking_sound();
 	}
 	// If dy/dx is almost zero, make it zero
-	if (pl->dx > FIX16(-0.1) && pl->dx < FIX16(0.1) && !(pl->input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	if (pl.dx > FIX16(-0.1) && pl.dx < FIX16(0.1) && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
-		pl->dx = FZERO;
+		pl.dx = FZERO;
 	}
 
 	// Limit top speed
-	if (pl->dx > PLAYER_DX_MAX)
+	if (pl.dx > PLAYER_DX_MAX)
 	{
-		pl->dx = PLAYER_DX_MAX;
+		pl.dx = PLAYER_DX_MAX;
 	}
-	else if (pl->dx < PLAYER_DX_MIN)
+	else if (pl.dx < PLAYER_DX_MIN)
 	{
-		pl->dx = PLAYER_DX_MIN;
+		pl.dx = PLAYER_DX_MIN;
 	}
 }
 
-static void player_eval_grounded(player *pl)
+static void player_eval_grounded(void)
 {
-	if (pl->dy < FZERO)
+	if (pl.dy < FZERO)
 	{
-		pl->grounded = 0;
+		pl.grounded = 0;
 		return;
 	}
-	u16 px = fix32ToInt(pl->x);
-	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl.x);
+	u16 py = fix32ToInt(pl.y);
 	// "Is the tile one pixel below me solid?"
 	if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM + 1)) || 
 		(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM + 1)))
 	{
-		pl->grounded = 1;
+		pl.grounded = 1;
 	}
 	else
 	{
-		pl->grounded = 0;
+		pl.grounded = 0;
 	}
 }
 
-static void player_jump(player *pl)
+static void player_jump(void)
 {
 	// Very small timeout to prevent lyle from cube-jumping so the occasional
 	// normal jump doesn't accidentally become a cube jump off a ledge
-	if (pl->grounded || pl->on_cube)
+	if (pl.grounded || pl.on_cube)
 	{
-		pl->cubejump_disable = 2;
+		pl.cubejump_disable = 2;
 	}
 
-	if (pl->lift_cnt)
+	if (pl.lift_cnt)
 	{
 		return;
 	}
 
 	// C key pressed, negative edge (1 -> 0)
-	if ((pl->input & BUTTON_C) && !(pl->input_prev & BUTTON_C))
+	if ((pl.input & BUTTON_C) && !(pl.input_prev & BUTTON_C))
 	{
 		// Normal jump off the ground
-		if (pl->grounded || pl->on_cube)
+		if (pl.grounded || pl.on_cube)
 		{
 			playsound(SFX_JUMP);
 			goto do_jump;
 		}
 		// Cube jumping, if we have the ability
-		else if (pl->holding_cube && sram.have_jump && !pl->cubejump_disable)
+		else if (pl.holding_cube && sram.have_jump && !pl.cubejump_disable)
 		{
-			pl->throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
+			pl.throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
 
 			// If the wall behind the player is solid, align the cube's X to it
 			// so it doesn't fizzle immediately on throw. Not sure exactly what
 			// made this happen in the original but this is mimicing what I see
 			// when I play the game.
-			u16 cx = fix32ToInt(pl->x);
-			u16 cy = fix32ToInt(pl->y) - 12;
-			u16 px = fix32ToInt(pl->x);
-			u16 back_x = (pl->direction == PLAYER_LEFT) ? 
+			u16 cx = fix32ToInt(pl.x);
+			u16 cy = fix32ToInt(pl.y) - 12;
+			u16 px = fix32ToInt(pl.x);
+			u16 back_x = (pl.direction == PLAYER_LEFT) ? 
 				(px + PLAYER_CHK_RIGHT + 4) : 
 				(px + PLAYER_CHK_LEFT - 4);
 
 			// Align the cube
-			if (map_collision(back_x, fix32ToInt(pl->y) + PLAYER_CHK_BOTTOM))
+			if (map_collision(back_x, fix32ToInt(pl.y) + PLAYER_CHK_BOTTOM))
 			{
 				cx = ((cx + 4) / 8) * 8;
 			}
@@ -362,11 +364,11 @@ static void player_jump(player *pl)
 			// Generate a cube to throw
 			cube_spawn(cx,
 				cy,
-				pl->holding_cube,
+				pl.holding_cube,
 				CUBE_STATE_AIR,
 				0, FIX16(4));
 
-			pl->holding_cube = 0;
+			pl.holding_cube = 0;
 			// Generate cube of right type, throw it down
 			playsound(SFX_CUBETOSS);
 			goto do_jump;
@@ -375,49 +377,49 @@ static void player_jump(player *pl)
 
 	return;
 do_jump:
-	pl->dy = PLAYER_JUMP_DY;
+	pl.dy = PLAYER_JUMP_DY;
 	// Play SFX
 	return;
 }
 
-static void player_toss_cubes(player *pl)
+static void player_toss_cubes(void)
 {
-	if (pl->holding_cube && (pl->input & BUTTON_B) && (!(pl->input_prev & BUTTON_B)))
+	if (pl.holding_cube && (pl.input & BUTTON_B) && (!(pl.input_prev & BUTTON_B)))
 	{
 		s16 cdx;
 		fix16 cdy;
 		// Holding down; do a short toss
-		if (pl->input & (BUTTON_DOWN))
+		if (pl.input & (BUTTON_DOWN))
 		{
-			cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
+			cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
 			cdy = FIX16(-2.0);
 		}
 		// Holding up; toss straight up
-		else if (pl->input & BUTTON_UP)
+		else if (pl.input & BUTTON_UP)
 		{
 			cdx = 0;
 			cdy = FIX16(-5.0);
 		}
 		// Throw with direction right
-		else if (pl->input & BUTTON_RIGHT && pl->direction == PLAYER_RIGHT)
+		else if (pl.input & BUTTON_RIGHT && pl.direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
 			cdy = FIX16(-1.0);
 		}
 		// Left
-		else if (pl->input & BUTTON_LEFT && pl->direction == PLAYER_LEFT)
+		else if (pl.input & BUTTON_LEFT && pl.direction == PLAYER_LEFT)
 		{
 			cdx = -4;
 			cdy = FIX16(-1.0);
 		}
 		else
 		{
-			cdx = (pl->direction == PLAYER_RIGHT) ? 2 : -2;
+			cdx = (pl.direction == PLAYER_RIGHT) ? 2 : -2;
 			cdy = FIX16(-2.0);
 		}
 
-		u16 cy = fix32ToInt(pl->y) - 23;
-		u16 cx = fix32ToInt(pl->x);
+		u16 cy = fix32ToInt(pl.y) - 23;
+		u16 cx = fix32ToInt(pl.x);
 
 		// Check if the new cube would be in a wall, and push it down if 
 		// necessary by at most two tiles
@@ -432,129 +434,129 @@ static void player_toss_cubes(player *pl)
 		
 		// Generate a cube to throw
 		cube_spawn(cx, cy,
-			pl->holding_cube,
+			pl.holding_cube,
 			CUBE_STATE_AIR,
 			cdx, cdy);
 
 		playsound(SFX_CUBETOSS);
 
 		// Player response
-		pl->holding_cube = 0;
-		pl->action_cnt = PLAYER_ACTION_THROW;
-		pl->throw_cnt = PLAYER_THROW_ANIM_LEN;
+		pl.holding_cube = 0;
+		pl.action_cnt = PLAYER_ACTION_THROW;
+		pl.throw_cnt = PLAYER_THROW_ANIM_LEN;
 	}
 }
 
-static void player_kick_cube(player *pl, cube *c)
+static void player_kick_cube(cube *c)
 {
-	if (c->state != CUBE_STATE_IDLE || !(pl->grounded || pl->on_cube) || 
-		pl->action_cnt)
+	if (c->state != CUBE_STATE_IDLE || !(pl.grounded || pl.on_cube) || 
+		pl.action_cnt)
 	{
 		return;
 	}
-	u16 py = fix32ToInt(pl->y);
-	u16 px = fix32ToInt(pl->x);
+	u16 py = fix32ToInt(pl.y);
+	u16 px = fix32ToInt(pl.x);
 	// check we are within appropriate Y bounds
-	if ((pl->input & BUTTON_B) && !(pl->input_prev & BUTTON_B) &&
+	if ((pl.input & BUTTON_B) && !(pl.input_prev & BUTTON_B) &&
 		c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 1 && 
 		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 8)
 	{
 		// Just touching the left side of it
 		if (px == (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1 &&
-			pl->direction == PLAYER_RIGHT)
+			pl.direction == PLAYER_RIGHT)
 		{
-			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
+			pl.kick_cnt = PLAYER_KICK_ANIM_LEN;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = CUBE_KICK_DX;
-			pl->action_cnt = PLAYER_ACTION_LIFT;
+			pl.action_cnt = PLAYER_ACTION_LIFT;
 			playsound(SFX_CUBEBOUNCE);
 		}
 		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1 &&
-			pl->direction == PLAYER_LEFT)
+			pl.direction == PLAYER_LEFT)
 		{
-			pl->kick_cnt = PLAYER_KICK_ANIM_LEN;
+			pl.kick_cnt = PLAYER_KICK_ANIM_LEN;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = (CUBE_KICK_DX * -1);
-			pl->action_cnt = PLAYER_ACTION_LIFT;
+			pl.action_cnt = PLAYER_ACTION_LIFT;
 			playsound(SFX_CUBEBOUNCE);
 		}
 	}
 }
 
-static void player_lift_cubes(player *pl)
+static void player_lift_cubes(void)
 {
 	if (!sram.have_lift)
 	{
 		return;
 	}	// In the middle of doing something that voids this ability
-	if (pl->hurt_cnt || pl->action_cnt)
+	if (pl.hurt_cnt || pl.action_cnt)
 	{
 		return;
 	}
-	if (pl->on_cube && pl->lift_cnt == 0 && pl->input & BUTTON_B && !(pl->input_prev & BUTTON_B))
+	if (pl.on_cube && pl.lift_cnt == 0 && pl.input & BUTTON_B && !(pl.input_prev & BUTTON_B))
 	{	
-		pl->lift_cnt = PLAYER_LIFT_TIME + 1;
-		pl->action_cnt = PLAYER_ACTION_LIFT;
-		pl->dx = FZERO;
+		pl.lift_cnt = PLAYER_LIFT_TIME + 1;
+		pl.action_cnt = PLAYER_ACTION_LIFT;
+		pl.dx = FZERO;
 	}
-	if (pl->lift_cnt == 1 && pl->on_cube)
+	if (pl.lift_cnt == 1 && pl.on_cube)
 	{
-		cube *c = (cube *)pl->on_cube;
-		pl->holding_cube = c->type;
+		cube *c = (cube *)pl.on_cube;
+		pl.holding_cube = c->type;
 		cube_delete(c);
 
 		// Re-implement the MMF version bug where you can jump while lifting
-		if (pl->input & BUTTON_C)
+		if (pl.input & BUTTON_C)
 		{
-			pl->dy = PLAYER_JUMP_DY;
+			pl.dy = PLAYER_JUMP_DY;
 		}
-		pl->action_cnt = PLAYER_ACTION_LIFT;
+		pl.action_cnt = PLAYER_ACTION_LIFT;
 	}
 }
 
-static void player_special_counters(player *pl)
+static void player_special_counters(void)
 {
-	if (pl->throwdown_cnt)
+	if (pl.throwdown_cnt)
 	{
-		pl->throwdown_cnt--;
+		pl.throwdown_cnt--;
 	}
-	if (pl->throw_cnt)
+	if (pl.throw_cnt)
 	{
-		pl->throw_cnt--;
+		pl.throw_cnt--;
 	}
-	if (pl->kick_cnt)
+	if (pl.kick_cnt)
 	{
-		pl->kick_cnt--;
+		pl.kick_cnt--;
 	}
-	if (pl->lift_cnt)
+	if (pl.lift_cnt)
 	{
-		pl->lift_cnt--;
+		pl.lift_cnt--;
 	}
-	if (pl->hurt_cnt)
+	if (pl.hurt_cnt)
 	{
-		pl->hurt_cnt--;
+		pl.hurt_cnt--;
 	}
-	if (pl->invuln_cnt)
+	if (pl.invuln_cnt)
 	{
-		pl->invuln_cnt--;
+		pl.invuln_cnt--;
 	}
-	if (pl->action_cnt)
+	if (pl.action_cnt)
 	{
-		pl->action_cnt--;
+		pl.action_cnt--;
 	}
-	if (pl->cubejump_disable)
+	if (pl.cubejump_disable)
 	{
-		pl->cubejump_disable--;
+		pl.cubejump_disable--;
 	}
 }
 
-static void player_bg_horizontal_collision(player *pl)
+static void player_bg_horizontal_collision(void)
 {
-	u16 py = fix32ToInt(pl->y);
-	u16 px = fix32ToInt(pl->x);
+	u16 py = fix32ToInt(pl.y);
+	u16 px = fix32ToInt(pl.x);
 
 	// Horizontal collision
-	if (pl->dx > FZERO)
+	if (pl.dx > FZERO)
 	{
 		if ((map_collision(px + PLAYER_CHK_RIGHT, py + PLAYER_CHK_TOP)) ||
 			(map_collision(px + PLAYER_CHK_RIGHT, py + PLAYER_CHK_FOOT)) ||
@@ -562,11 +564,11 @@ static void player_bg_horizontal_collision(player *pl)
 		{
 			px = 8 * (px / 8);
 			px += 3;
-			pl->x = intToFix32(px);
-			pl->dx = FZERO;
+			pl.x = intToFix32(px);
+			pl.dx = FZERO;
 		}
 	}
-	else if (pl->dx < FZERO)
+	else if (pl.dx < FZERO)
 	{
 		if ((map_collision(px + PLAYER_CHK_LEFT, py + PLAYER_CHK_TOP)) ||
 			(map_collision(px + PLAYER_CHK_LEFT, py + PLAYER_CHK_FOOT) ) ||
@@ -574,28 +576,28 @@ static void player_bg_horizontal_collision(player *pl)
 		{
 			px = 8 * (px / 8);
 			px += 5;
-			pl->x = intToFix32(px);
-			pl->dx = FZERO;
+			pl.x = intToFix32(px);
+			pl.dx = FZERO;
 		}
 	}
 }
 
-static void player_bg_vertical_collision(player *pl)
+static void player_bg_vertical_collision(void)
 {
-	u16 py = fix32ToInt(pl->y);
-	u16 px = fix32ToInt(pl->x);
-	px -= fix16ToInt(pl->dx);
+	u16 py = fix32ToInt(pl.y);
+	u16 px = fix32ToInt(pl.x);
+	px -= fix16ToInt(pl.dx);
 	// Vertical collision
 	// "Am I now stuck with my feet in the ground?"
-	if (pl->dy > FZERO)
+	if (pl.dy > FZERO)
 	{
 		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM)) ||
 			(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM)))
 		{
 			// Snap to nearest 8px boundary
 			py = 8 * (py / 8) - 1;
-			pl->y = intToFix32(py);
-			pl->dy = FZERO;
+			pl.y = intToFix32(py);
+			pl.dy = FZERO;
 			int i = 8;
 			while (i--)
 			{
@@ -603,23 +605,23 @@ static void player_bg_vertical_collision(player *pl)
 				if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_BOTTOM)) ||
 					(map_collision(px + PLAYER_CHK_LEFT + 1, py + PLAYER_CHK_BOTTOM)))
 				{
-					pl->y = fix32Sub(pl->y,intToFix32(1));
+					pl.y = fix32Sub(pl.y,intToFix32(1));
 				}
 				else
 				{
 					break;
 				}
 			}
-			player_eval_grounded(pl);
+			player_eval_grounded();
 			// Somehow we aren't grounded now - move down one tile.
-			if (!pl->grounded)
+			if (!pl.grounded)
 			{
-				pl->y = fix32Add(pl->y,intToFix32(8));
-				player_eval_grounded(pl);
+				pl.y = fix32Add(pl.y,intToFix32(8));
+				player_eval_grounded();
 			}
 		}
 	}
-	else if (pl->dy < FZERO)
+	else if (pl.dy < FZERO)
 	{
 		// "Am I now stuck with my head in the ceiling?"
 		if ((map_collision(px + PLAYER_CHK_RIGHT - 1, py + PLAYER_CHK_TOP - 1)) ||
@@ -627,10 +629,10 @@ static void player_bg_vertical_collision(player *pl)
 		{
 			// Snap to nearest 8px boundary, with head room accounted for
 			py = 8 * ((py + 4) / 8) + 3;
-			pl->y = intToFix32(py);
-			if (pl->dy < PLAYER_CEILING_VECY)
+			pl.y = intToFix32(py);
+			if (pl.dy < PLAYER_CEILING_VECY)
 			{
-				pl->dy = PLAYER_CEILING_VECY;
+				pl.dy = PLAYER_CEILING_VECY;
 			}
 
 		}
@@ -639,46 +641,46 @@ static void player_bg_vertical_collision(player *pl)
 
 // Interactions with stationary cubes
 
-static void player_cube_horizontal_collision(player *pl, cube *c)
+static void player_cube_horizontal_collision(cube *c)
 {
 	if (c->state == CUBE_STATE_AIR)
 	{
 		return;
 	}
-	u16 py = fix32ToInt(pl->y);
-	u16 px = fix32ToInt(pl->x);
+	u16 py = fix32ToInt(pl.y);
+	u16 px = fix32ToInt(pl.x);
 
 	// check we are within appropriate Y bounds
 	if (c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 1 && 
 		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 1)
 	{
 		// Horizontal collision
-		if (pl->dx > FZERO)
+		if (pl.dx > FZERO)
 		{
 			if (c->x + CUBE_LEFT >= px) 
 			{
 				px = (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1;
-				pl->x = intToFix32(px);
-				pl->dx = FZERO;
+				pl.x = intToFix32(px);
+				pl.dx = FZERO;
 			}
 		}
-		else if (pl->dx < FZERO)
+		else if (pl.dx < FZERO)
 		{
 			if (c->x + CUBE_RIGHT <= px) 
 			{
 				px = (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1;
-				pl->x = intToFix32(px);
-				pl->dx = FZERO;
+				pl.x = intToFix32(px);
+				pl.dx = FZERO;
 			}
 		}
 	}
 }
 
-static void player_cube_vertical_collision(player *pl, cube *c)
+static void player_cube_vertical_collision(cube *c)
 {
-	u16 py = fix32ToInt(pl->y);
-	u16 px = fix32ToInt(pl->x);
-	px -= fix16ToInt(pl->dx);
+	u16 py = fix32ToInt(pl.y);
+	u16 px = fix32ToInt(pl.x);
+	px -= fix16ToInt(pl.dx);
 
 	// appropriate X bounds
 	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
@@ -686,36 +688,36 @@ static void player_cube_vertical_collision(player *pl, cube *c)
 	{
 		// Vertical collision
 		// "Am I now stuck with my feet in a cube?"
-		if (pl->dy > FZERO)
+		if (pl.dy > FZERO)
 		{
 			if (py + PLAYER_CHK_BOTTOM >= c->y + CUBE_TOP && py + PLAYER_CHK_TOP < c->y + CUBE_BOTTOM)
 			{
 				// Snap to the cube
 				py = c->y + CUBE_TOP - PLAYER_CHK_BOTTOM - 1;
-				pl->y = intToFix32(py);
-				pl->dy = FZERO;
+				pl.y = intToFix32(py);
+				pl.dy = FZERO;
 			}
 		}
-		else if (pl->dy < FZERO)
+		else if (pl.dy < FZERO)
 		{
 			// "Am I now stuck with my head in the cube?"
 			if (py + PLAYER_CHK_TOP< c->y + CUBE_BOTTOM && py + PLAYER_CHK_BOTTOM > c->y + CUBE_BOTTOM)
 			{
 				py = c->y + CUBE_BOTTOM - PLAYER_CHK_TOP + 1;
-				pl->y = intToFix32(py);
-				if (pl->dy < PLAYER_CEILING_VECY)
+				pl.y = intToFix32(py);
+				if (pl.dy < PLAYER_CEILING_VECY)
 				{
-					pl->dy = PLAYER_CEILING_VECY;
+					pl.dy = PLAYER_CEILING_VECY;
 				}
 			}
 		}
 	}
 }
 
-static void player_cube_eval_standing(player *pl, cube *c)
+static void player_cube_eval_standing(cube *c)
 {
-	u16 py = fix32ToInt(pl->y);
-	u16 px = fix32ToInt(pl->x);
+	u16 py = fix32ToInt(pl.y);
+	u16 px = fix32ToInt(pl.x);
 	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
 		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT && 
 		py + PLAYER_CHK_BOTTOM + 1>= c->y + CUBE_TOP && 
@@ -723,10 +725,10 @@ static void player_cube_eval_standing(player *pl, cube *c)
 	{
 		// Already standing on a cube? Determine which cube is closer and
 		// use that cube as the "standing-on cube" reference for lifting.
-		if (pl->on_cube)
+		if (pl.on_cube)
 		{
 			// Get X distance difference for new and old cubes
-			cube *oc = (cube *)(pl->on_cube);
+			cube *oc = (cube *)(pl.on_cube);
 			s16 orig_diff_x = px - oc->x;
 			s16 new_diff_x = px - c->x;
 			// Make absolute values
@@ -741,21 +743,21 @@ static void player_cube_eval_standing(player *pl, cube *c)
 			// Our new cube is cloesr. Use it.
 			if (new_diff_x < orig_diff_x)
 			{
-				pl->on_cube = (void *)c;
+				pl.on_cube = (void *)c;
 			}
 			// Otherwise, the previous remains.
 		}
 		else
 		{
-			pl->on_cube = (void *)c;
+			pl.on_cube = (void *)c;
 		}
 	}
 }
 
-static inline void player_cube_collision(player *pl)
+static inline void player_cube_collision(void)
 {
-	u16 px = (u16)fix32ToInt(pl->x);
-	u16 py = (u16)fix32ToInt(pl->y);
+	u16 px = (u16)fix32ToInt(pl.x);
+	u16 py = (u16)fix32ToInt(pl.y);
 	int i = CUBES_NUM;
 	while (i--)
 	{
@@ -774,19 +776,19 @@ static inline void player_cube_collision(player *pl)
 		{
 			if (c->state == CUBE_STATE_IDLE)
 			{
-				player_cube_vertical_collision(pl, c);
-				player_cube_horizontal_collision(pl, c);
-				player_cube_eval_standing(pl, c);
-				player_kick_cube(pl, c);
+				player_cube_vertical_collision(c);
+				player_cube_horizontal_collision(c);
+				player_cube_eval_standing(c);
+				player_kick_cube(c);
 			}
-			else if (c->state == CUBE_STATE_AIR && pl->throw_cnt == 0 && pl->kick_cnt == 0 && pl->throwdown_cnt == 0)
+			else if (c->state == CUBE_STATE_AIR && pl.throw_cnt == 0 && pl.kick_cnt == 0 && pl.throwdown_cnt == 0)
 			{
-				player_get_hurt(pl);
+				player_get_hurt();
 			}
 		}
 
 		// Check for cube bouncing on the fake cube player is holding
-		if (pl->holding_cube)
+		if (pl.holding_cube)
 		{
 			if (c->state == CUBE_STATE_AIR &&
 				c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT + 1 && 
@@ -804,149 +806,149 @@ static inline void player_cube_collision(player *pl)
 	}
 }
 
-static inline void player_move(player *pl)
+static inline void player_move(void)
 {
 	// Do movement	
-	pl->x = fix32Add(pl->x,fix16ToFix32(pl->dx));
-	pl->y = fix32Add(pl->y,fix16ToFix32(pl->dy));
+	pl.x = fix32Add(pl.x,fix16ToFix32(pl.dx));
+	pl.y = fix32Add(pl.y,fix16ToFix32(pl.dy));
 
-	pl->on_cube = NULL;
-	player_bg_vertical_collision(pl);
-	player_bg_horizontal_collision(pl);
-	player_eval_grounded(pl);
-	player_cube_collision(pl);
+	pl.on_cube = NULL;
+	player_bg_vertical_collision();
+	player_bg_horizontal_collision();
+	player_eval_grounded();
+	player_cube_collision();
 
 	// In the air, gravity is affected by the player holding jump or not
-	if (!pl->grounded)
+	if (!pl.grounded)
 	{
 		// The jump holding only affects gravity on the way up, though
-		if ((pl->input & BUTTON_C) && pl->dy < FZERO)
+		if ((pl.input & BUTTON_C) && pl.dy < FZERO)
 		{
-			pl->dy = fix16Add(pl->dy,PLAYER_Y_ACCEL_WEAK);
+			pl.dy = fix16Add(pl.dy,PLAYER_Y_ACCEL_WEAK);
 		}
 		else
 		{
-			pl->dy = fix16Add(pl->dy,PLAYER_Y_ACCEL);
+			pl.dy = fix16Add(pl.dy,PLAYER_Y_ACCEL);
 		}
-		if (pl->dy > PLAYER_DY_MAX)
+		if (pl.dy > PLAYER_DY_MAX)
 		{
-			pl->dy = PLAYER_DY_MAX;
+			pl.dy = PLAYER_DY_MAX;
 		}
 	}
 
-	pl->px = fix32ToInt(pl->x);
-	pl->py = fix32ToInt(pl->y);
+	pl.px = fix32ToInt(pl.x);
+	pl.py = fix32ToInt(pl.y);
 }
 
-static inline void player_calc_anim(player *pl)
+static inline void player_calc_anim(void)
 {
-	if (pl->grounded || pl->on_cube)
+	if (pl.grounded || pl.on_cube)
 	{
-		pl->anim_cnt++;
-		if (pl->anim_cnt == PLAYER_ANIMSPEED * 4)
+		pl.anim_cnt++;
+		if (pl.anim_cnt == PLAYER_ANIMSPEED * 4)
 		{
-			pl->anim_cnt = 0;
+			pl.anim_cnt = 0;
 		}
 	}
 	else
 	{
-		pl->anim_cnt = 0;
+		pl.anim_cnt = 0;
 	}
-	if (pl->invuln_cnt && (system_osc % 8 > 3))
+	if (pl.invuln_cnt && (system_osc % 8 > 3))
 	{
 		return;
 	}
-	if (pl->hp == 0)
+	if (pl.hp == 0)
 	{
-		pl->anim_frame = 0x0F;
+		pl.anim_frame = 0x0F;
 	}
 	else
 	{
-		if (pl->throw_cnt > 0)
+		if (pl.throw_cnt > 0)
 		{
-			pl->anim_frame = 0x16;
+			pl.anim_frame = 0x16;
 			return;
 		}
-		else if (pl->throwdown_cnt > 0)
+		else if (pl.throwdown_cnt > 0)
 		{
-			pl->anim_frame = 0x07;
+			pl.anim_frame = 0x07;
 			return;
 		}
-		else if (pl->kick_cnt > 0)
+		else if (pl.kick_cnt > 0)
 		{
-			pl->anim_frame = 0x17;
+			pl.anim_frame = 0x17;
 			return;
 		}
-		else if (pl->lift_cnt > 0)
+		else if (pl.lift_cnt > 0)
 		{
-			pl->anim_frame = 0x05;
+			pl.anim_frame = 0x05;
 			return;
 		}
-		else if (pl->hurt_cnt > 0)
+		else if (pl.hurt_cnt > 0)
 		{
-			pl->anim_frame = 0x06;	
+			pl.anim_frame = 0x06;	
 			return;
 		}
 		
-		if (pl->grounded || pl->on_cube)
+		if (pl.grounded || pl.on_cube)
 		{
-			if (!(pl->input & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
+			if (!(pl.input & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
 			{
-				pl->anim_frame = 0x00;
+				pl.anim_frame = 0x00;
 			}
 			else // Walking cycle
 			{
-				if (pl->anim_cnt < PLAYER_ANIMSPEED)
+				if (pl.anim_cnt < PLAYER_ANIMSPEED)
 				{
-					pl->anim_frame = 0x02;
+					pl.anim_frame = 0x02;
 				}
-				else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 2))
+				else if (pl.anim_cnt < (PLAYER_ANIMSPEED * 2))
 				{
-					pl->anim_frame = 0x03;
+					pl.anim_frame = 0x03;
 				}
-				else if (pl->anim_cnt < (PLAYER_ANIMSPEED * 3))
+				else if (pl.anim_cnt < (PLAYER_ANIMSPEED * 3))
 				{
-					pl->anim_frame = 0x02;
+					pl.anim_frame = 0x02;
 				}
 				else
 				{
-					pl->anim_frame = 0x01;
+					pl.anim_frame = 0x01;
 				}
 			}
 		}
 		else
 		{
-			pl->anim_frame = 0x04;
+			pl.anim_frame = 0x04;
 		}
-		if ((pl->cp_cnt > PLAYER_CUBE_FX) || pl->holding_cube)
+		if ((pl.cp_cnt > PLAYER_CUBE_FX) || pl.holding_cube)
 		{
 			// Offset to arms-up version
-			pl->anim_frame += 0x08;
+			pl.anim_frame += 0x08;
 		}
 	}
 }
 
-void player_draw(player *pl)
+void player_draw(void)
 {
 
 	// Draw a cube he is holding
-	if (pl->holding_cube)
+	if (pl.holding_cube)
 	{
-		cube_draw_single(fix32ToInt(pl->x) + PLAYER_DRAW_LEFT, fix32ToInt(pl->y) + PLAYER_DRAW_TOP - 15, pl->holding_cube);
+		cube_draw_single(fix32ToInt(pl.x) + PLAYER_DRAW_LEFT, fix32ToInt(pl.y) + PLAYER_DRAW_TOP - 15, pl.holding_cube);
 	}
-	if (pl->invuln_cnt && (system_osc % 8 > 3))
+	if (pl.invuln_cnt && (system_osc % 8 > 3))
 	{
 		return;
 	}
 	u16 size;
 	s16 yoff;
-	s16 xoff = (pl->lift_cnt ? (pl->lift_cnt / 2) % 2 : 0);
-	if (pl->anim_frame < 0x10)
+	s16 xoff = (pl.lift_cnt ? (pl.lift_cnt / 2) % 2 : 0);
+	if (pl.anim_frame < 0x10)
 	{
 		size = SPRITE_SIZE(2,3);
 		yoff = PLAYER_DRAW_TOP;
 	}
-	else if (pl->anim_frame < 0x14)
+	else if (pl.anim_frame < 0x14)
 	{
 		size = SPRITE_SIZE(3,2);
 		yoff = PLAYER_DRAW_TOP + 8;
@@ -957,19 +959,19 @@ void player_draw(player *pl)
 	{
 		size = SPRITE_SIZE(3,3);
 		yoff = PLAYER_DRAW_TOP;
-		xoff = (pl->direction) ? -8 : 0;
+		xoff = (pl.direction) ? -8 : 0;
 	}
-	sprite_put(fix32ToInt(pl->x) + xoff + PLAYER_DRAW_LEFT - state.cam_x, 
-		fix32ToInt(pl->y) + yoff - state.cam_y, 
+	sprite_put(fix32ToInt(pl.x) + xoff + PLAYER_DRAW_LEFT - state.cam_x, 
+		fix32ToInt(pl.y) + yoff - state.cam_y, 
 		size, 
-		TILE_ATTR(PLAYER_PALNUM,1,0,pl->direction) + PLAYER_VRAM_SLOT);
+		TILE_ATTR(PLAYER_PALNUM,1,0,pl.direction) + PLAYER_VRAM_SLOT);
 }
 
-static inline void player_entrance_coll(player *pl)
+static inline void player_entrance_coll(void)
 {
 	u16 i = STATE_NUM_ENTRANCES;
-	u16 px = fix32ToInt(pl->x);
-	u16 py = fix32ToInt(pl->y);
+	u16 px = fix32ToInt(pl.x);
+	u16 py = fix32ToInt(pl.y);
 	while (i--)
 	{
 		if (i == 0)
@@ -988,67 +990,67 @@ static inline void player_entrance_coll(player *pl)
 	}
 }
 
-static inline void player_chk_spikes(player *pl)
+static inline void player_chk_spikes(void)
 {
-	if (pl->invuln_cnt == 0 && map_hurt(pl->px,pl->py + PLAYER_CHK_BOTTOM))
+	if (pl.invuln_cnt == 0 && map_hurt(pl.px,pl.py + PLAYER_CHK_BOTTOM))
 	{
-		player_get_hurt(pl);
+		player_get_hurt();
 	}
 }
 
-void player_run(player *pl)
+void player_run(void)
 {
-	player_eval_control_en(pl);
-	player_read_pad(pl);
-	player_accel(pl);
-	player_toss_cubes(pl);
-	player_lift_cubes(pl);
-	player_jump(pl);
-	player_move(pl);
-	player_chk_spikes(pl);
-	player_cp(pl);
-	player_eval_grounded(pl);
-	player_calc_anim(pl);
-	player_entrance_coll(pl);
-	player_dma_setup(pl);
-	player_special_counters(pl);
+	player_eval_control_en();
+	player_read_pad();
+	player_accel();
+	player_toss_cubes();
+	player_lift_cubes();
+	player_jump();
+	player_move();
+	player_chk_spikes();
+	player_cp();
+	player_eval_grounded();
+	player_calc_anim();
+	player_entrance_coll();
+	player_dma_setup();
+	player_special_counters();
 }
 
-void player_get_hurt(player *pl)
+void player_get_hurt(void)
 {
-	if (pl->hurt_cnt < PLAYER_HURT_TIME - PLAYER_HURT_TIMEOUT)
+	if (pl.hurt_cnt < PLAYER_HURT_TIME - PLAYER_HURT_TIMEOUT)
 	{
-		pl->dy = PLAYER_JUMP_DY;
-		if (pl->direction == PLAYER_RIGHT)
+		pl.dy = PLAYER_JUMP_DY;
+		if (pl.direction == PLAYER_RIGHT)
 		{
-			pl->dx = PLAYER_HURT_DX_R;
+			pl.dx = PLAYER_HURT_DX_R;
 		}
 		else
 		{
-			pl->dx = PLAYER_HURT_DX_L;
+			pl.dx = PLAYER_HURT_DX_L;
 		}
 	}
-	if (pl->invuln_cnt == 0)
+	if (pl.invuln_cnt == 0)
 	{
-		pl->hurt_cnt = PLAYER_HURT_TIME;
-		pl->invuln_cnt = PLAYER_INVULN_TIME;
+		pl.hurt_cnt = PLAYER_HURT_TIME;
+		pl.invuln_cnt = PLAYER_INVULN_TIME;
 
-		if (pl->hp > 0)
+		if (pl.hp > 0)
 		{
-			pl->hp--;
+			pl.hp--;
 		}
 
-		if (pl->holding_cube)
+		if (pl.holding_cube)
 		{
-			u16 cx = fix32ToInt(pl->x);
-			u16 cy = fix32ToInt(pl->y) - 12;
-			s16 cdx = (pl->direction == PLAYER_RIGHT) ? 1 : -1;
+			u16 cx = fix32ToInt(pl.x);
+			u16 cy = fix32ToInt(pl.y) - 12;
+			s16 cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
 			fix16 cdy = FIX16(-3.0);
 			cube_spawn(cx, cy,
-				pl->holding_cube,
+				pl.holding_cube,
 				CUBE_STATE_AIR,
 				cdx, cdy);
-			pl->holding_cube = 0;
+			pl.holding_cube = 0;
 		}
 	}
 }

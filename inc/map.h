@@ -80,7 +80,7 @@ void map_load_tileset(u8 num);
 map_file *map_by_id(u8 num);
 
 // Update the screen as needed based on movement differences
-void map_draw_diffs(u16 movedi, fix16 dx, fix16 dy);
+void map_draw_diffs(u16 moved);
 
 // Commit DMA queue to VRAM
 void map_dma(void);
