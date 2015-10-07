@@ -21,6 +21,7 @@ src/*.swp
 
 out/out.bin
 out.bin
+TEMP/*
 util/TEMP
 util/TEMP/*
 # Shared objects (inc. Windows DLLs)
@@ -43,4 +44,4 @@ editor
 lyle.bin
 out/rom.bin
 
-util/TEMP/*
+docs/sauce/*.0*

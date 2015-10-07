@@ -36,7 +36,6 @@ These directories are a product of SGDK and we are not very concerned with them:
 	out/ (various stages of output)
 	boot/ (construction of rom headers)
 	scd/ (sega CD build process; ignored)
-	builds/ (notable build artifacts preserved for posterity)
 
 These directories store resources and tools used for creation of game assets:
 	docs/ (helpful documents and notes on the game's operation and creation)
