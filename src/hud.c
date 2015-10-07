@@ -21,8 +21,7 @@ void hud_draw_health(u16 max, u16 val)
 	for (i = 1; i < max + 1; i++)
 	{
 		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + (val > i ? 8 : 10));
-			sprite_put(HUD_HP_X, HUD_HP_Y + 8 + (8 * i),
-				SPRITE_SIZE(2,1), attr);
+		sprite_put(HUD_HP_X, HUD_HP_Y + 8 + (8 * i), SPRITE_SIZE(2,1), attr);
 
 	}
 }
@@ -52,17 +51,17 @@ void hud_draw_cp(u16 val)
 	{
 		// Default to "full" tile
 		u16 attr = TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + 14);
-		u16 py = HUD_CP_Y - 9 - (i * 8) - euro_mod;
+		u16 py = HUD_CP_Y - 9 - (i << 3) - euro_mod;
 		if (val == HUD_CP_BAR_HEIGHT)
 		{
 			sprite_put(HUD_CP_X, py, SPRITE_SIZE(2,1), attr);
 			continue;
 		}
-		if (val < (i + 1) * 8 && val >= (i * 8))
+		if ((val < ((i + 1) << 3)) && (val >= (i << 3)))
 		{
-			attr += 2 + ((val % 8) * 2);
+			attr += 2 + ((val & 7) << 1);
 		}
-		else if (val < (i * 8))
+		else if (val < (i << 3))
 		{
 			attr += 2;
 		}
@@ -70,6 +69,4 @@ void hud_draw_cp(u16 val)
 		// Calculate Y for this tile
 		sprite_put(HUD_CP_X, py, SPRITE_SIZE(2,1), attr);
 	}
-
-
 }

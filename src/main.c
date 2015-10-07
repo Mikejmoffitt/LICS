@@ -16,35 +16,45 @@
 #include "bg.h"
 #include "enemy.h"
 
-#define DEBUG_BGCOL(x) if (debug_bgcol) { VDP_setPaletteColor(0,x); }
-
-u16 debug_bgcol;
-
 static inline void loop_logic(void)
 {
+	DEBUG_BGCOL(0x22E);
 	player_run();
+	DEBUG_BGCOL(0x2E2);
 	enemy_run();
+	DEBUG_BGCOL(0xE2E);
 	cubes_run();
+	DEBUG_BGCOL(0xE22);
 	particles_run();
+	DEBUG_BGCOL(0x444);
 	sfx_counters();
-
 }
 
 static inline void loop_gfx(void)
 {
 	/* BG updates for scrolling */
+	DEBUG_BGCOL(0xAA0);
 	map_draw_diffs(state_update_scroll());
 
+	DEBUG_BGCOL(0xAAA);
 	/* Place sprites */
 	hud_draw_health(sram.max_hp,pl.hp);
+	DEBUG_BGCOL(0x666);
 	if (sram.have_phantom)
 	{
 		hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
 	}
+	DEBUG_BGCOL(0x00A);
 	player_draw();
+	DEBUG_BGCOL(0x0A0);
 	enemy_draw();
+	DEBUG_BGCOL(0xA00);
 	particles_draw();
+	DEBUG_BGCOL(0xA0A);
 	cubes_draw();
+	DEBUG_BGCOL(0x000);
+	system_debug_cpu_meter();
+
 }
 
 static inline void loop_dma(void)

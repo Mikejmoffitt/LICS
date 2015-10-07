@@ -5,6 +5,12 @@
 
 #include <genesis.h>
 
+#ifdef WANT_DEBUG_COLOR
+#define DEBUG_BGCOL(x) VDP_setPaletteColor(0,x);
+#else
+#define DEBUG_BGCOL(x) 
+#endif
+
 #define SYSTEM_PLANE_W 64
 #define SYSTEM_PLANE_H 32
 
@@ -13,5 +19,6 @@ extern u16 system_osc;
 
 void system_init(void);
 void system_wait_v(void);
+void system_set_debug(u16 val);
 
 #endif

@@ -66,7 +66,7 @@ void enemy_run(void)
 		en_generic *e = &enemies[i];
 		if (e->head.type == ENEMY_NULL)
 		{
-			return;
+			// return;
 		}
 		if (e->head.active == 0)
 		{

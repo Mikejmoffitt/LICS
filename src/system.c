@@ -4,9 +4,12 @@
 #include "save.h"
 #include "music.h"
 #include "cdaudio.h"
+#include "vramslots.h"
 
 static vu16 vbl_active;
 u16 system_osc;
+
+static u16 debug_en;
 
 static _voidCallback *v_int(void)
 {
@@ -47,11 +50,21 @@ void system_init(void)
 	sprites_init();
 	save_clear();
 	save_load();
-	// Allow holding A + Start to change scan modes
-	if ((JOY_readJoypad(JOY_1) & BUTTON_A) || (JOY_readJoypad(JOY_1) & BUTTON_START))
+	system_set_debug(0);
+	// Allow holding A to force 480i
+	if ((JOY_readJoypad(JOY_1) & BUTTON_A))
 	{
-		sram.opt_interlace = (sram.opt_interlace == SAVE_OPT_INTERLACE_ENABLED) ? (SAVE_OPT_INTERLACE_NORMAL) : (SAVE_OPT_INTERLACE_ENABLED);
-		save_write();
+		sram.opt_interlace = SAVE_OPT_INTERLACE_ENABLED;
+	}
+	// Allow holding C to force 240p
+	if ((JOY_readJoypad(JOY_1) & BUTTON_C))
+	{
+		sram.opt_interlace = SAVE_OPT_INTERLACE_NORMAL;
+	}
+	// Hold Z for debug
+	if ((JOY_readJoypad(JOY_1) & BUTTON_Z))
+	{
+		system_set_debug(1);
 	}
 	if (sram.opt_interlace == SAVE_OPT_INTERLACE_ENABLED)
 	{
@@ -66,6 +79,7 @@ void system_init(void)
 	music_init();
 	cdaudio_init();
 
+
 }
 
 void system_wait_v(void)
@@ -78,3 +92,20 @@ void system_wait_v(void)
 	vbl_active = 0;
 }
 
+void system_set_debug(u16 val)
+{
+	debug_en = val;
+}	
+
+void system_debug_cpu_meter(void)
+{
+	if (debug_en)
+	{
+		u16 i = GET_VCOUNTER;
+		while (i < 240)
+		{
+			sprite_put(-4, i, SPRITE_SIZE(1,1), HUD_VRAM_SLOT + 14);
+			i+=8;
+		}
+	}
+}
