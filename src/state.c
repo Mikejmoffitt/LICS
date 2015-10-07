@@ -6,6 +6,7 @@
 #include "system.h"
 #include "vramslots.h"
 #include "pal.h"
+#include "enemy.h"
 
 gamestate state;
 
@@ -38,7 +39,8 @@ static void state_parse_objects(void)
 	}
 	i = MAP_NUM_OBJS;
 	map_list_obj *o = &(state.current_room->objects[0]);
-	entrance *e;
+	entrance *d;
+	en_generic *e;
 	while (i--)
 	{
 		o = &(state.current_room->objects[i]);
@@ -48,14 +50,17 @@ static void state_parse_objects(void)
 			case MAP_OBJ_NULL:
 				continue;
 			case MAP_OBJ_ENTRANCE:
-				e = &state.entrances[o->data & 0x000F];
-				e->x = o->x;
-				e->y = o->y; 
-				e->to_num = (o->data & 0x00F0) >> 4;
-				e->to_roomid = (o->data & 0xFF00) >> 8;
+				d = &state.entrances[o->data & 0x000F];
+				d->x = o->x;
+				d->y = o->y; 
+				d->to_num = (o->data & 0x00F0) >> 4;
+				d->to_roomid = (o->data & 0xFF00) >> 8;
 				break;
 			case MAP_OBJ_CUBE:
 				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
+				break;
+			case MAP_OBJ_METAGRUB:
+				e = (en_generic *)enemy_place(o->x + 12, o->y + 7, ENEMY_METAGRUB);
 				break;
 		}
 	}

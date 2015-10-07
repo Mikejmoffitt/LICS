@@ -1,4 +1,5 @@
 #include "plane.h"
+#include "objects.h"
 
 static ALLEGRO_BITMAP *checker_bg;
 static ALLEGRO_BITMAP *fg_chr;
@@ -189,42 +190,6 @@ void plane_draw_vram(unsigned int x, unsigned int y)
 	plane_print_label(x, y, col, selmsg);
 }
 
-static int height_for_obj(int objnum)
-{
-	switch (objnum)
-	{
-		default:
-		case OBJ_ROOMPTR:
-			return TILESIZE * 4;
-		case OBJ_CUBE:
-			return TILESIZE * 2;
-	}
-	return TILESIZE * 2;
-}
-
-static int width_for_obj(int objnum)
-{
-	switch (objnum)
-	{
-		default:
-		case OBJ_ROOMPTR:
-		case OBJ_CUBE:
-			return TILESIZE * 2;
-	}
-	return TILESIZE * 2;
-}
-
-const char *string_for_obj(int objnum)
-{
-	const char *names[] = {
-		"        ",
-		"Room Ptr",
-		"Cube    ",
-		0
-	};
-	return names[objnum];
-}
-
 static void plane_object_window(unsigned int x, unsigned int y)
 {
 	ALLEGRO_COLOR sel_col = (edit_mode == MODE_OBJECTS) ? al_map_rgba(0,96,255,0) : al_map_rgba(128,128,128,0);
@@ -262,21 +227,19 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 
 	sprintf(name,"Object Type: %02X, named %s",o->type, string_for_obj(o->type));
 	sprintf(posd,"X: %04X Y: %04X",o->x, o->y);
+	sprintf(dat1,"                       Raw Data: 0x%04X",o->data);
 
 	switch (o->type)
 	{
 		case OBJ_NULL:
 			sprintf(desc," ");
-			sprintf(dat1," ");
 			sprintf(dat2," ");
 			break;
 		case OBJ_ROOMPTR:
-			sprintf(desc,"This Ptr is #%X (LSN)",o->data & 0x000F);
-			sprintf(dat1,"Points to room %02X (MSB)     Raw: 0x%04X",(o->data & 0xFF00) >> 8,o->data);
-			sprintf(dat2,"          door #%X",(o->data & 0x00F0) >> 4);
+			sprintf(dat2,"Door #%X (LSN)",o->data & 0x000F);
+			sprintf(desc,"To (%2X, %X)",(o->data & 0xFF00) >> 8, (o->data & 0x00F0) >> 4);
 			break;
 		case OBJ_CUBE:
-			sprintf(dat1,"                            Raw: 0x%04X",o->data);
 			sprintf(dat2,"");
 			if (o->data == 0x0100)
 			{
@@ -331,10 +294,13 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 				}
 			}
 			break;
+		case OBJ_METAGRUB:
+			sprintf(desc,"Lunges side to side");
+			sprintf(dat2," ");
+			break;
 	}
 
 	plane_print_label(x, y + 40, al_map_rgb(255,255,255), name);
-
 	plane_print_label(x, y + 48, al_map_rgb(128,128,255), desc);
 	plane_print_label(x, y + 56, al_map_rgb(128,255,128), dat1);
 	plane_print_label(x, y + 64, al_map_rgb(255,192,128), dat2);

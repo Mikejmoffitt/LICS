@@ -21,23 +21,11 @@
 #define MAP_MAX_WIDTH 24
 #define MAP_MAX_HEIGHT 24
 
-#define OBJ_NULL 0
-#define OBJ_ROOMPTR 1
-#define OBJ_CUBE 2
 
 // ROOM POINTER NOTES
 // Lowest nybble is the room pointer ID  
 // Seocnd-lowest nybble is the room pointer ID to point to
 // High byte is the room to point to
-
-/* -------------- Object Types --------------
-
-0x0000 NULL
-0x0001 EXIT
-0x0002 CUBE
-0x0003 
-
-*/
 
 typedef struct map_obj map_obj;
 struct map_obj

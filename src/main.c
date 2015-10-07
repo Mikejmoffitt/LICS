@@ -87,10 +87,6 @@ void room_setup(void)
 
 	system_wait_v();
 	VDP_setEnable(1);
-
-	enemy_place(128, (240 - 32 - 1), ENEMY_METAGRUB);
-	enemy_place(512, (240 - 32 - 1), ENEMY_METAGRUB);
-	enemy_place(800, (240 - 32 - 1), ENEMY_METAGRUB);
 }
 
 void main_game_loop(void)

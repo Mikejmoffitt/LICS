@@ -8,9 +8,10 @@ Also handles some object list functions.
 
 #include <genesis.h>
 
-#define MAP_NAME_SIZE 32
-#define MAP_NUM_OBJS 128
-#define MAP_NUM_ROOM_PTRS 16
+#define MAP_OBJ_NULL 0
+#define MAP_OBJ_ENTRANCE 1
+#define MAP_OBJ_CUBE 2
+#define MAP_OBJ_METAGRUB 3
 
 #define MAP_SET_OUTSIDE1 0
 #define MAP_SET_OUTSIDE2 1
@@ -18,9 +19,11 @@ Also handles some object list functions.
 #define MAP_SET_SANDY1 3
 #define MAP_SET_TELEPORTER 4
 
-#define MAP_OBJ_NULL 0
-#define MAP_OBJ_ENTRANCE 1
-#define MAP_OBJ_CUBE 2
+#define MAP_NAME_SIZE 32
+#define MAP_NUM_OBJS 128
+#define MAP_NUM_ROOM_PTRS 16
+
+
 
 // In the object list for the map, only the four main fields are defined
 
