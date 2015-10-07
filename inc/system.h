@@ -5,8 +5,6 @@
 
 #include <genesis.h>
 
-#define WANT_DEBUG_COLOR
-
 #ifdef WANT_DEBUG_COLOR
 #define DEBUG_BGCOL(x) VDP_setPaletteColor(0,x);
 #else

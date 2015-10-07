@@ -114,6 +114,11 @@ void bg_scroll_y(u16 amt)
 	if (!state.vs_en)
 	{
 		bg_yscroll_vals[0] = 16;
+		// Hack for BG2 to look good on a single-height screen
+		if (current_bg == 2)
+		{
+			bg_yscroll_vals[0] += 80;
+		}
 		bg_yscroll_cmd = STATE_SCROLL_SINGLE;
 	}
 	else if (VDP_getVerticalScrollingMode() == VSCROLL_PLANE)
