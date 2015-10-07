@@ -18,30 +18,30 @@ Sik's excellent Echo sound engine is used for playback of BGM and SFX.
 Project Filesystem Structure
 ----------------------------
 These directories are relevant to building the game software:
-	./Makefile (For Linux / Mac OS X)
-	./build.bat (for Windows)
-	./test.bat (for Windows)
-	./winmake (for Windows)
-	src/ (source code)
-	inc/ (headers)
-	res/ (binary resources)
-		gfx/ (graphics)
-		pal/ (palettes)
-		bgm/ (music)
-		eif/ (instruments)
-		mapdata/ (rooms/maps)
-		./*.h (headers to declare the above resources in ROM space)
+-./Makefile (For Linux / Mac OS X)
+-./build.bat (for Windows)
+-./test.bat (for Windows)
+-./winmake (for Windows)
+-src/ (source code)
+-inc/ (headers)
+-res/ (binary resources)
+--gfx/ (graphics)
+--pal/ (palettes)
+--bgm/ (music)
+--eif/ (instruments)
+--mapdata/ (rooms/maps)
+--./*.h (headers to declare the above resources in ROM space)
 
 These directories are a product of SGDK and we are not very concerned with them:
-	out/ (various stages of output)
-	boot/ (construction of rom headers)
-	scd/ (sega CD build process; ignored)
+-out/ (various stages of output)
+-boot/ (construction of rom headers)
+-scd/ (sega CD build process; ignored)
 
 These directories store resources and tools used for creation of game assets:
-	docs/ (helpful documents and notes on the game's operation and creation)
-	leveled/ (level editor project source)
-	./editor (binary of level editor)
-	./font.ttf (font used for level editor)
-	./assets.bat (compiles XM music arrangements into the EIF format)
+-docs/ (helpful documents and notes on the game's operation and creation)
+-leveled/ (level editor project source)
+-./editor (binary of level editor)
+-./font.ttf (font used for level editor)
+-./assets.bat (compiles XM music arrangements into the EIF format)
 
 
