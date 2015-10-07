@@ -19,10 +19,6 @@ Project Filesystem Structure
 ----------------------------
 These directories are relevant to building the game software:
 +	Makefile (For Linux / Mac OS X)
-+	music_lin.sh (Script to convert XM music to ESF files)
-+	music_wine.bat
-+	sfx_lin.sh (Script to convert XM sounds to ESF files)
-+	sfx_wine.bat
 +	src/ (source code)
 +	inc/ (headers)
 +	res/ (binary resources)
@@ -34,10 +30,6 @@ These directories are relevant to building the game software:
 +	res/ewf/ (PCM data)
 +	res/mapdata/ (rooms/maps)
 +	res/bgmaps/ (PLANE B background mappings)
-+	editor (Game room creator for building mapdata
-+	xm/ (XM sound files for converting to BGM or SFX; organized within)
-
-These directories are a product of t
 +	out/ (various stages of output)
 +	boot/ (header information)
 +	scd/ (sega CD build process; ignored)
@@ -49,6 +41,8 @@ These directories store resources and tools used for creation of game assets:
 +	leveled/ (level editor project source)
 +	editor (binary of level editor)
 +	font.ttf (font used for level editor)
-+	assets.bat (compiles XM music arrangements into the EIF format)
-
-
++	xm/ (XM sound files for converting to BGM or SFX; organized within)
++	music_lin.sh (Script to convert XM music to ESF files)
++	music_wine.bat
++	sfx_lin.sh (Script to convert XM sounds to ESF files)
++	sfx_wine.bat
