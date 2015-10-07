@@ -45,7 +45,7 @@ These directories are a product of t
 
 These directories store resources and tools used for creation of game assets:
 +	docs/ (helpful documents and notes on the game's operation and creation)
-+	  original-sauce/ (the original Multimedia Fusion game source)
++	docs/original-sauce/ (the original Multimedia Fusion game source)
 +	leveled/ (level editor project source)
 +	editor (binary of level editor)
 +	font.ttf (font used for level editor)
