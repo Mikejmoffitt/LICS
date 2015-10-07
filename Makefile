@@ -31,11 +31,9 @@ RESOURCES=
 BOOT_RESOURCES=
 
 BOOTSS=$(wildcard boot/*.s)
-BOOTSS+=$(wildcard src/boot/*.s)
 BOOT_RESOURCES+=$(BOOTSS:.s=.o)
 
 SCDBOOTSS=$(wildcard scd/*.s)
-SCDBOOTSS+=$(wildcard src/scd/*.s)
 SCDBOOT_RESOURCES=$(SCDBOOTSS:.s=.o)
 
 #BMPS=$(wildcard res/*.bmp)
