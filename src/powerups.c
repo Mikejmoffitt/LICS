@@ -49,6 +49,13 @@ void powerup_dma_tiles(void)
 
 void powerup_spawn(s16 x, s16 y, u16 type, u16 num)
 {
+	if (!sram.have_phantom)
+	{
+		if (type == POWERUP_CP || type == POWERUP_CP_2X)
+		{
+			type = POWERUP_HP;
+		}
+	}
 	u16 i = NUM_POWERUPS;
 	while (i--)
 	{
