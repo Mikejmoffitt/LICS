@@ -15,6 +15,7 @@
 #include "music.h"
 #include "bg.h"
 #include "enemy.h"
+#include "powerups.h"
 
 static inline void loop_logic(void)
 {
@@ -25,9 +26,16 @@ static inline void loop_logic(void)
 	DEBUG_BGCOL(0xE2E);
 	cubes_run();
 	DEBUG_BGCOL(0xE22);
+	powerup_run();
+	DEBUG_BGCOL(0x2EE);
 	particles_run();
 	DEBUG_BGCOL(0x444);
 	sfx_counters();
+
+	if (pl.input & BUTTON_A)
+	{
+		powerup_spawn(pl.px, pl.py, 1 + GET_HVCOUNTER % 6, 1);
+	}
 }
 
 static inline void loop_gfx(void)
@@ -51,6 +59,8 @@ static inline void loop_gfx(void)
 	DEBUG_BGCOL(0xA00);
 	particles_draw();
 	DEBUG_BGCOL(0xA0A);
+	powerup_draw();
+	DEBUG_BGCOL(0x0AA);
 	cubes_draw();
 	DEBUG_BGCOL(0x000);
 	system_debug_cpu_meter();
@@ -73,6 +83,7 @@ void room_setup(void)
 	cubes_init();
 	enemy_init();
 	particles_init();
+	powerup_init();
 	player_init_soft();
 
 	state_load_room(state.next_id);
@@ -85,6 +96,7 @@ void room_setup(void)
 	cube_dma_tiles();
 	hud_dma_tiles();
 	enemy_dma_tiles();
+	powerup_dma_tiles();
 	bg_load(state.current_room->background);
 
 	// First graphical commit

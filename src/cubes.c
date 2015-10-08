@@ -9,6 +9,7 @@
 #include "particles.h"
 #include "music.h"
 #include "enemy.h"
+#include "powerups.h"
 
 cube cubes[CUBES_NUM];
 

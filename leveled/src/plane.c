@@ -270,17 +270,21 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 				sprintf(desc,"Yellow Cube (item)");
 				if ((o->data & 0x00FF) == 0x00)
 				{
+					sprintf(dat2,"Empty");
+				}
+				if ((o->data & 0x00FF) == 0x01)
+				{
 					sprintf(dat2,"HP UP");
 				}
-				else if ((o->data & 0x00FF) == 0x01)
+				else if ((o->data & 0x00FF) == 0x02)
 				{
 					sprintf(dat2,"HP UP 2X");
 				}
-				else if ((o->data & 0x00FF) == 0x20)
+				else if ((o->data & 0x00FF) == 0x03)
 				{
 					sprintf(dat2,"CP UP");
 				}
-				else if ((o->data & 0x00FF) == 0x21)
+				else if ((o->data & 0x00FF) == 0x04)
 				{
 					sprintf(dat2,"CP UP 2X");
 				}

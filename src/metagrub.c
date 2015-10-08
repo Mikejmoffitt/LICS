@@ -37,17 +37,17 @@ void en_anim_metagrub(en_metagrub *e)
 {
 	if (e->dx != FZERO)
 	{
-		e->head.size = SPRITE_SIZE(3,1);
-		e->head.xoff = -13;
-		e->head.yoff = -5;
-		e->head.attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, METAGRUB_VRAM_SLOT + 4);
+		e->head.size[0] = SPRITE_SIZE(3,1);
+		e->head.xoff[0] = -13;
+		e->head.yoff[0] = -5;
+		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, METAGRUB_VRAM_SLOT + 4);
 	}
 	else
 	{
-		e->head.size = SPRITE_SIZE(2,2);
-		e->head.xoff = -9;
-		e->head.yoff = -8;
-		e->head.attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, METAGRUB_VRAM_SLOT);
+		e->head.size[0] = SPRITE_SIZE(2,2);
+		e->head.xoff[0] = -9;
+		e->head.yoff[0] = -8;
+		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, METAGRUB_VRAM_SLOT);
 	}
 }
 

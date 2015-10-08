@@ -51,10 +51,11 @@ void enemy_init(void)
 		e->head.active = ENEMY_DISABLED;
 		e->head.x = -32;
 		e->head.y = -32;
-		e->head.xoff = 0;
-		e->head.yoff = 0;
-		e->head.attr = 0;
-		e->head.size = SPRITE_SIZE(1,1);
+		e->head.xoff[0] = 0;
+		e->head.yoff[0] = 0;
+		e->head.attr[0] = 0;
+		e->head.size[0] = SPRITE_SIZE(1,1);
+		e->head.attr[1] = 0;
 		e->head.hurt_cnt = 0;
 		e->head.hp = 1;
 		e->head.width = 4;
@@ -156,8 +157,8 @@ void enemy_draw(void)
 		}
 
 		// Calculate screen position
-		s16 ex = e->head.x + e->head.xoff - state.cam_x;
-		s16 ey = e->head.y + e->head.yoff - state.cam_y;
+		s16 ex = e->head.x + e->head.xoff[0] - state.cam_x;
+		s16 ey = e->head.y + e->head.yoff[0] - state.cam_y;
 
 		if (e->head.hurt_cnt > 0)
 		{
@@ -168,7 +169,13 @@ void enemy_draw(void)
 		// Check bounds
 		if (ex > -32 && ex < 320 && ey > -32 && ey < 240)
 		{
-			sprite_put(ex,ey, e->head.size, e->head.attr);
+			sprite_put(ex,ey, e->head.size[0], e->head.attr[0]);
+			if (e->head.attr[1])
+			{
+				s16 ex = e->head.x + e->head.xoff[1] - state.cam_x;
+				s16 ey = e->head.y + e->head.yoff[1] - state.cam_y;
+				sprite_put(ex,ey, e->head.size[1], e->head.attr[1]);
+			}
 		}
 	}
 }

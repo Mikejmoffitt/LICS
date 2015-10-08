@@ -8,8 +8,8 @@
 #include "gfx.h"
 #include "pal.h"
 
-#define ENEMIES_NUM 8
-#define ENEMY_DATA_SIZE 32
+#define ENEMIES_NUM 28
+#define ENEMY_DATA_SIZE 8
 
 #define ENEMY_DISABLED 0
 #define ENEMY_ONSCREEN 1
@@ -37,15 +37,15 @@ struct en_header
 	s16 x;
 	s16 y;
 	// Offset from origin for rendering ("hot spot")
-	s16 xoff;
-	s16 yoff;
+	s16 xoff[2];
+	s16 yoff[2];
 	// Hitbox info
 	s16 width; // Actually half-width for hitboxes
 	s16 height;
 	// Sprite engine register information
 	// For use when drawing; should be pre-calculated during active area
-	u16 attr;
-	u16 size;
+	u16 attr[2];
+	u16 size[2];
 	// Health information
 	u16 hurt_cnt; // When it reaches zero, hp--;
 	u16 hp; // If hp == 0, enemy is destroyed
