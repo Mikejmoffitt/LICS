@@ -106,10 +106,10 @@ test32: lyle.bin
 	@exec util/megaloader/mega32 md $< /dev/ttyUSB0 2> /dev/null
 
 boot/sega.o: boot/rom_head.bin
-	$(AS) $(ASFLAGS) boot/sega.s -o $@
+	@$(AS) $(ASFLAGS) boot/sega.s -o $@
 
 scd/segacd.o: 
-	$(AS) $(ASFLAGS) scd/segacd.s -o $@
+	@$(AS) $(ASFLAGS) scd/segacd.s -o $@
 
 
 out.iso: out.elf_scd
@@ -150,6 +150,7 @@ out.iso: out.elf_scd
 	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerc.py
 
 %.o: %.s 
+	@echo "$<"
 	@$(AS) $(ASFLAGS) $< -o $@
 
 %.s: %.bmp
@@ -195,10 +196,10 @@ out.iso: out.elf_scd
 	@$(BINTOS) -align 128 -sizealign 128 -nullfill 136 $<
 
 %.s: %.res
-	@ $(RESCOMP) $< $@
+	@ $(RESCOMP) $< $@ > /dev/null
 
 boot/rom_head.bin: boot/rom_head.o
-	$(LD) $(LINKFLAGS) --oformat binary -o $@ $<
+	@$(LD) $(LINKFLAGS) --oformat binary -o $@ $<
 	
 
 clean:

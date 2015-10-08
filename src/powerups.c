@@ -125,6 +125,7 @@ void powerup_draw(void)
 		// Base video address
 		switch (p->type)
 		{
+			default:
 			case POWERUP_CPORB:
 				attr = TILE_ATTR_FULL(3, 0, 0, 0, POWERUP_VRAM_SLOT + 8);
 				break;
