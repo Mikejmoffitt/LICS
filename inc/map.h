@@ -23,8 +23,6 @@ Also handles some object list functions.
 #define MAP_NUM_OBJS 128
 #define MAP_NUM_ROOM_PTRS 16
 
-
-
 // In the object list for the map, only the four main fields are defined
 
 typedef struct map_list_obj map_list_obj;

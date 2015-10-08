@@ -24,6 +24,8 @@ void save_load(void)
 		sf[i] = SRAM_readWord(i * 2);
 	}
 	SRAM_disable();
+
+	// Save reality check failed. Clear SRAM to start fresh.
 	if (sram.magic_0 != SAVE_MAGIC || sram.magic_1 != SAVE_MAGIC || sram.magic_2 != SAVE_MAGIC)
 	{
 		save_clear();
@@ -49,6 +51,13 @@ void save_clear(void)
 	sram.have_jump = 1;
 	sram.have_lift = 1;
 	sram.have_kick = 1;
+	for (i = 0; i < SAVE_NUM_ORBS; i++)
+	{
+		sram.cp_orbs_taken[i] = 0;
+		sram.hp_orbs_taken[i] = 0;
+	}
+	sram.cp_orbs_spent = 0;
+	sram.cp_orbs_have = 0;
 
 	sram.opt_interlace = SAVE_OPT_INTERLACE_NORMAL;
 	sram.opt_ctrlscheme = SAVE_OPT_CTRL_NORMAL;

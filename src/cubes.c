@@ -10,6 +10,7 @@
 #include "music.h"
 #include "enemy.h"
 #include "powerups.h"
+#include "save.h"
 
 cube cubes[CUBES_NUM];
 
@@ -47,11 +48,59 @@ static void cube_destroy(cube *c)
 	if (c->type == CUBE_RED)
 	{
 		c->state = CUBE_STATE_EXPLODE;
+		playsound(SFX_CUBE_EXPLODE);
 	}
 	else
 	{
 		c->state = CUBE_STATE_FIZZLE;
 		playsound(SFX_FIZZLE);
+	}
+
+	if ((c->type & 0xFF00) == CUBE_YELLOW)
+	{
+		// Spawn a powerup of the correct type, as needed
+		switch (c->type & 0x00F0)
+		{
+			default:
+			case CUBE_YELLOW_HP:
+				powerup_spawn(c->x, c->y, POWERUP_HP, 0);
+				break;
+			case CUBE_YELLOW_HP_2X:
+				powerup_spawn(c->x, c->y, POWERUP_HP_2X, 0);
+				break;
+			case CUBE_YELLOW_CP:
+				powerup_spawn(c->x, c->y, POWERUP_CP, 0);
+				break;
+			case CUBE_YELLOW_CP_2X:
+				powerup_spawn(c->x, c->y, POWERUP_CP_2X, 0);
+				break;
+			case CUBE_YELLOW_CPORB:
+				// Did we collect this # orb already?
+				if (!sram.cp_orbs_taken[c->type & 0x000F])
+				{
+					// If not, spawn it, assign it the tag
+					powerup_spawn(c->x, c->y, POWERUP_CPORB, c->type & 0x000F);	
+				}
+				else
+				{
+					// Otherwise, spawn a CP 2X powerup
+					powerup_spawn(c->x, c->y, POWERUP_CP_2X, 0);
+				}
+				break;
+			case CUBE_YELLOW_HPORB:
+				// Did we collect this # orb already?
+				if (!sram.hp_orbs_taken[c->type & 0x000F])
+				{
+					// Spawn it with HP orb tag
+					powerup_spawn(c->x, c->y, POWERUP_HPORB, c->type & 0x000F);	
+				}
+				else
+				{
+					// Give an HP powerup instead
+					powerup_spawn(c->x, c->y, POWERUP_HP_2X, 0);
+				}
+				break;
+		}
 	}
 }
 
@@ -59,6 +108,8 @@ void cube_delete(cube *c)
 {
 	c->type = NULL;
 	c->state = CUBE_STATE_INACTIVE;
+	c->x = -32;
+	c->y = -32;
 }
 
 static void cube_move(cube *c)
@@ -90,6 +141,8 @@ static void cube_move(cube *c)
 		c->y + CUBE_TOP < 0)
 	{
 		c->state = CUBE_STATE_INACTIVE;
+		c->x = -32;
+		c->y = -32;
 	}
 }
 
@@ -442,6 +495,8 @@ void cubes_run(void)
 			else
 			{
 				c->state = CUBE_STATE_INACTIVE;	
+				c->x = -32;
+				c->y = -32;
 			}
 			continue;
 		}
@@ -511,7 +566,7 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 		palnum = CUBE_PALNUM;
 	}
 	u16 frame = TILE_ATTR_FULL(palnum, 1, 0, 0, CUBE_VRAM_SLOT);
-	switch (type & 0xF00)
+	switch (type & 0xFF00)
 	{
 		case CUBE_PHANTOM:
 			frame += 16 + (4 * ((system_osc / 4) % 4));

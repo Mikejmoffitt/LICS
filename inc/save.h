@@ -12,7 +12,7 @@
 #define SAVE_MAP_W 26
 #define SAVE_MAP_H 12
 
-#define SAVE_NUM_ORBS 10
+#define SAVE_NUM_ORBS 16
 #define SAVE_DEFAULT_HP 5
 
 #define SAVE_MAP 0x00
@@ -31,14 +31,14 @@ struct save_file
 {
 	u16 magic_0;
 	// Which CP orbs have been collected
-	u16 orbs[SAVE_NUM_ORBS];
+	u16 cp_orbs_taken[SAVE_NUM_ORBS];
 	// How many CP orbs are on lyle
-	u16 orbs_holding;
+	u16 cp_orbs_have;
 	// How many CP orbs have been deposited
-	u16 orbs_deposited;
+	u16 cp_orbs_spent;
 	u16 magic_1;
 	// HP orbs collected
-	u16 hp_orbs[SAVE_NUM_ORBS];
+	u16 hp_orbs_taken[SAVE_NUM_ORBS];
 	u16 max_hp;
 	// abilities gained
 	u16 have_lift;

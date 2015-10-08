@@ -8,6 +8,7 @@
 #include "sprites.h"
 
 #include "player.h"
+#include "music.h"
 
 en_generic enemies[ENEMIES_NUM];
 
@@ -185,6 +186,7 @@ void enemy_get_hurt(en_generic *e)
 	if (e->head.hurt_cnt == 0)
 	{
 		e->head.hurt_cnt = ENEMY_HURT_TIME;
+		playsound(SFX_ENEMY_STRIKE);
 	}
 }
 

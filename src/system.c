@@ -48,7 +48,6 @@ void system_init(void)
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
 	sprites_init();
-	save_clear();
 	save_load();
 	system_set_debug(0);
 	// Allow holding A to force 480i

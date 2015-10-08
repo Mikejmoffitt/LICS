@@ -32,9 +32,10 @@ static inline void loop_logic(void)
 	DEBUG_BGCOL(0x444);
 	sfx_counters();
 
-	if (pl.input & BUTTON_A)
+	if (pl.input & BUTTON_A)	
 	{
-		powerup_spawn(pl.px, pl.py, 1 + GET_HVCOUNTER % 6, 1);
+		save_clear();
+
 	}
 }
 

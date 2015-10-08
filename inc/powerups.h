@@ -1,6 +1,9 @@
 #ifndef POWERUPS_H
 #define POWERUPS_H
 
+#include <genesis.h>
+
+#define NUM_POWERUPS 8
 #define POWERUP_MAX_DY FIX16(6.0)
 #define POWERUP_BOUNCE_SUB FIX16(-2.0)
 #define POWERUP_GRAVITY FIX16(0.2)
@@ -20,10 +23,6 @@
 #define POWERUP_CP_2X 4
 #define POWERUP_CPORB 5
 #define POWERUP_HPORB 6
-
-#include <genesis.h>
-
-#define NUM_POWERUPS 8
 
 typedef struct powerup powerup;
 struct powerup

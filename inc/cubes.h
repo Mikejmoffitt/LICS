@@ -42,10 +42,10 @@ Example values:
 */
 
 
-#define CUBE_YELLOW_HP 0x01
-#define CUBE_YELLOW_HP_2X 0x02
-#define CUBE_YELLOW_CP 0x03
-#define CUBE_YELLOW_CP_2X 0x04
+#define CUBE_YELLOW_HP 0x00
+#define CUBE_YELLOW_HP_2X 0x10
+#define CUBE_YELLOW_CP 0x20
+#define CUBE_YELLOW_CP_2X 0x30
 // Lower nybble gives it an ID (which CP orb?)
 #define CUBE_YELLOW_CPORB 0x40
 #define CUBE_YELLOW_HPORB 0x80
