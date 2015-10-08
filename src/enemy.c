@@ -9,6 +9,7 @@
 
 #include "player.h"
 #include "music.h"
+#include "powerups.h"
 
 en_generic enemies[ENEMIES_NUM];
 
@@ -23,6 +24,10 @@ static inline void enemy_explode(en_generic *e)
 	particle_spawn(e->head.x, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
 	particle_spawn(e->head.x + e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
 	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
+	if (GET_HVCOUNTER % 2)
+	{
+		powerup_spawn(e->head.x, e->head.y, 1 + (GET_HVCOUNTER & (e->head.powerup_range)), 0);
+	}
 }
 
 void enemy_dma_tiles(void)
@@ -61,6 +66,7 @@ void enemy_init(void)
 		e->head.hp = 1;
 		e->head.width = 4;
 		e->head.height = 4;
+		e->head.powerup_range = 1;
 
 		j = ENEMY_DATA_SIZE;
 		while (j--)

@@ -32,6 +32,7 @@ struct en_header
 	// Universal information all enemy objects share
 	u16 active; // should it be drawn this frame?
 	u16 type; // ID specifying which subclass of enemy it is
+	u16 powerup_range; // The max type of powerup to get
 	u16 direction; // Right/Left based on directions given above
 	// Real-world position in pixels; center-bottom of enemy
 	s16 x;
