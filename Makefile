@@ -146,8 +146,8 @@ out.iso: out.elf_scd
 	@$(BINTOS) $<
 
 %.o: %.c
-	@echo ">- $<"
-	$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 >/dev/null
+	@echo "$<"
+	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerc.py
 
 %.o: %.s 
 	@$(AS) $(ASFLAGS) $< -o $@
