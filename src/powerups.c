@@ -53,7 +53,7 @@ void powerup_spawn(s16 x, s16 y, u16 type, u16 num)
 	{
 		if (type == POWERUP_CP || type == POWERUP_CP_2X)
 		{
-			type = POWERUP_HP;
+			return;
 		}
 	}
 	u16 i = NUM_POWERUPS;
