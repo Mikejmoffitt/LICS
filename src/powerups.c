@@ -166,9 +166,14 @@ static inline void powerup_bg_collisions(powerup *p)
 {
 	s16 p_top = p->y - POWERUP_H(p->type);
 
-
+	// Top collision with BG
+	if (map_collision(p->x, p_top))
+	{
+		// Bounce the powerup downwards
+		p->dy = POWERUP_CEILING_DY;
+	}
 	// Bottom is colliding with the backdrop
-	if (map_collision(p->x, p->y))
+	else if (map_collision(p->x, p->y))
 	{
 		if (p->y > FZERO)
 		{
@@ -180,12 +185,6 @@ static inline void powerup_bg_collisions(powerup *p)
 				p->dy = FIX16(-1.2);
 			}
 		}
-	}
-	// Top of powerup is hitting BG
-	else if (map_collision(p->x, p_top))
-	{
-		// Bounce the powerup downwards
-		p->dy = POWERUP_CEILING_DY;
 	}
 }
 

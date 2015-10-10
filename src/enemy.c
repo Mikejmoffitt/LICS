@@ -27,7 +27,7 @@ static inline void enemy_explode(en_generic *e)
 	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
 	if (GET_HVCOUNTER % 2)
 	{
-		powerup_spawn(e->head.x, e->head.y, 1 + (GET_HVCOUNTER & (e->head.powerup_range)), 0);
+		powerup_spawn(e->head.x, e->head.y, 1 + (system_osc & (e->head.powerup_range)), 0);
 	}
 }
 
@@ -218,6 +218,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					e->head.hp = 1;
 					e->head.width = 6;
 					e->head.height = 8;
+					e->head.direction = ENEMY_LEFT;
 					break;
 			}
 

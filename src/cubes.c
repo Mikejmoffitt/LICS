@@ -449,6 +449,14 @@ static void cube_scan_enemies(cube *c)
 			e->head.y - e->head.width <= c->y + CUBE_BOTTOM &&
 			e->head.y >= c->y + CUBE_TOP)
 		{
+			if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
+			{
+				// Let the enemy get hurt extra
+				if (e->head.hp > 1)
+				{
+					e->head.hp--;
+				}
+			}
 			enemy_get_hurt(e);
 
 			if (c->type == CUBE_GREEN)

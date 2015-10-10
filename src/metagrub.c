@@ -32,7 +32,6 @@ static inline fix16 get_lunge_dx(u16 dir)
 	return ret;
 }
 
-
 void en_anim_metagrub(en_metagrub *e)
 {
 	if (e->dx != FZERO)

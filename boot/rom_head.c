@@ -38,6 +38,6 @@ const struct
     0x00200000,
     0x002001FF,
     "            ",
-    "LYLE IN CUBE SECTOR                     ",
+    "Original game by Nic Destefano          ",
     "JUE             "
 };
