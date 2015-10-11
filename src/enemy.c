@@ -23,10 +23,10 @@ static void enemy_player_scan();
 static void enemy_explode(en_generic *e)
 {
 	e->head.active = ENEMY_DISABLED;
-	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLE);
-	particle_spawn(e->head.x + e->head.width, e->head.y, PARTICLE_TYPE_FIZZLE);
-	particle_spawn(e->head.x - e->head.width, e->head.y, PARTICLE_TYPE_FIZZLE);
-	particle_spawn(e->head.x, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLERED);
+	particle_spawn(e->head.x + e->head.width, e->head.y, PARTICLE_TYPE_FIZZLERED);
+	particle_spawn(e->head.x - e->head.width, e->head.y, PARTICLE_TYPE_FIZZLERED);
+	particle_spawn(e->head.x, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
 	particle_spawn(e->head.x + e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
 	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
 	if (GET_HVCOUNTER % 2)
