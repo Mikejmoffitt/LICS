@@ -65,6 +65,9 @@ static void state_parse_objects(void)
 			case MAP_OBJ_FLIP:
 				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_FLIP);
 				break;
+			case MAP_OBJ_BOINGO:
+				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_BOINGO);
+				break;
 		}
 	}
 	// Suppress this annoying unused e error until it's actually used

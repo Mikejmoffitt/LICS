@@ -1,6 +1,5 @@
 #include "metagrub.h"
 #include "map.h"
-
 #include "player.h"
 #include "vramslots.h"
 

@@ -3,7 +3,6 @@
 
 #include <genesis.h>
 #include "enemy.h"
-#include "enemy_types.h"
 
 typedef struct en_metagrub en_metagrub;
 struct en_metagrub

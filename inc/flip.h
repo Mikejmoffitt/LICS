@@ -3,7 +3,6 @@
 
 #include <genesis.h>
 #include "enemy.h"
-#include "enemy_types.h"
 
 #define FLIP_DOWN 0
 #define FLIP_UP 1

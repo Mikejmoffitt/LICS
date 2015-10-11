@@ -11,6 +11,7 @@
 
 #include "metagrub.h"
 #include "flip.h"
+#include "boingo.h"
 
 en_generic enemies[ENEMIES_NUM];
 
@@ -137,6 +138,10 @@ void enemy_run(void)
 				en_proc_flip((en_flip *)e);
 				en_anim_flip((en_flip *)e);
 				break;
+			case ENEMY_BOINGO:
+				en_proc_boingo((en_boingo *)e);
+				en_anim_boingo((en_boingo *)e);
+				break;
 		}
 		enemy_player_scan();
 	}
@@ -229,6 +234,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					break;
 				case ENEMY_FLIP:
 					en_init_flip((en_flip *)e);
+					break;
+				case ENEMY_BOINGO:
+					en_init_boingo((en_boingo *)e);
 					break;
 			}
 			return &enemies[0];

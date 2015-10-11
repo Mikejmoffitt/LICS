@@ -18,7 +18,7 @@ static const int obj_width[] =
 	16,
 	24,
 	24,
-	16,
+	24,
 	0
 };
 

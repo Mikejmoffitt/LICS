@@ -1,8 +1,6 @@
 #include "flip.h"
 #include "vramslots.h"
 
-#include "gfx.h"
-
 void en_init_flip(en_flip *e)
 {
 	e->head.hp = 2;

@@ -52,15 +52,6 @@ struct en_header
 	u16 hp; // If hp == 0, enemy is destroyed
 };
 
-typedef struct en_boingo en_boingo;
-struct en_boingo
-{
-	en_header head;
-	u16 move_cnt; // When == 1, boingo jumps at random-ish height in direction
-	fix16 dy;
-};
-
-
 typedef struct en_generic en_generic;
 struct en_generic
 {
