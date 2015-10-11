@@ -5,6 +5,8 @@
 #define OBJ_ROOMPTR 1
 #define OBJ_CUBE 2
 #define OBJ_METAGRUB 3
+#define OBJ_FLIP 4
+#define OBJ_BOINGO 5
 
 int width_for_obj(int i);
 int height_for_obj(int i);

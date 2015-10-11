@@ -2,6 +2,7 @@
 #include "map.h"
 
 #include "player.h"
+#include "vramslots.h"
 
 #define METAGRUB_DECEL FIX16(0.125)
 
@@ -30,6 +31,18 @@ static inline fix16 get_lunge_dx(u16 dir)
 			break;
 	}
 	return ret;
+}
+
+void en_init_metagrub(en_metagrub *e)
+{
+	e->head.hp = 1;
+	e->head.width = 6;
+	e->head.height = 8;
+	e->move_cnt = 0;
+	e->dx = FIX16(0.0);
+	e->head.attr[1] = 0;
+	e->head.x += 12;
+	e->head.y += 7;
 }
 
 void en_anim_metagrub(en_metagrub *e)

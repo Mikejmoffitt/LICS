@@ -1,30 +1,33 @@
 #include "enemy.h"
 #include "enemy_types.h"
-#include "metagrub.h"
-
-#include "particles.h"
-
-#include "state.h"
 #include "sprites.h"
+#include "state.h"
+#include "particles.h"
 
 #include "player.h"
 #include "music.h"
 #include "powerups.h"
 #include "system.h"
 
+#include "metagrub.h"
+#include "flip.h"
+
 en_generic enemies[ENEMIES_NUM];
 
+static void enemy_explode(en_generic *e);
 static void enemy_player_scan();
 
-static inline void enemy_explode(en_generic *e)
+// ---------------------------------------------------------------------
+
+static void enemy_explode(en_generic *e)
 {
 	e->head.active = ENEMY_DISABLED;
 	particle_spawn(e->head.x, e->head.y, PARTICLE_TYPE_FIZZLE);
 	particle_spawn(e->head.x + e->head.width, e->head.y, PARTICLE_TYPE_FIZZLE);
 	particle_spawn(e->head.x - e->head.width, e->head.y, PARTICLE_TYPE_FIZZLE);
 	particle_spawn(e->head.x, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
-	particle_spawn(e->head.x + e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
-	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLE);
+	particle_spawn(e->head.x + e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
+	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
 	if (GET_HVCOUNTER % 2)
 	{
 		powerup_spawn(e->head.x, e->head.y, 1 + (system_osc & (e->head.powerup_range)), 0);
@@ -130,6 +133,10 @@ void enemy_run(void)
 				en_proc_metagrub((en_metagrub *)e);
 				en_anim_metagrub((en_metagrub *)e);
 				break;
+			case ENEMY_FLIP:
+				en_proc_flip((en_flip *)e);
+				en_anim_flip((en_flip *)e);
+				break;
 		}
 		enemy_player_scan();
 	}
@@ -209,24 +216,21 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 		en_generic *e = &enemies[i];
 		if (e->head.type == ENEMY_NULL)
 		{
-			switch (type)
-			{
-				default:
-				case ENEMY_NULL:
-					return NULL;
-				case ENEMY_METAGRUB:
-					e->head.hp = 1;
-					e->head.width = 6;
-					e->head.height = 8;
-					e->head.direction = ENEMY_LEFT;
-					break;
-			}
-
 			e->head.x = x;
 			e->head.y = y;
 			e->head.type = type;
 			e->head.hurt_cnt = 0;
 			e->head.active = ENEMY_OFFSCREEN;
+			
+			switch (type)
+			{
+				case ENEMY_METAGRUB:
+					en_init_metagrub((en_metagrub *)e);
+					break;
+				case ENEMY_FLIP:
+					en_init_flip((en_flip *)e);
+					break;
+			}
 			return &enemies[0];
 		}
 	}

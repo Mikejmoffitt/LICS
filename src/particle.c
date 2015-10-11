@@ -61,7 +61,6 @@ void particles_draw(void)
 			continue;
 		}
 		particle *p = &particles[i];
-		// TODO: Rip out test that just places tile 4 with actual graphics
 		u16 gfx;
 		u16 cent;
 		u16 size;

@@ -52,14 +52,6 @@ struct en_header
 	u16 hp; // If hp == 0, enemy is destroyed
 };
 
-typedef struct en_flip en_flip;
-struct en_flip
-{
-	en_header head;
-	u16 move_timer; // Always incrementing; used for sinFix16 lookup
-	u16 flip_cnt; // When == 1, direction switches
-};
-
 typedef struct en_boingo en_boingo;
 struct en_boingo
 {

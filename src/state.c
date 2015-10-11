@@ -60,7 +60,10 @@ static void state_parse_objects(void)
 				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
 				break;
 			case MAP_OBJ_METAGRUB:
-				e = (en_generic *)enemy_place(o->x + 12, o->y + 7, ENEMY_METAGRUB);
+				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_METAGRUB);
+				break;
+			case MAP_OBJ_FLIP:
+				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_FLIP);
 				break;
 		}
 	}

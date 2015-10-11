@@ -457,12 +457,31 @@ static void cube_scan_enemies(cube *c)
 					e->head.hp--;
 				}
 			}
+			if (c->type == CUBE_RED)
+			{	
+				if (e->head.hp > 1)
+				{
+					e->head.hp--;
+				}			// Let the enemy get hurt extra
+				if (e->head.hp > 1)
+				{
+					e->head.hp--;
+				}
+
+			}
 			enemy_get_hurt(e);
 
 			if (c->type == CUBE_GREEN)
 			{
 				c->state = CUBE_STATE_AIR;
-				c->dy = CUBE_ON_CUBE_DY;
+				if (c->y < e->head.y)
+				{
+					c->dy = CUBE_ON_CUBE_DY;
+				}
+				else
+				{
+					c->dy = -CUBE_ON_CUBE_DY;
+				}
 				if (c->dx == FZERO)
 				{
 					c->dx = (GET_HVCOUNTER % 2) ? 1 : -1;

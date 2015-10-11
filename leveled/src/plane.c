@@ -298,6 +298,10 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 			sprintf(desc,"Lunges side to side");
 			sprintf(dat2," ");
 			break;
+		case OBJ_FLIP:
+			sprintf(desc,"Flies left to right 100px");
+			sprintf(dat2," ");
+			break;
 	}
 
 	plane_print_label(x, y + 40, al_map_rgb(255,255,255), name);
