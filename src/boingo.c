@@ -13,7 +13,7 @@ void en_init_boingo(en_boingo *e)
 	e->head.attr[1] = 0;
 	e->head.xoff[0] = -12;
 	e->head.x += 12;
-	e->head.x += 15;
+	e->head.y += 15;
 
 	e->dy = FIX16(0.0);
 	e->state = BOINGO_STANDING;
@@ -31,10 +31,10 @@ void en_anim_boingo(en_boingo *e)
 		e->head.width = BOINGO_GND_W;
 		e->head.height = BOINGO_GND_H;
 		e->head.xoff[0] = -12;
-		e->head.yoff[0] = -15;
+		e->head.yoff[0] = -14;
 		e->head.size[0] = SPRITE_SIZE(3,2);
 
-		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, BOINGO_VRAM_SLOT); 
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, BOINGO_VRAM_SLOT); 
 
 		if (e->anim_cnt >= BOINGO_ANIM_SPEED_STAND)
 		{
@@ -50,7 +50,7 @@ void en_anim_boingo(en_boingo *e)
 		e->head.yoff[0] = -19;
 		e->head.size[0] = SPRITE_SIZE(2,3);
 
-		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, BOINGO_VRAM_SLOT + 12);
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, BOINGO_VRAM_SLOT + 12);
 
 		if (e->anim_cnt >= BOINGO_ANIM_SPEED_JUMP)
 		{
@@ -82,7 +82,8 @@ static void bg_collisions(en_boingo *e)
 	{
 		e->dy = FIX16(0.0);
 		// Lock to 8x8 grid
-		e->head.y = (e->head.y - 1) & 0xFFF8;
+		e->head.y = (e->head.y) & 0xFFF8;
+		e->state = BOINGO_STANDING;
 		return;
 	}
 
@@ -104,13 +105,13 @@ static void bg_collisions(en_boingo *e)
 static const fix16 str_table[] = 
 {
 	FIX16(0.00),
-	FIX16(-0.70),
-	FIX16(-1.41),
-	FIX16(-2.20),
-	FIX16(-2.81),
-	FIX16(-3.52),
-	FIX16(-4.22),
-	FIX16(-5.0)
+	FIX16(-0.6),
+	FIX16(-1.2),
+	FIX16(-1.8),
+	FIX16(-2.4),
+	FIX16(-3.0),
+	FIX16(-3.6),
+	FIX16(-4.2)
 };
 
 static void do_jump(en_boingo *e)

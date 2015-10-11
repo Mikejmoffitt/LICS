@@ -20,7 +20,7 @@
 
 #define ENEMY_HURT_TIME 20
 
-#define ENEMY_ACTIVE_DISTANCE 200
+#define ENEMY_ACTIVE_DISTANCE 32
 
 #ifndef FZERO
 #define FZERO FIX16(0.0)
