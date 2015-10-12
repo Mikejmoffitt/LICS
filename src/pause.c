@@ -130,31 +130,56 @@ static void pause_place_sprites(void)
 	// Cube lifting / tossing
 	if (sram.have_lift)
 	{
-		sprite_put(88, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE4)); 
+		sprite_put(PAUSE_POWER_X, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE4)); 
 	}
 
 	// Cube jumping
 	if (sram.have_jump)
 	{
-		sprite_put(116, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE8)); 
+		sprite_put(PAUSE_POWER_X + 28, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE8)); 
 	}
 
 	// CP power levels
+	// Order is:
+	// 		have_phantom
+	//		have_double_phantom
+	//		have_fast_phantom
+	//		have_cheap_phantom
 	if (sram.have_phantom)
 	{
-		sprite_put(148, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF4)); 
+		u16 phantom_x = PAUSE_POWER_X + 60;
+		sprite_put(phantom_x, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF4)); 
+
+		// Show level counter
+		if (sram.have_cheap_phantom)
+		{
+			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB6));
+		}
+		else if (sram.have_fast_phantom)
+		{
+			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB4));
+
+		}
+		else if (sram.have_double_phantom)
+		{
+			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB2));
+		}
+		else
+		{
+			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB0));
+		}
 	}
 
 	// Kicking
 	if (sram.have_kick)
 	{
-		sprite_put(180, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xEC)); 
+		sprite_put(PAUSE_POWER_X + 92, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xEC)); 
 	}
 
 	// Orange cube lifting
 	if (sram.have_orange)
 	{
-		sprite_put(200, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0)); 
+		sprite_put(PAUSE_POWER_X + 112, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0)); 
 	}
 }
 

@@ -46,9 +46,9 @@ struct save_file
 	u16 have_jump;
 	u16 have_kick;
 	u16 have_phantom;
+	u16 have_double_phantom;
 	u16 have_fast_phantom;
 	u16 have_cheap_phantom;
-	u16 have_double_phantom;
 	u16 have_orange;
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];
