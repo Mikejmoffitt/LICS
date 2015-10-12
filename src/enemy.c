@@ -139,26 +139,6 @@ void enemy_run(void)
 		{
 			e->head.anim_func((void *)e);
 		}
-		
-		/*
-		// Handle it based on type.
-		switch (e->head.type)
-		{
-			default:
-				continue;
-			case ENEMY_METAGRUB:
-				en_proc_metagrub((en_metagrub *)e);
-				en_anim_metagrub((en_metagrub *)e);
-				break;
-			case ENEMY_FLIP:
-				en_proc_flip((en_flip *)e);
-				en_anim_flip((en_flip *)e);
-				break;
-			case ENEMY_BOINGO:
-				en_proc_boingo((en_boingo *)e);
-				en_anim_boingo((en_boingo *)e);
-				break;
-		}*/
 	}
 	enemy_player_scan();
 }
@@ -184,12 +164,6 @@ void enemy_draw(void)
 		else if (e->head.hurt_cnt % 4 > 1)
 		{
 			continue;
-		}
-		// Handle enemies with special drawing routines
-		switch (e->head.type)
-		{
-			default:
-				break;
 		}
 
 		// Calculate screen position
@@ -225,6 +199,8 @@ void enemy_get_hurt(en_generic *e)
 	}
 }
 
+// The typical and default "bounce cube off enemy, damage enemy" reaction.
+// Most enemies will use this. 
 void enemy_cube_response(en_generic *e, cube *c)
 {
 	if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
@@ -276,13 +252,16 @@ void enemy_cube_response(en_generic *e, cube *c)
 	}
 }
 
+// Called by cubes.c when a collision against an enemy is detected
 void enemy_cube_impact(en_generic *e, cube *c)
 {
+	// If a cube impact handler is registered, run it
 	if (e->head.cube_func)
 	{
 		e->head.cube_func((void *)e, c);
 		return;
 	}
+	// This is the default impact response
 	else
 	{
 		enemy_cube_response(e, c);
