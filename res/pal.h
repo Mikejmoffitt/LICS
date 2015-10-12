@@ -3,6 +3,7 @@
 
 extern const u8 pal_lyle[32];
 extern const u8 pal_enemy[32];
+extern const u8 pal_pause[32];
 extern const u8 pal_outside1[32];
 extern const u8 pal_outside2[32];
 extern const u8 pal_inside1[32];

@@ -16,6 +16,7 @@
 #include "bg.h"
 #include "enemy.h"
 #include "powerups.h"
+#include "pause.h"
 
 static inline void loop_logic(void)
 {
@@ -31,12 +32,6 @@ static inline void loop_logic(void)
 	particles_run();
 	DEBUG_BGCOL(0x444);
 	sfx_counters();
-
-	if (pl.input & BUTTON_A)	
-	{
-		save_clear();
-
-	}
 }
 
 static inline void loop_gfx(void)
@@ -86,6 +81,7 @@ void room_setup(void)
 	particles_init();
 	powerup_init();
 	player_init_soft();
+	pause_init();
 
 	state_load_room(state.next_id);
 	// First entry to a room needs some extra processing
@@ -96,6 +92,7 @@ void room_setup(void)
 	particles_dma_tiles();
 	cube_dma_tiles();
 	hud_dma_tiles();
+	pause_dma_tiles();
 	enemy_dma_tiles();
 	powerup_dma_tiles();
 	bg_load(state.current_room->background);
@@ -119,12 +116,23 @@ void main_game_loop(void)
 	state.current_id = 64;
 
 	player_init();
+
+
+
+	if (pl.input & BUTTON_A)	
+	{
+		save_clear();
+	}
 	// Game is in progress
 	while (1)
 	{
 		room_setup();
 		do
 		{
+			if (pl.input & BUTTON_START)
+			{
+				pause_screen_loop();	
+			}
 			/* Run one frame of engine logic */
 			loop_logic();
 			loop_gfx();

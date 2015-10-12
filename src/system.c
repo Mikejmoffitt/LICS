@@ -5,6 +5,7 @@
 #include "music.h"
 #include "cdaudio.h"
 #include "vramslots.h"
+#include "pausemap.h"
 
 static vu16 vbl_active;
 u16 system_osc;
@@ -47,6 +48,12 @@ void system_init(void)
 	VDP_setHilightShadow(0);
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
+	// Set base addresses for tables
+	VDP_setBPlanAddress(0xC000);
+	VDP_setWindowAddress(0xD000);
+	VDP_setAPlanAddress(0xE000);
+	VDP_setSpriteListAddress(0xF000);
+
 	sprites_init();
 	save_load();
 	system_set_debug(0);
@@ -78,7 +85,7 @@ void system_init(void)
 	music_init();
 	cdaudio_init();
 
-
+	//VDP_setReg(0x11,0x88);
 }
 
 void system_wait_v(void)

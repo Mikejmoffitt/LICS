@@ -4,6 +4,7 @@
 extern const u8 gfx_lyle[5184];
 extern const u8 gfx_cubes[1664];
 extern const u8 gfx_hud[1024];
+extern const u8 gfx_pause[8192];
 extern const u8 gfx_particles[2468];
 extern const u8 gfx_powerups[768];
 extern const u8 gfx_en_metagrub[224];

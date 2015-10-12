@@ -1,5 +1,6 @@
 BIN pal_lyle "pal/lyle.pal" 2 2 0
 BIN pal_enemy "pal/enemy.pal" 2 2 0
+BIN pal_pause "pal/pause.pal" 2 2 0
 
 BIN pal_outside1 "pal/outside1.pal" 2 2 0
 BIN pal_outside2 "pal/outside2.pal" 2 2 0

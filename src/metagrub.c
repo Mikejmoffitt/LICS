@@ -35,7 +35,7 @@ static inline fix16 get_lunge_dx(u16 dir)
 void en_init_metagrub(en_metagrub *e)
 {
 	e->head.hp = 1;
-	e->head.width = 6;
+	e->head.width = 7;
 	e->head.height = 8;
 	e->move_cnt = 0;
 	e->dx = FIX16(0.0);

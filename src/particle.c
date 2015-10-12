@@ -181,7 +181,7 @@ void particles_draw(void)
 		{	
 			palnum = PARTICLES_PALNUM;
 		}
-		sprite_put(tx, ty, size, TILE_ATTR_FULL(palnum, 1, 0, 0, gfx));
+		sprite_put(tx, ty, size, TILE_ATTR_FULL(palnum, 0, 0, 0, gfx));
 	}
 }
 

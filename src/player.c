@@ -968,7 +968,7 @@ void player_draw(void)
 	sprite_put(fix32ToInt(pl.x) + xoff + PLAYER_DRAW_LEFT - state.cam_x, 
 		fix32ToInt(pl.y) + yoff - state.cam_y, 
 		size, 
-		TILE_ATTR(PLAYER_PALNUM,1,0,pl.direction) + PLAYER_VRAM_SLOT);
+		TILE_ATTR(PLAYER_PALNUM,0,0,pl.direction) + PLAYER_VRAM_SLOT);
 }
 
 static inline void player_entrance_coll(void)
