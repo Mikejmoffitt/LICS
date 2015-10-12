@@ -96,7 +96,7 @@ void enemy_run(void)
 		// this is the end of the list and we can stop processing it.
 		if (e->head.type == ENEMY_NULL)
 		{
-			return;
+			break;
 		}
 		if (e->head.active == ENEMY_DISABLED)
 		{
@@ -133,11 +133,11 @@ void enemy_run(void)
 		// Enemy is valid. Run its processes if needed.
 		if (e->head.proc_func)
 		{
-			e->head.proc_func(e);
+			e->head.proc_func((void *)e);
 		}
 		if (e->head.anim_func)
 		{
-			e->head.anim_func(e);
+			e->head.anim_func((void *)e);
 		}
 		
 		/*
@@ -280,7 +280,7 @@ void enemy_cube_impact(en_generic *e, cube *c)
 {
 	if (e->head.cube_func)
 	{
-		e->head.cube_func(e, c);
+		e->head.cube_func((void *)e, c);
 		return;
 	}
 	else

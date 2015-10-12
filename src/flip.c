@@ -1,8 +1,8 @@
 #include "flip.h"
 #include "vramslots.h"
 
-static void en_anim_flip(en_flip *e);
-static void en_proc_flip(en_flip *e);
+static void en_anim_flip(void *v);
+static void en_proc_flip(void *v);
 
 void en_init_flip(en_flip *e)
 {
@@ -27,8 +27,9 @@ void en_init_flip(en_flip *e)
 	e->head.cube_func = NULL;
 }
 
-static void en_anim_flip(en_flip *e)
+static void en_anim_flip(void *v)
 {
+	en_flip *e = (en_flip *)v;
 	// Animation counter
 	if (e->anim_cnt == FLIP_ANIM_LEN)
 	{
@@ -50,8 +51,9 @@ static void en_anim_flip(en_flip *e)
 }
 
 
-static void en_proc_flip(en_flip *e)
+static void en_proc_flip(void *v)
 {
+	en_flip *e = (en_flip *)v;
 	// Horizontal Movement
 	if (e->h_cnt == FLIP_H_CNT_MAX)
 	{

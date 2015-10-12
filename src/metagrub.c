@@ -5,8 +5,8 @@
 
 #define METAGRUB_DECEL FIX16(0.125)
 
-static void en_anim_metagrub(en_metagrub *e);
-static void en_proc_metagrub(en_metagrub *e);
+static void en_anim_metagrub(void *v);
+static void en_proc_metagrub(void *v);
 static inline fix16 get_lunge_dx(u16 dir);
 
 void en_init_metagrub(en_metagrub *e)
@@ -51,8 +51,9 @@ static inline fix16 get_lunge_dx(u16 dir)
 	return ret;
 }
 
-static void en_anim_metagrub(en_metagrub *e)
+static void en_anim_metagrub(void *v)
 {
+	en_metagrub *e= (en_metagrub *)v;
 	if (e->dx != FZERO)
 	{
 		e->head.size[0] = SPRITE_SIZE(3,1);
@@ -69,8 +70,9 @@ static void en_anim_metagrub(en_metagrub *e)
 	}
 }
 
-static void en_proc_metagrub(en_metagrub *e)
+static void en_proc_metagrub(void *v)
 {
+	en_metagrub *e= (en_metagrub *)v;
 	// Moving to the right
 	if (e->dx > FIX16(0.125))
 	{
