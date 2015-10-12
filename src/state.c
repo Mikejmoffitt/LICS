@@ -6,6 +6,7 @@
 #include "system.h"
 #include "vramslots.h"
 #include "pal.h"
+#include "save.h"
 #include "enemy.h"
 
 gamestate state;
@@ -277,4 +278,30 @@ u16 state_watch_transitions()
 		return 1;
 	}
 	return 0;
+}
+
+static u16 crap_division(u16 num, u16 den)
+{
+	u16 ret = 0;
+	while (num >= den)
+	{
+		ret++;
+		num -= den;
+	}
+	return ret;
+}
+
+// Indicator on pause map
+void state_update_progress(void)
+{
+	// No need to save progress on a room that shouldn't exist
+	if (state.current_id == 0)
+	{
+		return;
+	}
+	state.world_x = state.current_room->map_x + crap_division(pl.px, STATE_SC_W);
+	state.world_y = state.current_room->map_y + crap_division(pl.py, STATE_SC_H);
+
+	// Record progress
+	sram.map[state.world_y][state.world_x] = 1;
 }

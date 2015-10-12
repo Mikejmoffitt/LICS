@@ -72,6 +72,8 @@ struct gamestate
 	s8 next_entrance;
 	u8 current_id;
 
+	u16 world_x, world_y;
+
 	// 
 	u8 fresh_room;
 };
@@ -99,5 +101,8 @@ fix32 state_get_entrance_y(void);
 
 // Check if player has reached a screen edge, load new room if needed
 u16 state_watch_transitions(void);
+
+// Update player's map exploration progress
+void state_update_progress(void);
 
 #endif

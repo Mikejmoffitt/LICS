@@ -32,6 +32,8 @@ static inline void loop_logic(void)
 	particles_run();
 	DEBUG_BGCOL(0x444);
 	sfx_counters();
+	DEBUG_BGCOL(0x222);
+	state_update_progress();
 }
 
 static inline void loop_gfx(void)
@@ -76,6 +78,8 @@ void room_setup(void)
 	// Blank the display
 	system_wait_v();
 	VDP_setEnable(0);
+
+	// Reset object lists, gameplay variables, etc.
 	cubes_init();
 	enemy_init();
 	particles_init();
@@ -83,19 +87,28 @@ void room_setup(void)
 	player_init_soft();
 	pause_init();
 
+	// Load the next room
 	state_load_room(state.next_id);
-	// First entry to a room needs some extra processing
+
+	// Locate entry position for player
 	player_set_xy_fix32(state_get_entrance_x(), state_get_entrance_y());
 
-	// One-time graphics DMA parts
+	// DMA needed graphics for this room
 	map_load_tileset(state.current_room->tileset);
+
+	// Re-load the usuals in case something else is in VRAM there
 	particles_dma_tiles();
 	cube_dma_tiles();
 	hud_dma_tiles();
 	pause_dma_tiles();
 	enemy_dma_tiles();
 	powerup_dma_tiles();
+
+	// Set up the far backdrop
 	bg_load(state.current_room->background);
+
+	// Save player's progress for frequent auto-save
+	save_write();
 
 	// First graphical commit
 	loop_logic();

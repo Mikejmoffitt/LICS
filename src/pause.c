@@ -8,11 +8,41 @@
 #include "sprites.h"
 #include "save.h"
 #include "hud.h"
+#include "state.h"
 
-// Clear the given spot on the map
-static void window_clear_spot(u16 x, u16 y)
+// Set the given window plane tile
+static void window_tile_set(u16 x, u16 y, u16 tile)
 {
+	vu32 *plctrl;
+	vu16 *pwdata;
+	u32 vaddr = VDP_getWindowAddress() + (x * 2) + (y << 7);
 
+	plctrl = (u32 *)GFX_CTRL_PORT;
+	pwdata = (u16 *)GFX_DATA_PORT;
+
+	*plctrl = GFX_WRITE_VRAM_ADDR(vaddr);
+	*pwdata = tile;
+}
+
+// Set all unexplored areas to be blank
+static void map_progress_cover(void)
+{
+	if (!sram.have_map)
+	{
+		// TODO: Once lyle can get the map, re-enable this
+		// return;
+	}
+	u16 y, x;
+	for (y = 0; y < SAVE_MAP_H; y++)
+	{
+		for (x = 0; x < SAVE_MAP_W; x++)
+		{
+			if (sram.map[y][x] == 0)
+			{
+				window_tile_set(PAUSE_MAP_X + x, PAUSE_MAP_Y + y, 0xe220);
+			}
+		}
+	}
 }
 
 // --------------------
@@ -36,6 +66,10 @@ void pause_setup(void)
 	// Copy the layout information for the window plane
 	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
 
+	// Not sure why the DMA seems to miss this, so this is a manual fix.
+	window_tile_set(0,0, PAUSE_VRAM_SLOT);
+	map_progress_cover();
+
 	// Fullscreen Window plane
 	VDP_setReg(0x12,0x1E);
 
@@ -50,6 +84,78 @@ void pause_exit(void)
 
 	// Give lyle back his palette
 	VDP_doCRamDMA((u32)pal_lyle, PLAYER_PALNUM * 32, 16);
+}
+
+static void pause_pal_cycle(void)
+{
+	
+	const u16 tele_colors[] = 
+	{
+		0xEEE, 0x8EE, 0x0EE, 0x0CE,
+		0x0AE, 0x0CE, 0x0EE, 0x8EE
+	};
+
+	const u16 special_colors[] =
+	{
+		0xEEE, 0xECC, 0xE88, 0xE66,
+		0xE44, 0xE66, 0xE88, 0xECC
+	};
+	
+	if (system_osc % 16 >= 8)
+	{
+		VDP_setPaletteColor(59, 0x0E00);
+	}
+	else
+	{
+		VDP_setPaletteColor(59, 0x0800);
+	}
+	
+	VDP_setPaletteColor(56, special_colors[(system_osc / 16) % 8]);
+	VDP_setPaletteColor(55, tele_colors[(system_osc / 8) % 8]);
+}
+
+static void pause_place_sprites(void)
+{
+	// Show lyle on the map
+	if (system_osc % 16 >= 8)
+	{
+		sprite_put(8 * (PAUSE_MAP_X +  state.world_x),
+		           8 * (PAUSE_MAP_Y + state.world_y),
+				   SPRITE_SIZE(1,1), 
+				   TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xC0));
+	}
+
+	// Abilities
+
+	// Cube lifting / tossing
+	if (sram.have_lift)
+	{
+		sprite_put(88, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE4)); 
+	}
+
+	// Cube jumping
+	if (sram.have_jump)
+	{
+		sprite_put(116, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE8)); 
+	}
+
+	// CP power levels
+	if (sram.have_phantom)
+	{
+		sprite_put(148, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF4)); 
+	}
+
+	// Kicking
+	if (sram.have_kick)
+	{
+		sprite_put(180, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xEC)); 
+	}
+
+	// Orange cube lifting
+	if (sram.have_orange)
+	{
+		sprite_put(200, 176, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0)); 
+	}
 }
 
 void pause_screen_loop(void)
@@ -69,8 +175,12 @@ void pause_screen_loop(void)
 		{
 			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
 		}
+
+		pause_place_sprites();
+
 		system_wait_v();
 		sprites_dma_simple();
+		pause_pal_cycle();
 	}
 	pause_exit();
 }

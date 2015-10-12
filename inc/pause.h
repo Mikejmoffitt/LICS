@@ -3,6 +3,9 @@
 
 #include <genesis.h>
 
+#define PAUSE_MAP_X 8
+#define PAUSE_MAP_Y 6
+
 void pause_init(void);
 void pause_dma_tiles(void);
 

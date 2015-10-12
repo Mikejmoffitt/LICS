@@ -35,15 +35,19 @@ void save_load(void)
 void save_clear(void)
 {
 	u16 *sf = (u16 *)&sram;
+	int j;
 	int i = (sizeof(save_file) / sizeof(u16));
+	// Just-in-case full zero of SRAM
 	while (i--)
 	{
 		sf[i] = 0;
 	}	
+	// Set magic numbers for save validity check
 	sram.magic_0 = SAVE_MAGIC;
 	sram.magic_1 = SAVE_MAGIC;
 	sram.magic_2 = SAVE_MAGIC;
 
+	// Reset abilities
 	sram.max_hp = SAVE_DEFAULT_HP;
 	sram.have_phantom = 1;
 	sram.have_fast_phantom = 0;
@@ -51,6 +55,17 @@ void save_clear(void)
 	sram.have_jump = 1;
 	sram.have_lift = 1;
 	sram.have_kick = 1;
+
+	// Clear map exploration
+	for (j = 0; j < SAVE_MAP_H; j++)
+	{
+		for (i = 0; i < SAVE_MAP_W; i++)
+		{
+			sram.map[j][i] = 0;
+		}
+	}
+
+	// Clear orb collection
 	for (i = 0; i < SAVE_NUM_ORBS; i++)
 	{
 		sram.cp_orbs_taken[i] = 0;
@@ -59,6 +74,7 @@ void save_clear(void)
 	sram.cp_orbs_spent = 0;
 	sram.cp_orbs_have = 0;
 
+	// Reset options to defaults
 	sram.opt_interlace = SAVE_OPT_INTERLACE_NORMAL;
 	sram.opt_ctrlscheme = SAVE_OPT_CTRL_NORMAL;
 	sram.opt_mus = 0;

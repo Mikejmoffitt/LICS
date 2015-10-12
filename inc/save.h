@@ -9,7 +9,7 @@
 
 #define SAVE_MAGIC 0x1337
 #define SAVE_NG 0xDEAD
-#define SAVE_MAP_W 26
+#define SAVE_MAP_W 25
 #define SAVE_MAP_H 12
 
 #define SAVE_NUM_ORBS 16
@@ -41,6 +41,7 @@ struct save_file
 	u16 hp_orbs_taken[SAVE_NUM_ORBS];
 	u16 max_hp;
 	// abilities gained
+	u16 have_map;
 	u16 have_lift;
 	u16 have_jump;
 	u16 have_kick;
@@ -48,6 +49,7 @@ struct save_file
 	u16 have_fast_phantom;
 	u16 have_cheap_phantom;
 	u16 have_double_phantom;
+	u16 have_orange;
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];
 	u16 magic_2;
