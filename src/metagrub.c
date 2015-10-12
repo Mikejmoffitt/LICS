@@ -5,6 +5,25 @@
 
 #define METAGRUB_DECEL FIX16(0.125)
 
+static void en_anim_metagrub(en_metagrub *e);
+static void en_proc_metagrub(en_metagrub *e);
+static inline fix16 get_lunge_dx(u16 dir);
+
+void en_init_metagrub(en_metagrub *e)
+{
+	e->head.hp = 1;
+	e->head.width = 7;
+	e->head.height = 8;
+	e->move_cnt = 0;
+	e->dx = FIX16(0.0);
+	e->head.attr[1] = 0;
+	e->head.x += 12;
+	e->head.y += 7;
+	e->head.anim_func = &en_anim_metagrub;
+	e->head.proc_func = &en_proc_metagrub;
+	e->head.cube_func = NULL;
+}
+
 static inline fix16 get_lunge_dx(u16 dir)
 {
 	fix16 ret = (dir == ENEMY_RIGHT) ? FIX16(1.875) : FIX16(-1.875);
@@ -32,19 +51,7 @@ static inline fix16 get_lunge_dx(u16 dir)
 	return ret;
 }
 
-void en_init_metagrub(en_metagrub *e)
-{
-	e->head.hp = 1;
-	e->head.width = 7;
-	e->head.height = 8;
-	e->move_cnt = 0;
-	e->dx = FIX16(0.0);
-	e->head.attr[1] = 0;
-	e->head.x += 12;
-	e->head.y += 7;
-}
-
-void en_anim_metagrub(en_metagrub *e)
+static void en_anim_metagrub(en_metagrub *e)
 {
 	if (e->dx != FZERO)
 	{
@@ -62,7 +69,7 @@ void en_anim_metagrub(en_metagrub *e)
 	}
 }
 
-void en_proc_metagrub(en_metagrub *e)
+static void en_proc_metagrub(en_metagrub *e)
 {
 	// Moving to the right
 	if (e->dx > FIX16(0.125))
@@ -118,6 +125,5 @@ void en_proc_metagrub(en_metagrub *e)
 			e->dx = get_lunge_dx(e->head.direction); 
 		}
 	}
-
 	e->head.x = e->head.x + fix16ToInt(e->dx);	
 }

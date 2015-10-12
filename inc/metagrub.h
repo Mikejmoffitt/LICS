@@ -14,10 +14,4 @@ struct en_metagrub
 
 // Clear out variables as needed
 void en_init_metagrub(en_metagrub *e);
-
-// Calculate tile attributes, sprite size, and x/y draw offsets
-void en_anim_metagrub(en_metagrub *e);
-
-// Process enemy logic for one frame
-void en_proc_metagrub(en_metagrub *e);
 #endif

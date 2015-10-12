@@ -12,6 +12,8 @@
 #include "metagrub.h"
 #include "flip.h"
 #include "boingo.h"
+#include "cubes.h"
+#include "save.h"
 
 en_generic enemies[ENEMIES_NUM];
 
@@ -57,6 +59,9 @@ void enemy_init(void)
 	while (i--)
 	{
 		en_generic *e = &enemies[i];
+		e->head.anim_func = NULL;
+		e->head.proc_func = NULL;
+		e->head.cube_func = NULL;
 		e->head.type = ENEMY_NULL;
 		e->head.direction = ENEMY_RIGHT;
 		e->head.active = ENEMY_DISABLED;
@@ -125,7 +130,18 @@ void enemy_run(void)
 			// Enemies processing damage don't run their processes
 			continue;
 		}
-		// Enemy is valid. Handle it based on type.
+		// Enemy is valid. Run its processes if needed.
+		if (e->head.proc_func)
+		{
+			e->head.proc_func(e);
+		}
+		if (e->head.anim_func)
+		{
+			e->head.anim_func(e);
+		}
+		
+		/*
+		// Handle it based on type.
 		switch (e->head.type)
 		{
 			default:
@@ -142,9 +158,9 @@ void enemy_run(void)
 				en_proc_boingo((en_boingo *)e);
 				en_anim_boingo((en_boingo *)e);
 				break;
-		}
-		enemy_player_scan();
+		}*/
 	}
+	enemy_player_scan();
 }
 
 void enemy_draw(void)
@@ -209,6 +225,70 @@ void enemy_get_hurt(en_generic *e)
 	}
 }
 
+void enemy_cube_response(en_generic *e, cube *c)
+{
+	if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
+	{
+		// Let the enemy get hurt extra
+		if (e->head.hp > 1)
+		{
+			e->head.hp--;
+		}
+	}
+	if (c->type == CUBE_RED)
+	{	
+		if (e->head.hp > 1)
+		{
+			e->head.hp--;
+		}			// Let the enemy get hurt extra
+		if (e->head.hp > 1)
+		{
+			e->head.hp--;
+		}
+
+	}
+	enemy_get_hurt(e);
+
+	if (c->type == CUBE_GREEN)
+	{
+		c->state = CUBE_STATE_AIR;
+		if (c->y < e->head.y)
+		{
+			c->dy = CUBE_ON_CUBE_DY;
+		}
+		else
+		{
+			c->dy = -CUBE_ON_CUBE_DY;
+		}
+		if (c->dx == FZERO)
+		{
+			c->dx = (GET_HVCOUNTER % 2) ? 1 : -1;
+		}
+		else
+		{
+			c->dx = c->dx * -1;
+			cube_clamp_dx(c);
+		}
+	}
+	else if (c->state != CUBE_STATE_FIZZLE)
+	{
+		cube_destroy(c);	
+	}
+}
+
+void enemy_cube_impact(en_generic *e, cube *c)
+{
+	if (e->head.cube_func)
+	{
+		e->head.cube_func(e, c);
+		return;
+	}
+	else
+	{
+		enemy_cube_response(e, c);
+	}
+}
+
 en_generic *enemy_place(u16 x, u16 y, u16 type)
 {
 	u16 i = ENEMIES_NUM;
@@ -226,6 +306,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 			e->head.type = type;
 			e->head.hurt_cnt = 0;
 			e->head.active = ENEMY_OFFSCREEN;
+			e->head.anim_func = NULL;
+			e->head.proc_func = NULL;
+			e->head.cube_func = NULL;
 			
 			switch (type)
 			{

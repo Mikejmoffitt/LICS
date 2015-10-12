@@ -31,7 +31,5 @@ struct en_boingo
 };
 
 void en_init_boingo(en_boingo *e);
-void en_anim_boingo(en_boingo *e);
-void en_proc_boingo(en_boingo *e);
 
 #endif

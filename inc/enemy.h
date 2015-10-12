@@ -29,6 +29,10 @@
 typedef struct en_header en_header;
 struct en_header
 {
+	// Pointers to basic enemy functions
+	void (*anim_func)(void *); 
+	void (*proc_func)(void *);
+	void (*cube_func)(void *, cube *);
 	// Universal information all enemy objects share
 	u16 active; // should it be drawn this frame?
 	u16 type; // ID specifying which subclass of enemy it is
@@ -109,8 +113,12 @@ void enemy_run(void);
 // Renders all enemies as needed
 void enemy_draw(void);
 
-// Strike an enemy with a cube
+// The standard response to getting hit with a cube
 void enemy_get_hurt(en_generic *e);
+
+// Enemy e collides with cube c
+void enemy_cube_response(en_generic *e, cube *c);
+void enemy_cube_impact(en_generic *e, cube *c);
 
 // Puts an enemy on the map. Returns a handle to the placed enemy if valid,
 // and returns NULL if invalid or out of room.

@@ -3,6 +3,11 @@
 #include "player.h"
 #include "map.h"
 
+static void en_proc_boingo(en_boingo *e);
+static void en_anim_boingo(en_boingo *e);
+static void bg_collisions(en_boingo *e);
+static void do_jump(en_boingo *e);
+
 void en_init_boingo(en_boingo *e)
 {
 	e->head.hp = 1;
@@ -19,9 +24,13 @@ void en_init_boingo(en_boingo *e)
 	e->state = BOINGO_STANDING;
 	e->jump_cnt = 0;
 	e->anim_cnt = 0;
+
+	e->head.proc_func = &en_proc_boingo;
+	e->head.anim_func = &en_anim_boingo;
+	e->head.cube_func = NULL;
 }
 
-void en_anim_boingo(en_boingo *e)
+static void en_anim_boingo(en_boingo *e)
 {
 	e->anim_cnt++;
 
@@ -133,7 +142,7 @@ static void do_jump(en_boingo *e)
 	e->jump_cnt = 0;
 }
 
-void en_proc_boingo(en_boingo *e)
+static void en_proc_boingo(en_boingo *e)
 {
 	// Standing state
 	if (e->state == BOINGO_STANDING)

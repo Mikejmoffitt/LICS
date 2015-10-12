@@ -29,8 +29,6 @@ struct en_flip
 };
 
 void en_init_flip(en_flip *e);
-void en_anim_flip(en_flip *e);
-void en_proc_flip(en_flip *e);
 
 
 #endif

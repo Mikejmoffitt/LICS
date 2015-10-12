@@ -15,7 +15,6 @@
 cube cubes[CUBES_NUM];
 
 static void cube_move(cube *c);
-static void cube_clamp_dx(cube *c);
 static void cube_degrade_dx(cube *c);
 static void cube_on_cube_collisions(cube *c);
 static void cube_eval_stopmoving(cube *c);
@@ -41,7 +40,7 @@ void cubes_init(void)
 	}
 }
 
-static void cube_destroy(cube *c)
+void cube_destroy(cube *c)
 {
 	c->dx = 0;
 	c->dy = 7;
@@ -158,7 +157,7 @@ static void cube_degrade_dx(cube *c)
 	}
 }
 
-static void cube_clamp_dx(cube *c)
+void cube_clamp_dx(cube *c)
 {
 	if (c->dx > 0)
 	{
@@ -449,53 +448,7 @@ static void cube_scan_enemies(cube *c)
 			e->head.y - e->head.width <= c->y + CUBE_BOTTOM &&
 			e->head.y >= c->y + CUBE_TOP)
 		{
-			if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
-			{
-				// Let the enemy get hurt extra
-				if (e->head.hp > 1)
-				{
-					e->head.hp--;
-				}
-			}
-			if (c->type == CUBE_RED)
-			{	
-				if (e->head.hp > 1)
-				{
-					e->head.hp--;
-				}			// Let the enemy get hurt extra
-				if (e->head.hp > 1)
-				{
-					e->head.hp--;
-				}
-
-			}
-			enemy_get_hurt(e);
-
-			if (c->type == CUBE_GREEN)
-			{
-				c->state = CUBE_STATE_AIR;
-				if (c->y < e->head.y)
-				{
-					c->dy = CUBE_ON_CUBE_DY;
-				}
-				else
-				{
-					c->dy = -CUBE_ON_CUBE_DY;
-				}
-				if (c->dx == FZERO)
-				{
-					c->dx = (GET_HVCOUNTER % 2) ? 1 : -1;
-				}
-				else
-				{
-					c->dx = c->dx * -1;
-					cube_clamp_dx(c);
-				}
-			}
-			else if (c->state != CUBE_STATE_FIZZLE)
-			{
-				cube_destroy(c);	
-			}
+			enemy_cube_impact(e, c);
 		}
 	}
 }
