@@ -9,6 +9,14 @@
 #include "save.h"
 #include "hud.h"
 
+// Clear the given spot on the map
+static void window_clear_spot(u16 x, u16 y)
+{
+
+}
+
+// --------------------
+
 void pause_init(void)
 {
 	// Get rid of the window plane
