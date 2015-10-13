@@ -142,7 +142,7 @@ void gameloop_main(void)
 		gameloop_room_setup();
 		do
 		{
-			if (pl.input & BUTTON_START)
+			if ((pl.input & BUTTON_START) && (!(pl.input_prev & BUTTON_START)))
 			{
 				pause_screen_loop();	
 			}

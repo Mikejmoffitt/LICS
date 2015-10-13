@@ -8,3 +8,4 @@ BIN sfx_cubespawn "sfx/cubespawn.esf" 2 2 0
 BIN sfx_enemyexplode "sfx/enemyexplode.esf" 2 2 0
 BIN sfx_enemystrike "sfx/enemystrike.esf" 2 2 0
 BIN sfx_pause "sfx/pause.esf" 2 2 0
+BIN sfx_cubeexplode "sfx/cubeexplode.esf" 2 2 0

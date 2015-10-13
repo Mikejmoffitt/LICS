@@ -14,5 +14,6 @@ xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_fizzle.xif Z:\home\moffitt\De
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubespawn.xif Z:\home\moffitt\Development\LICS\res\sfx\cubespawn.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_enemyexplode.xif Z:\home\moffitt\Development\LICS\res\sfx\enemyexplode.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_enemystrike.xif Z:\home\moffitt\Development\LICS\res\sfx\enemystrike.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\sfx\sfx_cubeexplode.xif Z:\home\moffitt\Development\LICS\res\sfx\cubeexplode.esf
 REM clean up the working dir (oh god)
 cd ..

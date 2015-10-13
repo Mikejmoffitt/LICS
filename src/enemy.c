@@ -248,7 +248,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 			cube_clamp_dx(c);
 		}
 	}
-	else if (c->state != CUBE_STATE_FIZZLE)
+	else if (c->state != CUBE_STATE_EXPLODE && c->state != CUBE_STATE_FIZZLE)
 	{
 		cube_destroy(c);	
 	}

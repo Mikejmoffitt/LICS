@@ -215,6 +215,9 @@ void pause_setup(void)
 
 	// Bring in the colors
 	VDP_doCRamDMA((u32)pal_pause, PAUSE_PALNUM * 32, 16);
+
+	// Save the player's progress, why not?
+	save_write();
 }
 
 void pause_exit(void)
@@ -226,18 +229,20 @@ void pause_exit(void)
 
 	// Bring in the colors
 	VDP_doCRamDMA((u32)pal_lyle, PAUSE_PALNUM * 32, 16);
+	system_set_h_split(0, 0, NULL);
+	stopsound();
 }
 
 void pause_screen_loop(void)
 {
 	u16 in_prog = 1;
-	u16 pad;
 	pause_setup();
 	system_set_h_split(0, 0, NULL);
 	while (in_prog)
 	{
-		pad = JOY_readJoypad(JOY_1); 
-		if (pad & BUTTON_START)
+		pl.input_prev = pl.input;
+		pl.input = JOY_readJoypad(JOY_1); 
+		if ((pl.input & BUTTON_START) && (!(pl.input_prev & BUTTON_START)))
 		{
 			in_prog = 0;
 		}

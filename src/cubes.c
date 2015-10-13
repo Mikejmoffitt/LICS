@@ -44,15 +44,18 @@ void cube_destroy(cube *c)
 {
 	c->dx = 0;
 	c->dy = 7;
-	if (c->type == CUBE_RED)
+	if (c->state != CUBE_STATE_EXPLODE && c->state != CUBE_STATE_FIZZLE)
 	{
-		c->state = CUBE_STATE_EXPLODE;
-		playsound(SFX_CUBE_EXPLODE);
-	}
-	else
-	{
-		c->state = CUBE_STATE_FIZZLE;
-		playsound(SFX_FIZZLE);
+		if (c->type == CUBE_RED)
+		{
+			c->state = CUBE_STATE_EXPLODE;
+			playsound(SFX_CUBE_EXPLODE);
+		}
+		else
+		{
+			c->state = CUBE_STATE_FIZZLE;
+			playsound(SFX_FIZZLE);
+		}
 	}
 
 	if ((c->type & 0xFF00) == CUBE_YELLOW)
@@ -180,7 +183,7 @@ static void cube_on_cube_collisions(cube *c)
 	while (i--)
 	{
 		cube *d = &cubes[i];
-		if (d->state == CUBE_STATE_INACTIVE || d->state == CUBE_STATE_FIZZLE || d == c)
+		if (d->state == CUBE_STATE_INACTIVE || d->state == CUBE_STATE_FIZZLE || d->state == CUBE_STATE_EXPLODE || d == c)
 		{
 			continue;
 		}
@@ -465,7 +468,7 @@ void cubes_run(void)
 		{
 			continue;
 		}
-		else if (c->state >= CUBE_STATE_FIZZLE)
+		else if (c->state == CUBE_STATE_FIZZLE || c->state == CUBE_STATE_EXPLODE)
 		{
 			if (c->dy > 0)
 			{
@@ -485,7 +488,7 @@ void cubes_run(void)
 			// Collison is processed a frame late intentionally to mimic the
 			// original game's behavior. 
 			cube_scan_enemies(c);
-			if (c->state != CUBE_STATE_FIZZLE)
+			if (c->state != CUBE_STATE_FIZZLE && c->state != CUBE_STATE_EXPLODE)
 			{
 				cube_bg_collision(c);
 			}
