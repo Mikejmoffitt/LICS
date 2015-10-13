@@ -9,82 +9,8 @@
 #include "save.h"
 #include "hud.h"
 #include "state.h"
-
-// Set the given window plane tile
-static void window_tile_set(u16 x, u16 y, u16 tile)
-{
-	vu32 *plctrl;
-	vu16 *pwdata;
-	u32 vaddr = VDP_getWindowAddress() + (x * 2) + (y << 7);
-
-	plctrl = (u32 *)GFX_CTRL_PORT;
-	pwdata = (u16 *)GFX_DATA_PORT;
-
-	*plctrl = GFX_WRITE_VRAM_ADDR(vaddr);
-	*pwdata = tile;
-}
-
-// Set all unexplored areas to be blank
-static void map_progress_cover(void)
-{
-	if (!sram.have_map)
-	{
-		// TODO: Once lyle can get the map, re-enable this
-		// return;
-	}
-	u16 y, x;
-	for (y = 0; y < SAVE_MAP_H; y++)
-	{
-		for (x = 0; x < SAVE_MAP_W; x++)
-		{
-			if (sram.map[y][x] == 0)
-			{
-				window_tile_set(PAUSE_MAP_X + x, PAUSE_MAP_Y + y, 0xe220);
-			}
-		}
-	}
-}
-
-// --------------------
-
-void pause_init(void)
-{
-	// Get rid of the window plane
-	VDP_setReg(0x12,0x00);
-}
-
-void pause_dma_tiles(void)
-{
-	VDP_doVRamDMA((u32)gfx_pause, PAUSE_VRAM_SLOT * 32, PAUSE_VRAM_LEN * 16);
-}
-
-void pause_setup(void)
-{
-	// Black out the screen during drawing
-	VDP_doCRamDMA((u32)pal_black, PAUSE_PALNUM * 32, 16);
-
-	// Copy the layout information for the window plane
-	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
-
-	// Not sure why the DMA seems to miss this, so this is a manual fix.
-	window_tile_set(0,0, PAUSE_VRAM_SLOT);
-	map_progress_cover();
-
-	// Fullscreen Window plane
-	VDP_setReg(0x12,0x1E);
-
-	// Bring in the colors
-	VDP_doCRamDMA((u32)pal_pause, PAUSE_PALNUM * 32, 16);
-}
-
-void pause_exit(void)
-{
-	// no Window plane here
-	VDP_setReg(0x12,0x00);
-
-	// Give lyle back his palette
-	VDP_doCRamDMA((u32)pal_lyle, PLAYER_PALNUM * 32, 16);
-}
+#include "music.h"
+#include "gameloop.h"
 
 static void pause_pal_cycle(void)
 {
@@ -183,26 +109,140 @@ static void pause_place_sprites(void)
 	}
 }
 
+// Set the given window plane tile
+static void window_tile_set(u16 x, u16 y, u16 tile)
+{
+	vu32 *plctrl;
+	vu16 *pwdata;
+	u32 vaddr = VDP_getWindowAddress() + (x * 2) + (y << 7);
+
+	plctrl = (u32 *)GFX_CTRL_PORT;
+	pwdata = (u16 *)GFX_DATA_PORT;
+
+	*plctrl = GFX_WRITE_VRAM_ADDR(vaddr);
+	*pwdata = tile;
+}
+
+// Set all unexplored areas to be blank
+static void map_progress_cover(void)
+{
+	if (!sram.have_map)
+	{
+		// TODO: Once lyle can get the map, re-enable this
+		// return;
+	}
+	u16 y, x;
+	for (y = 0; y < SAVE_MAP_H; y++)
+	{
+		for (x = 0; x < SAVE_MAP_W; x++)
+		{
+			if (sram.map[y][x] == 0)
+			{
+				window_tile_set(PAUSE_MAP_X + x, PAUSE_MAP_Y + y, 0xe220);
+			}
+		}
+	}
+}
+
+// --------------------
+
+void pause_init(void)
+{
+	// Get rid of the window plane
+	VDP_setReg(0x12,0x00);
+}
+
+void pause_dma_tiles(void)
+{
+	VDP_doVRamDMA((u32)gfx_pause, PAUSE_VRAM_SLOT * 32, PAUSE_VRAM_LEN * 16);
+}
+
+static void pause_intro_anim(void)
+{
+	u16 win_v = 0x9F;
+	while (win_v > 0x82)
+	{
+		win_v-=1;
+		// Window plane vertical 
+		VDP_setReg(0x12,win_v);	
+		gameloop_gfx();
+		system_wait_v();
+		// Set the palette at the window seam so Lyle and Co don't look weird
+		if (win_v < 0x9E)
+		{
+			system_set_h_split((win_v - 128 - 2) * 8, 3, (u16 *)pal_pause);
+		}
+		VDP_doCRamDMA((u32)pal_lyle, PLAYER_PALNUM * 32, 16);
+		sprites_dma_simple();
+	}
+}
+
+static void pause_exit_anim(void)
+{
+	u16 win_v = 0x20;
+	while (win_v > 0x02)
+	{
+		win_v-=1;
+		VDP_setReg(0x12,win_v);
+		gameloop_gfx();
+		system_wait_v();
+		// Set the palette at the window seam so Lyle and Co don't look weird
+			system_set_h_split((win_v) * 8, 3, (u16 *)pal_lyle);
+		VDP_doCRamDMA((u32)pal_pause, PLAYER_PALNUM * 32, 16);
+		sprites_dma_simple();
+	}
+}
+
+void pause_setup(void)
+{
+	// Copy the layout information for the window plane
+	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
+
+	// Not sure why the DMA seems to miss this, so this is a manual fix.
+	window_tile_set(0,0, PAUSE_VRAM_SLOT);
+
+	// Play the "pause sound" which mutes three FM channels
+	stopsound();
+	playsound(SFX_PAUSE);
+
+	// Cover unexplored areas on the map
+	map_progress_cover();
+
+	pause_intro_anim();
+
+	// Fullscreen Window plane
+	VDP_setReg(0x12,0x1E);
+
+	// Bring in the colors
+	VDP_doCRamDMA((u32)pal_pause, PAUSE_PALNUM * 32, 16);
+}
+
+void pause_exit(void)
+{
+	playsound(SFX_PAUSE);
+	pause_exit_anim();
+	// no Window plane here
+	VDP_setReg(0x12,0x00);
+
+	// Bring in the colors
+	VDP_doCRamDMA((u32)pal_lyle, PAUSE_PALNUM * 32, 16);
+}
+
 void pause_screen_loop(void)
 {
 	u16 in_prog = 1;
 	u16 pad;
 	pause_setup();
+	system_set_h_split(0, 0, NULL);
 	while (in_prog)
 	{
 		pad = JOY_readJoypad(JOY_1); 
-		if (pad & BUTTON_C)
+		if (pad & BUTTON_START)
 		{
 			in_prog = 0;
 		}
-		hud_draw_health(sram.max_hp,pl.hp);
-		if (sram.have_phantom)
-		{
-			hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
-		}
-
 		pause_place_sprites();
-
+		gameloop_gfx();
 		system_wait_v();
 		sprites_dma_simple();
 		pause_pal_cycle();

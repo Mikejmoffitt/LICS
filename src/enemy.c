@@ -14,6 +14,7 @@
 #include "boingo.h"
 #include "cubes.h"
 #include "save.h"
+#include "music.h"
 
 en_generic enemies[ENEMIES_NUM];
 
@@ -35,6 +36,7 @@ static void enemy_explode(en_generic *e)
 	{
 		powerup_spawn(e->head.x, e->head.y, 1 + (system_osc & (e->head.powerup_range)), 0);
 	}
+	playsound(SFX_ENEMY_EXPLODE);
 }
 
 void enemy_dma_tiles(void)

@@ -101,8 +101,9 @@ static const void *sfx_list[] = {
 	(void *)sfx_cubebounce,
 	(void *)sfx_fizzle,
 	(void *)sfx_cubespawn,
-	0,
-	0,
+	(void *)sfx_enemyexplode,
+	(void *)sfx_enemystrike,
+	(void *)sfx_pause,
 	0,
 	0,
 	0,
@@ -119,7 +120,10 @@ static const u16 sfx_len[] = {
 	9,
 	7,
 	16,
-	32
+	38,
+	30,
+	30,
+	24
 };
 
 static const u16 sfx_priority[] = {
@@ -129,7 +133,10 @@ static const u16 sfx_priority[] = {
 	3,
 	1,
 	2,
-	3
+	3,
+	5,
+	4,
+	32767
 };
 
 void playsound(u16 snd)

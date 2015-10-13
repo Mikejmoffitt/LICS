@@ -12,6 +12,28 @@ u16 system_osc;
 
 static u16 debug_en;
 
+// For doing a palette write at a certain line
+static u16 hsplit_line;
+static u16 hsplit_num;
+static u16 *hsplit_pal;
+
+void system_set_h_split(u16 line, u16 num, u16 *p)
+{
+	if (line)
+	{
+		hsplit_line = line;
+		hsplit_pal = p;
+		hsplit_num = num;
+		VDP_setHInterrupt(1);
+		VDP_setHIntCounter(line);
+	}
+	else
+	{
+		hsplit_line = 0;
+		VDP_setHInterrupt(0);
+	}
+}
+
 static _voidCallback *v_int(void)
 {
 	vbl_active = 1;
@@ -21,11 +43,17 @@ static _voidCallback *v_int(void)
 		volatile unsigned short *reg = (volatile unsigned short *)SEGACD_REG_CPU;
 		*reg |= 0x0100;
 	}
+	if (hsplit_line)
+	{
+		VDP_setHInterrupt(1);
+	}
 	return NULL;
 }
 
 static _voidCallback *h_int(void)
 {
+	VDP_doCRamDMA((u32)hsplit_pal, hsplit_num << 5, 16);
+	VDP_setHInterrupt(0);
 	return NULL;
 }
 
@@ -35,7 +63,6 @@ void system_init(void)
 	// Configure interrupts
 	SYS_disableInts();
 	VDP_setHInterrupt(0);
-	VDP_setHIntCounter(223 - 6);
 	SYS_setVIntCallback((_voidCallback *)v_int);
 	SYS_setHIntCallback((_voidCallback *)h_int);
 	SYS_setInterruptMaskLevel(0);
@@ -84,6 +111,7 @@ void system_init(void)
 	// Set up sound stuff engine
 	music_init();
 	cdaudio_init();
+	system_set_h_split(0, 0, NULL);
 
 	//VDP_setReg(0x11,0x88);
 }

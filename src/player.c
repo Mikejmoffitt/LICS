@@ -117,11 +117,13 @@ void player_dma_setup(void)
 	lyle_dma_len = (offset >= 120) ? (9 * 16) : (6 * 16);
 	lyle_dma_src = (u32)(gfx_lyle + (32 * offset));
 	lyle_dma_dest = PLAYER_VRAM_SLOT * 32;
+
 }
 
 void player_dma(void)
 {
 	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
+	player_set_pal();
 }
 
 static void player_read_pad(void)
@@ -859,7 +861,7 @@ static inline void player_calc_anim(void)
 	{
 		pl.anim_cnt = 0;
 	}
-	if (pl.invuln_cnt && (system_osc % 8 > 3))
+	if (pl.invuln_cnt && (system_osc % 2))
 	{
 		return;
 	}
@@ -940,7 +942,7 @@ void player_draw(void)
 	{
 		cube_draw_single(fix32ToInt(pl.x) + PLAYER_DRAW_LEFT, fix32ToInt(pl.y) + PLAYER_DRAW_TOP - 15, pl.holding_cube);
 	}
-	if (pl.invuln_cnt && (system_osc % 8 > 3))
+	if (pl.invuln_cnt && (system_osc % 2))
 	{
 		return;
 	}
