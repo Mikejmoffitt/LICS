@@ -3,7 +3,7 @@
 
 #include <genesis.h>
 
-#define PAUSE_POWER_X 88
+#define PAUSE_POWER_X 96
 #define PAUSE_POWER_Y 176
 
 #define PAUSE_MAP_X 8
