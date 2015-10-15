@@ -9,7 +9,7 @@
 #include "ewf.h"
 #include "sfx.h"
 
-const void *instrument_set[] =
+static const void *instrument_set[] =
 {
 	(void *)eif_bass1,          // 00: FM Bass 1
 	(void *)eif_sqchords1,      // 01: FM Square 1
@@ -35,7 +35,7 @@ const void *instrument_set[] =
 	0
 };
 
-const void *bgm_set[] = 
+static const void *bgm_set[] = 
 {
 	0,
 	(void *)bgm_bgm1,           // 01: Alone in the dark
@@ -45,7 +45,7 @@ const void *bgm_set[] =
 	0
 };
 
-const void *sfx_list[] = {
+static const void *sfx_list[] = {
 	(void *)sfx_jump,
 	(void *)sfx_walk1,
 	(void *)sfx_walk2,
@@ -66,7 +66,7 @@ const void *sfx_list[] = {
 	0
 };
 
-const u16 sfx_len[] = {
+static const u16 sfx_len[] = {
 	2,
 	2,
 	2,
@@ -80,7 +80,7 @@ const u16 sfx_len[] = {
 	30
 };
 
-const u16 sfx_priority[] = {
+static const u16 sfx_priority[] = {
 	0,
 	0,
 	0,

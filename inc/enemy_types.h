@@ -6,6 +6,7 @@
 #define ENEMY_METAGRUB 1
 #define ENEMY_FLIP 2
 #define ENEMY_BOINGO 3
+#define ENEMY_ITEM 4
 // ---------------------
 
 

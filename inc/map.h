@@ -14,6 +14,7 @@ Also handles some object list functions.
 #define MAP_OBJ_METAGRUB 3
 #define MAP_OBJ_FLIP 4
 #define MAP_OBJ_BOINGO 5
+#define MAP_OBJ_ITEM 6
 
 #define MAP_SET_OUTSIDE1 0
 #define MAP_SET_OUTSIDE2 1

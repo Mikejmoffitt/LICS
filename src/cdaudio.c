@@ -4,14 +4,7 @@
 
 #include "cdaudio.h"
 #include <genesis.h>
-#include <string.h>
 #include <stdlib.h>
-
-#define WANT_LOGGING 1 
-
-#ifndef WANT_LOGGING
-#define WANT_LOGGING 0
-#endif
 
 typedef struct cd_info cd_info;
 struct cd_info
@@ -47,20 +40,6 @@ static volatile uint8_t *first_tno_ptr = (volatile uint8_t *)SEGACD_FIRST_TNO;
 static volatile uint8_t *last_tno_ptr = (volatile uint8_t *)SEGACD_LAST_TNO;
 static volatile uint8_t *drv_vers_ptr = (volatile uint8_t *)SEGACD_DRV_VERS;
 static volatile uint8_t *flag_ptr = (volatile uint8_t *)SEGACD_FLAG;
-
-static void log(const char *s)
-{
-	if (WANT_LOGGING)
-	{
-		static int y = 0;
-		VDP_drawText(s, 1, y);
-		y++;
-		if (y > 27)
-		{
-			y = 0;
-		}
-	}
-}
 
 // Write to writeonly COMM port; upper 8 bits
 static inline void comm_write(int8_t msg)
@@ -113,7 +92,6 @@ static void wait_do_cmd(int8_t cmd)
 
 static inline void wait_cpu_running(void)
 {
-	log("Waiting for Sub-CPU to run");
 	while ((*reg_cpu & 0x0001) == 0)
 	{
 		*reg_cpu = (*reg_cpu & 0xFF00) | 0x01;
@@ -151,7 +129,6 @@ static inline void delay(int32_t iterations)
 static volatile uint8_t *check_hardware(void)
 {
 	volatile uint8_t *bios;
-	log("Checking for CD Hardware");
 
 	bios = (volatile uint8_t *)SCD_BIOSLOC_1;
 	if (memcmp(bios + SCD_OFFSET, "SEGA", 4))
@@ -178,7 +155,6 @@ static volatile uint8_t *check_hardware(void)
 static void reset_gate_array(void)
 {
 	volatile uint8_t *loc2;
-	log("Resetting gate array and sub-CPU");
 	loc2 = (volatile uint8_t *)0xA12001;
 
 	*reg_mem = 0xFF00;
@@ -190,13 +166,11 @@ static void reset_gate_array(void)
 // Reset Sub-CPU and req bus
 static void subcpu_setup(void)
 {
-	log("Setting up Sub-CPU (busreq)");
 	bus_req();
 }
 
 static int32_t decompress_bios(void)
 {
-	log("Decompressing BIOS");
 	// Configure for writing
 	*reg_mem = 0x0002;
 	
@@ -217,7 +191,6 @@ static int32_t decompress_bios(void)
 
 void cdaudio_check_disc(void)
 {
-	log("Checking disc... ");
 	wait_do_cmd('C');
 	wait_cmd_ack();
 	comm_write(SEGACD_CMD_ACK);
@@ -240,7 +213,6 @@ static char get_disc_info(void)
 // Wait until the player is done reading the TOC or scanning
 static void wait_for_ready(void)
 {
-	log("Waiting for drive to be ready");
 	int8_t ack;
 	int8_t ok = 0;
 	while (!ok)
@@ -269,7 +241,6 @@ static void wait_for_ready(void)
 
 static void start_subcpu(void)
 {
-	log("Starting Sub-CPU");
 	comm_write(SEGACD_CMD_ACK); // Clear main comm port
 	*reg_mem = 0x2A01;
 
@@ -279,7 +250,6 @@ static void start_subcpu(void)
 
 	// Enable level 2 interrupts on sub-CPU to poke it during vblank
 
-	log("Enabling level 2 interrupts on sub-CPU");
 	*reg_cpu = (*reg_cpu & 0xEFFF) | SEGACD_CPU_IEN_MASK;
 	set_sr(0x2000);
 
@@ -296,14 +266,12 @@ static void start_subcpu(void)
 			return;
 		}
 	}
-	log("Got signal from Sub-CPU, waiting for ready...");
 
 	// Wait for sub-CPU being ready to receive commands
 	while (comm_read() != 0x00)
 	{
 		__asm__("nop");
 	}
-	log("CPU is ready.");
 }
 
 int16_t cdaudio_init(void)

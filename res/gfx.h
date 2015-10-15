@@ -7,6 +7,7 @@ extern const u8 gfx_hud[1024];
 extern const u8 gfx_pause[8192];
 extern const u8 gfx_particles[2468];
 extern const u8 gfx_powerups[768];
+extern const u8 gfx_items[1536];
 extern const u8 gfx_en_metagrub[224];
 extern const u8 gfx_en_flip[384];
 extern const u8 gfx_en_boingo[768];

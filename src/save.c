@@ -49,12 +49,16 @@ void save_clear(void)
 
 	// Reset abilities
 	sram.max_hp = SAVE_DEFAULT_HP;
-	sram.have_phantom = 1;
+
+	// Debuggity stuff
+	sram.have_map = 0;
+	sram.have_lift = 0;
+	sram.have_jump = 0;
+	sram.have_phantom = 0;
 	sram.have_fast_phantom = 0;
-	sram.have_cheap_phantom = 1;
-	sram.have_jump = 1;
-	sram.have_lift = 1;
-	sram.have_kick = 1;
+	sram.have_cheap_phantom = 0;
+	sram.have_kick = 0;
+	sram.have_orange = 0;
 
 	// Clear map exploration
 	for (j = 0; j < SAVE_MAP_H; j++)

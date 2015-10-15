@@ -8,23 +8,35 @@
 #include "gfx.h"
 #include "pal.h"
 
+// Size of array of enemy objects
 #define ENEMIES_NUM 28
+
+// How much generic data is allocated per enemy
 #define ENEMY_DATA_SIZE 8
 
+// Enemy / Object status
 #define ENEMY_DISABLED 0
 #define ENEMY_ONSCREEN 1
 #define ENEMY_OFFSCREEN 2
 
+// Direction constants
 #define ENEMY_RIGHT 0
 #define ENEMY_LEFT 1
 
+// How long an enemy is frozen when struck with a cube
 #define ENEMY_HURT_TIME 20
 
+// Distance away from edge of screen to remain active
 #define ENEMY_ACTIVE_DISTANCE 32
 
 #ifndef FZERO
 #define FZERO FIX16(0.0)
 #endif
+
+#define ENEMY_HARM_NONE 0
+#define ENEMY_HARM_NORMAL 1
+#define ENEMY_HARM_ALWAYS_BOUNCE 2
+#define ENEMY_HARM_KILL 3
 
 typedef struct en_header en_header;
 struct en_header
@@ -36,6 +48,8 @@ struct en_header
 	// Universal information all enemy objects share
 	u16 active; // should it be drawn this frame?
 	u16 type; // ID specifying which subclass of enemy it is
+	u16 harmful; // How the player interacts
+	u16 touching_player; // Signal for if enemy is overlapping the player
 	u16 powerup_range; // The max type of powerup to get
 	u16 direction; // Right/Left based on directions given above
 	// Real-world position in pixels; center-bottom of enemy
@@ -64,18 +78,11 @@ struct en_generic
 	u16 data[ENEMY_DATA_SIZE];
 };
 
-
-static const u16 enemy_palnums[] = 
-{
-	0,
-	PLAYER_PALNUM,   // 01 Metagrub
-	OBJECTS_PALNUM,  // 02 Flip
-	PLAYER_PALNUM,   // 03 Boingo
-	0
-};
+// Graphics lists
 
 static const u32 enemy_vram_src[] = 
 {
+	(u32)gfx_items, 
 	(u32)gfx_en_metagrub,
 	(u32)gfx_en_flip,
 	(u32)gfx_en_boingo,
@@ -84,6 +91,7 @@ static const u32 enemy_vram_src[] =
 
 static const u16 enemy_vram_dest[] = 
 {
+	ITEMS_VRAM_SLOT * 32,
 	METAGRUB_VRAM_SLOT * 32,
 	FLIP_VRAM_SLOT * 32,
 	BOINGO_VRAM_SLOT * 32,
@@ -92,6 +100,7 @@ static const u16 enemy_vram_dest[] =
 
 static const u16 enemy_vram_len[] =
 {
+	ITEMS_VRAM_LEN * 16,
 	METAGRUB_VRAM_LEN * 16,
 	FLIP_VRAM_LEN * 16,
 	BOINGO_VRAM_LEN * 16,

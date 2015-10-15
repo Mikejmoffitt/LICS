@@ -1,6 +1,12 @@
 #include "enemy.h"
 #include "enemy_types.h"
+
+#include "metagrub.h"
+#include "flip.h"
+#include "boingo.h"
+#include "items.h"
 #include "sprites.h"
+
 #include "state.h"
 #include "particles.h"
 
@@ -8,10 +14,6 @@
 #include "music.h"
 #include "powerups.h"
 #include "system.h"
-
-#include "metagrub.h"
-#include "flip.h"
-#include "boingo.h"
 #include "cubes.h"
 #include "save.h"
 #include "music.h"
@@ -287,6 +289,8 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 			e->head.type = type;
 			e->head.hurt_cnt = 0;
 			e->head.active = ENEMY_OFFSCREEN;
+			e->head.touching_player = 0;
+			e->head.harmful = ENEMY_HARM_NORMAL;
 			e->head.anim_func = NULL;
 			e->head.proc_func = NULL;
 			e->head.cube_func = NULL;
@@ -302,8 +306,11 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 				case ENEMY_BOINGO:
 					en_init_boingo((en_boingo *)e);
 					break;
+				case ENEMY_ITEM:
+					en_init_item((en_item *)e);
+					break;
 			}
-			return &enemies[0];
+			return &enemies[i];
 		}
 	}
 	return NULL;
@@ -323,13 +330,43 @@ static void enemy_player_scan(void)
 		{
 			continue;
 		}
-
 		if (e->head.x - e->head.width <= pl.px + PLAYER_CHK_RIGHT &&
 			e->head.x + e->head.width >= pl.px + PLAYER_CHK_LEFT &&
 			e->head.y - e->head.height <= pl.py + PLAYER_CHK_BOTTOM &&
 			e->head.y >= pl.py + PLAYER_CHK_TOP)
 		{
-			player_get_hurt();
+			e->head.touching_player = 1;
+			if (e->head.harmful == ENEMY_HARM_NORMAL)
+			{
+				player_get_hurt();
+			}
+			else if (e->head.harmful == ENEMY_HARM_ALWAYS_BOUNCE)
+			{
+				player_get_hurt();
+
+				// Bounce the player always away from the enemy, since this
+				// type is typically used as a blockade.
+				if (pl.x < e->head.x)
+				{
+					pl.direction = PLAYER_RIGHT;
+				}
+				else
+				{
+					pl.direction = PLAYER_LEFT;
+				}
+				player_get_bounced();
+			}
+			else if (e->head.harmful == ENEMY_HARM_KILL)
+			{
+				// Set up conditions to ensure the player will die
+				pl.hp = 0;
+				pl.invuln_cnt = 0;
+				player_get_hurt();
+			}
+		}
+		else
+		{
+			e->head.touching_player = 0;
 		}
 	}
 }

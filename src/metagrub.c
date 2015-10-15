@@ -14,14 +14,16 @@ void en_init_metagrub(en_metagrub *e)
 	e->head.hp = 1;
 	e->head.width = 7;
 	e->head.height = 8;
-	e->move_cnt = 0;
-	e->dx = FIX16(0.0);
 	e->head.attr[1] = 0;
 	e->head.x += 12;
 	e->head.y += 7;
+	e->head.harmful = ENEMY_HARM_NORMAL;
+
 	e->head.anim_func = &en_anim_metagrub;
 	e->head.proc_func = &en_proc_metagrub;
 	e->head.cube_func = NULL;
+	e->dx = FIX16(0.0);
+	e->move_cnt = 0;
 }
 
 static inline fix16 get_lunge_dx(u16 dir)

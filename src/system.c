@@ -7,6 +7,8 @@
 #include "vramslots.h"
 #include "pausemap.h"
 
+#define WAIT_NOP(x) for (i = 0; i < x; i++) { __asm__("nop"); }
+
 static vu16 vbl_active;
 u16 system_osc;
 
@@ -52,7 +54,12 @@ static _voidCallback *v_int(void)
 
 static _voidCallback *h_int(void)
 {
+	u16 i;
+	VDP_setReg(0x01, VDP_getReg(0x01) & (~0x40));
+	WAIT_NOP(8);
 	VDP_doCRamDMA((u32)hsplit_pal, hsplit_num << 5, 16);
+	WAIT_NOP(72);
+	VDP_setReg(0x01, VDP_getReg(0x01) | (0x40));
 	VDP_setHInterrupt(0);
 	return NULL;
 }
@@ -112,6 +119,9 @@ void system_init(void)
 	music_init();
 	cdaudio_init();
 	system_set_h_split(0, 0, NULL);
+
+//	*(vu16 *)(0xC0001C) = 0x0180;
+
 
 	//VDP_setReg(0x11,0x88);
 }

@@ -8,6 +8,7 @@ static const char *obj_name[] =
 	"Metagrub",
 	"Flip    ",
 	"Boingo  ",
+	"Item    ",
 	0
 };
 
@@ -19,6 +20,7 @@ static const int obj_width[] =
 	24,
 	24,
 	24,
+	16,
 	0
 };
 
@@ -28,6 +30,7 @@ static const int obj_height[] =
 	32,
 	16,
 	8,
+	16,
 	16,
 	16,
 	0

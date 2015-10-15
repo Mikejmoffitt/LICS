@@ -302,6 +302,37 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 			sprintf(desc,"Flies left to right 100px");
 			sprintf(dat2," ");
 			break;
+		case OBJ_ITEM:
+			if (o->data == 0x0000)
+			{
+				sprintf(desc, "Map screen");
+			}
+			else if (o->data == 0x0001)
+			{
+				sprintf(desc, "Cube lifting");
+			}
+			else if (o->data == 0x0002)
+			{
+				sprintf(desc, "Cube jumping");
+			}
+			else if (o->data == 0x0003)
+			{
+				sprintf(desc, "Phantom cubes");
+			}
+			else if (o->data == 0x0004)
+			{
+				sprintf(desc, "Kicking cubes");
+			}
+			else if (o->data == 0x0005)
+			{
+				sprintf(desc, "Orange cube lifting");
+			}
+			else
+			{
+				sprintf(desc, "Invalid item (defaults to map)");
+			}
+			sprintf(dat2," ");
+			break;
 	}
 
 	plane_print_label(x, y + 40, al_map_rgb(255,255,255), name);

@@ -42,13 +42,32 @@ static void pause_pal_cycle(void)
 
 static void pause_place_sprites(void)
 {
-	// Show lyle on the map
-	if (system_osc % 16 >= 8)
+	if (sram.have_map)
 	{
-		sprite_put(8 * (PAUSE_MAP_X +  state.world_x),
-		           8 * (PAUSE_MAP_Y + state.world_y),
-				   SPRITE_SIZE(1,1), 
-				   TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xC0));
+		switch (system_osc % 32)
+		{
+			case 0:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 11:
+				break;
+				
+			default:
+			sprite_put(8 * (PAUSE_MAP_X + state.world_x) - 5,
+					   8 * (PAUSE_MAP_Y + state.world_y) - 14,
+					   SPRITE_SIZE(2,2),
+					   TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xA8));
+			sprite_put(8 * (PAUSE_MAP_X +  state.world_x),
+					   8 * (PAUSE_MAP_Y + state.world_y),
+					   SPRITE_SIZE(1,1), 
+					   TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xC0));
+		}
 	}
 
 	// Abilities
@@ -126,20 +145,25 @@ static void window_tile_set(u16 x, u16 y, u16 tile)
 // Set all unexplored areas to be blank
 static void map_progress_cover(void)
 {
-	if (!sram.have_map)
-	{
-		// TODO: Once lyle can get the map, re-enable this
-		// return;
-	}
 	u16 y, x;
 	for (y = 0; y < SAVE_MAP_H; y++)
 	{
 		for (x = 0; x < SAVE_MAP_W; x++)
 		{
-			if (sram.map[y][x] == 0)
+			if (sram.map[y][x] == 0 || !sram.have_map)
 			{
 				window_tile_set(PAUSE_MAP_X + x, PAUSE_MAP_Y + y, 0xe220);
 			}
+		}
+	}
+	if (!sram.have_map)
+	{	
+		for (x = 0; x < 5; x++)
+		{
+		window_tile_set(PAUSE_MAP_X + 10 + x, PAUSE_MAP_Y + 6, 
+			TILE_ATTR_FULL(3, 1, 0, 0, 0x1db + x));
+		window_tile_set(PAUSE_MAP_X + 10 + x, PAUSE_MAP_Y + 7, 
+			TILE_ATTR_FULL(3, 1, 0, 0, 0x1eb + x));
 		}
 	}
 }
@@ -187,7 +211,7 @@ static void pause_exit_anim(void)
 		gameloop_gfx();
 		system_wait_v();
 		// Set the palette at the window seam so Lyle and Co don't look weird
-			system_set_h_split((win_v) * 8, 3, (u16 *)pal_lyle);
+			system_set_h_split((win_v - 2) * 8, 3, (u16 *)pal_lyle);
 		VDP_doCRamDMA((u32)pal_pause, PLAYER_PALNUM * 32, 16);
 		sprites_dma_simple();
 	}

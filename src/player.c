@@ -452,7 +452,7 @@ static void player_toss_cubes(void)
 static void player_kick_cube(cube *c)
 {
 	if (c->state != CUBE_STATE_IDLE || !(pl.grounded || pl.on_cube) || 
-		pl.action_cnt)
+		pl.action_cnt || !sram.have_kick)
 	{
 		return;
 	}
@@ -685,8 +685,8 @@ static void player_cube_vertical_collision(cube *c)
 	px -= fix16ToInt(pl.dx);
 
 	// appropriate X bounds
-	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
-		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT)
+	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT - 1 && 
+		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT + 1)
 	{
 		// Vertical collision
 		// "Am I now stuck with my feet in a cube?"
@@ -720,8 +720,8 @@ static void player_cube_eval_standing(cube *c)
 {
 	u16 py = fix32ToInt(pl.y);
 	u16 px = fix32ToInt(pl.x);
-	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT && 
-		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT && 
+	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT - 1 && 
+		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT + 1 && 
 		py + PLAYER_CHK_BOTTOM + 1>= c->y + CUBE_TOP && 
 		py + PLAYER_CHK_TOP < c->y + CUBE_TOP)
 	{
@@ -808,6 +808,7 @@ static inline void player_cube_collision(void)
 					c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
 				}
 				c->dy = CUBE_ON_CUBE_DY;
+				playsound(SFX_CUBEBOUNCE);
 			}
 		}
 	}

@@ -131,10 +131,18 @@ void gameloop_main(void)
 	player_init();
 
 
-
+	pl.input = JOY_readJoypad(JOY_1);
 	if (pl.input & BUTTON_A)	
 	{
 		save_clear();
+	}
+	if (pl.input & BUTTON_Z)	
+	{
+		save_clear();
+		sram.have_lift = 1;
+		sram.have_kick = 1;
+		sram.have_phantom = 1;
+		sram.have_map = 1;
 	}
 	// Game is in progress
 	while (1)
@@ -142,10 +150,6 @@ void gameloop_main(void)
 		gameloop_room_setup();
 		do
 		{
-			if ((pl.input & BUTTON_START) && (!(pl.input_prev & BUTTON_START)))
-			{
-				pause_screen_loop();	
-			}
 			/* Run one frame of engine logic */
 			gameloop_logic();
 			gameloop_gfx();
@@ -154,6 +158,10 @@ void gameloop_main(void)
 			system_wait_v();
 
 			gameloop_dma();
+			if ((pl.input & BUTTON_START) && (!(pl.input_prev & BUTTON_START)))
+			{
+				pause_screen_loop();	
+			}
 		}
 		while (!state_watch_transitions());
 	}

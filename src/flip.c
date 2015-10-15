@@ -21,6 +21,7 @@ void en_init_flip(en_flip *e)
 	e->head.x += 12;
 	e->head.y += 16;
 	e->y_orig = e->head.y;
+	e->head.harmful = ENEMY_HARM_NORMAL;
 
 	e->head.anim_func = &en_anim_flip;
 	e->head.proc_func = &en_proc_flip;

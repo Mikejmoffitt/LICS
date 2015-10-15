@@ -8,6 +8,7 @@
 #include "pal.h"
 #include "save.h"
 #include "enemy.h"
+#include "items.h"
 
 gamestate state;
 
@@ -69,10 +70,13 @@ static void state_parse_objects(void)
 			case MAP_OBJ_BOINGO:
 				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_BOINGO);
 				break;
+			case MAP_OBJ_ITEM:
+				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_ITEM);
+				en_item *q = (en_item *)e;
+				q->item_type = o->data;
+				break;
 		}
 	}
-	// Suppress this annoying unused e error until it's actually used
-	(void)e;
 }
 
 static void state_config_scrolling(void)

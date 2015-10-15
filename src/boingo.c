@@ -19,6 +19,7 @@ void en_init_boingo(en_boingo *e)
 	e->head.xoff[0] = -12;
 	e->head.x += 12;
 	e->head.y += 15;
+	e->head.harmful = ENEMY_HARM_NORMAL;
 
 	e->dy = FIX16(0.0);
 	e->state = BOINGO_STANDING;
