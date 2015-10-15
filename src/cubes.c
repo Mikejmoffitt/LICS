@@ -448,7 +448,7 @@ static void cube_scan_enemies(cube *c)
 		}
 		if (e->head.x - e->head.width <= c->x + CUBE_RIGHT &&
 			e->head.x + e->head.width >= c->x + CUBE_LEFT &&
-			e->head.y - e->head.width <= c->y + CUBE_BOTTOM &&
+			e->head.y - e->head.height <= c->y + CUBE_BOTTOM &&
 			e->head.y >= c->y + CUBE_TOP)
 		{
 			enemy_cube_impact(e, c);
