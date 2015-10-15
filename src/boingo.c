@@ -36,7 +36,6 @@ static void en_anim_boingo(void *v)
 	en_boingo *e = (en_boingo *)v;
 	e->anim_cnt++;
 
-
 	if (e->state == BOINGO_STANDING)
 	{
 		e->head.width = BOINGO_GND_W;
@@ -70,7 +69,7 @@ static void en_anim_boingo(void *v)
 		}
 	}
 
-	if (e->anim_frame == 2)
+	if (e->anim_frame >= 2)
 	{
 		e->anim_frame = 0;
 	}

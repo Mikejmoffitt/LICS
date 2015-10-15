@@ -14,7 +14,7 @@
 #define BOINGO_ANIM_SPEED_JUMP 2
 
 #define BOINGO_AIR_W 7
-#define BOINGO_AIR_H 19
+#define BOINGO_AIR_H 23
 
 #define BOINGO_GND_W 9
 #define BOINGO_GND_H 15
