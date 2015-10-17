@@ -11,28 +11,28 @@ void map_data_interview(void)
 	char in_buffer[MAP_NAME_LEN];
 	memset(in_buffer, 0, sizeof(char) * MAP_NAME_LEN);
 
-	printf("\nRoom ID? (integer)\n>");
+	printf("\nRoom ID? (prev == %d)\n>",map_header.id);
 	unsigned int arg;
 	scanf("%d",&arg);
 	map_header.id = arg;
 
-	printf("\nTileset chioce? (prev == %X)\n>",map_header.tileset);
+	printf("\nTileset chioce? (prev == %d)\n>",map_header.tileset);
 	scanf("%d",&arg);
 	map_header.tileset = arg;
 
-	printf("\nSprite palette? (prev == %X)\n>",map_header.sprite_palette);
+	printf("\nSprite palette? (prev == %d)\n>",map_header.sprite_palette);
 	scanf("%d",&arg);
 	map_header.sprite_palette = arg;
 
-	printf("\nBackground? (prev == %X)\n>",map_header.background);
+	printf("\nBackground? (prev == %d)\n>",map_header.background);
 	scanf("%d",&arg);
 	map_header.background = arg;
 
-	printf("\nMusic? (prev == %X)\n>",map_header.music);
+	printf("\nMusic? (prev == %d)\n>",map_header.music);
 	scanf("%d",&arg);
 	map_header.music = arg;
 
-	printf("\nTop-left Map coords? (prev == %X,%X)\n>",map_header.map_x,map_header.map_y);
+	printf("\nTop-left Map coords? (prev == %d,%d)\n>",map_header.map_x,map_header.map_y);
 	scanf("%d",&arg);
 	map_header.map_x = arg;
 	printf(" ");

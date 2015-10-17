@@ -21,6 +21,7 @@ static const s16 *coeff_tables[] =
 	bgcoef_bg2,
 	bgcoef_bg3,
 	bgcoef_bg4,
+	bgcoef_bg5
 };
 
 // Set up the called-upon BG number's tiles, palette, and mapping
@@ -71,6 +72,11 @@ void bg_load(u16 num)
 			gfx_src = (u32)gfx_bg4;
 			map_src = (u32)map_bg4;
 			gfx_len = 8;
+		case 5:
+			pal_src = (u32)pal_bg5;
+			gfx_src = (u32)gfx_bg5;
+			map_src = (u32)map_bg5;
+			gfx_len = 16;
 			break;
 	}
 	// Multiply length by 16 for number of words per tile
