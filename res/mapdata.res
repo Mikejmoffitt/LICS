@@ -7,3 +7,5 @@ BIN mapdata_plantroom "mapdata/plantroom.bin" 2 2 0
 BIN mapdata_earlycorridor "mapdata/earlycorridor.bin" 2 2 0
 BIN mapdata_cownspikes "mapdata/cownspikes.bin" 2 2 0
 BIN mapdata_liftget "mapdata/liftget.bin" 2 2 0
+BIN mapdata_earlybumps "mapdata/earlybumps.bin" 2 2 0
+BIN mapdata_smallchamber "mapdata/smallchamber.bin" 2 2 0

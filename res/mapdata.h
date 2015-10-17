@@ -10,5 +10,7 @@ extern const u8 mapdata_plantroom[5868];
 extern const u8 mapdata_earlycorridor[8268];
 extern const u8 mapdata_cownspikes[8268];
 extern const u8 mapdata_liftget[3468];
+extern const u8 mapdata_earlybumps[15468];
+extern const u8 mapdata_smallchamber[22668];
 
 #endif // _MAPDATA_H_

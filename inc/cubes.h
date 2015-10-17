@@ -65,7 +65,7 @@ Example values:
 #define CUBE_GRAVITY FIX16(0.2)
 
 // Green cube specifics
-#define CUBE_ON_CUBE_DY	FIX16(-3)
+#define CUBE_ON_CUBE_DY	FIX16(-2.2)
 #define CUBE_ON_CUBE_DX 1
 #define CUBE_MAX_GROUND_PUSH 8
 #define CUBE_COL_T 8

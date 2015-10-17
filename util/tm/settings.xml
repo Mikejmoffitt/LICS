@@ -5,5 +5,6 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
+  <property key="recentFile" value="/home/moffitt/Development/cshdemos/res/gfx/font.bin"/>
   <property key="recentFile" value="/opt/toolchains/gen/m68k-elf/lib/libmd.a"/>
 </settings>

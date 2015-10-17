@@ -227,14 +227,16 @@ void enemy_cube_response(en_generic *e, cube *c)
 		}
 
 	}
-	enemy_get_hurt(e);
-
+	if (e->head.hurt_cnt != 0)
+	{
+		return;	
+	}
 	if (c->type == CUBE_GREEN)
 	{
 		c->state = CUBE_STATE_AIR;
 		if (c->y < e->head.y)
 		{
-			c->dy = CUBE_ON_CUBE_DY;
+			c->dy = -1 * (c->dy >> 1);
 		}
 		else
 		{
@@ -254,6 +256,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 	{
 		cube_destroy(c);	
 	}
+	enemy_get_hurt(e);
 }
 
 // Called by cubes.c when a collision against an enemy is detected
