@@ -28,18 +28,19 @@
 #define OBJ_COW 24
 #define OBJ_CONTAINER 25
 #define OBJ_HOOP 26
-#define OBJ_FLASEBLOCK 27
+#define OBJ_FALSEBLOCK 27
 #define OBJ_CP_PAD 28
 #define OBJ_CP_METER 29
 #define OBJ_DOG 30
 #define OBJ_ELEVATOR 31
 #define OBJ_ELEVATOR_STOP 32
-#define OBJ_FISSINS 33
+#define OBJ_FISSINS1 33
 #define OBJ_BOSS1 34
 #define OBJ_BOSS2 35
 #define OBJ_BOSSF1 36
 #define OBJ_BOSSF2 37
 #define OBJ_EGG 38
+#define OBJ_FISSINS2 39
 
 int width_for_obj(int i);
 int height_for_obj(int i);

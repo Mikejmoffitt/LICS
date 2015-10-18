@@ -228,19 +228,24 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 	sprintf(name,"Object Type: %02X, named %s",o->type, string_for_obj(o->type));
 	sprintf(posd,"X: %04X Y: %04X",o->x, o->y);
 	sprintf(dat1,"                       Raw Data: 0x%04X",o->data);
+	sprintf(dat2,"                                       ");
 
 	switch (o->type)
 	{
 		case OBJ_NULL:
 			sprintf(desc," ");
-			sprintf(dat2," ");
 			break;
 		case OBJ_ROOMPTR:
-			sprintf(dat2,"Door #%X (LSN)",o->data & 0x000F);
 			sprintf(desc,"To (%2X, %X)",(o->data & 0xFF00) >> 8, (o->data & 0x00F0) >> 4);
+			sprintf(dat2,"Door #%X (LSN)",o->data & 0x000F);
 			break;
+		case OBJ_DOG:
+			sprintf(dat2,"Releases object after eating 3 eggs");
+			goto cube_desc_area;
+		case OBJ_CONTAINER:
+			sprintf(dat2,"A background element that can be struck.");
 		case OBJ_CUBE:
-			sprintf(dat2,"");
+cube_desc_area:
 			if (o->data == 0x0100)
 			{
 				sprintf(desc,"Blue Cube (destructable)");
@@ -296,12 +301,20 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 			break;
 		case OBJ_METAGRUB:
 			sprintf(desc,"Lunges side to side");
-			sprintf(dat2," ");
 			break;
 		case OBJ_FLIP:
 			sprintf(desc,"Flies left to right 100px");
-			sprintf(dat2," ");
 			break;
+		case OBJ_BOINGO:
+			sprintf(desc,"Jumps left and right");
+			if (o->data == 0x0000)
+			{
+				sprintf(dat2, "Normal version");
+			}
+			else
+			{
+				sprintf(dat2, "Angry version");
+			}
 		case OBJ_ITEM:
 			if (o->data == 0x0000)
 			{
@@ -331,7 +344,128 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 			{
 				sprintf(desc, "Invalid item (defaults to map)");
 			}
-			sprintf(dat2," ");
+			break;
+		case OBJ_GAXTER1:
+			sprintf(desc,"Flies around, homing at player");
+			break;
+		case OBJ_GAXTER2:
+			sprintf(desc,"Flies left and right, shoots at player");
+			sprintf(dat2,"Shots angle against floor");
+			break;
+		case OBJ_BUGGO1:
+			sprintf(desc,"Walks on ceiling left and right");
+			sprintf(dat2,"Fires spike down when player approaches");
+			break;
+		case OBJ_BUGGO2:
+			sprintf(desc,"Walks on floor left and right, firing sparks");
+			sprintf(dat2,"Can only be hurt by a kicked cube");
+			break;
+		case OBJ_DANCYFLOWER:
+			sprintf(desc,"Just sits there, waiting to get destroyed");
+			break;
+		case OBJ_JRAFF:
+			sprintf(desc,"Walks left and right constrained by BG");
+			sprintf(dat2,"Takes two hits");
+			break;
+		case OBJ_PILLA:
+			sprintf(desc,"Walks left and right constrained by BG");
+			if (o->data)
+			{
+				sprintf(dat2,"(head unit)");
+			}
+			else
+			{
+				sprintf(dat2,"(tail unit)");
+			}
+			break;
+		case OBJ_HEDGEDOG:
+			sprintf(desc,"Jumps up and fires a few shots");
+			break;
+		case OBJ_SHOOT:
+			sprintf(desc,"Like Flip, but swoops down when player approaches");
+			break;
+		case OBJ_LASER:
+			sprintf(desc,"A laser effect that fades in and out.");
+			sprintf(dat2,"Hurts player when visible and touched.");
+			break;
+		case OBJ_KILLZAM:
+			sprintf(desc,"Fizzles in, shoots at player, fizzles out.");
+			sprintf(dat2,"Only vulnerable when visible");
+			break;
+		case OBJ_FLARGY:
+			sprintf(desc,"Walks in a small tight zone, deflects cubes");
+			sprintf(dat2,"Only vulnerable from behind");
+			break;
+		case OBJ_PLANT:
+			sprintf(desc,"Evel plant fires shots at player");
+			sprintf(dat2,"Takes two hits");
+			break;
+		case OBJ_TOSSMUFFIN:
+			sprintf(desc,"Walks slowly, picks up and throws cubes");
+			sprintf(dat2,"Takes two hits");
+			break;
+		case OBJ_TELEPORTER:
+			sprintf(desc,"Triggers room event, and player exit.");
+			sprintf(dat2,"On room event, is destroyed");
+			break;
+		case OBJ_MAGIBEAR:
+			sprintf(desc,"Walks slowly, barfs shots at player");
+			sprintf(dat2,"Takes three hits");
+			break;
+		case OBJ_LAVA:
+			sprintf(desc,"Generates a column of lava");
+			break;
+		case OBJ_COW:
+			sprintf(desc,"Will protect lyle from lava");
+			sprintf(dat2,"Attack too much and he'll charge");
+			break;
+		case OBJ_HOOP:
+			sprintf(desc,"When a ball is put through it vanishes.");
+			sprintf(dat2,"Triggers a room event on vanish.");
+			break;
+		case OBJ_FALSEBLOCK:
+			sprintf(desc,"A block that vanishes on room event.");
+			break;
+		case OBJ_CP_PAD:
+			sprintf(desc,"Active area for the CP orb sucker");
+			break;
+		case OBJ_CP_METER:
+			sprintf(desc,"Indicator for CP meter position");
+			break;
+		case OBJ_ELEVATOR:
+			sprintf(desc,"Allows lyle transport up/down");
+			break;
+		case OBJ_ELEVATOR_STOP:
+			sprintf(desc,"Indicates the elevator is to stop here");
+			break;
+		case OBJ_FISSINS1:
+			sprintf(desc,"Jumps up/down from one spot");
+			break;
+		case OBJ_BOSS1:
+			sprintf(desc,"Boss 1 room indicator");
+			break;
+		case OBJ_BOSS2:
+			sprintf(desc,"Boss 2 room indicator");
+			break;
+		case OBJ_BOSSF1:
+			sprintf(desc,"Final boss 1 room indicator");
+			break;
+		case OBJ_BOSSF2:
+			sprintf(desc,"Final boss 2 room indicator");
+			break;
+		case OBJ_EGG:
+			sprintf(desc,"Egg that will drop down when hit");
+			break;
+		case OBJ_FISSINS2:
+			sprintf(desc,"Jumps up from sand; bound by marker");
+			if (o->data)
+			{
+				sprintf(dat2,"This is a marker");
+			}
+			else
+			{
+				sprintf(dat2,"This is the fissins");
+			}
 			break;
 	}
 

@@ -41,12 +41,13 @@ Also handles some object list functions.
 #define MAP_OBJ_DOG 30
 #define MAP_OBJ_ELEVATOR 31
 #define MAP_OBJ_ELEVATOR_STOP 32
-#define MAP_OBJ_FISSINS 33
+#define MAP_OBJ_FISSINS1 33
 #define MAP_OBJ_BOSS1 34
 #define MAP_OBJ_BOSS2 35
 #define MAP_OBJ_BOSSF1 36
 #define MAP_OBJ_BOSSF2 37
 #define MAP_OBJ_EGG 38
+#define MAP_OBJ_FISSINS2 39
 
 #define MAP_SET_OUTSIDE1 0
 #define MAP_SET_OUTSIDE2 1
