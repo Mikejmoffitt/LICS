@@ -936,6 +936,18 @@ static inline void player_calc_anim(void)
 	}
 }
 
+u16 player_collision(s16 x1, s16 x2, s16 y1, s16 y2)
+{
+	if (x1 > pl.px + PLAYER_CHK_RIGHT + 1 ||
+	x2 < pl.px + PLAYER_CHK_LEFT - 1 ||
+	y1 > pl.py + PLAYER_CHK_BOTTOM + 1 ||
+	y2 < pl.py + PLAYER_CHK_TOP - 1 )
+	{
+		return 0;
+	}
+	return 1;
+}
+
 void player_draw(void)
 {
 	// Draw a cube he is holding
@@ -977,8 +989,6 @@ void player_draw(void)
 static inline void player_entrance_coll(void)
 {
 	u16 i = STATE_NUM_ENTRANCES;
-	u16 px = fix32ToInt(pl.x);
-	u16 py = fix32ToInt(pl.y);
 	while (i--)
 	{
 		if (i == 0)
@@ -986,10 +996,7 @@ static inline void player_entrance_coll(void)
 			continue;
 		}
 		entrance *e = &(state.entrances[i]);
-		if ((e->x + ENTRANCE_CHK_LEFT < px + PLAYER_CHK_RIGHT) &&
-			(e->x + ENTRANCE_CHK_RIGHT > px + PLAYER_CHK_LEFT) && 
-			(e->y + ENTRANCE_CHK_TOP < py + PLAYER_CHK_BOTTOM) &&
-			(e->y + ENTRANCE_CHK_BOTTOM > py + PLAYER_CHK_TOP))
+		if (player_collision(e->x + ENTRANCE_CHK_LEFT, e->x + ENTRANCE_CHK_RIGHT, e->y + ENTRANCE_CHK_TOP, e->y + ENTRANCE_CHK_BOTTOM))
 		{
 			state.next_id = e->to_roomid;
 			state.next_entrance = e->to_num;

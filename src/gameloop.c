@@ -17,50 +17,37 @@
 #include "enemy.h"
 #include "powerups.h"
 #include "pause.h"
+#include "projectiles.h"
 
 void gameloop_logic(void)
 {
-	DEBUG_BGCOL(0x22E);
 	player_run();
-	DEBUG_BGCOL(0x2E2);
 	enemy_run();
-	DEBUG_BGCOL(0xE2E);
 	cubes_run();
-	DEBUG_BGCOL(0xE22);
 	powerup_run();
-	DEBUG_BGCOL(0x2EE);
+	projectiles_run();
 	particles_run();
-	DEBUG_BGCOL(0x444);
 	sfx_counters();
-	DEBUG_BGCOL(0x222);
 	state_update_progress();
 }
 
 void gameloop_gfx(void)
 {
 	/* BG updates for scrolling */
-	DEBUG_BGCOL(0xAA0);
 	map_draw_diffs(state_update_scroll());
 
-	DEBUG_BGCOL(0xAAA);
 	/* Place sprites */
 	hud_draw_health(sram.max_hp,pl.hp);
-	DEBUG_BGCOL(0x666);
 	if (sram.have_phantom)
 	{
 		hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
 	}
-	DEBUG_BGCOL(0x00A);
 	player_draw();
-	DEBUG_BGCOL(0x0A0);
 	enemy_draw();
-	DEBUG_BGCOL(0xA00);
+	projectiles_draw();
 	particles_draw();
-	DEBUG_BGCOL(0xA0A);
 	powerup_draw();
-	DEBUG_BGCOL(0x0AA);
 	cubes_draw();
-	DEBUG_BGCOL(0x000);
 	system_debug_cpu_meter();
 
 }
@@ -83,6 +70,7 @@ static void gameloop_room_setup(void)
 	cubes_init();
 	enemy_init();
 	particles_init();
+	projectiles_init();
 	powerup_init();
 	player_init_soft();
 	pause_init();
@@ -98,6 +86,7 @@ static void gameloop_room_setup(void)
 
 	// Re-load the usuals in case something else is in VRAM there
 	particles_dma_tiles();
+	projectiles_dma_tiles();
 	cube_dma_tiles();
 	hud_dma_tiles();
 	pause_dma_tiles();
@@ -140,6 +129,7 @@ void gameloop_main(void)
 	{
 		save_clear();
 		sram.have_lift = 1;
+		sram.have_jump = 1;
 		sram.have_kick = 1;
 		sram.have_phantom = 1;
 		sram.have_map = 1;

@@ -132,6 +132,9 @@ void player_dma(void);
 // Run player's logic for one frame
 void player_run(void);
 
+// Test for box collision with the player
+u16 player_collision(s16 x1, s16 x2, s16 y1, s16 y2);
+
 // Update entry in sprite table cache
 void player_draw(void);
 

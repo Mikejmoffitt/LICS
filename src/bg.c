@@ -72,6 +72,7 @@ void bg_load(u16 num)
 			gfx_src = (u32)gfx_bg4;
 			map_src = (u32)map_bg4;
 			gfx_len = 8;
+			break;
 		case 5:
 			pal_src = (u32)pal_bg5;
 			gfx_src = (u32)gfx_bg5;

@@ -15,20 +15,16 @@ void particles_dma_tiles(void)
 
 void particles_init(void)
 {
-	unsigned int i = PARTICLES_NUM;
+	u16 i = PARTICLES_NUM;
 	while(i--)
 	{
-		if (i == PARTICLES_NUM)
-		{
-			VDP_setPaletteColor(0,0x00E);
-		}
 		particles[i].active = 0; 
 	}
 }
 
 void particles_run(void)
 {
-	unsigned int i = PARTICLES_NUM;
+	u16 i = PARTICLES_NUM;
 	while(i--)
 	{
 		if (particles[i].active)
@@ -53,7 +49,7 @@ void particles_run(void)
 
 void particles_draw(void)
 {
-	unsigned int i = PARTICLES_NUM;
+	u16 i = PARTICLES_NUM;
 	while(i--)
 	{
 		if (!particles[i].active)
@@ -187,7 +183,7 @@ void particles_draw(void)
 
 void particle_spawn(u16 x, u16 y, u16 type)
 {
-	unsigned int i = PARTICLES_NUM;
+	u16 i = PARTICLES_NUM;
 	while(i--)
 	{	
 		if (!particles[i].active)
