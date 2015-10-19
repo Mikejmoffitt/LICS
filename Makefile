@@ -16,7 +16,7 @@ RESCOMP= rescomp
 SCD_LOADER = scd/LukeProjectCD
 
 OPTION = -O1 -std=c99 -Wall 
-INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc
+INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
 CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin
 HWCCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin
 Z80FLAGS = -vb2
@@ -65,9 +65,9 @@ RESS=$(wildcard res/*.res)
 #RESOURCES+=$(WAVPCMS:.wavpcm=.o)
 RESOURCES+=$(RESS:.res=.o)
 
-CS=$(wildcard src/*.c)
-SS=$(wildcard src/*.s)
-S80S=$(wildcard src/*.s80)
+CS=$(wildcard src/*.c) $(wildcard src/*/*.c)
+SS=$(wildcard src/*.s) $(wildcard src/*/*.s)
+S80S=$(wildcard src/*.s80) $(wildcard src/*/*.s80)
 # CS+=$(wildcard *.c)
 SS+=$(wildcard *.s)
 S80S+=$(wildcard *.s80)

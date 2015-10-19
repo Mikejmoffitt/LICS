@@ -10,6 +10,8 @@ BIN gfx_items "gfx/items.bin" 2 2 0
 BIN gfx_en_metagrub "gfx/en_metagrub.bin" 2 2 0
 BIN gfx_en_flip "gfx/en_flip.bin" 2 2 0
 BIN gfx_en_boingo "gfx/en_boingo.bin" 2 2 0
+BIN gfx_en_gaxter "gfx/en_gaxter.bin" 2 2 0
+BIN gfx_en_buggo "gfx/en_buggo.bin" 2 2 0
 
 BIN gfx_inside1 "gfx/inside1.bin" 2 2 0
 BIN gfx_outside1 "gfx/outside1.bin" 2 2 0

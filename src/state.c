@@ -62,18 +62,30 @@ static void state_parse_objects(void)
 				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
 				break;
 			case MAP_OBJ_METAGRUB:
-				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_METAGRUB);
+				enemy_place(o->x, o->y, ENEMY_METAGRUB);
 				break;
 			case MAP_OBJ_FLIP:
-				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_FLIP);
+				enemy_place(o->x, o->y, ENEMY_FLIP);
 				break;
 			case MAP_OBJ_BOINGO:
-				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_BOINGO);
+				enemy_place(o->x, o->y, ENEMY_BOINGO);
 				break;
 			case MAP_OBJ_ITEM:
 				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_ITEM);
 				en_item *q = (en_item *)e;
 				q->item_type = o->data;
+				break;
+			case MAP_OBJ_GAXTER1:
+				enemy_place(o->x, o->y, ENEMY_GAXTER1);
+				break;
+			case MAP_OBJ_GAXTER2:
+				enemy_place(o->x, o->y, ENEMY_GAXTER2);
+				break;
+			case MAP_OBJ_BUGGO1:
+				enemy_place(o->x, o->y, ENEMY_BUGGO1);
+				break;
+			case MAP_OBJ_BUGGO2:
+				enemy_place(o->x, o->y, ENEMY_BUGGO2);
 				break;
 		}
 	}
@@ -98,6 +110,8 @@ static void state_config_scrolling(void)
 	{
 		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 	}
+
+	VDP_setReg(0x0B, VDP_getReg(0x0B) | 0x80);
 }
 
 // Set up a room by the specified ID.

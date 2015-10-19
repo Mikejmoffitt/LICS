@@ -933,6 +933,14 @@ do_hex_entry:
 						}
 					}
 					break;
+				case ALLEGRO_KEY_DELETE:
+				case ALLEGRO_KEY_BACKSPACE:
+					if (edit_mode == MODE_OBJECTS)
+					{
+						map_header.objects[obj_list_sel].type = 0;
+						map_header.objects[obj_list_sel].data = 0;
+					}
+					break;
 				case ALLEGRO_KEY_PAD_PLUS:
 				case ALLEGRO_KEY_EQUALS:
 					if (edit_mode == MODE_OBJECTS)

@@ -86,6 +86,8 @@ static const u32 enemy_vram_src[] =
 	(u32)gfx_en_metagrub,
 	(u32)gfx_en_flip,
 	(u32)gfx_en_boingo,
+	(u32)gfx_en_gaxter,
+	(u32)gfx_en_buggo,
 	0
 };
 
@@ -95,6 +97,8 @@ static const u16 enemy_vram_dest[] =
 	METAGRUB_VRAM_SLOT * 32,
 	FLIP_VRAM_SLOT * 32,
 	BOINGO_VRAM_SLOT * 32,
+	GAXTER_VRAM_SLOT * 32,
+	BUGGO_VRAM_SLOT * 32,
 	0
 };
 
@@ -104,6 +108,8 @@ static const u16 enemy_vram_len[] =
 	METAGRUB_VRAM_LEN * 16,
 	FLIP_VRAM_LEN * 16,
 	BOINGO_VRAM_LEN * 16,
+	GAXTER_VRAM_LEN * 16,
+	BUGGO_VRAM_LEN * 16,
 	0
 };
 

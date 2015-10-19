@@ -122,7 +122,6 @@ void system_init(void)
 
 //	*(vu16 *)(0xC0001C) = 0x0180;
 
-
 	//VDP_setReg(0x11,0x88);
 }
 

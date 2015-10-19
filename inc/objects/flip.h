@@ -7,7 +7,7 @@
 #define FLIP_DOWN 0
 #define FLIP_UP 1
 
-#define FLIP_RIGHT_CUTOFF 100
+#define FLIP_DISTANCE 100
 
 #define FLIP_DDY FIX16(0.2)
 #define FLIP_DY_CUTOFF FIX16(2.4)
@@ -15,6 +15,8 @@
 #define FLIP_ANIM_LEN 20
 
 #define FLIP_H_CNT_MAX 2
+#define FLIP_WIDTH 11
+#define FLIP_HEIGHT 12
 
 typedef struct en_flip en_flip;
 struct en_flip

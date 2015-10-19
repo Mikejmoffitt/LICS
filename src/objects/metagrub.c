@@ -28,7 +28,7 @@ void en_init_metagrub(en_metagrub *e)
 
 static inline fix16 get_lunge_dx(u16 dir)
 {
-	fix16 ret = (dir == ENEMY_RIGHT) ? FIX16(1.875) : FIX16(-1.875);
+	fix16 ret = (dir == ENEMY_RIGHT) ? FIX16(1.675) : FIX16(-1.675);
 	ret = fix16Add(FIX16(0.5),ret);
 	u16 rando = GET_HVCOUNTER % 4;
 	switch (rando)

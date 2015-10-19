@@ -6,7 +6,8 @@
 #define PROJECTILE_BALL 0
 #define PROJECTILE_SPIKE 1
 #define PROJECTILE_SPARK 2
-#define PROJECTILE_BALL2 3
+#define PROJECTILE_DEATHBALL 3
+#define PROJECTILE_BALL2 4
 
 // Projectile "radius"
 #define PROJECTILE_CHK 3

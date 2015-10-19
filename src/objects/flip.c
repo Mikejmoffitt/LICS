@@ -7,25 +7,27 @@ static void en_proc_flip(void *v);
 void en_init_flip(en_flip *e)
 {
 	e->head.hp = 2;
-	e->head.width = 11;
-	e->head.height = 12;
-	e->dy = FIX16(0.0);
+	e->head.width = FLIP_WIDTH;
+	e->head.height = FLIP_HEIGHT;
 	e->head.direction = ENEMY_LEFT;
-	e->v_dir = FLIP_DOWN;
-	e->h_cnt = 0;
-	e->h_rev_cnt = 100;
+
 	e->head.size[0] = SPRITE_SIZE(3,2);
 	e->head.xoff[0] = -11;
 	e->head.yoff[0] = -12;
 	e->head.attr[1] = 0;
 	e->head.x += 12;
 	e->head.y += 16;
-	e->y_orig = e->head.y;
 	e->head.harmful = ENEMY_HARM_NORMAL;
 
 	e->head.anim_func = &en_anim_flip;
 	e->head.proc_func = &en_proc_flip;
 	e->head.cube_func = NULL;
+
+	e->dy = FIX16(0.0);
+	e->y_orig = e->head.y;
+	e->v_dir = FLIP_DOWN;
+	e->h_cnt = 0;
+	e->h_rev_cnt = 100;
 }
 
 static void en_anim_flip(void *v)
@@ -51,10 +53,26 @@ static void en_anim_flip(void *v)
 	}
 }
 
-
-static void en_proc_flip(void *v)
+static inline void bg_collision(en_flip *e)
 {
-	en_flip *e = (en_flip *)v;
+	if (e->head.direction == ENEMY_RIGHT && 
+	    map_collision(e->head.x + FLIP_WIDTH, e->head.y))
+	{
+		e->head.direction = ENEMY_LEFT;	
+		e->head.x -= 4;
+		e->h_rev_cnt = 100;
+	}
+	else if (e->head.direction == ENEMY_LEFT &&
+	    map_collision(e->head.x - FLIP_WIDTH, e->head.y))
+	{
+		e->head.direction = ENEMY_RIGHT;
+		e->head.x += 4;
+		e->h_rev_cnt = 0;
+	}
+}
+
+static inline void h_movement(en_flip *e)
+{
 	// Horizontal Movement
 	if (e->h_cnt == FLIP_H_CNT_MAX)
 	{
@@ -68,12 +86,12 @@ static void en_proc_flip(void *v)
 		}
 		e->h_cnt = 0;	
 
-		if (e->h_rev_cnt == 200)
+		if (e->h_rev_cnt == FLIP_DISTANCE * 2)
 		{
 			e->h_rev_cnt = 0;
 			e->head.direction = ENEMY_RIGHT;
 		}
-		else if (e->h_rev_cnt == 100)
+		else if (e->h_rev_cnt == FLIP_DISTANCE)
 		{
 			e->head.direction = ENEMY_LEFT;
 		}
@@ -84,6 +102,11 @@ static void en_proc_flip(void *v)
 	{
 		e->h_cnt++;
 	}
+	bg_collision(e);
+}
+
+static inline void v_movement(en_flip *e)
+{
 	// Vertical movement
 	if (e->v_dir == FLIP_DOWN)
 	{
@@ -106,4 +129,12 @@ static void en_proc_flip(void *v)
 		e->head.y = e->y_orig;
 	}
 	e->head.y += fix16ToInt(fix16Add(e->dy, FIX16(0.5)));
+}
+
+static void en_proc_flip(void *v)
+{
+	en_flip *e = (en_flip *)v;
+	h_movement(e);
+	v_movement(e);
+
 }

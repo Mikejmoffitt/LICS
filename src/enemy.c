@@ -6,6 +6,9 @@
 #include "boingo.h"
 #include "items.h"
 #include "sprites.h"
+#include "gaxter1.h"
+#include "gaxter2.h"
+#include "buggo.h"
 
 #include "state.h"
 #include "particles.h"
@@ -220,7 +223,8 @@ void enemy_cube_response(en_generic *e, cube *c)
 		if (e->head.hp > 1)
 		{
 			e->head.hp--;
-		}			// Let the enemy get hurt extra
+		}
+		// Let the enemy get hurt extra
 		if (e->head.hp > 1)
 		{
 			e->head.hp--;
@@ -311,6 +315,18 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					break;
 				case ENEMY_ITEM:
 					en_init_item((en_item *)e);
+					break;
+				case ENEMY_GAXTER1:
+					en_init_gaxter1((en_gaxter1 *)e);
+					break;
+				case ENEMY_GAXTER2:
+					en_init_gaxter2((en_gaxter2 *)e);
+					break;
+				case ENEMY_BUGGO1:
+					en_init_buggo((en_buggo *)e, BUGGO_T1);
+					break;
+				case ENEMY_BUGGO2:
+					en_init_buggo((en_buggo *)e, BUGGO_T2);
 					break;
 			}
 			return &enemies[i];
