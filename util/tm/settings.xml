@@ -5,6 +5,7 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_jraff.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_dancyflower.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_buggo.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_boingo.bin"/>
@@ -13,6 +14,5 @@
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg5.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg3.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg4.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg1.bin"/>
   <property key="recentFile" value="/opt/toolchains/gen/m68k-elf/lib/libmd.a"/>
 </settings>

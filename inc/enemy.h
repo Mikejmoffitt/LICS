@@ -90,6 +90,7 @@ static const u32 enemy_vram_src[] =
 	(u32)gfx_en_gaxter,
 	(u32)gfx_en_buggo,
 	(u32)gfx_en_dancyflower,
+	(u32)gfx_en_jraff,
 	0
 };
 
@@ -102,6 +103,7 @@ static const u16 enemy_vram_dest[] =
 	GAXTER_VRAM_SLOT * 32,
 	BUGGO_VRAM_SLOT * 32,
 	DANCYFLOWER_VRAM_SLOT * 32,
+	JRAFF_VRAM_SLOT * 32,
 	0
 };
 
@@ -114,6 +116,7 @@ static const u16 enemy_vram_len[] =
 	GAXTER_VRAM_LEN * 16,
 	BUGGO_VRAM_LEN * 16,
 	DANCYFLOWER_VRAM_LEN * 16,
+	JRAFF_VRAM_LEN * 16,
 	0
 };
 
