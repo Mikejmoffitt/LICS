@@ -45,5 +45,6 @@ struct en_buggo
 };
 
 void en_init_buggo(en_buggo *e, u16 type);
+void en_unload_buggo(void);
 
 #endif

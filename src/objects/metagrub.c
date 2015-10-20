@@ -9,8 +9,25 @@ static void en_anim_metagrub(void *v);
 static void en_proc_metagrub(void *v);
 static inline fix16 get_lunge_dx(u16 dir);
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(METAGRUB_VRAM_LEN / 2);
+		VDP_doVRamDMA((u32)gfx_en_metagrub, (vram_pos * 32), METAGRUB_VRAM_LEN * 16);
+	}
+}
+
+void en_unload_metagrub(void)
+{
+	vram_pos = 0;
+}
+
 void en_init_metagrub(en_metagrub *e)
 {
+	vram_load();
 	e->head.hp = 1;
 	e->head.width = 7;
 	e->head.height = 8;
@@ -61,14 +78,14 @@ static void en_anim_metagrub(void *v)
 		e->head.size[0] = SPRITE_SIZE(3,1);
 		e->head.xoff[0] = -13;
 		e->head.yoff[0] = -5;
-		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, METAGRUB_VRAM_SLOT + 4);
+		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, vram_pos + 4);
 	}
 	else
 	{
 		e->head.size[0] = SPRITE_SIZE(2,2);
 		e->head.xoff[0] = -9;
 		e->head.yoff[0] = -8;
-		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, METAGRUB_VRAM_SLOT);
+		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, vram_pos);
 	}
 }
 

@@ -40,6 +40,6 @@ struct en_gaxter2
 };
 
 void en_init_gaxter2(en_gaxter2 *e);
-
+void en_unload_gaxter2(void);
 
 #endif

@@ -10,8 +10,25 @@ static void en_anim_buggo(void *v);
 static void en_proc_buggo(void *v);
 static void en_cube_buggo(void *v, cube *c);
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(BUGGO_VRAM_LEN);
+		VDP_doVRamDMA((u32)gfx_en_buggo, vram_pos * 32, BUGGO_VRAM_LEN * 16);
+	}
+}
+
+void en_unload_buggo(void)
+{
+	vram_pos = 0;
+}
+
 void en_init_buggo(en_buggo *e, u16 type)
 {
+	vram_load();
 	e->head.width = BUGGO_WIDTH;
 	e->head.height = BUGGO_HEIGHT;
 	e->head.direction = ENEMY_LEFT;
@@ -148,12 +165,12 @@ static void en_anim_buggo(void *v)
 		if (e->shot_clock <= BUGGO_SHOT_TEST)
 		{
 			u16 frame = walking_frame(e->anim_cnt);
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, BUGGO_VRAM_SLOT + frame);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + frame);
 		}
 		// When shot_clock > test, vibrate back and forth on frame 2
 		else
 		{
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, BUGGO_VRAM_SLOT + 8);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 8);
 			e->head.xoff[0] += ((system_osc >> 1) % 2);
 		}
 	}
@@ -163,12 +180,12 @@ static void en_anim_buggo(void *v)
 		if (e->spin_cnt == 0)
 		{
 			u16 frame = walking_frame(e->anim_cnt);
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, BUGGO_VRAM_SLOT + 16 + frame);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 16 + frame);
 		}
 		// Spinning animation
 		else
 		{
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, BUGGO_VRAM_SLOT + 32 + (((system_osc >> 2) % 4) << 2));
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 32 + (((system_osc >> 2) % 4) << 2));
 		}
 	}
 }

@@ -23,5 +23,6 @@ struct en_gaxter1
 };
 
 void en_init_gaxter1(en_gaxter1 *e);
+void en_unload_gaxter1(void);
 
 #endif

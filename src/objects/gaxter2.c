@@ -8,8 +8,25 @@
 static void en_anim_gaxter2(void *v);
 static void en_proc_gaxter2(void *v);
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(GAXTER_VRAM_LEN / 2);
+		VDP_doVRamDMA((u32)(gfx_en_gaxter + ((GAXTER_VRAM_LEN / 2) * 16)), (vram_pos * 32), (GAXTER_VRAM_LEN / 2) * 16);
+	}
+}
+
+void en_unload_gaxter2(void)
+{
+	vram_pos = 0;
+}
+
 void en_init_gaxter2(en_gaxter2 *e)
 {
+	vram_load();
 	e->head.hp = GAXTER2_HP;
 	e->head.width = GAXTER2_WIDTH;
 	e->head.height = GAXTER2_HEIGHT;
@@ -55,17 +72,17 @@ static void en_anim_gaxter2(void *v)
 
 	if (e->anim_cnt < GAXTER2_ANIM_T / 3)
 	{
-		frame = 12;
+		frame = 0;
 	}
 	else if (e->anim_cnt < (2 * GAXTER2_ANIM_T / 3))
 	{
-		frame = 16;
+		frame = 4;
 	}
 	else
 	{
-		frame = 20;
+		frame = 8;
 	}
-	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, hflip, GAXTER_VRAM_SLOT + frame);
+	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, hflip, vram_pos + frame);
 
 	// Use sprite #2 to draw
 	if (e->shot_clock >= GAXTER2_SHOT_FLICKER_T && system_osc % 2 == 0)

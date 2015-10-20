@@ -23,6 +23,7 @@
 #include "music.h"
 
 en_generic enemies[ENEMIES_NUM];
+u16 vram_slot;
 
 static void enemy_explode(en_generic *e);
 static void enemy_player_scan();
@@ -47,23 +48,23 @@ static void enemy_explode(en_generic *e)
 
 void enemy_dma_tiles(void)
 {
-	u16 i = 0;
-
 	// Enemy palette
 	VDP_doCRamDMA((u32)pal_enemy, ENEMY_PALNUM * 32, 16);
-
-	// Enemy graphics
-	while (enemy_vram_len[i] != 0)
-	{
-		VDP_doVRamDMA(enemy_vram_src[i], enemy_vram_dest[i], enemy_vram_len[i]);
-		i++;
-	}
 }
 
 void enemy_init(void)
 {
 	u16 i = ENEMIES_NUM;
 	u16 j;
+	enemy_vram_reset();
+	en_unload_metagrub();
+	en_unload_flip();
+	en_unload_boingo();
+	en_unload_item();
+	en_unload_gaxter1();
+	en_unload_gaxter2();
+	en_unload_buggo();
+	en_unload_dancyflower();
 	while (i--)
 	{
 		en_generic *e = &enemies[i];
@@ -408,4 +409,17 @@ static void enemy_player_scan(void)
 			e->head.touching_player = 0;
 		}
 	}
+}
+
+
+u16 enemy_vram_alloc(u16 len)
+{
+	u16 ret = vram_slot;
+	vram_slot += len;
+	return ret;
+}
+
+void enemy_vram_reset(void)
+{
+	vram_slot = ENEMY_VRAM_START;
 }

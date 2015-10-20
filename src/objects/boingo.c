@@ -3,13 +3,31 @@
 #include "player.h"
 #include "map.h"
 
+
 static void en_proc_boingo(void *v);
 static void en_anim_boingo(void *v);
 static void bg_collisions(en_boingo *e);
 static void do_jump(en_boingo *e);
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(BOINGO_VRAM_LEN);
+		VDP_doVRamDMA((u32)gfx_en_boingo, vram_pos * 32, BOINGO_VRAM_LEN * 16);
+	}
+}
+
+void en_unload_boingo(void)
+{
+	vram_pos = 0;
+}
+
 void en_init_boingo(en_boingo *e)
 {
+	vram_load();
 	e->head.hp = 1;
 	e->head.width = 9;
 	e->head.height = 15;
@@ -44,7 +62,7 @@ static void en_anim_boingo(void *v)
 		e->head.yoff[0] = -14;
 		e->head.size[0] = SPRITE_SIZE(3,2);
 
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, BOINGO_VRAM_SLOT); 
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos); 
 
 		if (e->anim_cnt >= BOINGO_ANIM_SPEED_STAND)
 		{
@@ -60,7 +78,7 @@ static void en_anim_boingo(void *v)
 		e->head.yoff[0] = -19;
 		e->head.size[0] = SPRITE_SIZE(2,3);
 
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, BOINGO_VRAM_SLOT + 12);
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 12);
 
 		if (e->anim_cnt >= BOINGO_ANIM_SPEED_JUMP)
 		{

@@ -26,5 +26,6 @@ struct en_item
 };
 
 void en_init_item(en_item *e);
+void en_unload_item(void);
 
 #endif

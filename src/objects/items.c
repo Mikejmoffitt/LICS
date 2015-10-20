@@ -4,6 +4,22 @@
 #include "vramslots.h"
 #include "cubes.h"
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(ITEMS_VRAM_LEN / 2);
+		VDP_doVRamDMA((u32)gfx_items, (vram_pos * 32), ITEMS_VRAM_LEN * 16);
+	}
+}
+
+void en_unload_item(void)
+{
+	vram_pos = 0;
+}
+
 // Non-null but empty cube function to not allow it to get hit at all
 static void cube_func(void *v, cube *c)
 {
@@ -120,11 +136,12 @@ static void anim_func(void *v)
 
 	// Select tiles
 	e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0,
-	  ITEMS_VRAM_SLOT + (e->item_type * 8) + ((e->anim_cnt > ITEM_ANIM_LEN / 2) ? 4 : 0));
+	  vram_pos + (e->item_type * 8) + ((e->anim_cnt > ITEM_ANIM_LEN / 2) ? 4 : 0));
 }
 
 void en_init_item(en_item *e)
 {
+	vram_load();
 	e->head.hp = 0xFF;
 	e->head.width = 6;
 	e->head.height = 10;

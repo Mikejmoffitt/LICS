@@ -31,6 +31,6 @@ struct en_flip
 };
 
 void en_init_flip(en_flip *e);
-
+void en_unload_flip(void);
 
 #endif

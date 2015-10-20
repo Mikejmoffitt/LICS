@@ -19,5 +19,6 @@ struct en_dancyflower
 };
 
 void en_init_dancyflower(en_dancyflower *e);
+void en_unload_dancyflower(void);
 
 #endif

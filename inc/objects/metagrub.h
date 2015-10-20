@@ -14,4 +14,5 @@ struct en_metagrub
 
 // Clear out variables as needed
 void en_init_metagrub(en_metagrub *e);
+void en_unload_metagrub(void);
 #endif

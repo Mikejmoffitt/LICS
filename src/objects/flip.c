@@ -4,8 +4,25 @@
 static void en_anim_flip(void *v);
 static void en_proc_flip(void *v);
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(FLIP_VRAM_LEN);
+		VDP_doVRamDMA((u32)gfx_en_flip, vram_pos * 32, FLIP_VRAM_LEN * 16);
+	}
+}
+
+void en_unload_flip(void)
+{
+	vram_pos = 0;
+}
+
 void en_init_flip(en_flip *e)
 {
+	vram_load();
 	e->head.hp = 2;
 	e->head.width = FLIP_WIDTH;
 	e->head.height = FLIP_HEIGHT;
@@ -45,11 +62,11 @@ static void en_anim_flip(void *v)
 
 	if (e->anim_cnt > FLIP_ANIM_LEN / 2)
 	{	
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, FLIP_VRAM_SLOT);
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, vram_pos);
 	}
 	else
 	{
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, FLIP_VRAM_SLOT + 6);
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, (e->head.direction == ENEMY_RIGHT) ? 0 : 1, vram_pos + 6);
 	}
 }
 

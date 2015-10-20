@@ -39,6 +39,7 @@
 #define ENEMY_HARM_ALWAYS_BOUNCE_R 3
 #define ENEMY_HARM_KILL 4
 
+
 typedef struct en_header en_header;
 struct en_header
 {
@@ -79,51 +80,9 @@ struct en_generic
 	u16 data[ENEMY_DATA_SIZE];
 };
 
-// Graphics lists
-
-static const u32 enemy_vram_src[] = 
-{
-	(u32)gfx_items, 
-	(u32)gfx_en_metagrub,
-	(u32)gfx_en_flip,
-	(u32)gfx_en_boingo,
-	(u32)gfx_en_gaxter,
-	(u32)gfx_en_buggo,
-	(u32)gfx_en_dancyflower,
-	(u32)gfx_en_jraff,
-	0
-};
-
-static const u16 enemy_vram_dest[] = 
-{
-	ITEMS_VRAM_SLOT * 32,
-	METAGRUB_VRAM_SLOT * 32,
-	FLIP_VRAM_SLOT * 32,
-	BOINGO_VRAM_SLOT * 32,
-	GAXTER_VRAM_SLOT * 32,
-	BUGGO_VRAM_SLOT * 32,
-	DANCYFLOWER_VRAM_SLOT * 32,
-	JRAFF_VRAM_SLOT * 32,
-	0
-};
-
-static const u16 enemy_vram_len[] =
-{
-	ITEMS_VRAM_LEN * 16,
-	METAGRUB_VRAM_LEN * 16,
-	FLIP_VRAM_LEN * 16,
-	BOINGO_VRAM_LEN * 16,
-	GAXTER_VRAM_LEN * 16,
-	BUGGO_VRAM_LEN * 16,
-	DANCYFLOWER_VRAM_LEN * 16,
-	JRAFF_VRAM_LEN * 16,
-	0
-};
-
 // Global list of enemies
 extern en_generic enemies[ENEMIES_NUM];
 
-// Copy enemy tile and palette data into VRAM/CRAM
 void enemy_dma_tiles(void);
 
 // Clear out enemy structures
@@ -145,5 +104,8 @@ void enemy_cube_impact(en_generic *e, cube *c);
 // Puts an enemy on the map. Returns a handle to the placed enemy if valid,
 // and returns NULL if invalid or out of room.
 en_generic *enemy_place(u16 x, u16 y, u16 type);
+
+u16 enemy_vram_alloc(u16 len);
+void enemy_vram_reset(void);
 
 #endif

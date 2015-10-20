@@ -5,8 +5,25 @@
 static void en_anim_gaxter1(void *v);
 static void en_proc_gaxter1(void *v);
 
+// Dynamic VRAM slot support
+static u16 vram_pos;
+static void vram_load(void)
+{
+	if (vram_pos == 0)
+	{
+		vram_pos = enemy_vram_alloc(GAXTER_VRAM_LEN / 2);
+		VDP_doVRamDMA((u32)gfx_en_gaxter, (vram_pos * 32), (GAXTER_VRAM_LEN / 2) * 16);
+	}
+}
+
+void en_unload_gaxter1(void)
+{
+	vram_pos = 0;
+}
+
 void en_init_gaxter1(en_gaxter1 *e)
 {
+	vram_load();
 	e->head.x += 8;
 	e->head.y += 8;
 	e->head.hp = GAXTER1_HP;
@@ -51,7 +68,7 @@ static void en_anim_gaxter1(void *v)
 	{
 		frame = 8;
 	}
-	e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, hflip, GAXTER_VRAM_SLOT + frame);
+	e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, hflip, vram_pos + frame);
 }
 
 static void en_proc_gaxter1(void *v)
