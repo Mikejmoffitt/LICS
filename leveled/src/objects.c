@@ -58,7 +58,7 @@ static const int obj_width[] =
 	16,
 	16,
 	16,
-	16, // just the base
+	24,
 	24,
 	16,
 	24,

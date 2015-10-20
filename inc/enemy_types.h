@@ -1,7 +1,7 @@
 #ifndef ENEMY_TYPES_H
 #define ENEMY_TYPES_H
 
-// Enemy type numbers --
+// Enemy type numbers -- these line up to MAP_OBJ numbers intentionally
 #define ENEMY_NULL 0
 #define ENEMY_METAGRUB 3
 #define ENEMY_FLIP 4

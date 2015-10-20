@@ -35,8 +35,9 @@
 
 #define ENEMY_HARM_NONE 0
 #define ENEMY_HARM_NORMAL 1
-#define ENEMY_HARM_ALWAYS_BOUNCE 2
-#define ENEMY_HARM_KILL 3
+#define ENEMY_HARM_ALWAYS_BOUNCE_L 2
+#define ENEMY_HARM_ALWAYS_BOUNCE_R 3
+#define ENEMY_HARM_KILL 4
 
 typedef struct en_header en_header;
 struct en_header
@@ -88,6 +89,7 @@ static const u32 enemy_vram_src[] =
 	(u32)gfx_en_boingo,
 	(u32)gfx_en_gaxter,
 	(u32)gfx_en_buggo,
+	(u32)gfx_en_dancyflower,
 	0
 };
 
@@ -99,6 +101,7 @@ static const u16 enemy_vram_dest[] =
 	BOINGO_VRAM_SLOT * 32,
 	GAXTER_VRAM_SLOT * 32,
 	BUGGO_VRAM_SLOT * 32,
+	DANCYFLOWER_VRAM_SLOT * 32,
 	0
 };
 
@@ -110,6 +113,7 @@ static const u16 enemy_vram_len[] =
 	BOINGO_VRAM_LEN * 16,
 	GAXTER_VRAM_LEN * 16,
 	BUGGO_VRAM_LEN * 16,
+	DANCYFLOWER_VRAM_LEN * 16,
 	0
 };
 

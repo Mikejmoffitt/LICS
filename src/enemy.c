@@ -9,6 +9,7 @@
 #include "gaxter1.h"
 #include "gaxter2.h"
 #include "buggo.h"
+#include "dancyflower.h"
 
 #include "state.h"
 #include "particles.h"
@@ -191,6 +192,11 @@ void enemy_draw(void)
 			{
 				s16 ex = e->head.x + e->head.xoff[1] - state.cam_x;
 				s16 ey = e->head.y + e->head.yoff[1] - state.cam_y;
+				if (e->head.hurt_cnt > 0)
+				{
+					ex = ex - 2 + GET_HVCOUNTER % 4;
+					ey = ey - 2 + (GET_HVCOUNTER >> 1) % 4;
+				}
 				sprite_put(ex,ey, e->head.size[1], e->head.attr[1]);
 			}
 		}
@@ -270,7 +276,6 @@ void enemy_cube_impact(en_generic *e, cube *c)
 	if (e->head.cube_func)
 	{
 		e->head.cube_func((void *)e, c);
-		return;
 	}
 	// This is the default impact response
 	else
@@ -295,15 +300,19 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 			e->head.y = y;
 			e->head.type = type;
 			e->head.hurt_cnt = 0;
-			e->head.active = ENEMY_OFFSCREEN;
 			e->head.touching_player = 0;
 			e->head.harmful = ENEMY_HARM_NORMAL;
 			e->head.anim_func = NULL;
 			e->head.proc_func = NULL;
 			e->head.cube_func = NULL;
+			e->head.active = ENEMY_OFFSCREEN;
 			
 			switch (type)
 			{
+				default:
+					e->head.active = ENEMY_DISABLED;
+					return NULL;
+					break;
 				case ENEMY_METAGRUB:
 					en_init_metagrub((en_metagrub *)e);
 					break;
@@ -327,6 +336,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					break;
 				case ENEMY_BUGGO2:
 					en_init_buggo((en_buggo *)e, BUGGO_T2);
+					break;
+				case ENEMY_DANCYFLOWER:
+					en_init_dancyflower((en_dancyflower *)e);
 					break;
 			}
 			return &enemies[i];
@@ -359,21 +371,29 @@ static void enemy_player_scan(void)
 			{
 				player_get_hurt();
 			}
-			else if (e->head.harmful == ENEMY_HARM_ALWAYS_BOUNCE)
+			else if (e->head.harmful == ENEMY_HARM_ALWAYS_BOUNCE_L)
 			{
-				player_get_hurt();
-
 				// Bounce the player always away from the enemy, since this
 				// type is typically used as a blockade.
-				if (pl.x < e->head.x)
-				{
-					pl.direction = PLAYER_RIGHT;
-				}
-				else
-				{
-					pl.direction = PLAYER_LEFT;
-				}
+				player_get_hurt();
 				player_get_bounced();
+				if (pl.dx > FIX16(0.0))
+				{
+					pl.dx = -pl.dx;
+				}
+				pl.direction = PLAYER_RIGHT;
+			}
+			else if (e->head.harmful == ENEMY_HARM_ALWAYS_BOUNCE_R)
+			{
+				// Bounce the player always away from the enemy, since this
+				// type is typically used as a blockade.
+				player_get_hurt();
+				player_get_bounced();
+				if (pl.dx < FIX16(0.0))
+				{
+					pl.dx = -pl.dx;
+				}
+				pl.direction = PLAYER_LEFT;
 			}
 			else if (e->head.harmful == ENEMY_HARM_KILL)
 			{
