@@ -10,6 +10,7 @@
 #include "gaxter2.h"
 #include "buggo.h"
 #include "dancyflower.h"
+#include "jraff.h"
 
 #include "state.h"
 #include "particles.h"
@@ -65,6 +66,7 @@ void enemy_init(void)
 	en_unload_gaxter2();
 	en_unload_buggo();
 	en_unload_dancyflower();
+	en_unload_jraff();
 	while (i--)
 	{
 		en_generic *e = &enemies[i];
@@ -340,6 +342,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					break;
 				case ENEMY_DANCYFLOWER:
 					en_init_dancyflower((en_dancyflower *)e);
+					break;
+				case ENEMY_JRAFF:
+					en_init_jraff((en_jraff *)e);
 					break;
 			}
 			return &enemies[i];

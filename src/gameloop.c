@@ -121,11 +121,11 @@ void gameloop_main(void)
 
 
 	pl.input = JOY_readJoypad(JOY_1);
-	if (pl.input & BUTTON_A)	
+	if (pl.input & BUTTON_Z)	
 	{
 		save_clear();
 	}
-	if (pl.input & BUTTON_Z)	
+	if (pl.input & BUTTON_A)	
 	{
 		save_clear();
 		sram.have_lift = 1;

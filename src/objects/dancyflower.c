@@ -90,7 +90,6 @@ void anim_func(void *v)
 	{
 		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 6);
 	}
-	
 }
 
 void proc_func(void *v)
