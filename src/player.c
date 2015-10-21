@@ -11,6 +11,7 @@
 #include "cubes.h"
 #include "particles.h"
 
+
 static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
 static u16 lyle_dma_len;
@@ -42,6 +43,47 @@ static void player_entrance_coll(void);
 
 player pl;
 
+
+// Constants manager, to make transition from NTSC --> PAL a lot easier
+static player_k plk;
+static void player_init_constants(void)
+{
+	plk.dx_max = system_ntsc ? FIX16(1.42) : FIX16(1.7);
+	plk.dy_max = system_ntsc ? FIX16(6.67) : FIX16(8.0);
+	plk.x_accel = system_ntsc ? FIX16(0.125) : FIX16(0.15);
+	plk.y_accel = system_ntsc ? FIX16(0.23) : FIX16(0.276);
+	plk.y_accel_weak = system_ntsc ? FIX16(0.12) : FIX16(0.156);
+	plk.jump_dy = system_ntsc ? FIX16(-3.17) : FIX16(-3.58);
+	plk.ceiling_dy = system_ntsc ? FIX16(-0.42) : FIX16(-0.5);
+	plk.hurt_dx = system_ntsc ? FIX16(-1.92) : FIX16(-2.3);
+
+	// Scale down all fix16 constants to 5/6 their normal value for NTSC
+	/*
+	if (!system_ntsc && 1 == 0)
+	{
+		fix16 *f = (fix16 *)&plk;
+		u16 i = 8;
+		while (i--)
+		{
+			f[i] = fix16Mul(f[i], FIX16(1.2));
+		}
+	}*/
+
+	plk.throw_anim_len = system_ntsc ? 10 : 8;
+	plk.kick_anim_len = system_ntsc ? 10 : 8;
+	plk.cubejump_anim_len = system_ntsc ? 24 : 20;
+	plk.lift_time = system_ntsc ? 18 : 15;
+	plk.hurt_time = system_ntsc ? 35 : 29;
+	plk.hurt_timeout = system_ntsc ? 24 : 20;
+	plk.invuln_time = system_ntsc ? 95 : 79;
+	plk.cp_restore_period = system_ntsc ? 300 : 250;
+	plk.cp_restore_period_fast = system_ntsc ? 300 : 250;
+	plk.cp_spawn_fast = system_ntsc ? 36 : 30;
+	plk.cp_spawn_slow = system_ntsc ? 72 : 60;
+	plk.cube_fx = system_ntsc ? 6 : 5;
+	plk.animspeed = system_ntsc ? 6 : 5;
+}
+
 static void player_set_pal(void)
 {
 	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
@@ -61,6 +103,7 @@ static inline void player_eval_control_en(void)
 
 void player_init(void)
 {
+	player_init_constants();
 	pl.dx = FZERO;
 	pl.dy = FZERO;
 	pl.x = FZERO32;
@@ -150,7 +193,7 @@ static void player_cp(void)
 	}
 	cp_restore_cnt++;
 	// Manage periodic restoration of CP
-	if (cp_restore_cnt >= PLAYER_CP_RESTORE_PERIOD)
+	if (cp_restore_cnt >= plk.cp_restore_period)
 	{
 		cp_restore_cnt = 0;
 		if (pl.cp != PLAYER_MAX_CP)
@@ -171,24 +214,24 @@ static void player_cp(void)
 		if (pl.input & BUTTON_B)
 		{
 			pl.cp_cnt++;
-			if (pl.cp_cnt == PLAYER_CUBE_FX + 1)
+			if (pl.cp_cnt == plk.cube_fx + 1)
 			{
 				playsound(SFX_CUBESPAWN);
 			}
-			else if (pl.cp_cnt == PLAYER_CP_SPAWN_FAST + 1)
+			else if (pl.cp_cnt == plk.cp_spawn_fast + 1)
 			{
 				playsound(SFX_CUBESPAWN);
 			}
 		}
 		else
 		{
-			if (pl.cp_cnt > PLAYER_CUBE_FX)
+			if (pl.cp_cnt > plk.cube_fx)
 			{
 				stopsound();
 			}
 			pl.cp_cnt = 0;
 		}
-		u16 cube_spawn_period = (sram.have_fast_phantom ? PLAYER_CP_SPAWN_FAST : PLAYER_CP_SPAWN_SLOW);
+		u16 cube_spawn_period = (sram.have_fast_phantom ? plk.cp_spawn_fast : plk.cp_spawn_slow);
 		if (pl.cp_cnt >= cube_spawn_period)
 		{
 			switch (ctype)
@@ -219,7 +262,7 @@ static void player_cp(void)
 		}
 	}
 	// Sparkling effect when cube is starting to form
-	if (pl.cp_cnt > PLAYER_CUBE_FX && system_osc % 2)
+	if (pl.cp_cnt > plk.cube_fx && system_osc % 2)
 	{
 		particle_spawn(fix32ToInt(pl.x), fix32ToInt(pl.y) - 32, PARTICLE_TYPE_SPARKLE);
 
@@ -228,11 +271,11 @@ static void player_cp(void)
 
 static inline void player_walking_sound(void)
 {
-	if (pl.anim_cnt == (PLAYER_ANIMSPEED * 1) - 1)
+	if (pl.anim_cnt == (plk.animspeed * 1) - 1)
 	{
 		playsound(SFX_WALK1);
 	}
-	else if (pl.anim_cnt == (PLAYER_ANIMSPEED * 3) - 1)
+	else if (pl.anim_cnt == (plk.animspeed * 3) - 1)
 	{
 		playsound(SFX_WALK2);
 	}
@@ -241,11 +284,11 @@ static inline void player_walking_sound(void)
 static inline void player_accel(void)
 {
 
-	// deceleration
+	// acceleration
 	if (pl.dx > FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
-		pl.dx = fix16Sub(pl.dx,PLAYER_X_DECEL);	
-		// Don't decel into the other direction
+		pl.dx = fix16Sub(pl.dx,plk.x_accel);	
+		// Don't accel into the other direction
 		if (fix16ToInt(pl.dx) < FZERO)
 		{
 			pl.dx = FZERO;
@@ -253,8 +296,8 @@ static inline void player_accel(void)
 	}
 	else if (pl.dx < FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
-		pl.dx = fix16Add(pl.dx,PLAYER_X_ACCEL);				
-		// Don't decel into the other direction
+		pl.dx = fix16Add(pl.dx,plk.x_accel);				
+		// Don't accel into the other direction
 		if (pl.dx > FZERO)
 		{
 			pl.dx = FZERO;
@@ -270,13 +313,13 @@ static inline void player_accel(void)
 	// walking right and left
 	if (pl.input & BUTTON_RIGHT)
 	{
-		pl.dx = fix16Add(pl.dx,PLAYER_X_ACCEL);
+		pl.dx = fix16Add(pl.dx,plk.x_accel);
 		pl.direction = PLAYER_RIGHT;
 		player_walking_sound();
 	}
 	else if (pl.input & BUTTON_LEFT)
 	{
-		pl.dx = fix16Sub(pl.dx,PLAYER_X_ACCEL);
+		pl.dx = fix16Sub(pl.dx,plk.x_accel);
 		pl.direction = PLAYER_LEFT;
 		player_walking_sound();
 	}
@@ -287,13 +330,13 @@ static inline void player_accel(void)
 	}
 
 	// Limit top speed
-	if (pl.dx > PLAYER_DX_MAX)
+	if (pl.dx > plk.dx_max)
 	{
-		pl.dx = PLAYER_DX_MAX;
+		pl.dx = plk.dx_max;
 	}
-	else if (pl.dx < PLAYER_DX_MIN)
+	else if (pl.dx < -plk.dx_max)
 	{
-		pl.dx = PLAYER_DX_MIN;
+		pl.dx = -plk.dx_max;
 	}
 }
 
@@ -344,7 +387,7 @@ static void player_jump(void)
 		// Cube jumping, if we have the ability
 		else if (pl.holding_cube && sram.have_jump && !pl.cubejump_disable)
 		{
-			pl.throwdown_cnt = PLAYER_CUBEJUMP_ANIM_LEN;
+			pl.throwdown_cnt = plk.cubejump_anim_len;
 
 			// If the wall behind the player is solid, align the cube's X to it
 			// so it doesn't fizzle immediately on throw. Not sure exactly what
@@ -379,7 +422,7 @@ static void player_jump(void)
 
 	return;
 do_jump:
-	pl.dy = PLAYER_JUMP_DY;
+	pl.dy = plk.jump_dy;
 	// Play SFX
 	return;
 }
@@ -445,7 +488,7 @@ static void player_toss_cubes(void)
 		// Player response
 		pl.holding_cube = 0;
 		pl.action_cnt = PLAYER_ACTION_THROW;
-		pl.throw_cnt = PLAYER_THROW_ANIM_LEN;
+		pl.throw_cnt = plk.throw_anim_len;
 	}
 }
 
@@ -467,7 +510,7 @@ static void player_kick_cube(cube *c)
 		if (px == (c->x + CUBE_LEFT) - PLAYER_CHK_RIGHT - 1 &&
 			pl.direction == PLAYER_RIGHT)
 		{
-			pl.kick_cnt = PLAYER_KICK_ANIM_LEN;
+			pl.kick_cnt = plk.kick_anim_len;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = CUBE_KICK_DX;
 			pl.action_cnt = PLAYER_ACTION_LIFT;
@@ -476,7 +519,7 @@ static void player_kick_cube(cube *c)
 		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1 &&
 			pl.direction == PLAYER_LEFT)
 		{
-			pl.kick_cnt = PLAYER_KICK_ANIM_LEN;
+			pl.kick_cnt = plk.kick_anim_len;
 			c->state = CUBE_STATE_KICKED;
 			c->dx = (CUBE_KICK_DX * -1);
 			pl.action_cnt = PLAYER_ACTION_LIFT;
@@ -497,7 +540,7 @@ static void player_lift_cubes(void)
 	}
 	if (pl.on_cube && pl.lift_cnt == 0 && pl.input & BUTTON_B && !(pl.input_prev & BUTTON_B))
 	{	
-		pl.lift_cnt = PLAYER_LIFT_TIME + 1;
+		pl.lift_cnt = plk.lift_time + 1;
 		pl.action_cnt = PLAYER_ACTION_LIFT;
 		pl.dx = FZERO;
 	}
@@ -510,7 +553,7 @@ static void player_lift_cubes(void)
 		// Re-implement the MMF version bug where you can jump while lifting
 		if (pl.input & BUTTON_C)
 		{
-			pl.dy = PLAYER_JUMP_DY;
+			pl.dy = plk.jump_dy;
 		}
 		pl.action_cnt = PLAYER_ACTION_LIFT;
 	}
@@ -632,9 +675,9 @@ static void player_bg_vertical_collision(void)
 			// Snap to nearest 8px boundary, with head room accounted for
 			py = 8 * ((py + 4) / 8) + 3;
 			pl.y = intToFix32(py);
-			if (pl.dy < PLAYER_CEILING_VECY)
+			if (pl.dy < plk.ceiling_dy)
 			{
-				pl.dy = PLAYER_CEILING_VECY;
+				pl.dy = plk.ceiling_dy;
 			}
 
 		}
@@ -707,9 +750,9 @@ static void player_cube_vertical_collision(cube *c)
 			{
 				py = c->y + CUBE_BOTTOM - PLAYER_CHK_TOP + 1;
 				pl.y = intToFix32(py);
-				if (pl.dy < PLAYER_CEILING_VECY)
+				if (pl.dy < plk.ceiling_dy)
 				{
-					pl.dy = PLAYER_CEILING_VECY;
+					pl.dy = plk.ceiling_dy;
 				}
 			}
 		}
@@ -785,7 +828,7 @@ static inline void player_cube_collision(void)
 			}
 			else if (c->state == CUBE_STATE_AIR && pl.throw_cnt == 0 && pl.kick_cnt == 0 && pl.throwdown_cnt == 0)
 			{
-				if (pl.hurt_cnt < PLAYER_HURT_TIME - PLAYER_HURT_TIMEOUT)
+				if (pl.hurt_cnt < plk.hurt_time - plk.hurt_timeout)
 				{
 					player_get_bounced();
 					player_get_hurt();
@@ -832,15 +875,15 @@ static inline void player_move(void)
 		// The jump holding only affects gravity on the way up, though
 		if ((pl.input & BUTTON_C) && pl.dy < FZERO)
 		{
-			pl.dy = fix16Add(pl.dy,PLAYER_Y_ACCEL_WEAK);
+			pl.dy = fix16Add(pl.dy,plk.y_accel_weak);
 		}
 		else
 		{
-			pl.dy = fix16Add(pl.dy,PLAYER_Y_ACCEL);
+			pl.dy = fix16Add(pl.dy,plk.y_accel);
 		}
-		if (pl.dy > PLAYER_DY_MAX)
+		if (pl.dy > plk.dy_max)
 		{
-			pl.dy = PLAYER_DY_MAX;
+			pl.dy = plk.dy_max;
 		}
 	}
 
@@ -853,7 +896,7 @@ static inline void player_calc_anim(void)
 	if (pl.grounded || pl.on_cube)
 	{
 		pl.anim_cnt++;
-		if (pl.anim_cnt == PLAYER_ANIMSPEED * 4)
+		if (pl.anim_cnt == plk.animspeed * 4)
 		{
 			pl.anim_cnt = 0;
 		}
@@ -906,15 +949,15 @@ static inline void player_calc_anim(void)
 			}
 			else // Walking cycle
 			{
-				if (pl.anim_cnt < PLAYER_ANIMSPEED)
+				if (pl.anim_cnt < plk.animspeed)
 				{
 					pl.anim_frame = 0x02;
 				}
-				else if (pl.anim_cnt < (PLAYER_ANIMSPEED * 2))
+				else if (pl.anim_cnt < (plk.animspeed * 2))
 				{
 					pl.anim_frame = 0x03;
 				}
-				else if (pl.anim_cnt < (PLAYER_ANIMSPEED * 3))
+				else if (pl.anim_cnt < (plk.animspeed * 3))
 				{
 					pl.anim_frame = 0x02;
 				}
@@ -928,7 +971,7 @@ static inline void player_calc_anim(void)
 		{
 			pl.anim_frame = 0x04;
 		}
-		if ((pl.cp_cnt > PLAYER_CUBE_FX) || pl.holding_cube)
+		if ((pl.cp_cnt > plk.cube_fx) || pl.holding_cube)
 		{
 			// Offset to arms-up version
 			pl.anim_frame += 0x08;
@@ -1032,14 +1075,14 @@ void player_run(void)
 
 void player_get_bounced(void)
 {
-	pl.dy = PLAYER_JUMP_DY;
+	pl.dy = plk.jump_dy;
 	if (pl.direction == PLAYER_RIGHT)
 	{
-		pl.dx = PLAYER_HURT_DX_R;
+		pl.dx = plk.hurt_dx;
 	}
 	else
 	{
-		pl.dx = PLAYER_HURT_DX_L;
+		pl.dx = -plk.hurt_dx;
 	}
 }
 
@@ -1048,8 +1091,8 @@ void player_get_hurt(void)
 	if (pl.invuln_cnt == 0)
 	{
 		player_get_bounced();
-		pl.hurt_cnt = PLAYER_HURT_TIME;
-		pl.invuln_cnt = PLAYER_INVULN_TIME;
+		pl.hurt_cnt = plk.hurt_time;
+		pl.invuln_cnt = plk.invuln_time;
 
 		if (pl.hp > 0)
 		{

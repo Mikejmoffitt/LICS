@@ -125,7 +125,7 @@ void gameloop_main(void)
 	{
 		save_clear();
 	}
-	if (pl.input & BUTTON_A)	
+	if (pl.input & BUTTON_X)	
 	{
 		save_clear();
 		sram.have_lift = 1;

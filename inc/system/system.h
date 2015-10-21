@@ -17,6 +17,9 @@
 // This just counts up forever. It is often used for animations.
 extern u16 system_osc;
 
+// Is the system NTSC (60fps)?
+extern u16 system_ntsc;
+
 void system_init(void);
 void system_wait_v(void);
 void system_set_debug(u16 val);

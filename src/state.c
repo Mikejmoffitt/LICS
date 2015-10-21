@@ -192,7 +192,7 @@ u16 state_update_scroll()
 	// Vertical scrolling TODO: Make euro mode less ghetto looking
 	if (!state.vs_en)
 	{
-		state.cam_y = 240 - VDP_getScreenHeight();
+		state.cam_y = (system_ntsc) ? 16 : 0;
 	}
 	else if (py >= (state.current_room->h * STATE_SC_H) - (VDP_getScreenHeight() / 2))
 	{

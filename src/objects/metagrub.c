@@ -15,7 +15,7 @@ static void vram_load(void)
 {
 	if (vram_pos == 0)
 	{
-		vram_pos = enemy_vram_alloc(METAGRUB_VRAM_LEN / 2);
+		vram_pos = enemy_vram_alloc(METAGRUB_VRAM_LEN);
 		VDP_doVRamDMA((u32)gfx_en_metagrub, (vram_pos * 32), METAGRUB_VRAM_LEN * 16);
 	}
 }

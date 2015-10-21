@@ -11,6 +11,7 @@
 
 static vu16 vbl_active;
 u16 system_osc;
+u16 system_ntsc;
 
 static u16 debug_en;
 
@@ -79,6 +80,10 @@ void system_init(void)
 	VDP_setPlanSize(SYSTEM_PLANE_W,SYSTEM_PLANE_H);
 	VDP_setScreenWidth320();
 	VDP_setScreenHeight240();
+
+	// Determine region
+	system_ntsc = (!IS_PALSYSTEM);
+
 	VDP_setHilightShadow(0);
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 

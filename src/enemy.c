@@ -57,7 +57,6 @@ void enemy_init(void)
 {
 	u16 i = ENEMIES_NUM;
 	u16 j;
-	enemy_vram_reset();
 	en_unload_metagrub();
 	en_unload_flip();
 	en_unload_boingo();
@@ -67,6 +66,7 @@ void enemy_init(void)
 	en_unload_buggo();
 	en_unload_dancyflower();
 	en_unload_jraff();
+	enemy_vram_reset();
 	while (i--)
 	{
 		en_generic *e = &enemies[i];

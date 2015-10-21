@@ -4,24 +4,38 @@
 #include <genesis.h>
 
 #define LYLE_3x3_CUTOFF 0x14
-
+/*
+// PAL
 #define PLAYER_DX_MAX FIX16(1.7)
-//#define PLAYER_DX_MAX FIX16(7.0)
-#define PLAYER_DX_MIN FIX16(-1.7)
-//#define PLAYER_DX_MIN FIX16(-7.0)
 #define PLAYER_DY_MAX FIX16(8.0)
 #define PLAYER_X_ACCEL FIX16(0.15)
-#define PLAYER_X_DECEL FIX16(0.15)
 
 #define PLAYER_Y_ACCEL FIX16(0.276)
 #define PLAYER_Y_ACCEL_WEAK FIX16(0.156)
 #define PLAYER_JUMP_DY FIX16(-3.7 + 0.12)
-//#define PLAYER_JUMP_DY FIX16(-3.7)
 #define PLAYER_JUMP_HOLD_STR FIX16(0.1)
-#define PLAYER_STEP_UP 3
+#
+#
+#define PLAYER_CEILING_DY FIX16(-0.5)
+
+// NTSC
+
+#define PLAYER_DX_MAX FIX16(1.42)
+#define PLAYER_DY_MAX FIX16(6.67)
+#define PLAYER_X_ACCEL FIX16(0.13)
+
+#define PLAYER_Y_ACCEL FIX16(0.23)
+#define PLAYER_Y_ACCEL_WEAK FIX16(0.13)
+#define PLAYER_JUMP_DY FIX16(-2.98)
+#define PLAYER_JUMP_HOLD_STR FIX16(0.84)
+
+#define PLAYER_CEILING_DY FIX16(-0.42)
+#define PLAYER_HURT_DX FIX16(-1.92);*/
+
+//
 #define FZERO FIX16(0.0)
-#define FZERO32 FIX32(0.0)
-#define PLAYER_CEILING_VECY FIX16(-0.5)
+#define FZERO32 FIX32(0.0) 
+#define PLAYER_STEP_UP 3
 
 #define PLAYER_ACTION_THROW 2
 #define PLAYER_ACTION_LIFT 2
@@ -36,8 +50,7 @@
 #define PLAYER_HURT_TIME 29
 #define PLAYER_HURT_TIMEOUT 20
 #define PLAYER_INVULN_TIME 79
-#define PLAYER_HURT_DX_R FIX16(-2.3);
-#define PLAYER_HURT_DX_L FIX16(2.3);
+// #define PLAYER_HURT_DX FIX16(-2.3);
 
 #define PLAYER_MAX_CP 30
 #define PLAYER_CP_RESTORE_PERIOD 250
@@ -75,6 +88,33 @@
 
 #define PLAYER_DRAW_LEFT -8
 #define PLAYER_DRAW_TOP -23
+
+// Hold the player's constants, loaded and calculated at init
+typedef struct player_k player_k;
+struct player_k
+{
+	fix16 dx_max;
+	fix16 dy_max;
+	fix16 x_accel;
+	fix16 y_accel;
+	fix16 y_accel_weak;
+	fix16 jump_dy;
+	fix16 ceiling_dy;
+	fix16 hurt_dx;
+	u16 throw_anim_len;
+	u16 kick_anim_len;
+	u16 cubejump_anim_len;
+	u16 lift_time;
+	u16 hurt_time;
+	u16 hurt_timeout;
+	u16 invuln_time;
+	u16 cp_restore_period;
+	u16 cp_restore_period_fast;
+	u16 cp_spawn_fast;
+	u16 cp_spawn_slow;
+	u16 cube_fx;
+	u16 animspeed;
+};
 
 typedef struct player player;
 struct player

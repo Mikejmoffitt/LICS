@@ -6,6 +6,7 @@
 #include "mapdata.h"
 #include "state.h"
 #include "player.h"
+#include "system.h"
 
 #define MAP_DMA_QUEUE_MAX 96
 static u32 map_dma_src_queue[MAP_DMA_QUEUE_MAX];
@@ -226,7 +227,7 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 	{
 		dma_src_0 += map_width * 28;
 		dma_dest_0 += STATE_PLANE_W * 2 * 28;
-		if (VDP_getScreenHeight() == 240)
+		if (!system_ntsc)
 		{
 			dma_src_0 += map_width * 2;
 			dma_dest_0 += STATE_PLANE_W * 2 * 2;
@@ -243,7 +244,7 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 		if (dma_len_1)
 		{
 
-			if (VDP_getScreenHeight() == 240)
+			if (!system_ntsc)
 			{
 				dma_src_1 += map_width * 2;
 				dma_dest_1 += STATE_PLANE_W * 2 * 2;
