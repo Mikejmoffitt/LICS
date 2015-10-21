@@ -27,6 +27,7 @@ struct en_flip
 	u16 h_rev_cnt;
 	u16 v_dir;
 	u16 anim_cnt;
+	u16 anim_frame;
 	u16 y_orig;
 };
 
