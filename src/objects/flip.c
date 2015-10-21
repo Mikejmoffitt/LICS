@@ -1,8 +1,12 @@
 #include "flip.h"
 #include "vramslots.h"
+#include "system.h"
 
 static void en_anim_flip(void *v);
 static void en_proc_flip(void *v);
+
+static fix16 ddy;
+static fix16 dy_cutoff;
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
@@ -45,6 +49,9 @@ void en_init_flip(en_flip *e)
 	e->v_dir = FLIP_DOWN;
 	e->h_cnt = 0;
 	e->h_rev_cnt = 100;
+
+	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.22);
+	dy_cutoff = system_ntsc ? FIX16(2.4) : FIX16(2.65);
 }
 
 static void en_anim_flip(void *v)
@@ -127,16 +134,16 @@ static inline void v_movement(en_flip *e)
 	// Vertical movement
 	if (e->v_dir == FLIP_DOWN)
 	{
-		e->dy = fix16Add(e->dy, FLIP_DDY);
-		if (e->dy > FLIP_DY_CUTOFF)
+		e->dy = fix16Add(e->dy, ddy);
+		if (e->dy > dy_cutoff)
 		{
 			e->v_dir = FLIP_UP;
 		}
 	}	
 	else
 	{
-		e->dy = fix16Sub(e->dy, FLIP_DDY);
-		if (e->dy < FLIP_DY_CUTOFF * -1)
+		e->dy = fix16Sub(e->dy, ddy);
+		if (e->dy < dy_cutoff * -1)
 		{
 			e->v_dir = FLIP_DOWN;
 		}
