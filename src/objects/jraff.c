@@ -1,6 +1,7 @@
 #include "jraff.h"
 #include "gfx.h"
 #include "vramslots.h"
+#include "map.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
@@ -26,7 +27,7 @@ void en_init_jraff(en_jraff *e)
 	vram_load();
 	e->head.hp = 2;
 	e->head.x += 12;
-	e->head.y += 64;
+	e->head.y += 63;
 	e->head.width = JRAFF_WIDTH;
 	e->head.height = JRAFF_HEIGHT;
 
@@ -37,8 +38,8 @@ void en_init_jraff(en_jraff *e)
 	e->head.size[1] = SPRITE_SIZE(3,4);
 	e->head.xoff[0] = -12;
 	e->head.xoff[1] = -12;
-	e->head.yoff[0] = -64;
-	e->head.yoff[1] = -32;
+	e->head.yoff[0] = -63;
+	e->head.yoff[1] = -31;
 
 	e->head.cube_func = NULL;
 	e->head.proc_func = &proc_func;
@@ -48,9 +49,60 @@ void en_init_jraff(en_jraff *e)
 	e->anim_frame = 0;
 }
 
+static void h_movement(en_jraff *e)
+{
+	s16 test_x;
+	if (e->move_cnt == JRAFF_MOVE_DIV)
+	{
+		e->move_cnt = 0;
+	}
+	else
+	{
+		e->move_cnt++;
+		return;
+	}
+	if (e->head.direction == ENEMY_RIGHT)
+	{
+		test_x = e->head.x + e->head.width;
+	}
+	else
+	{
+		test_x = e->head.x - e->head.width;
+	}
+	if (map_collision(test_x, e->head.y - 1))
+	{
+		e->head.direction = (e->head.direction == ENEMY_RIGHT) ? ENEMY_LEFT : ENEMY_RIGHT;
+	}
+	if (e->head.direction == ENEMY_RIGHT)
+	{
+		e->head.x++;
+	}
+	else
+	{
+		e->head.x--;
+	}
+}
+
+static void v_movement(en_jraff *e)
+{
+	e->head.y += fix16ToInt(e->dy);
+	if (!map_collision(e->head.x, e->head.y))
+	{
+		e->dy = fix16Add(e->dy, JRAFF_GRAVITY);
+	}
+	if (e->dy > FIX16(0.0) && map_collision(e->head.x, e->head.y))
+	{
+		e->dy = FIX16(0.0);	
+		e->head.y = (e->head.y) & 0xFFF8;
+	}
+}
+
 static void proc_func(void *v)
 {
-	return;
+	en_jraff *e = (en_jraff *)v;	
+
+	h_movement(e);
+	v_movement(e);
 }
 
 static void anim_func(void *v)

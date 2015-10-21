@@ -15,7 +15,7 @@ static void vram_load(void)
 	if (vram_pos == 0)
 	{
 		vram_pos = enemy_vram_alloc(GAXTER_VRAM_LEN / 2);
-		VDP_doVRamDMA((u32)(gfx_en_gaxter + ((GAXTER_VRAM_LEN / 2) * 16)), (vram_pos * 32), (GAXTER_VRAM_LEN / 2) * 16);
+		VDP_doVRamDMA((u32)(gfx_en_gaxter + ((GAXTER_VRAM_LEN / 2) * 32)), (vram_pos * 32), (GAXTER_VRAM_LEN / 2) * 16);
 	}
 }
 
