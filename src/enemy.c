@@ -253,7 +253,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 		}
 		else
 		{
-			c->dy = -CUBE_ON_CUBE_DY;
+			c->dy = -cube_on_cube_dy;
 		}
 		if (c->dx == FZERO)
 		{

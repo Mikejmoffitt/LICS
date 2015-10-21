@@ -14,6 +14,15 @@
 
 cube cubes[CUBES_NUM];
 
+// Constants, for region independence
+static fix16 kgravity;
+fix16 cube_on_cube_dy;
+static fix16 kbounce_coef;
+static fix16 kbounce_cutoff;
+static fix16 kceiling_dy;
+
+static u16 ntsc_counter; // Counts from 0-5 when in NTSC mode for H-movement speed hack
+
 static void cube_move(cube *c);
 static void cube_degrade_dx(cube *c);
 static void cube_on_cube_collisions(cube *c);
@@ -26,7 +35,7 @@ static void cube_bg_collision(cube *c);
 
 void cube_dma_tiles(void)
 {
-	VDP_doVRamDMA((u32)gfx_cubes, CUBE_VRAM_SLOT * 32,CUBE_VRAM_LEN * 16);
+	VDP_doVRamDMA((u32)gfx_cubes, CUBE_VRAM_SLOT * 32, CUBE_VRAM_LEN * 16);
 	// Cubes use Lyle's palette. No palette transfer here.
 }
 
@@ -38,6 +47,12 @@ void cubes_init(void)
 		cube *c = &cubes[i];
 		c->state = CUBE_STATE_INACTIVE;
 	}
+	// Set up constants for NTSC/PAL stuff
+	kgravity = system_ntsc ? FIX16(0.1667) : FIX16(0.2);
+	cube_on_cube_dy = system_ntsc ? FIX16(-1.833) : FIX16(-2.2);
+	kbounce_coef = system_ntsc ? FIX16(0.3) : FIX16(0.35);
+	kbounce_cutoff = system_ntsc ? FIX16(-1.04) : FIX16(-1.3);
+	kceiling_dy = system_ntsc ? FIX16(2.5) : FIX16(3.0);
 }
 
 void cube_destroy(cube *c)
@@ -120,9 +135,59 @@ static void cube_move(cube *c)
 	if (c->state == CUBE_STATE_AIR)
 	{	
 		c->y += fix16ToInt(c->dy);
-		c->dy = fix16Add(c->dy, CUBE_GRAVITY);
+		c->dy = fix16Add(c->dy, kgravity);
 	}
-	c->x += c->dx;
+	if (!system_ntsc)
+	{
+		c->x += c->dx;
+	}
+	else // This is a nasty hack to let pixel-precision movement speed match NTSC/PAL
+	{
+		if (c->dx == 1 || c->dx == -1)
+		{
+			if (ntsc_counter != 3)
+			{
+				c->x += c->dx;
+			}
+		}
+		else if (c->dx == 2 || c->dx == -2)
+		{
+			if (ntsc_counter == 0 || ntsc_counter == 3)
+			{
+				c->x += (c->dx >> 1);
+			}
+			else
+			{
+				c->x += c->dx;
+			}
+		}
+		else if (c->dx == 3 || c->dx == -3)
+		{
+			if (ntsc_counter % 2 == 0)
+			{
+				c->x += (c->dx > FIX16(0.0) ? 2 : -2);
+			}
+			else
+			{
+				c->x += c->dx;
+			}
+		}
+		else if (c->dx == 4 || c->dx == -4)
+		{
+			if (ntsc_counter == 0 || ntsc_counter == 3)
+			{
+				c->x += (c->dx > FIX16(0.0) ? 3 : -3);
+			}
+			else
+			{
+				c->x += c->dx;
+			}
+		}
+		else // Cube DX should never exceed 3; this is just a formality
+		{
+			c->x += c->dx;
+		}
+	}
 	if (c->state == CUBE_STATE_KICKED)
 	{
 		// in free air, change to an air cube and fall straight down
@@ -131,7 +196,7 @@ static void cube_move(cube *c)
 		{
 			c->dx = 0;
 			c->state = CUBE_STATE_AIR;
-			c->dy = CUBE_GRAVITY;
+			c->dy = kgravity;
 			// lock to grid
 			c->x = ((c->x + 4) / 8) * 8;
 		}
@@ -235,7 +300,7 @@ static void cube_on_cube_collisions(cube *c)
 					{
 						c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
 					}
-					c->dy = CUBE_ON_CUBE_DY;
+					c->dy = cube_on_cube_dy;
 					playsound(SFX_CUBEBOUNCE);
 					c->cube_col_timeout = CUBE_COL_T;
 				}
@@ -269,7 +334,7 @@ static void cube_eval_stopmoving(cube *c)
 		c->bounce_count = 1;
 	}
 
-	if (c->dx == 0 && c->dy > CUBE_BOUNCE_CUTOFF)
+	if (c->dx == 1 && c->dy > kbounce_cutoff)
 	{
 		c->bounce_count--;
 	}
@@ -283,7 +348,7 @@ static void cube_do_ground_recoil(cube *c)
 {
 	// First push the cube out of the ground if it's stuck
 	c->y = (c->y / 8) * 8;
-	c->dy = fix16Mul(c->dy, CUBE_BOUNCE_COEF);
+	c->dy = fix16Mul(c->dy, kbounce_coef);
 	c->dy = c->dy - (c->dy + c->dy);
 	cube_degrade_dx(c);
 	cube_eval_stopmoving(c);
@@ -358,7 +423,7 @@ static void cube_bg_bounce_sides(cube *c)
 		if (c->state == CUBE_STATE_KICKED)
 		{
 			c->state = CUBE_STATE_AIR;
-			c->dy = CUBE_ON_CUBE_DY;
+			c->dy = cube_on_cube_dy;
 			c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
 		}
 	}
@@ -373,7 +438,7 @@ static void cube_bg_bounce_top(cube *c)
 	// Both left and right test passes for being on the ground
 	if (gnd_chk[0] && gnd_chk[1])
 	{
-		c->dy = CUBE_CEILING_DY;
+		c->dy = kceiling_dy;
 		playsound(SFX_CUBEBOUNCE);
 	}
 	else if (gnd_chk[0] || gnd_chk[1])
@@ -383,7 +448,7 @@ static void cube_bg_bounce_top(cube *c)
 		// Center checks out, do a normal bounce
 		if (cnt_chk)
 		{
-			c->dy = CUBE_CEILING_DY;
+			c->dy = kceiling_dy;
 			playsound(SFX_CUBEBOUNCE);
 		}
 		// Center didn't check out. Align it to the wall it's partially on.
@@ -461,6 +526,17 @@ static void cube_scan_enemies(cube *c)
 void cubes_run(void)
 {
 	int i = CUBES_NUM;
+	if (system_ntsc)
+	{
+		if (ntsc_counter == 5)
+		{
+			ntsc_counter = 0;
+		}
+		else
+		{
+			ntsc_counter++;
+		}
+	}
 	while (i--)
 	{
 		cube *c = &cubes[i];

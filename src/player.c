@@ -437,30 +437,30 @@ static void player_toss_cubes(void)
 		if (pl.input & (BUTTON_DOWN))
 		{
 			cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
-			cdy = FIX16(-2.0);
+			cdy = system_ntsc ? FIX16(-1.7) : FIX16(-2.0);
 		}
 		// Holding up; toss straight up
 		else if (pl.input & BUTTON_UP)
 		{
 			cdx = 0;
-			cdy = FIX16(-5.0);
+			cdy = system_ntsc ? FIX16(-4.37) : FIX16(-5.0);
 		}
 		// Throw with direction right
 		else if (pl.input & BUTTON_RIGHT && pl.direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
-			cdy = FIX16(-1.0);
+			cdy = system_ntsc ? FIX16(-0.9) : FIX16(-1.0);
 		}
 		// Left
 		else if (pl.input & BUTTON_LEFT && pl.direction == PLAYER_LEFT)
 		{
 			cdx = -4;
-			cdy = FIX16(-1.0);
+			cdy = system_ntsc ? FIX16(-0.9) : FIX16(-1.0);
 		}
 		else
 		{
 			cdx = (pl.direction == PLAYER_RIGHT) ? 2 : -2;
-			cdy = FIX16(-2.0);
+			cdy = system_ntsc ? FIX16(-1.7) : FIX16(-2.0);
 		}
 
 		u16 cy = fix32ToInt(pl.y) - 23;
@@ -850,7 +850,7 @@ static inline void player_cube_collision(void)
 				{
 					c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
 				}
-				c->dy = CUBE_ON_CUBE_DY;
+				c->dy = cube_on_cube_dy;
 				playsound(SFX_CUBEBOUNCE);
 			}
 		}
@@ -1104,7 +1104,7 @@ void player_get_hurt(void)
 			u16 cx = fix32ToInt(pl.x);
 			u16 cy = fix32ToInt(pl.y) - 12;
 			s16 cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
-			fix16 cdy = FIX16(-3.0);
+			fix16 cdy = system_ntsc ? FIX16(-2.5) : FIX16(-3.0);
 			cube_spawn(cx, cy,
 				pl.holding_cube,
 				CUBE_STATE_AIR,

@@ -107,7 +107,7 @@ static void en_cube_buggo(void *v, cube *c)
 		}
 		else
 		{
-			c->dy = -CUBE_ON_CUBE_DY;
+			c->dy = -cube_on_cube_dy;
 		}
 		if (c->dx == FZERO)
 		{
