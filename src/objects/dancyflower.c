@@ -1,10 +1,12 @@
 #include "dancyflower.h"
 #include "cubes.h"
+#include "system.h"
 
 static void anim_func(void *v);
-static void proc_func(void *v);
 static void cube_func(void *v, cube *c);
 static u16 has_been_destroyed;
+
+static u16 anim_delay;
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
@@ -50,14 +52,16 @@ void en_init_dancyflower(en_dancyflower *e)
 	e->anim_frame = 0;
 
 	e->head.anim_func = &anim_func;
-	e->head.proc_func = &proc_func;
+	e->head.proc_func = NULL;
 	e->head.cube_func = &cube_func;
+
+	anim_delay = system_ntsc ? 14 : 11; 
 }
 
 void anim_func(void *v)
 {
 	en_dancyflower *e = (en_dancyflower *)v;
-	if (e->anim_cnt == DANCYFLOWER_ANIM_DELAY)
+	if (e->anim_cnt == anim_delay)
 	{
 		e->anim_cnt = 0;
 		if (e->anim_frame == DANCYFLOWER_ANIM_LEN)
@@ -90,11 +94,6 @@ void anim_func(void *v)
 	{
 		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 6);
 	}
-}
-
-void proc_func(void *v)
-{
-	return;
 }
 
 void cube_func(void *v, cube *c)

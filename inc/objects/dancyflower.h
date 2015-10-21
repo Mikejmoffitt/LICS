@@ -5,7 +5,6 @@
 #include <enemy.h>
 
 #define DANCYFLOWER_ANIM_LEN 3
-#define DANCYFLOWER_ANIM_DELAY 14
 
 #define DANCYFLOWER_WIDTH 8
 #define DANCYFLOWER_HEIGHT 48
