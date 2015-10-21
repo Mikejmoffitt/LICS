@@ -4,13 +4,9 @@
 #include <genesis.h>
 #include "enemy.h"
 
-#define BOINGO_JUMP_TIME 20
-#define BOINGO_GRAVITY FIX16(0.2)
-
 #define BOINGO_STANDING 0
 #define BOINGO_JUMPING 1
 
-#define BOINGO_ANIM_SPEED_STAND 9
 #define BOINGO_ANIM_SPEED_JUMP 2
 
 #define BOINGO_AIR_W 7

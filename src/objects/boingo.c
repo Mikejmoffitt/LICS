@@ -2,12 +2,18 @@
 #include "vramslots.h"
 #include "player.h"
 #include "map.h"
-
+#include "system.h"
 
 static void en_proc_boingo(void *v);
 static void en_anim_boingo(void *v);
 static void bg_collisions(en_boingo *e);
 static void do_jump(en_boingo *e);
+
+// Local type-wide constants
+static fix16 jump_str;
+static fix16 gravity;
+static u16 jump_time;
+static u16 anim_speed;
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
@@ -47,6 +53,12 @@ void en_init_boingo(en_boingo *e)
 	e->head.proc_func = &en_proc_boingo;
 	e->head.anim_func = &en_anim_boingo;
 	e->head.cube_func = NULL;
+
+	// Establish constants for NTSC/PAL
+	jump_str = (system_ntsc) ? FIX16(-0.83) : FIX16(-1.0);
+	gravity = system_ntsc ? FIX16(0.167) : FIX16(0.2);
+	jump_time = (system_ntsc) ? 24 : 20;
+	anim_speed = system_ntsc ? 11 : 9;
 }
 
 static void en_anim_boingo(void *v)
@@ -130,7 +142,7 @@ static void bg_collisions(en_boingo *e)
 	}
 }
 
-static const fix16 str_table[] = 
+static const fix16 str_table_pal[] = 
 {
 	FIX16(0.00),
 	FIX16(-0.6),
@@ -140,6 +152,18 @@ static const fix16 str_table[] =
 	FIX16(-3.0),
 	FIX16(-3.6),
 	FIX16(-4.2)
+};
+
+static const fix16 str_table_ntsc[] =
+{
+	FIX16(0.00),
+	FIX16(-0.5),
+	FIX16(-1.0),
+	FIX16(-1.5),
+	FIX16(-2.0),
+	FIX16(-2.5),
+	FIX16(-3.0),
+	FIX16(-3.5)
 };
 
 static void do_jump(en_boingo *e)
@@ -153,10 +177,17 @@ static void do_jump(en_boingo *e)
 		e->head.direction = ENEMY_RIGHT;
 	}
 	// Base jump strength
-	e->dy = FIX16(-1.0);
+	e->dy = jump_str;
 
 	// Additional jump strength from random generator
-	e->dy += str_table[GET_HVCOUNTER & 0x07];
+	if (system_ntsc)
+	{
+		e->dy += str_table_ntsc[GET_HVCOUNTER & 0x07];
+	}
+	else
+	{
+		e->dy += str_table_pal[GET_HVCOUNTER & 0x07];
+	}
 	e->state = BOINGO_JUMPING;
 	e->jump_cnt = 0;
 }
@@ -167,7 +198,7 @@ static void en_proc_boingo(void *v)
 	// Standing state
 	if (e->state == BOINGO_STANDING)
 	{
-		if (e->jump_cnt >= BOINGO_JUMP_TIME)
+		if (e->jump_cnt >= jump_time)
 		{
 			do_jump(e);
 		}
@@ -179,7 +210,7 @@ static void en_proc_boingo(void *v)
 	else if (e->state == BOINGO_JUMPING)
 	{
 		e->head.y += fix16ToInt(e->dy);
-		e->dy = fix16Add(e->dy, BOINGO_GRAVITY);
+		e->dy = fix16Add(e->dy, gravity);
 		e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
 		bg_collisions(e);
 	}
