@@ -9,9 +9,6 @@
 
 #define GAXTER2_DISTANCE 50
 
-#define GAXTER2_DDY FIX16(0.2)
-#define GAXTER2_DY_CUTOFF FIX16(2.4)
-
 #define GAXTER2_ANIM_LEN 20
 
 #define GAXTER2_HP 3
@@ -19,12 +16,6 @@
 #define GAXTER2_WIDTH 6
 #define GAXTER2_HEIGHT 8
 
-#define GAXTER2_ANIM_T 9
-
-#define GAXTER2_SHOT_FLICKER_T 70
-#define GAXTER2_SHOT_FIRE_T 100
-
-#define GAXTER2_SHOT_SPEED FIX16(2.2)
 
 typedef struct en_gaxter2 en_gaxter2;
 struct en_gaxter2

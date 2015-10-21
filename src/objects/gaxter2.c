@@ -10,6 +10,13 @@ static void en_proc_gaxter2(void *v);
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
+
+static u16 shot_flicker_t;
+static u16 shot_fire_t;
+static fix16 shot_speed;
+static fix16 ddy;
+static fix16 dy_cutoff;
+
 static void vram_load(void)
 {
 	if (vram_pos == 0)
@@ -46,6 +53,13 @@ void en_init_gaxter2(en_gaxter2 *e)
 	e->head.proc_func = &en_proc_gaxter2;
 	e->head.cube_func = NULL;
 
+	shot_flicker_t = system_ntsc ? 58 : 70;
+	shot_fire_t = system_ntsc ? 83 : 100;
+	shot_speed = system_ntsc ? FIX16(2.3) : FIX16(2.76);
+
+	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.22);
+	dy_cutoff = system_ntsc ? FIX16(2.4) : FIX16(2.6);
+
 	e->dy = FIX16(0.0);
 	e->y_orig = e->head.y;
 	e->v_dir = GAXTER2_DOWN;
@@ -59,7 +73,7 @@ static void en_anim_gaxter2(void *v)
 	u16 hflip, frame;
 	en_gaxter2 *e = (en_gaxter2 *)v;
 
-	if (e->anim_cnt == GAXTER2_ANIM_T)
+	if (e->anim_cnt == (system_ntsc ? 9 : 6))
 	{
 		e->anim_cnt = 0;
 	}
@@ -68,24 +82,42 @@ static void en_anim_gaxter2(void *v)
 		e->anim_cnt++;
 	}
 
-	hflip = (e->head.x < pl.px) ? 0 : 1;
-
-	if (e->anim_cnt < GAXTER2_ANIM_T / 3)
+	hflip = (e->head.x > pl.px) ? 1 : 0;
+	if (system_ntsc)
 	{
-		frame = 0;
-	}
-	else if (e->anim_cnt < (2 * GAXTER2_ANIM_T / 3))
-	{
-		frame = 4;
+		if (e->anim_cnt < 3)
+		{
+			frame = 0;
+		}
+		else if (e->anim_cnt < 6)
+		{
+			frame = 4;
+		}
+		else
+		{
+			frame = 8;
+		}
 	}
 	else
 	{
-		frame = 8;
+		if (e->anim_cnt < 2)
+		{
+			frame = 0;
+		}
+		else if (e->anim_cnt < 4)
+		{
+			frame = 4;
+		}
+		else
+		{
+			frame = 8;
+		}
 	}
+
 	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, hflip, vram_pos + frame);
 
 	// Use sprite #2 to draw
-	if (e->shot_clock >= GAXTER2_SHOT_FLICKER_T && system_osc % 2 == 0)
+	if (e->shot_clock >= shot_flicker_t && system_osc % 2 == 0)
 	{
 		e->head.attr[1] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + ((system_osc >> 2) % 2));
 		e->head.xoff[1] = (hflip) ? (-GAXTER2_WIDTH - 4) : (GAXTER2_WIDTH - 4);
@@ -98,19 +130,19 @@ static void en_anim_gaxter2(void *v)
 
 static inline void shot_proc(en_gaxter2 *e)
 {
-	if (e->shot_clock == GAXTER2_SHOT_FIRE_T)
+	if (e->shot_clock == shot_fire_t)
 	{
 		e->shot_clock = 0;
 		if (e->head.x < pl.px)
 		{
 			projectile_shoot(e->head.x + GAXTER2_WIDTH, e->head.y + 6, 
-			                 GAXTER2_SHOT_SPEED, GAXTER2_SHOT_SPEED, 
+			                 shot_speed, shot_speed, 
 			                 PROJECTILE_BALL);
 		}
 		else
 		{
 			projectile_shoot(e->head.x - GAXTER2_WIDTH, e->head.y + 6, 
-			                 -GAXTER2_SHOT_SPEED, GAXTER2_SHOT_SPEED, 
+			                 -shot_speed, shot_speed, 
 			                 PROJECTILE_BALL);
 		}
 	}
@@ -177,16 +209,16 @@ static inline void v_movement(en_gaxter2 *e)
 	// Vertical movement
 	if (e->v_dir == GAXTER2_DOWN)
 	{
-		e->dy = fix16Add(e->dy, GAXTER2_DDY);
-		if (e->dy > GAXTER2_DY_CUTOFF)
+		e->dy = fix16Add(e->dy, ddy);
+		if (e->dy > dy_cutoff)
 		{
 			e->v_dir = GAXTER2_UP;
 		}
 	}	
 	else
 	{
-		e->dy = fix16Sub(e->dy, GAXTER2_DDY);
-		if (e->dy < GAXTER2_DY_CUTOFF * -1)
+		e->dy = fix16Sub(e->dy, ddy);
+		if (e->dy < -dy_cutoff)
 		{
 			e->v_dir = GAXTER2_DOWN;
 		}
