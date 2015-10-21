@@ -2,12 +2,17 @@
 #include "map.h"
 #include "player.h"
 #include "vramslots.h"
+#include "system.h"
 
 #define METAGRUB_DECEL FIX16(0.125)
 
 static void en_anim_metagrub(void *v);
 static void en_proc_metagrub(void *v);
 static inline fix16 get_lunge_dx(u16 dir);
+
+static fix16 lunge_strength;
+static fix16 decel;
+static u16 lunge_time;
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
@@ -41,31 +46,44 @@ void en_init_metagrub(en_metagrub *e)
 	e->head.cube_func = NULL;
 	e->dx = FIX16(0.0);
 	e->move_cnt = 0;
+	
+	// Region constants
+	lunge_time = system_ntsc ? 24 : 20;
+	decel = system_ntsc ? FIX16(0.105) : FIX16(0.13);
+	lunge_strength = system_ntsc ? FIX16(1.817) : FIX16(2.175);
 }
+
+static fix16 lunge_str_ntsc[] = 
+{
+	FIX16(0.0),
+	FIX16(0.52),
+	FIX16(0.70),
+	FIX16(0.875)
+};
+
+static fix16 lunge_str_pal[] = 
+{
+	FIX16(0.0),
+	FIX16(0.62),
+	FIX16(0.84),
+	FIX16(1.00)
+};
 
 static inline fix16 get_lunge_dx(u16 dir)
 {
-	fix16 ret = (dir == ENEMY_RIGHT) ? FIX16(1.675) : FIX16(-1.675);
-	ret = fix16Add(FIX16(0.5),ret);
+	fix16 ret = lunge_strength;
 	u16 rando = GET_HVCOUNTER % 4;
-	switch (rando)
+	if (system_ntsc)
 	{
-		case 0:
-		default:
-			return ret;
-			break;
-
-		case 1:
-			ret = fix16Add(FIX16((dir == ENEMY_RIGHT)?(0.62):(-0.62)),ret);
-			break;
-
-		case 2:
-			ret = fix16Add(FIX16((dir == ENEMY_RIGHT)?(0.84):(-0.84)),ret);
-			break;
-
-		case 3:
-			ret = fix16Add(FIX16((dir == ENEMY_RIGHT)?(1.05):(-1.05)),ret);
-			break;
+		ret = fix16Add(lunge_str_ntsc[rando], ret);
+	}
+	else
+	{
+		ret = fix16Add(lunge_str_pal[rando], ret);
+	}
+	if (dir == ENEMY_LEFT)
+	{
+		ret = -ret;
 	}
 	return ret;
 }
@@ -93,10 +111,10 @@ static void en_proc_metagrub(void *v)
 {
 	en_metagrub *e= (en_metagrub *)v;
 	// Moving to the right
-	if (e->dx > FIX16(0.125))
+	if (e->dx > decel)
 	{
-		e->move_cnt = 20;
-		e->dx = fix16Add(FIX16(-0.125), e->dx);
+		e->move_cnt = lunge_time;
+		e->dx = fix16Add(-decel, e->dx);
 		e->head.direction = ENEMY_RIGHT;		
 		if (map_collision(e->head.x + 11, e->head.y - 8))
 		{
@@ -105,10 +123,10 @@ static void en_proc_metagrub(void *v)
 		}
 	}
 	// Moving to the left
-	else if (e->dx < FIX16(-0.125))
+	else if (e->dx < -decel)
 	{
-		e->move_cnt = 20;
-		e->dx = fix16Add(FIX16(0.125), e->dx);
+		e->move_cnt = lunge_time;
+		e->dx = fix16Add(decel, e->dx);
 		e->head.direction = ENEMY_LEFT;
 		
 		if (map_collision(e->head.x - 13, e->head.y - 8))
@@ -123,7 +141,7 @@ static void en_proc_metagrub(void *v)
 		// Clamp dx
 		e->dx = FZERO;
 		// Look towards player
-		if (e->move_cnt == 20)
+		if (e->move_cnt == lunge_time)
 		{
 			if (e->head.x < pl.px)
 			{

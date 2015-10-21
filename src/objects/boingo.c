@@ -76,7 +76,7 @@ static void en_anim_boingo(void *v)
 
 		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos); 
 
-		if (e->anim_cnt >= BOINGO_ANIM_SPEED_STAND)
+		if (e->anim_cnt >= anim_speed)
 		{
 			e->anim_cnt = 0;
 			e->anim_frame++;
