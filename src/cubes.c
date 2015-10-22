@@ -48,9 +48,9 @@ void cubes_init(void)
 		c->state = CUBE_STATE_INACTIVE;
 	}
 	// Set up constants for NTSC/PAL stuff
-	kgravity = system_ntsc ? FIX16(0.1667) : FIX16(0.2);
+	kgravity = system_ntsc ? FIX16(0.16) : FIX16(0.2);
 	cube_on_cube_dy = system_ntsc ? FIX16(-1.833) : FIX16(-2.2);
-	kbounce_coef = system_ntsc ? FIX16(0.3) : FIX16(0.35);
+	kbounce_coef = system_ntsc ? FIX16(0.35) : FIX16(0.35);
 	kbounce_cutoff = system_ntsc ? FIX16(-1.04) : FIX16(-1.3);
 	kceiling_dy = system_ntsc ? FIX16(2.5) : FIX16(3.0);
 }
@@ -348,7 +348,7 @@ static void cube_do_ground_recoil(cube *c)
 {
 	// First push the cube out of the ground if it's stuck
 	c->y = (c->y / 8) * 8;
-	c->dy = fix16Mul(c->dy, kbounce_coef);
+	c->dy = fix16Mul(c->dy, FIX16(0.35));
 	c->dy = c->dy - (c->dy + c->dy);
 	cube_degrade_dx(c);
 	cube_eval_stopmoving(c);

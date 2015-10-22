@@ -52,8 +52,8 @@ static void player_init_constants(void)
 	plk.dy_max = system_ntsc ? FIX16(6.67) : FIX16(8.0);
 	plk.x_accel = system_ntsc ? FIX16(0.125) : FIX16(0.15);
 	plk.y_accel = system_ntsc ? FIX16(0.21) : FIX16(0.276);
-	plk.y_accel_weak = system_ntsc ? FIX16(0.12) : FIX16(0.156);
-	plk.jump_dy = system_ntsc ? FIX16(-3.17) : FIX16(-3.58);
+	plk.y_accel_weak = system_ntsc ? FIX16(0.10) : FIX16(0.156);
+	plk.jump_dy = system_ntsc ? FIX16(-2.94) : FIX16(-3.58);
 	plk.ceiling_dy = system_ntsc ? FIX16(-0.42) : FIX16(-0.5);
 	plk.hurt_dx = system_ntsc ? FIX16(-1.92) : FIX16(-2.3);
 
@@ -411,7 +411,7 @@ static void player_jump(void)
 				cy,
 				pl.holding_cube,
 				CUBE_STATE_AIR,
-				0, FIX16(4));
+				0, system_ntsc ? FIX16(3.33) : FIX16(4));
 
 			pl.holding_cube = 0;
 			// Generate cube of right type, throw it down
