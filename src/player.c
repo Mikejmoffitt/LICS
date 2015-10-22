@@ -443,7 +443,7 @@ static void player_toss_cubes(void)
 		else if (pl.input & BUTTON_UP)
 		{
 			cdx = 0;
-			cdy = system_ntsc ? FIX16(-4.37) : FIX16(-5.0);
+			cdy = system_ntsc ? FIX16(-4.2) : FIX16(-5.0);
 		}
 		// Throw with direction right
 		else if (pl.input & BUTTON_RIGHT && pl.direction == PLAYER_RIGHT)
