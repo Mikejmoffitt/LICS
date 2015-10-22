@@ -334,7 +334,7 @@ static void cube_eval_stopmoving(cube *c)
 		c->bounce_count = 1;
 	}
 
-	if (c->dx == 1 && c->dy > kbounce_cutoff)
+	if (c->dx == 0 && c->dy > kbounce_cutoff)
 	{
 		c->bounce_count--;
 	}

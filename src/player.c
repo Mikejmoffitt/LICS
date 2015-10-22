@@ -437,7 +437,7 @@ static void player_toss_cubes(void)
 		if (pl.input & (BUTTON_DOWN))
 		{
 			cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
-			cdy = system_ntsc ? FIX16(-1.7) : FIX16(-2.0);
+			cdy = system_ntsc ? FIX16(-1.77) : FIX16(-2.0);
 		}
 		// Holding up; toss straight up
 		else if (pl.input & BUTTON_UP)
@@ -449,18 +449,18 @@ static void player_toss_cubes(void)
 		else if (pl.input & BUTTON_RIGHT && pl.direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
-			cdy = system_ntsc ? FIX16(-0.9) : FIX16(-1.0);
+			cdy = system_ntsc ? FIX16(-0.84) : FIX16(-1.0);
 		}
 		// Left
 		else if (pl.input & BUTTON_LEFT && pl.direction == PLAYER_LEFT)
 		{
 			cdx = -4;
-			cdy = system_ntsc ? FIX16(-0.9) : FIX16(-1.0);
+			cdy = system_ntsc ? FIX16(-0.84) : FIX16(-1.0);
 		}
 		else
 		{
 			cdx = (pl.direction == PLAYER_RIGHT) ? 2 : -2;
-			cdy = system_ntsc ? FIX16(-1.7) : FIX16(-2.0);
+			cdy = system_ntsc ? FIX16(-1.77) : FIX16(-2.0);
 		}
 
 		u16 cy = fix32ToInt(pl.y) - 23;
