@@ -48,7 +48,7 @@ player pl;
 static player_k plk;
 static void player_init_constants(void)
 {
-	plk.dx_max = system_ntsc ? FIX16(1.42) : FIX16(1.7);
+	plk.dx_max = system_ntsc ? FIX16(1.54) : FIX16(1.8);
 	plk.dy_max = system_ntsc ? FIX16(6.67) : FIX16(8.0);
 	plk.x_accel = system_ntsc ? FIX16(0.125) : FIX16(0.15);
 	plk.y_accel = system_ntsc ? FIX16(0.21) : FIX16(0.276);
@@ -281,10 +281,41 @@ static inline void player_walking_sound(void)
 	}
 }
 
+static inline void player_hurt_decel(void)
+{
+	// decel
+	if (pl.dx > FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	{
+		pl.dx = fix16Sub(pl.dx,plk.x_accel >> 1);	
+		// Don't accel into the other direction
+		if (fix16ToInt(pl.dx) < FZERO)
+		{
+			pl.dx = FZERO;
+		}
+	}
+	else if (pl.dx < FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	{
+		pl.dx = fix16Add(pl.dx,plk.x_accel >> 1);				
+		// Don't accel into the other direction
+		if (pl.dx > FZERO)
+		{
+			pl.dx = FZERO;
+		}
+	}
+}
+
 static inline void player_accel(void)
 {
 
-	// acceleration
+
+	if (pl.control_disabled || pl.lift_cnt)
+	{
+		player_hurt_decel();
+		return;
+	}
+
+
+	// decel
 	if (pl.dx > FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
 		pl.dx = fix16Sub(pl.dx,plk.x_accel);	
@@ -302,12 +333,6 @@ static inline void player_accel(void)
 		{
 			pl.dx = FZERO;
 		}
-	}
-
-
-	if (pl.control_disabled || pl.lift_cnt)
-	{
-		return;
 	}
 
 	// walking right and left
