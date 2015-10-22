@@ -53,12 +53,12 @@ void en_init_gaxter2(en_gaxter2 *e)
 	e->head.proc_func = &en_proc_gaxter2;
 	e->head.cube_func = NULL;
 
-	shot_flicker_t = system_ntsc ? 58 : 70;
-	shot_fire_t = system_ntsc ? 83 : 100;
+	shot_flicker_t = system_ntsc ? 84 : 70;
+	shot_fire_t = system_ntsc ? 120 : 100;
 	shot_speed = system_ntsc ? FIX16(2.3) : FIX16(2.76);
 
-	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.22);
-	dy_cutoff = system_ntsc ? FIX16(2.4) : FIX16(2.6);
+	ddy = system_ntsc ? FIX16(0.18) : FIX16(0.22);
+	dy_cutoff = system_ntsc ? FIX16(2.17) : FIX16(2.6);
 
 	e->dy = FIX16(0.0);
 	e->y_orig = e->head.y;

@@ -23,9 +23,6 @@
 #define ENEMY_RIGHT 0
 #define ENEMY_LEFT 1
 
-// How long an enemy is frozen when struck with a cube
-#define ENEMY_HURT_TIME 20
-
 // Distance away from edge of screen to remain active
 #define ENEMY_ACTIVE_DISTANCE 32
 

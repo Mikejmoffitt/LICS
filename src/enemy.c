@@ -26,6 +26,8 @@
 en_generic enemies[ENEMIES_NUM];
 u16 vram_slot;
 
+static u16 hurt_time;
+
 static void enemy_explode(en_generic *e);
 static void enemy_player_scan();
 
@@ -57,6 +59,7 @@ void enemy_init(void)
 {
 	u16 i = ENEMIES_NUM;
 	u16 j;
+	hurt_time = system_ntsc ? 24 : 20;
 	en_unload_metagrub();
 	en_unload_flip();
 	en_unload_boingo();
@@ -210,7 +213,7 @@ void enemy_get_hurt(en_generic *e)
 {
 	if (e->head.hurt_cnt == 0)
 	{
-		e->head.hurt_cnt = ENEMY_HURT_TIME;
+		e->head.hurt_cnt = hurt_time; 
 		playsound(SFX_ENEMY_STRIKE);
 	}
 }

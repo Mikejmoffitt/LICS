@@ -38,8 +38,8 @@ void en_init_jraff(en_jraff *e)
 	e->head.size[1] = SPRITE_SIZE(3,4);
 	e->head.xoff[0] = -12;
 	e->head.xoff[1] = -12;
-	e->head.yoff[0] = -63;
-	e->head.yoff[1] = -31;
+	e->head.yoff[0] = -64;
+	e->head.yoff[1] = -32;
 
 	e->head.cube_func = NULL;
 	e->head.proc_func = &proc_func;
