@@ -11,13 +11,10 @@
 #include "cubes.h"
 #include "particles.h"
 
-
 static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
 static u16 lyle_dma_len;
-
 static u16 ctype;
-
 static u16 cp_restore_cnt;
 
 static void player_set_pal(void);
@@ -43,7 +40,6 @@ static void player_entrance_coll(void);
 
 player pl;
 
-
 // Constants manager, to make transition from NTSC --> PAL a lot easier
 static player_k plk;
 static void player_init_constants(void)
@@ -56,18 +52,6 @@ static void player_init_constants(void)
 	plk.jump_dy = system_ntsc ? FIX16(-2.94) : FIX16(-3.58);
 	plk.ceiling_dy = system_ntsc ? FIX16(-0.42) : FIX16(-0.5);
 	plk.hurt_dx = system_ntsc ? FIX16(-1.92) : FIX16(-2.3);
-
-	// Scale down all fix16 constants to 5/6 their normal value for NTSC
-	/*
-	if (!system_ntsc && 1 == 0)
-	{
-		fix16 *f = (fix16 *)&plk;
-		u16 i = 8;
-		while (i--)
-		{
-			f[i] = fix16Mul(f[i], FIX16(1.2));
-		}
-	}*/
 
 	plk.throw_anim_len = system_ntsc ? 10 : 8;
 	plk.kick_anim_len = system_ntsc ? 10 : 8;
