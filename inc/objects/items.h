@@ -7,7 +7,7 @@
 #include "enemy.h"
 
 #define ITEM_FLOAT_LEN 32
-#define ITEM_ANIM_LEN 18
+#define ITEM_ANIM_LEN 12
 
 #define ITEM_MAP 0
 #define ITEM_LIFT 1
