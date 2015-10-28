@@ -12,6 +12,7 @@
 static vu16 vbl_active;
 u16 system_osc;
 u16 system_ntsc;
+u16 ntsc_counter;
 
 static u16 debug_en;
 
@@ -49,6 +50,17 @@ static _voidCallback *v_int(void)
 	if (hsplit_line)
 	{
 		VDP_setHInterrupt(1);
+	}
+	if (system_ntsc)
+	{
+		if (ntsc_counter == 0)
+		{
+			ntsc_counter = 5;
+		}
+		else
+		{
+			ntsc_counter--;
+		}
 	}
 	return NULL;
 }

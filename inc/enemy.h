@@ -100,7 +100,7 @@ void enemy_cube_impact(en_generic *e, cube *c);
 
 // Puts an enemy on the map. Returns a handle to the placed enemy if valid,
 // and returns NULL if invalid or out of room.
-en_generic *enemy_place(u16 x, u16 y, u16 type);
+en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data);
 
 u16 enemy_vram_alloc(u16 len);
 void enemy_vram_reset(void);

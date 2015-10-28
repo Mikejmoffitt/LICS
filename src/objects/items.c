@@ -139,7 +139,7 @@ static void anim_func(void *v)
 	  vram_pos + (e->item_type * 8) + ((e->anim_cnt > ITEM_ANIM_LEN / 2) ? 4 : 0));
 }
 
-void en_init_item(en_item *e)
+void en_init_item(en_item *e, u16 type)
 {
 	vram_load();
 	e->head.hp = 0xFF;
@@ -158,4 +158,5 @@ void en_init_item(en_item *e)
 	
 	e->anim_cnt = 0;
 	e->float_cnt = 0;
+	e->item_type = type;
 }

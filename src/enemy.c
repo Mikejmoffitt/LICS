@@ -11,6 +11,7 @@
 #include "buggo.h"
 #include "dancyflower.h"
 #include "jraff.h"
+#include "pilla.h"
 
 #include "state.h"
 #include "particles.h"
@@ -69,6 +70,7 @@ void enemy_init(void)
 	en_unload_buggo();
 	en_unload_dancyflower();
 	en_unload_jraff();
+	en_unload_pilla();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -290,7 +292,7 @@ void enemy_cube_impact(en_generic *e, cube *c)
 	}
 }
 
-en_generic *enemy_place(u16 x, u16 y, u16 type)
+en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 {
 	u16 i = ENEMIES_NUM;
 	if (type == ENEMY_NULL)
@@ -329,7 +331,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					en_init_boingo((en_boingo *)e);
 					break;
 				case ENEMY_ITEM:
-					en_init_item((en_item *)e);
+					en_init_item((en_item *)e, data);
 					break;
 				case ENEMY_GAXTER1:
 					en_init_gaxter1((en_gaxter1 *)e);
@@ -348,6 +350,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type)
 					break;
 				case ENEMY_JRAFF:
 					en_init_jraff((en_jraff *)e);
+					break;
+				case ENEMY_PILLA:
+					en_init_pilla((en_pilla *)e, data);
 					break;
 			}
 			return &enemies[i];

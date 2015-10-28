@@ -16,6 +16,7 @@ extern const u8 gfx_en_gaxter[768];
 extern const u8 gfx_en_buggo[1536];
 extern const u8 gfx_en_dancyflower[960];
 extern const u8 gfx_en_jraff[2688];
+extern const u8 gfx_en_pilla[768];
 extern const u8 gfx_inside1[8192];
 extern const u8 gfx_outside1[8192];
 extern const u8 gfx_outside2[8192];

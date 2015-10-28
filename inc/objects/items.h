@@ -25,7 +25,7 @@ struct en_item
 	u16 float_cnt;
 };
 
-void en_init_item(en_item *e);
+void en_init_item(en_item *e, u16 type);
 void en_unload_item(void);
 
 #endif

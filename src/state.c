@@ -60,13 +60,8 @@ static void state_parse_objects(void)
 			case MAP_OBJ_CUBE:
 				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
 				break;
-			case MAP_OBJ_ITEM:
-				e = (en_generic *)enemy_place(o->x, o->y, ENEMY_ITEM);
-				en_item *q = (en_item *)e;
-				q->item_type = o->data;
-				break;
 			default:
-				enemy_place(o->x, o->y, o->type);
+				enemy_place(o->x, o->y, o->type, o->data);
 				break;
 		}
 	}

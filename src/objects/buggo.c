@@ -10,6 +10,10 @@ static void en_anim_buggo(void *v);
 static void en_proc_buggo(void *v);
 static void en_cube_buggo(void *v, cube *c);
 
+static u16 kshot_test;
+static u16 kshot_fire;
+static u16 kspark_t;
+
 // Dynamic VRAM slot support
 static u16 vram_pos;
 static void vram_load(void)
@@ -62,6 +66,10 @@ void en_init_buggo(en_buggo *e, u16 type)
 	e->type = type;
 
 	e->head.hp = (type == BUGGO_T1) ? BUGGO_HP_1 : BUGGO_HP_2;
+
+	kshot_test = system_ntsc ? 48 : 40;
+	kshot_fire = system_ntsc ? 84 : 70;
+	kspark_t = system_ntsc ? 144 : 120;
 }
 
 static void en_cube_buggo(void *v, cube *c)
@@ -153,7 +161,7 @@ static void en_anim_buggo(void *v)
 	{
 		e->anim_cnt = 0;
 	}
-	else
+	else if (!system_ntsc || ntsc_counter != 0)
 	{
 		e->anim_cnt++;
 	}
@@ -162,7 +170,7 @@ static void en_anim_buggo(void *v)
 	if (e->type == BUGGO_T1)
 	{
 		// When shot_clock <= test, walking animation
-		if (e->shot_clock <= BUGGO_SHOT_TEST)
+		if (e->shot_clock <= kshot_test)
 		{
 			u16 frame = walking_frame(e->anim_cnt);
 			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + frame);
@@ -196,7 +204,7 @@ static inline void buggo_shot_proc(en_buggo *e)
 	if (e->type == BUGGO_T1)
 	{
 		// Shooting amount reached. Reset counter, fire projectile
-		if (e->shot_clock == BUGGO_SHOT_TEST)
+		if (e->shot_clock == kshot_test)
 		{
 			// Player nearby; allow a shot instead of resetting
 			if (e->head.x < pl.px + BUGGO_PLAYER_SENSE &&
@@ -211,10 +219,10 @@ static inline void buggo_shot_proc(en_buggo *e)
 				e->shot_clock = 0;
 			}
 		}
-		else if (e->shot_clock >= BUGGO_SHOT_FIRE)
+		else if (e->shot_clock >= kshot_fire)
 		{
 			e->shot_clock = 0;
-			projectile_shoot(e->head.x, e->head.y - 4, FIX16(0.0), BUGGO_SPIKE_SPEED, PROJECTILE_SPIKE);
+			projectile_shoot(e->head.x, e->head.y - 4, FIX16(0.0), system_ntsc ? FIX16(5.42) : FIX16(6.5), PROJECTILE_SPIKE);
 		}
 	}
 	else
@@ -223,12 +231,12 @@ static inline void buggo_shot_proc(en_buggo *e)
 		{
 			e->spin_cnt--;
 		}
-		if (e->shot_clock == BUGGO_SPARK_T)
+		if (e->shot_clock == kspark_t)
 		{
 			e->shot_clock = 0;
-			e->spin_cnt = BUGGO_SPIN_T;
-			projectile_shoot(e->head.x, e->head.y + 7, BUGGO_SPARK_SPEED, FIX16(0.0), PROJECTILE_SPARK);
-			projectile_shoot(e->head.x, e->head.y + 7, -BUGGO_SPARK_SPEED, FIX16(0.0), PROJECTILE_SPARK);
+			e->spin_cnt = kspark_t >> 1;
+			projectile_shoot(e->head.x, e->head.y + 7, system_ntsc ? FIX16(2.5) : FIX16(3.0), FIX16(0.0), PROJECTILE_SPARK);
+			projectile_shoot(e->head.x, e->head.y + 7, system_ntsc ? FIX16(-2.5) : FIX16(-3.0), FIX16(0.0), PROJECTILE_SPARK);
 		}
 	}
 }
@@ -255,7 +263,7 @@ static inline int buggo_can_move(en_buggo *e)
 {
 	if (e->type == BUGGO_T1)
 	{
-		if (e->shot_clock > BUGGO_SHOT_TEST)
+		if (e->shot_clock > kshot_test)
 		{
 			return 0;
 		}
@@ -300,7 +308,7 @@ static inline void h_movement(en_buggo *e)
 
 		e->h_rev_cnt++;
 	}
-	else
+	else if (!system_ntsc || ntsc_counter != 0)
 	{
 		e->h_cnt++;
 	}

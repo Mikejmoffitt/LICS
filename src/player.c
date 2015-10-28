@@ -73,15 +73,33 @@ static void player_init_constants(void)
 	plk.kick_anim_len = system_ntsc ? 10 : 8;
 	plk.cubejump_anim_len = system_ntsc ? 24 : 20;
 	plk.lift_time = system_ntsc ? 18 : 15;
+	plk.cp_restore_period = system_ntsc ? 300 : 250;
+	plk.cp_restore_period_fast = system_ntsc ? 150 : 125;
+	plk.cp_spawn_fast = system_ntsc ? 36 : 30;
+	plk.cp_spawn_slow = system_ntsc ? 72 : 60;
+
 	plk.hurt_time = system_ntsc ? 35 : 29;
 	plk.hurt_timeout = system_ntsc ? 24 : 20;
 	plk.invuln_time = system_ntsc ? 95 : 79;
-	plk.cp_restore_period = system_ntsc ? 300 : 250;
-	plk.cp_restore_period_fast = system_ntsc ? 300 : 250;
-	plk.cp_spawn_fast = system_ntsc ? 36 : 30;
-	plk.cp_spawn_slow = system_ntsc ? 72 : 60;
 	plk.cube_fx = system_ntsc ? 6 : 5;
 	plk.animspeed = system_ntsc ? 6 : 5;
+
+	// Cool cheat codes
+	if (JOY_readJoypad(JOY_1) & BUTTON_Y)
+	{
+		plk.dx_max = system_ntsc ? FIX16(5.0) : FIX16(6.0);
+		plk.x_accel = system_ntsc ? FIX16(0.5) : FIX16(0.6);
+		plk.jump_dy = system_ntsc ? FIX16(-5.0) : FIX16(-6.0);
+
+		plk.throw_anim_len = system_ntsc ? 6 : 5;
+		plk.kick_anim_len = system_ntsc ? 6 : 5;
+		plk.cubejump_anim_len = system_ntsc ? 6 : 5;
+		plk.lift_time = system_ntsc ? 6 : 5;
+		plk.cp_restore_period = system_ntsc ? 30 : 25;
+		plk.cp_restore_period_fast = system_ntsc ? 15 : 12;
+		plk.cp_spawn_fast = system_ntsc ? 6 : 5;
+		plk.cp_spawn_slow = system_ntsc ? 12 : 10;
+	}
 }
 
 static void player_set_pal(void)

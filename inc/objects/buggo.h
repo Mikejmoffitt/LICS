@@ -17,17 +17,7 @@
 #define BUGGO_HP_1 2
 #define BUGGO_HP_2 1
 
-// TODO: Find real values
-#define BUGGO_SPIKE_SPEED FIX16(6.5)
-#define BUGGO_SPARK_SPEED FIX16(3.0)
-
 #define BUGGO_PLAYER_SENSE 80
-
-#define BUGGO_SHOT_FIRE 70
-#define BUGGO_SHOT_TEST 40
-
-#define BUGGO_SPARK_T 120
-#define BUGGO_SPIN_T 60
 
 // movement speed denominator
 #define BUGGO_H_CNT_MAX 3
