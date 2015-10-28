@@ -4,11 +4,7 @@
 #include <genesis.h>
 
 #define NUM_POWERUPS 8
-#define POWERUP_MAX_DY FIX16(6.0)
-#define POWERUP_BOUNCE_SUB FIX16(-2.0)
-#define POWERUP_GRAVITY FIX16(0.2)
-#define POWERUP_CEILING_DY FIX16(1.0)
-#define POWERUP_CREATION_DY FIX16(-3.0)
+
 
 #define POWERUP_S_HEIGHT 8
 #define POWERUP_S_WIDTH 4

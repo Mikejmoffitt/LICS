@@ -6,9 +6,6 @@
 #include <genesis.h>
 #include "enemy.h"
 
-#define ITEM_FLOAT_LEN 32
-#define ITEM_ANIM_LEN 18
-
 #define ITEM_MAP 0
 #define ITEM_LIFT 1
 #define ITEM_JUMP 2

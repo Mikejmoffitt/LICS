@@ -3,6 +3,10 @@
 #include "gfx.h"
 #include "vramslots.h"
 #include "cubes.h"
+#include "system.h"
+
+static u16 kanim_len;
+static u16 kfloat_len;
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
@@ -110,22 +114,22 @@ static void anim_func(void *v)
 	en_item *e = (en_item *)v;
 	// Animation counters
 	e->anim_cnt++;
-	if (e->anim_cnt >= ITEM_ANIM_LEN)
+	if (e->anim_cnt >= kanim_len)
 	{
 		e->anim_cnt = 0;
 	}
 	e->float_cnt++;
-	if (e->float_cnt >= ITEM_FLOAT_LEN)
+	if (e->float_cnt >= kfloat_len)
 	{
 		e->float_cnt = 0;
 	}
 
 	// Make the item float up and down a little
-	if (e->float_cnt < (ITEM_FLOAT_LEN / 4))
+	if (e->float_cnt < (kfloat_len / 4))
 	{	
 		e->head.yoff[0] = -17;
 	}
-	else if (e->float_cnt > (ITEM_FLOAT_LEN / 2) && e->float_cnt < (3 * ITEM_FLOAT_LEN / 4))
+	else if (e->float_cnt > (kfloat_len / 2) && e->float_cnt < (3 * kfloat_len / 4))
 	{
 		e->head.yoff[0] = -15;
 	}
@@ -136,7 +140,7 @@ static void anim_func(void *v)
 
 	// Select tiles
 	e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0,
-	  vram_pos + (e->item_type * 8) + ((e->anim_cnt > ITEM_ANIM_LEN / 2) ? 4 : 0));
+	  vram_pos + (e->item_type * 8) + ((e->anim_cnt > kanim_len / 2) ? 4 : 0));
 }
 
 void en_init_item(en_item *e)
@@ -158,4 +162,7 @@ void en_init_item(en_item *e)
 	
 	e->anim_cnt = 0;
 	e->float_cnt = 0;
+
+	kanim_len = system_ntsc ? 32 : 38;
+	kfloat_len = system_ntsc ? 18 : 22;
 }

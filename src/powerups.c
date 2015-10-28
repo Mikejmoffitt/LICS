@@ -10,6 +10,12 @@
 #include "sprites.h"
 #include "save.h"
 
+static u16 kmax_dy;
+static u16 kbounce_sub;
+static u16 kgravity;
+static u16 kceiling_dy;
+static u16 kcreation_dy;
+
 #define POWERUP_IS_ORB(t) (t == POWERUP_CPORB || t == POWERUP_HPORB)
 #define POWERUP_W(t) (POWERUP_IS_ORB(t) ? POWERUP_L_WIDTH : POWERUP_S_WIDTH)
 #define POWERUP_H(t) (POWERUP_IS_ORB(t) ? POWERUP_L_HEIGHT : POWERUP_S_HEIGHT)
@@ -37,9 +43,15 @@ void powerup_init(void)
 		p->type = POWERUP_NULL;
 		p->x = -32;
 		p->y = -32;
-		p->dy = POWERUP_CREATION_DY; 
+		p->dy = kcreation_dy; 
 		p->num = 0;
 	}
+
+	kmax_dy = system_ntsc ? FIX16(5.0) : FIX16(6.0);
+	kbounce_sub = system_ntsc ? FIX16(-1.667) : FIX16(-2.0);
+	kgravity = system_ntsc ? FIX16(0.1667) : FIX16(0.2);
+	kceiling_dy = system_ntsc ? FIX16(0.833) : FIX16(1.0);
+	kcreation_dy = system_ntsc ? FIX16(-2.5) : FIX16(-3.0);
 }
 
 void powerup_dma_tiles(void)
@@ -65,7 +77,7 @@ void powerup_spawn(s16 x, s16 y, u16 type, u16 num)
 			p->type = type;
 			p->x = x;
 			p->y = y;
-			p->dy = POWERUP_CREATION_DY; 
+			p->dy = kcreation_dy; 
 			p->num = num;
 			return;
 		}
@@ -81,7 +93,7 @@ void powerup_spawn(s16 x, s16 y, u16 type, u16 num)
 			p->type = type;
 			p->x = x;
 			p->y = y;
-			p->dy = POWERUP_CREATION_DY; 
+			p->dy = kcreation_dy; 
 			p->num = num;
 			return;
 		}
@@ -170,7 +182,8 @@ static inline void powerup_bg_collisions(powerup *p)
 	if (map_collision(p->x, p_top))
 	{
 		// Bounce the powerup downwards
-		p->dy = POWERUP_CEILING_DY;
+		p->dy = kceiling_dy;
+		p->y += 4;
 	}
 	// Bottom is colliding with the backdrop
 	else if (map_collision(p->x, p->y))
@@ -297,7 +310,7 @@ static inline void powerup_cube_collisions(powerup *p)
 
 static void powerup_move(powerup *p)
 {
-	p->dy = fix16Add(p->dy, POWERUP_GRAVITY);
+	p->dy = fix16Add(p->dy, kgravity);
 	p->y = p->y + fix16ToInt(p->dy);
 	powerup_bg_collisions(p);
 	powerup_player_collisions(p);
