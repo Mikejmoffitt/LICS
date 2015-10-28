@@ -19,6 +19,10 @@ static void en_anim_buggo(void *v);
 static void en_proc_buggo(void *v);
 static void en_cube_buggo(void *v, cube *c);
 
+static u16 kshot_test;
+static u16 kshot_fire;
+static u16 kspark_t;
+
 // Dynamic VRAM slot support
 static u16 vram_pos;
 static void vram_load(void)
@@ -160,7 +164,7 @@ static void en_anim_buggo(void *v)
 			e->anim_frame+= 4;
 		}
 	}
-	else
+	else if (!system_ntsc || ntsc_counter != 0)
 	{
 		e->anim_cnt++;
 	}
@@ -231,9 +235,9 @@ static inline void buggo_shot_proc(en_buggo *e)
 		if (e->shot_clock == kspark_t)
 		{
 			e->shot_clock = 0;
-			e->spin_cnt = kspin_t;
-			projectile_shoot(e->head.x, e->head.y + 7, kspark_speed, FIX16(0.0), PROJECTILE_SPARK);
-			projectile_shoot(e->head.x, e->head.y + 7, -kspark_speed, FIX16(0.0), PROJECTILE_SPARK);
+			e->spin_cnt = kspark_t >> 1;
+			projectile_shoot(e->head.x, e->head.y + 7, system_ntsc ? FIX16(2.5) : FIX16(3.0), FIX16(0.0), PROJECTILE_SPARK);
+			projectile_shoot(e->head.x, e->head.y + 7, system_ntsc ? FIX16(-2.5) : FIX16(-3.0), FIX16(0.0), PROJECTILE_SPARK);
 		}
 	}
 }
@@ -305,7 +309,7 @@ static inline void h_movement(en_buggo *e)
 
 		e->h_rev_cnt++;
 	}
-	else
+	else if (!system_ntsc || ntsc_counter != 0)
 	{
 		e->h_cnt++;
 	}

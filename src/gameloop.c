@@ -65,6 +65,7 @@ static void gameloop_room_setup(void)
 	// Blank the display
 	system_wait_v();
 	VDP_setEnable(0);
+	system_ntsc = (!IS_PALSYSTEM);
 
 	// Reset object lists, gameplay variables, etc.
 	cubes_init();

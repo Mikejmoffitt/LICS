@@ -147,7 +147,7 @@ out.iso: out.elf_scd
 
 %.o: %.c
 	@echo "$<"
-	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerc.py
+	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerrc.py
 
 %.o: %.s 
 	@echo "$<"

@@ -21,8 +21,6 @@ static fix16 kbounce_coef;
 static fix16 kbounce_cutoff;
 static fix16 kceiling_dy;
 
-static u16 ntsc_counter; // Counts from 0-5 when in NTSC mode for H-movement speed hack
-
 static void cube_move(cube *c);
 static void cube_degrade_dx(cube *c);
 static void cube_on_cube_collisions(cube *c);
@@ -526,17 +524,7 @@ static void cube_scan_enemies(cube *c)
 void cubes_run(void)
 {
 	int i = CUBES_NUM;
-	if (system_ntsc)
-	{
-		if (ntsc_counter == 5)
-		{
-			ntsc_counter = 0;
-		}
-		else
-		{
-			ntsc_counter++;
-		}
-	}
+
 	while (i--)
 	{
 		cube *c = &cubes[i];

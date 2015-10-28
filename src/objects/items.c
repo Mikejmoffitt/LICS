@@ -143,7 +143,7 @@ static void anim_func(void *v)
 	  vram_pos + (e->item_type * 8) + ((e->anim_cnt > kanim_len / 2) ? 4 : 0));
 }
 
-void en_init_item(en_item *e)
+void en_init_item(en_item *e, u16 type)
 {
 	vram_load();
 	e->head.hp = 0xFF;
@@ -162,7 +162,7 @@ void en_init_item(en_item *e)
 	
 	e->anim_cnt = 0;
 	e->float_cnt = 0;
-
 	kanim_len = system_ntsc ? 32 : 38;
 	kfloat_len = system_ntsc ? 18 : 22;
+	e->item_type = type;
 }

@@ -19,6 +19,8 @@ extern u16 system_osc;
 
 // Is the system NTSC (60fps)?
 extern u16 system_ntsc;
+extern u16 ntsc_counter; // Counts from 0-5 when in NTSC mode for H-movement speed hack
+
 
 void system_init(void);
 void system_wait_v(void);
