@@ -162,7 +162,7 @@ void en_init_item(en_item *e, u16 type)
 	
 	e->anim_cnt = 0;
 	e->float_cnt = 0;
-	kanim_len = system_ntsc ? 32 : 38;
-	kfloat_len = system_ntsc ? 18 : 22;
+	kfloat_len = system_ntsc ? 32 : 38;
+	kanim_len = system_ntsc ? 12 : 10;
 	e->item_type = type;
 }
