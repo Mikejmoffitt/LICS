@@ -43,6 +43,7 @@ static void state_parse_objects(void)
 	map_list_obj *o = &(state.current_room->objects[0]);
 	entrance *d;
 	en_generic *e;
+	(void)e;
 	while (i--)
 	{
 		o = &(state.current_room->objects[i]);

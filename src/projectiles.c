@@ -166,10 +166,9 @@ void projectile_shoot(s16 x, s16 y, fix16 dx, fix16 dy, u16 type)
 	}
 }
 
-void projectile_shoot_at(s16 x, s16 y, s16 px, s16 py, u16 type)
+void projectile_shoot_at(s16 x, s16 y, u16 type, s16 tx, s16 ty)
 {
-	// Target coordianates
-	s16 tx;
-	s16 ty;
+	// Get rise-over-run coefficient
+	fix16 ratio = fix16Div(FIX16(ty - y), FIX16(tx - x));
 
 }

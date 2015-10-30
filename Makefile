@@ -17,8 +17,8 @@ SCD_LOADER = scd/LukeProjectCD
 
 OPTION = -O1 -std=c99 -Wall 
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
-CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin
-HWCCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin
+CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow
+HWCCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow
 Z80FLAGS = -vb2
 ASFLAGS = -m68000 --register-prefix-optional
 #LIBS =  -L$(GENDEV)/m68k-elf/lib -L$(GENDEV)/m68k-elf/lib/gcc/m68k-elf/4.8.2 -L$(GENDEV)/m68k-elf/m68k-elf/lib -lmd -lc -lgcc -lnosys -lm 
@@ -123,7 +123,7 @@ out.iso: out.elf_scd
 	$(SIZEBND) $(SCD_LOADER)/_filesystem/M_INIT.PRG -sizealign 131072    
 	$(MKISOFS) -iso-level 1 -o $(SCD_LOADER)/filesystem.img -pad $(SCD_LOADER)/_filesystem
 	tail -c +32769 $(SCD_LOADER)/filesystem.img > $(SCD_LOADER)/filesystem.bin
-	$(RM) -f $(SCD_LOADER)/filesystem.img
+	@$(RM) -f $(SCD_LOADER)/filesystem.img
 	cd $(SCD_LOADER) && $(AS) $(ASFLAGS) -M -ahlsm=listing.asm  main-us-as.asm -o out.iso
 	tail -c +53 $(SCD_LOADER)/out.iso > out.iso
 	$(RM) -f $(SCD_LOADER)/filesystem.bin
@@ -203,7 +203,7 @@ boot/rom_head.bin: boot/rom_head.o
 	
 
 clean:
-	$(RM) $(RESOURCES)
-	$(RM) *.o *.bin *.elf *.elf_scd *.map *.iso
-	$(RM) boot/*.o boot/*.bin
-	$(RM) $(RESS:.res=.h) $(RESS:.res=.s)
+	@$(RM) $(RESOURCES)
+	@$(RM) *.o *.bin *.elf *.elf_scd *.map *.iso
+	@$(RM) boot/*.o boot/*.bin
+	@$(RM) $(RESS:.res=.h) $(RESS:.res=.s)
