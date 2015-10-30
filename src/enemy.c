@@ -120,9 +120,9 @@ void enemy_run(void)
 		}
 		// Enemy must be within 64px of the screen to be "alive"
 		else if (e->head.x < state.cam_x - ENEMY_ACTIVE_DISTANCE ||
-			e->head.x > state.cam_x + STATE_SC_W  + ENEMY_ACTIVE_DISTANCE ||
+			e->head.x > state.cam_x + STATE_SC_W + ENEMY_ACTIVE_DISTANCE ||
 			e->head.y < state.cam_y - ENEMY_ACTIVE_DISTANCE ||
-			e->head.y > state.cam_y + STATE_SC_H + (ENEMY_ACTIVE_DISTANCE * 2))
+			e->head.y >= state.cam_y + STATE_SC_H + e->head.height)
 		{
 			e->head.active = ENEMY_OFFSCREEN;
 			continue;
