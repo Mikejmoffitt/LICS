@@ -70,8 +70,10 @@ static _voidCallback *h_int(void)
 {
 	u16 i;
 	VDP_setReg(0x01, VDP_getReg(0x01) & (~0x40));
-	WAIT_NOP(8);
-	VDP_doCRamDMA((u32)hsplit_pal, hsplit_num << 5, 16);
+	WAIT_NOP(7);
+	VDP_doCRamDMA((u32)hsplit_pal, hsplit_num << 5, 8);
+	WAIT_NOP(144);
+	VDP_doCRamDMA((u32)hsplit_pal + 16, (hsplit_num << 5) + 16, 8);
 	WAIT_NOP(72);
 	VDP_setReg(0x01, VDP_getReg(0x01) | (0x40));
 	VDP_setHInterrupt(0);
