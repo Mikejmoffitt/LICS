@@ -4,6 +4,7 @@
 extern const u8 gfx_lyle[5184];
 extern const u8 gfx_cubes[1664];
 extern const u8 gfx_hud[1024];
+extern const u8 gfx_font[3072];
 extern const u8 gfx_pause[8192];
 extern const u8 gfx_particles[2468];
 extern const u8 gfx_powerups[768];
@@ -17,6 +18,7 @@ extern const u8 gfx_en_buggo[1536];
 extern const u8 gfx_en_dancyflower[960];
 extern const u8 gfx_en_jraff[2688];
 extern const u8 gfx_en_pilla[768];
+extern const u8 gfx_en_hedgedog[1376];
 extern const u8 gfx_inside1[8192];
 extern const u8 gfx_outside1[8192];
 extern const u8 gfx_outside2[8192];

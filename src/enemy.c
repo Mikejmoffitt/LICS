@@ -12,6 +12,7 @@
 #include "dancyflower.h"
 #include "jraff.h"
 #include "pilla.h"
+#include "hedgedog.h"
 
 #include "state.h"
 #include "particles.h"
@@ -71,6 +72,7 @@ void enemy_init(void)
 	en_unload_dancyflower();
 	en_unload_jraff();
 	en_unload_pilla();
+	en_unload_hedgedog();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -353,6 +355,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_PILLA:
 					en_init_pilla((en_pilla *)e, data);
+					break;
+				case ENEMY_HEDGEDOG:
+					en_init_hedgedog((en_hedgedog *)e);
 					break;
 			}
 			return &enemies[i];

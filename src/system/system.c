@@ -6,6 +6,7 @@
 #include "cdaudio.h"
 #include "vramslots.h"
 #include "pausemap.h"
+#include "gfx.h"
 
 #define WAIT_NOP(x) for (i = 0; i < x; i++) { __asm__("nop"); }
 
@@ -104,6 +105,9 @@ void system_init(void)
 	VDP_setWindowAddress(0xD000);
 	VDP_setAPlanAddress(0xE000);
 	VDP_setSpriteListAddress(0xF000);
+
+	// Inject our font
+	VDP_doVRamDMA((u32)gfx_font, 0xA400, 1536);
 
 	sprites_init();
 	save_load();

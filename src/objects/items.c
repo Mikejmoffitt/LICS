@@ -4,6 +4,7 @@
 #include "vramslots.h"
 #include "cubes.h"
 #include "system.h"
+#include "sprites.h"
 
 static u16 kanim_len;
 static u16 kfloat_len;
@@ -30,11 +31,11 @@ static void cube_func(void *v, cube *c)
 	return;
 }
 
+
 static void proc_func(void *v)
 {
 	en_item *e = (en_item *)v;
 
-// TODO: Go to popup screen to show message for collection
 
 	switch (e->item_type)
 	{
@@ -44,6 +45,8 @@ static void proc_func(void *v)
 			{
 				sram.have_map = 1;
 				save_write();
+				// TODO: Go to popup screen to show message for collection
+//				message_screen("Hello world!");
 			}
 			if (sram.have_map)
 			{

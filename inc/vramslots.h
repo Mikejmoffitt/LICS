@@ -51,6 +51,7 @@ the length of a 256-tile DMA is only (256 * 16).
 #define DANCYFLOWER_VRAM_LEN 30
 #define JRAFF_VRAM_LEN 84
 #define PILLA_VRAM_LEN 24
+#define HEDGEDOG_VRAM_LEN 43
 
 #define MAP_FG_PALNUM 0
 #define BG_PALNUM 1

@@ -19,6 +19,30 @@
 #include "pause.h"
 #include "projectiles.h"
 
+static void puts(const char *s, u16 x, u16 y)
+{
+	while (*s)
+	{
+		VDP_setTileMapXY(VDP_getWindowPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		x++;
+		s++;
+	}
+}
+
+static void message_screen(const char *s)
+{
+	u16 i = 60 * 5;
+	puts(s, 8, 8);
+//	VDP_drawTextBG(VDP_getWindowPlanAddress(), s, TILE_ATTR(1, 1, 0, 0), 4, 6);
+	VDP_setReg(0x12, 0x1E);
+	while (i--)
+	{
+		system_wait_v();
+		sprites_dma_simple();
+	}
+	VDP_setReg(0x12, 0x00);
+}
+
 void gameloop_logic(void)
 {
 	player_run();
@@ -28,7 +52,14 @@ void gameloop_logic(void)
 	projectiles_run();
 	particles_run();
 	sfx_counters();
+	if (pl.input & BUTTON_Z)
+	{
+		message_screen("Oh my lordy!!! It's not broken.");
+		message_screen("Could it really be a success?");
+		message_screen("Is that even real?");
+	}
 	state_update_progress();
+
 }
 
 void gameloop_gfx(void)
