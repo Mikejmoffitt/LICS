@@ -110,6 +110,7 @@ static void pause_place_sprites(void)
 			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB2));
 		}
 		else
+#define PILLA_VRAM_LEN 24
 		{
 			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB0));
 		}
@@ -223,7 +224,7 @@ void pause_setup(void)
 	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
 
 	// Not sure why the DMA seems to miss this, so this is a manual fix.
-	window_tile_set(0,0, PAUSE_VRAM_SLOT);
+	window_tile_set(0,0, TILE_ATTR_FULL(3, 1, 0, 0, PAUSE_VRAM_SLOT));
 
 	// Play the "pause sound" which mutes three FM channels
 	stopsound();
