@@ -10,5 +10,7 @@ BIN mapdata_earlybumps "mapdata/earlybumps.bin" 2 2 0
 BIN mapdata_smallchamber "mapdata/smallchamber.bin" 2 2 0
 BIN mapdata_zigzag "mapdata/zigzag.bin" 2 2 0
 BIN mapdata_jumpget "mapdata/jumpget.bin" 2 2 0
+BIN mapdata_lavatower "mapdata/ballhall.bin" 2 2 0
+BIN mapdata_ballhall "mapdata/ballhall.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0

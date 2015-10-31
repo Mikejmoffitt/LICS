@@ -45,7 +45,7 @@ void bg_load(u16 num)
 	{
 		default:
 		case 0:
-			current_bg = num;
+			current_bg = 0;
 			VDP_waitDMACompletion();
 			VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
 			return;

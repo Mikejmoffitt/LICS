@@ -13,6 +13,8 @@ extern const u8 mapdata_earlybumps[15468];
 extern const u8 mapdata_smallchamber[22668];
 extern const u8 mapdata_zigzag[8268];
 extern const u8 mapdata_jumpget[3468];
+extern const u8 mapdata_lavatower[13068];
+extern const u8 mapdata_ballhall[13068];
 extern const u8 mapdata_roomzero[3468];
 
 #endif // _MAPDATA_H_

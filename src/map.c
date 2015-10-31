@@ -47,6 +47,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_smallchamber,
 	(map_file *)&mapdata_zigzag,
 	(map_file *)&mapdata_jumpget,
+	(map_file *)&mapdata_ballhall,
 	0
 };
 
