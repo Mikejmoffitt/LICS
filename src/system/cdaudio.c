@@ -247,9 +247,7 @@ static void start_subcpu(void)
 	// Wait for the sub-CPU to be running
 	wait_cpu_running();
 
-
 	// Enable level 2 interrupts on sub-CPU to poke it during vblank
-
 	*reg_cpu = (*reg_cpu & 0xEFFF) | SEGACD_CPU_IEN_MASK;
 	set_sr(0x2000);
 

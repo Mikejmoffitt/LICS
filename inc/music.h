@@ -15,6 +15,8 @@
 #define SFX_PAUSE 9
 #define SFX_CUBE_EXPLODE 10
 #define SFX_POWERUP_GET 11
+#define SFX_ENEMY_JUMP 12
+#define SFX_ENEMY_SHOOT 13
 
 void music_init(void);
 void music_play(u16 num);
