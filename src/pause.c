@@ -147,6 +147,7 @@ static void window_tile_set(u16 x, u16 y, u16 tile)
 static void map_progress_cover(void)
 {
 	u16 y, x;
+	return;
 	for (y = 0; y < SAVE_MAP_H; y++)
 	{
 		for (x = 0; x < SAVE_MAP_W; x++)
