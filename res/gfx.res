@@ -17,6 +17,7 @@ BIN gfx_en_dancyflower "gfx/en_dancyflower.bin" 2 2 0
 BIN gfx_en_jraff "gfx/en_jraff.bin" 2 2 0
 BIN gfx_en_pilla "gfx/en_pilla.bin" 2 2 0
 BIN gfx_en_hedgedog "gfx/en_hedgedog.bin" 2 2 0
+BIN gfx_en_shoot "gfx/en_shoot.bin" 2 2 0
 
 BIN gfx_inside1 "gfx/inside1.bin" 2 2 0
 BIN gfx_outside1 "gfx/outside1.bin" 2 2 0

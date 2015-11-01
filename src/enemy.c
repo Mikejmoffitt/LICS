@@ -13,6 +13,7 @@
 #include "jraff.h"
 #include "pilla.h"
 #include "hedgedog.h"
+#include "shoot.h"
 
 #include "state.h"
 #include "particles.h"
@@ -73,6 +74,7 @@ void enemy_init(void)
 	en_unload_jraff();
 	en_unload_pilla();
 	en_unload_hedgedog();
+	en_unload_shoot();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -358,6 +360,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_HEDGEDOG:
 					en_init_hedgedog((en_hedgedog *)e);
+					break;
+				case ENEMY_SHOOT:
+					en_init_shoot((en_shoot *)e);
 					break;
 			}
 			return &enemies[i];
