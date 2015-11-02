@@ -54,6 +54,7 @@ Also handles some object list functions.
 #define MAP_SET_INSIDE1 2
 #define MAP_SET_SANDY1 3
 #define MAP_SET_TELEPORTER 4
+#define MAP_SET_OUTSIDE3 5
 
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128

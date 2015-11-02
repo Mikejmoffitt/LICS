@@ -57,7 +57,7 @@ void en_init_shoot(en_shoot *e)
 
 	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.23);
 	dy_cutoff = system_ntsc ? FIX16(2.2) : FIX16(2.2);
-	dy_cutoff_big = system_ntsc ? FIX16(4.18) : FIX16(4.18);
+	dy_cutoff_big = system_ntsc ? FIX16(4.18) : FIX16(4.58);
 	anim_len = system_ntsc ? 10 : 8;
 }
 

@@ -9,6 +9,7 @@ extern const u8 pal_outside2[32];
 extern const u8 pal_inside1[32];
 extern const u8 pal_sandy1[32];
 extern const u8 pal_teleporter[32];
+extern const u8 pal_outside3[32];
 extern const u8 pal_bg_common[16];
 extern const u8 pal_bg1[32];
 extern const u8 pal_bg2[32];

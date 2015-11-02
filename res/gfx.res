@@ -24,6 +24,7 @@ BIN gfx_outside1 "gfx/outside1.bin" 2 2 0
 BIN gfx_outside2 "gfx/outside2.bin" 2 2 0
 BIN gfx_sandy1 "gfx/sandy1.bin" 2 2 0
 BIN gfx_teleporter "gfx/teleporter.bin" 2 2 0
+BIN gfx_outside3 "gfx/outside3.bin" 2 2 0
 
 BIN gfx_bg1 "gfx/bg1.bin" 2 2 0
 BIN gfx_bg2 "gfx/bg2.bin" 2 2 0

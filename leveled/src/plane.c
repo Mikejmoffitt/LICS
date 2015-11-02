@@ -90,6 +90,10 @@ void plane_load_fg(void)
 			sprintf(tile,"res/gfx/teleporter.bin");
 			sprintf(pal,"res/pal/teleporter.pal");
 			break;
+		case MAP_SET_OUTSIDE3:
+			sprintf(tile,"res/gfx/outside3.bin");
+			sprintf(pal,"res/pal/outside3.pal");
+			break;
 	}
 
 	printf("Opening %s for tile data...\n",tile);
