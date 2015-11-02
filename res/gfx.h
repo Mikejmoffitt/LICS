@@ -20,6 +20,7 @@ extern const u8 gfx_en_jraff[2688];
 extern const u8 gfx_en_pilla[768];
 extern const u8 gfx_en_hedgedog[1376];
 extern const u8 gfx_en_shoot[384];
+extern const u8 gfx_en_laser[384];
 extern const u8 gfx_inside1[8192];
 extern const u8 gfx_outside1[8192];
 extern const u8 gfx_outside2[8192];

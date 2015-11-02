@@ -14,6 +14,7 @@
 #include "pilla.h"
 #include "hedgedog.h"
 #include "shoot.h"
+#include "laser.h"
 
 #include "state.h"
 #include "particles.h"
@@ -75,6 +76,7 @@ void enemy_init(void)
 	en_unload_pilla();
 	en_unload_hedgedog();
 	en_unload_shoot();
+	en_unload_laser();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -199,7 +201,10 @@ void enemy_draw(void)
 		// Check bounds
 		if (ex > -32 && ex < 320 && ey > -32 && ey < 240)
 		{
-			sprite_put(ex,ey, e->head.size[0], e->head.attr[0]);
+			if (e->head.attr[0])
+			{
+				sprite_put(ex,ey, e->head.size[0], e->head.attr[0]);
+			}
 			if (e->head.attr[1])
 			{
 				s16 ex = e->head.x + e->head.xoff[1] - state.cam_x;
@@ -363,6 +368,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_SHOOT:
 					en_init_shoot((en_shoot *)e);
+					break;
+				case ENEMY_LASER:
+					en_init_laser((en_laser *)e);
 					break;
 			}
 			return &enemies[i];
