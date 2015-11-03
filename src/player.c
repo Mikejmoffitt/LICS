@@ -852,7 +852,11 @@ static inline void player_cube_collision(void)
 			c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM + 1 && 
 			c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 1 )
 		{
-			if (c->state == CUBE_STATE_IDLE)
+			if (c->type == CUBE_SPAWNER)
+			{
+				cube_restrict_spawn(c);
+			}
+			else if (c->state == CUBE_STATE_IDLE)
 			{
 				player_cube_vertical_collision(c);
 				player_cube_horizontal_collision(c);

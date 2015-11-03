@@ -20,6 +20,7 @@ fix16 cube_on_cube_dy;
 static fix16 kbounce_coef;
 static fix16 kbounce_cutoff;
 static fix16 kceiling_dy;
+static u16 kspawn_seq[2]; // Flicker time, spawn time
 
 static void cube_move(cube *c);
 static void cube_degrade_dx(cube *c);
@@ -51,6 +52,8 @@ void cubes_init(void)
 	kbounce_coef = system_ntsc ? FIX16(0.35) : FIX16(0.35);
 	kbounce_cutoff = system_ntsc ? FIX16(-1.04) : FIX16(-1.3);
 	kceiling_dy = system_ntsc ? FIX16(2.5) : FIX16(3.0);
+	kspawn_seq[0] = 40;
+	kspawn_seq[1] = 80;
 }
 
 void cube_destroy(cube *c)
@@ -279,7 +282,7 @@ static inline void green_cube_col(cube *c, cube *d)
 		}
 		c->dy = cube_on_cube_dy;
 		playsound(SFX_CUBEBOUNCE);
-		c->d2.cube_col_timeout = CUBE_COL_T;
+		c->cube_col_timeout = CUBE_COL_T;
 	}
 	else if (c->dy != FZERO)
 	{
@@ -297,14 +300,36 @@ static inline void green_cube_col(cube *c, cube *d)
 
 static inline void spawner_cube_col(cube *c, cube *d)
 {
+	// Overlapping a blue cube holds the spawn timer at zero
+	if (d->type == CUBE_BLUE && c->x == d->x && c->y == d->y)
+	{
+		c->d1.spawn_timer = 0;
+	}
+}
 
+void cube_restrict_spawn(cube *c)
+{
+	if (c->d1.spawn_timer == kspawn_seq[1] - 1)
+	{
+		c->d1.spawn_timer = kspawn_seq[1] - 2;
+	}
+}
+
+static void spawner_proc(cube *c)
+{
+	c->d1.spawn_timer++;
+	// Blue cube spawning time has been reached
+	if (c->d1.spawn_timer == kspawn_seq[1])
+	{
+		cube_spawn(c->x, c->y, CUBE_BLUE, CUBE_STATE_IDLE, FIX16(0.0), FIX16(0.0));
+	}
 }
 
 static void cube_on_cube_collisions(cube *c)
 {
-	if (c->d2.cube_col_timeout)
+	if (c->type != CUBE_SPAWNER && c->cube_col_timeout)
 	{
-		c->d2.cube_col_timeout--;
+		c->cube_col_timeout--;
 		return;
 	}
 	int i = CUBES_NUM;
@@ -550,6 +575,11 @@ void cubes_run(void)
 		{
 			continue;
 		}
+		else if (c->type == CUBE_SPAWNER)
+		{
+			spawner_proc(c);
+			cube_on_cube_collisions(c);
+		}
 		else if (c->state == CUBE_STATE_FIZZLE || c->state == CUBE_STATE_EXPLODE)
 		{
 			if (c->dy > 0)
@@ -584,15 +614,56 @@ void cubes_run(void)
 	}
 }
 
+static void highp_draw(void)
+{
+
+	int i = CUBES_NUM;
+	while (i--)
+	{
+		cube *c = &cubes[i];
+		if (c->type == CUBE_SPAWNER)
+		{
+			if (c->d1.spawn_timer < kspawn_seq[0] && c->d1.spawn_timer)
+			{
+				continue;
+			}
+			else if ((system_osc >> 2) % 2 == 0)
+			{
+				continue;
+			}
+			s16 cx = c->x - state.cam_x + CUBE_LEFT;
+			s16 cy = c->y - state.cam_y + CUBE_TOP;
+			if (cx <= -16 || cx >= 320 || cy <= -16 || cy >= 240)
+			{
+				continue;
+			}
+			cube_draw_single(c->x + CUBE_LEFT, c->y + CUBE_TOP, c->type);
+		}
+	}
+}
+
 void cubes_draw(void)
 {
+	// Memoize ones to draw at higher priotities
 	int i = CUBES_NUM;
+	highp_draw();
 	while (i--)
 	{
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
 		{
 			continue;
+		}
+		else if (c->type == CUBE_SPAWNER)
+		{
+			if (c->d1.spawn_timer < kspawn_seq[0] && c->d1.spawn_timer)
+			{
+				continue;
+			}
+			else if ((system_osc >> 2) % 2 == 0)
+			{
+				continue;
+			}
 		}
 		else if (c->state == CUBE_STATE_FIZZLE)
 		{
@@ -622,7 +693,7 @@ void cubes_draw(void)
 void cube_draw_single(u16 x, u16 y, u16 type)
 {
 	u16 palnum;
-	if (type == CUBE_BLUE || type == CUBE_ORANGE)
+	if (type == CUBE_BLUE || type == CUBE_ORANGE || type == CUBE_SPAWNER)
 	{
 		palnum = CUBE_ALT_PALNUM;
 	}
@@ -645,8 +716,10 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 		case CUBE_GREEN:
 			frame += 12;
 			break;
+		case CUBE_SPAWNER:
+			frame += 48;
+			break;
 	}
-
 	sprite_put(x - state.cam_x, y - state.cam_y, SPRITE_SIZE(2,2), frame);
 }
 
@@ -658,14 +731,22 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 		cube *c = &cubes[i];
 		if (c->state == CUBE_STATE_INACTIVE)
 		{
-			c->state = state;
 			c->x = x;
 			c->y = y;
 			c->dx = dx;
 			c->dy = dy;
 			c->type = type;
-			c->d2.cube_col_timeout = 0;
-			c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
+			c->cube_col_timeout = 0;
+			if (c->type == CUBE_SPAWNER)
+			{
+				c->d1.spawn_timer = 0;
+				c->state = CUBE_STATE_IDLE;
+			}
+			else
+			{
+				c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
+				c->state = state;
+			}
 			break;
 		}
 	}

@@ -83,11 +83,7 @@ struct cube
 		s16 bounce_count; // Used by green cubes
 		u16 spawn_timer; // Used by spawner cubes
 	} d1;
-	union
-	{
-		u16 cube_col_timeout; // Used by green cubes
-		u16 anim_cnt; // Used by spawner cubes
-	} d2;
+	u16 cube_col_timeout; // Used by green cubes
 	u16 type;
 };
 
@@ -98,6 +94,7 @@ void cubes_init(void);
 void cube_delete(cube *c);
 void cubes_run(void);
 void cubes_draw(void);
+void cube_restrict_spawn(cube *c);
 void cube_draw_single(u16 x, u16 y, u16 type);
 void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy);
 void cube_clamp_dx(cube *c);
