@@ -298,15 +298,6 @@ static inline void green_cube_col(cube *c, cube *d)
 	}
 }
 
-static inline void spawner_cube_col(cube *c, cube *d)
-{
-	// Overlapping a blue cube holds the spawn timer at zero
-	if (d->type == CUBE_BLUE && c->x == d->x && c->y == d->y)
-	{
-		c->d1.spawn_timer = 0;
-	}
-}
-
 void cube_restrict_spawn(cube *c)
 {
 	if (c->d1.spawn_timer == kspawn_seq[1] - 1)
@@ -325,9 +316,22 @@ static void spawner_proc(cube *c)
 	}
 }
 
+static void spawn_touch_check(cube *c)
+{
+	int i = CUBES_NUM;
+	while (i--)
+	{
+		cube *d = &cubes[i];
+		if (d->type == CUBE_BLUE && d->x == c->x && d->y == c->y)
+		{
+			c->d1.spawn_timer = 0;
+		}
+	}
+}
+
 static void cube_on_cube_collisions(cube *c)
 {
-	if (c->type != CUBE_SPAWNER && c->cube_col_timeout)
+	if (c->cube_col_timeout)
 	{
 		c->cube_col_timeout--;
 		return;
@@ -349,10 +353,6 @@ static void cube_on_cube_collisions(cube *c)
 			if (c->type == CUBE_GREEN)
 			{
 				green_cube_col(c, d);
-			}
-			else if (c->type == CUBE_SPAWNER)
-			{
-				spawner_cube_col(c, d);
 			}
 			else
 			{
@@ -578,7 +578,7 @@ void cubes_run(void)
 		else if (c->type == CUBE_SPAWNER)
 		{
 			spawner_proc(c);
-			cube_on_cube_collisions(c);
+			spawn_touch_check(c);
 		}
 		else if (c->state == CUBE_STATE_FIZZLE || c->state == CUBE_STATE_EXPLODE)
 		{
@@ -737,9 +737,9 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 			c->dy = dy;
 			c->type = type;
 			c->cube_col_timeout = 0;
-			if (c->type == CUBE_SPAWNER)
+			if (type == CUBE_SPAWNER)
 			{
-				c->d1.spawn_timer = 0;
+				c->d1.spawn_timer = kspawn_seq[1] - 1;
 				c->state = CUBE_STATE_IDLE;
 			}
 			else
