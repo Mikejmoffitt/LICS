@@ -15,6 +15,7 @@
 #include "hedgedog.h"
 #include "shoot.h"
 #include "laser.h"
+#include "killzam.h"
 
 #include "state.h"
 #include "particles.h"
@@ -77,6 +78,7 @@ void enemy_init(void)
 	en_unload_hedgedog();
 	en_unload_shoot();
 	en_unload_laser();
+	en_unload_killzam();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -371,6 +373,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_LASER:
 					en_init_laser((en_laser *)e);
+					break;
+				case ENEMY_KILLZAM:
+					en_init_killzam((en_killzam *)e);
 					break;
 			}
 			return &enemies[i];

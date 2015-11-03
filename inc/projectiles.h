@@ -30,6 +30,6 @@ void projectiles_init(void);
 void projectiles_run(void);
 void projectiles_draw(void);
 void projectile_shoot(s16 x, s16 y, fix16 dx, fix16 dy, u16 type);
-void projectile_shoot_at(s16 x, s16 y, u16 type, s16 tx, s16 ty);
+void projectile_shoot_at(s16 x, s16 y, s16 tx, s16 ty);
 
 #endif

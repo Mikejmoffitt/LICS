@@ -19,6 +19,7 @@ BIN gfx_en_pilla "gfx/en_pilla.bin" 2 2 0
 BIN gfx_en_hedgedog "gfx/en_hedgedog.bin" 2 2 0
 BIN gfx_en_shoot "gfx/en_shoot.bin" 2 2 0
 BIN gfx_en_laser "gfx/en_laser.bin" 2 2 0
+BIN gfx_en_killzam "gfx/en_killzam.bin" 2 2 0
 
 BIN gfx_inside1 "gfx/inside1.bin" 2 2 0
 BIN gfx_outside1 "gfx/outside1.bin" 2 2 0

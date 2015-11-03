@@ -166,9 +166,24 @@ void projectile_shoot(s16 x, s16 y, fix16 dx, fix16 dy, u16 type)
 	}
 }
 
-void projectile_shoot_at(s16 x, s16 y, u16 type, s16 tx, s16 ty)
+void projectile_shoot_at(s16 x, s16 y, s16 tx, s16 ty)
 {
 	// Get rise-over-run coefficient
-	fix16 ratio = fix16Div(FIX16(ty - y), FIX16(tx - x));
+// 	fix16 ratio = fix16Div(FIX16(ty - y), FIX16(tx - x));
+	s16 dx, dy;
+	dx = FIX16(tx - x) >> 4;
+	dy = FIX16(ty - y) >> 4;
 
+	// Reductions for distance, to pretend this isn't a bad function
+	if (tx - x > 64 || x - tx > 64 || ty - y > 48 || y - ty > 48)
+	{	
+		dx = dx >> 1;
+		dy = dy >> 1;
+	}
+	else if (tx - x > 128 || x - tx > 128 || ty - y > 96 || y - ty > 96)
+	{	
+		dx = dx >> 1;
+		dy = dy >> 1;
+	}
+	projectile_shoot(x, y, dx, dy, PROJECTILE_BALL2); 
 }
