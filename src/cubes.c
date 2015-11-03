@@ -235,11 +235,76 @@ void cube_clamp_dx(cube *c)
 	}
 }
 
+static inline void normal_cube_col(cube *c, cube *d)
+{
+	if (d->type == CUBE_SPAWNER)
+	{
+		return;
+	}
+	if (c->state != CUBE_STATE_IDLE)
+	{
+		cube_destroy(c);
+	}
+	else if (c->dy != FZERO)
+	{
+		c->dy = FZERO;
+	}
+	if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
+	{
+		cube_destroy(d);
+	}
+	else if (d->dy != FZERO)
+	{
+		d->dy = FZERO;
+	}
+}
+
+static inline void green_cube_col(cube *c, cube *d)
+{
+	if (c->state != CUBE_STATE_IDLE)
+	{
+		if (c->state == CUBE_STATE_KICKED)
+		{
+			c->dx = c->dx * -1;
+			c->state = CUBE_STATE_AIR;
+			c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
+		}
+		if (c->dx)
+		{
+			cube_clamp_dx(c);
+		}
+		else
+		{
+			c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
+		}
+		c->dy = cube_on_cube_dy;
+		playsound(SFX_CUBEBOUNCE);
+		c->d2.cube_col_timeout = CUBE_COL_T;
+	}
+	else if (c->dy != FZERO)
+	{
+		c->dy = FZERO;
+	}
+	if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
+	{
+		cube_destroy(d);
+	}
+	else if (d->dy != FZERO)
+	{
+		d->dy = FZERO;
+	}
+}
+
+static inline void spawner_cube_col(cube *c, cube *d)
+{
+
+}
+
 static void cube_on_cube_collisions(cube *c)
 {
-	if (c->cube_col_timeout)
+	if (c->d2.cube_col_timeout)
 	{
-		c->cube_col_timeout--;
+		c->d2.cube_col_timeout--;
 		return;
 	}
 	int i = CUBES_NUM;
@@ -250,70 +315,23 @@ static void cube_on_cube_collisions(cube *c)
 		{
 			continue;
 		}
-		if (c->type != CUBE_GREEN)
+		// Collision between C and D registered
+		if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
+		    c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
+		    c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
+		    c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
 		{
-			if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
-				c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
-				c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
-				c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
+			if (c->type == CUBE_GREEN)
 			{
-				if (c->state != CUBE_STATE_IDLE)
-				{
-					cube_destroy(c);
-				}
-				else if (c->dy != FZERO)
-				{
-					c->dy = FZERO;
-				}
-				if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
-				{
-					cube_destroy(d);
-				}
-				else if (d->dy != FZERO)
-				{
-					d->dy = FZERO;
-				}
+				green_cube_col(c, d);
 			}
-		}
-		else
-		{
-			if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
-				c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
-				c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
-				c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
+			else if (c->type == CUBE_SPAWNER)
 			{
-				if (c->state != CUBE_STATE_IDLE)
-				{
-					if (c->state == CUBE_STATE_KICKED)
-					{
-						c->dx = c->dx * -1;
-						c->state = CUBE_STATE_AIR;
-						c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
-					}
-					if (c->dx)
-					{
-						cube_clamp_dx(c);
-					}
-					else
-					{
-						c->dx = GET_HVCOUNTER % 2 ? 1 : -1;
-					}
-					c->dy = cube_on_cube_dy;
-					playsound(SFX_CUBEBOUNCE);
-					c->cube_col_timeout = CUBE_COL_T;
-				}
-				else if (c->dy != FZERO)
-				{
-					c->dy = FZERO;
-				}
-				if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
-				{
-					cube_destroy(d);
-				}
-				else if (d->dy != FZERO)
-				{
-					d->dy = FZERO;
-				}
+				spawner_cube_col(c, d);
+			}
+			else
+			{
+				normal_cube_col(c, d);
 			}
 		}
 	}
@@ -321,24 +339,24 @@ static void cube_on_cube_collisions(cube *c)
 
 static void cube_eval_stopmoving(cube *c)
 {
-	if (c->bounce_count <= 0 && c->dx == 0)
+	if (c->d1.bounce_count <= 0 && c->dx == 0)
 	{
 		c->dy = FZERO;
 		c->y = ((c->y / 8) * 8) - 1;
 		c->state = CUBE_STATE_IDLE;
 	}
-	else if (c->bounce_count == 0)
+	else if (c->d1.bounce_count == 0)
 	{
-		c->bounce_count = 1;
+		c->d1.bounce_count = 1;
 	}
 
 	if (c->dx == 0 && c->dy > kbounce_cutoff)
 	{
-		c->bounce_count--;
+		c->d1.bounce_count--;
 	}
 	else
 	{
-		c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
+		c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
 	}
 }
 
@@ -422,7 +440,7 @@ static void cube_bg_bounce_sides(cube *c)
 		{
 			c->state = CUBE_STATE_AIR;
 			c->dy = cube_on_cube_dy;
-			c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
+			c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
 		}
 	}
 }
@@ -646,8 +664,8 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 			c->dx = dx;
 			c->dy = dy;
 			c->type = type;
-			c->cube_col_timeout = 0;
-			c->bounce_count = CUBE_BOUNCE_COUNT_INIT;
+			c->d2.cube_col_timeout = 0;
+			c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
 			break;
 		}
 	}

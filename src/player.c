@@ -716,7 +716,7 @@ static void player_bg_vertical_collision(void)
 
 static void player_cube_horizontal_collision(cube *c)
 {
-	if (c->state == CUBE_STATE_AIR)
+	if (c->state == CUBE_STATE_AIR || c->type == CUBE_SPAWNER)
 	{
 		return;
 	}
@@ -751,6 +751,10 @@ static void player_cube_horizontal_collision(cube *c)
 
 static void player_cube_vertical_collision(cube *c)
 {
+	if (c->type == CUBE_SPAWNER)
+	{
+		return;
+	}
 	u16 py = fix32ToInt(pl.y);
 	u16 px = fix32ToInt(pl.x);
 	px -= fix16ToInt(pl.dx);
@@ -794,7 +798,8 @@ static void player_cube_eval_standing(cube *c)
 	if (c->x + CUBE_LEFT <= px + PLAYER_CHK_RIGHT - 1 && 
 		c->x + CUBE_RIGHT >= px + PLAYER_CHK_LEFT + 1 && 
 		py + PLAYER_CHK_BOTTOM + 1>= c->y + CUBE_TOP && 
-		py + PLAYER_CHK_TOP < c->y + CUBE_TOP)
+		py + PLAYER_CHK_TOP < c->y + CUBE_TOP &&
+		c->type != CUBE_SPAWNER)
 	{
 		// Already standing on a cube? Determine which cube is closer and
 		// use that cube as the "standing-on cube" reference for lifting.

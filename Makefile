@@ -93,6 +93,9 @@ gens: lyle.bin
 regen: lyle.bin
 	@exec wine ./util/regen/Regen.exe ../../lyle.bin
 
+kmod: lyle.bin
+	@exec wine ./util/kmod/gens.exe lyle.bin
+
 fusion: lyle.bin
 	@exec util/Fusion $< 2> /dev/null
 

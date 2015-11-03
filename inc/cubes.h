@@ -78,8 +78,16 @@ struct cube
 	s16 y;
 	s16 dx;
 	fix16 dy;
-	s16 bounce_count;
-	u16 cube_col_timeout;
+	union 
+	{
+		s16 bounce_count; // Used by green cubes
+		u16 spawn_timer; // Used by spawner cubes
+	} d1;
+	union
+	{
+		u16 cube_col_timeout; // Used by green cubes
+		u16 anim_cnt; // Used by spawner cubes
+	} d2;
 	u16 type;
 };
 
