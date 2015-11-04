@@ -52,8 +52,8 @@ void cubes_init(void)
 	kbounce_coef = system_ntsc ? FIX16(0.35) : FIX16(0.35);
 	kbounce_cutoff = system_ntsc ? FIX16(-1.04) : FIX16(-1.3);
 	kceiling_dy = system_ntsc ? FIX16(2.5) : FIX16(3.0);
-	kspawn_seq[0] = 40;
-	kspawn_seq[1] = 80;
+	kspawn_seq[0] = system_ntsc ? 72 : 60;
+	kspawn_seq[1] = system_ntsc ? 120 : 100;
 }
 
 void cube_destroy(cube *c)

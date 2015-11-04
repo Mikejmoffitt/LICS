@@ -420,13 +420,13 @@ void map_dma(void)
 u16 map_collision(u16 px, u16 py)
 {
 	u16 check_addr = ((py / 8) * (state.current_room->w * 40)) + (px / 8);
-	u16 *m = (u16 *)(&state.current_map[0] + (2 * check_addr));
-	return ((*m >= 0x80) && (*m < 0xE0));
+	u16 m = *(u16 *)(&state.current_map[0] + (2 * check_addr)) & 0x7FFF;
+	return ((m >= 0x80) && (m < 0xE0));
 }
 
 u16 map_hurt(u16 px, u16 py)
 {
 	u16 check_addr = ((py / 8) * (state.current_room->w * 40)) + (px / 8);
-	u16 *m = (u16 *)(&state.current_map[0] + (2 * check_addr));
-	return ((*m >= 0xE0) && (*m <= 0xFF));
+	u16 m = *(u16 *)(&state.current_map[0] + (2 * check_addr)) & 0x7FFF;
+	return ((m >= 0xE0) && (m <= 0xFF));
 }

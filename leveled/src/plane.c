@@ -149,12 +149,23 @@ void plane_draw_map(unsigned int x, unsigned int y)
 			}	
 			unsigned int t_idx = j + scroll_x;
 			t_idx += (i + scroll_y) * (MAP_WIDTH * map_header.w);
-			unsigned int t_choice = map_data[t_idx];
+			unsigned int t_choice = map_data[t_idx] & 0x7FFF;
 			// determine coords of tile to pull from tileset from buffer
 			unsigned int t_x = TILESIZE * (t_choice % CHR_T_W);
 			unsigned int t_y = TILESIZE * (t_choice/CHR_T_W);
 			al_draw_bitmap_region(chr, t_x, t_y, TILESIZE, TILESIZE, 
 				x + (TILESIZE * j), y + (TILESIZE * i),0);
+
+			// If it's high priority, tint it slightly
+			if (map_data[t_idx] & 0x8000)
+			{
+				al_draw_filled_rectangle(
+					x + (TILESIZE * j), 
+					y + (TILESIZE * i),
+					x + (TILESIZE * j) + TILESIZE, 
+					y + (TILESIZE * i) + TILESIZE,
+					al_map_rgba(64, 80, 64, 0));
+			}
 		}
 	}
 
@@ -518,8 +529,8 @@ void plane_draw_meta(unsigned int x, unsigned int y)
 	plane_print_label(x, y + 24, al_map_rgb(255, 255, 192), msg);
 	
 	// Edit mode information
-	sprintf(msg, "(%03X,%03X-%c)",
-		cursor_x, cursor_y, tile_src_size == SEL_FULL ? 'L' : 's');
+	sprintf(msg, "(%03X,%03X-%c)%c",
+		cursor_x, cursor_y, tile_src_size == SEL_FULL ? 'L' : 's', tile_prio ? 'P' : ' ');
 	plane_print_label(x + (TILESIZE * 28), y + 16, al_map_rgb(192, 255, 192), msg);
 
 	switch (edit_mode)
@@ -602,22 +613,22 @@ static void mouse_in_map(void)
 
 		if (mousestate.buttons & 1)
 		{
-			map_data[t_idx] = tile_sel;
+			map_data[t_idx] = (tile_prio << 15) | tile_sel;
 			if (tile_src_size == SEL_FULL)
 			{
 				t_idx++;
-				map_data[t_idx] = tile_sel + 1;
+				map_data[t_idx] = (tile_prio << 15) | tile_sel + 1;
 				t_idx += (map_header.w * MAP_WIDTH) - 1;
-				map_data[t_idx] = tile_sel + (CHR_T_W);
+				map_data[t_idx] = (tile_prio << 15) | tile_sel + (CHR_T_W);
 				t_idx += 1;
-				map_data[t_idx] = tile_sel + (CHR_T_W + 1);
+				map_data[t_idx] = (tile_prio << 15) | tile_sel + (CHR_T_W + 1);
 			}
 			sprintf(display_title,"%s [*]",map_fname);
 			al_set_window_title(display, display_title);
 		}
 		else if (mousestate.buttons & 2)
 		{
-			tile_sel = map_data[t_idx];
+			tile_sel = map_data[t_idx] & 0x7FFF;
 		}
 	}
 	else if (edit_mode == MODE_OBJECTS)
@@ -802,6 +813,10 @@ void plane_handle_io(void)
 				case ALLEGRO_KEY_I:
 					map_data_interview();
 					plane_load_fg();
+					break;
+				case ALLEGRO_KEY_P:
+					tile_prio = tile_prio ? 0 : 1;
+					break;
 
 				case ALLEGRO_KEY_UP:
 					if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))
