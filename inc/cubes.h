@@ -8,6 +8,9 @@
 
 #define CUBES_NUM 32
 
+#define CUBE_DIR_RIGHT 0
+#define CUBE_DIR_LEFT  1
+
 #define CUBE_W 16
 #define CUBE_H 16
 #define CUBE_TOP -15
@@ -83,6 +86,7 @@ struct cube
 		s16 bounce_count; // Used by green cubes
 		u16 spawn_timer; // Used by spawner cubes
 	} d1;
+	u16 direction;
 	u16 cube_col_timeout; // Used by green cubes
 	u16 type;
 };

@@ -737,6 +737,7 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 			c->dy = dy;
 			c->type = type;
 			c->cube_col_timeout = 0;
+			c->direction = pl.direction;
 			if (type == CUBE_SPAWNER)
 			{
 				c->d1.spawn_timer = kspawn_seq[1] - 1;

@@ -543,6 +543,7 @@ static void player_kick_cube(cube *c)
 			c->dx = CUBE_KICK_DX;
 			pl.action_cnt = PLAYER_ACTION_LIFT;
 			playsound(SFX_CUBEBOUNCE);
+			c->direction = pl.direction;
 		}
 		else if (px == (c->x + CUBE_RIGHT) - PLAYER_CHK_LEFT + 1 &&
 			pl.direction == PLAYER_LEFT)
@@ -552,6 +553,7 @@ static void player_kick_cube(cube *c)
 			c->dx = (CUBE_KICK_DX * -1);
 			pl.action_cnt = PLAYER_ACTION_LIFT;
 			playsound(SFX_CUBEBOUNCE);
+			c->direction = pl.direction;
 		}
 	}
 }
