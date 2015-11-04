@@ -190,7 +190,7 @@ static void cube_func(void *v, cube *c)
 			c->state = CUBE_STATE_AIR;
 		}
 		else if (e->head.direction == ENEMY_LEFT && 
-		    c->x > e->head.x &&
+		    c->x < e->head.x &&
 		    c->direction != e->head.direction)
 		{
 			c->dx = -4;
