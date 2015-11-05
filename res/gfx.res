@@ -21,6 +21,7 @@ BIN gfx_en_shoot "gfx/en_shoot.bin" 2 2 0
 BIN gfx_en_laser "gfx/en_laser.bin" 2 2 0
 BIN gfx_en_killzam "gfx/en_killzam.bin" 2 2 0
 BIN gfx_en_flargy "gfx/en_flargy.bin" 2 2 0
+BIN gfx_en_plant "gfx/en_plant.bin" 2 2 0
 
 BIN gfx_inside1 "gfx/inside1.bin" 2 2 0
 BIN gfx_outside1 "gfx/outside1.bin" 2 2 0

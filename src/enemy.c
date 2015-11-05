@@ -17,6 +17,7 @@
 #include "laser.h"
 #include "killzam.h"
 #include "flargy.h"
+#include "plant.h"
 
 #include "state.h"
 #include "particles.h"
@@ -81,6 +82,7 @@ void enemy_init(void)
 	en_unload_laser();
 	en_unload_killzam();
 	en_unload_flargy();
+	en_unload_plant();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -381,6 +383,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_FLARGY:
 					en_init_flargy((en_flargy *)e);
+					break;
+				case ENEMY_PLANT:
+					en_init_plant((en_plant *)e);
 					break;
 			}
 			return &enemies[i];

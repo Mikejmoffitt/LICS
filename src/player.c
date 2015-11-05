@@ -169,7 +169,6 @@ void player_dma_setup(void)
 void player_dma(void)
 {
 	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
-	player_set_pal();
 }
 
 static void player_read_pad(void)
