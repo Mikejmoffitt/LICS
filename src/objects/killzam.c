@@ -46,9 +46,14 @@ void en_init_killzam(en_killzam *e)
 
 	e->head.direction = ENEMY_RIGHT;
 
-	e->head.size[0] = SPRITE_SIZE(2,3);
-	e->head.xoff[0] = -8;
-	e->head.yoff[0] = -24;
+	e->head.size[1] = SPRITE_SIZE(2,3);
+	e->head.xoff[1] = -8;
+	e->head.yoff[1] = -24;
+	e->head.attr[1] = NULL;
+
+	e->head.size[0] = SPRITE_SIZE(1,1);
+	e->head.yoff[0] = -12;
+	e->head.xoff[0] = 64;
 	e->head.attr[0] = NULL;
 
 	e->dy = FIX16(0.0);
@@ -201,16 +206,28 @@ static void anim_func(void *v)
 		if ((e->timer < ksequence[1] && (system_osc >> 1) % 2 == 0) ||
 			(e->timer >= ksequence[2] && (system_osc >> 1) % 2 == 0))
 		{
-			e->head.attr[0] = NULL;
+			e->head.attr[1] = NULL;
 		}
 		else
 		{
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + e->anim_frame);
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + e->anim_frame);
+		}
+
+		// Show the projectile he's going to shoot
+		if (e->timer >= ksequence[1] && e->timer < ksequence[2])
+		{
+			e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + ((system_osc >> 2) % 2));
+			e->head.xoff[0] = (e->head.direction == ENEMY_RIGHT) ? 8 : -8;
+		}
+		else
+		{
+			e->head.attr[0] = NULL;
 		}
 	}
 	else
 	{
 		e->head.attr[0] = NULL;
+		e->head.attr[1] = NULL;
 	}
 }
 
