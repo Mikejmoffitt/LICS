@@ -2,9 +2,11 @@
 #include "gfx.h"
 #include "vramslots.h"
 #include "system.h"
+#include "cubes.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
+static void cube_func(void *v, cube *c);
 static void vram_load(void);
 
 static u16 ksequence[4]; // Start flickering, start harming, stop harming, stop flickering
@@ -26,7 +28,7 @@ void en_init_laser(en_laser *e)
 	vram_load();
 	e->head.proc_func = &proc_func;
 	e->head.anim_func = &anim_func;
-	e->head.cube_func = NULL;
+	e->head.cube_func = &cube_func;
 
 	e->head.hp = 1;
 	e->head.x += 8;
@@ -91,4 +93,9 @@ static void anim_func(void *v)
 	{
 		e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, (system_osc >> 2) % 2, vram_pos);
 	}
+}
+
+static void cube_func(void *v, cube *c)
+{
+	return;
 }
