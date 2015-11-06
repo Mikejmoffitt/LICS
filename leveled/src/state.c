@@ -19,6 +19,8 @@ unsigned int tile_sel;
 unsigned int tile_src_size;
 unsigned int tile_dest_size;
 unsigned int tile_prio;
+unsigned int tile_flip_v;
+unsigned int tile_flip_h;
 
 // Scrolling down the object listing
 unsigned int obj_list_scroll;
@@ -45,6 +47,8 @@ void state_init(void)
 	tile_src_size = SEL_FULL;
 	tile_dest_size = SEL_SINGLE;
 	tile_prio = 0;
+	tile_flip_v = 0;
+	tile_flip_h = 0;
 	tile_sel = 0;
 	obj_list_scroll = 0;
 	obj_list_sel = 0;

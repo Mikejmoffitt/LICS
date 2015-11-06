@@ -817,6 +817,12 @@ void plane_handle_io(void)
 				case ALLEGRO_KEY_P:
 					tile_prio = tile_prio ? 0 : 1;
 					break;
+				case ALLEGRO_KEY_X:
+					tile_flip_h = tile_flip_h ? 0 : 1;
+					break;
+				case ALLEGRO_KEY_Y:
+					tile_flip_v = tile_flip_v ? 0 : 1;
+					break;
 
 				case ALLEGRO_KEY_UP:
 					if (al_key_down(&keystate, ALLEGRO_KEY_LCTRL))

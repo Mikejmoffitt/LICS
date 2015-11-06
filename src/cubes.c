@@ -45,6 +45,8 @@ void cubes_init(void)
 	{
 		cube *c = &cubes[i];
 		c->state = CUBE_STATE_INACTIVE;
+		c->x = -32;
+		c->y = -32;
 	}
 	// Set up constants for NTSC/PAL stuff
 	kgravity = system_ntsc ? FIX16(0.15) : FIX16(0.2);

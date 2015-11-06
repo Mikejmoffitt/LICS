@@ -49,6 +49,11 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_jumpget,
 	(map_file *)&mapdata_lavatower,
 	(map_file *)&mapdata_ballhall,
+	(map_file *)&mapdata_kickblock,
+	(map_file *)&mapdata_pillatower,
+	(map_file *)&mapdata_buggozone,
+	(map_file *)&mapdata_poweruptower,
+	(map_file *)&mapdata_boingotele,
 	0
 };
 

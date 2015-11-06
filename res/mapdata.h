@@ -15,6 +15,11 @@ extern const u8 mapdata_zigzag[8268];
 extern const u8 mapdata_jumpget[3468];
 extern const u8 mapdata_lavatower[15468];
 extern const u8 mapdata_ballhall[13068];
+extern const u8 mapdata_kickblock[5868];
+extern const u8 mapdata_pillatower[8268];
+extern const u8 mapdata_buggozone[5868];
+extern const u8 mapdata_poweruptower[10668];
+extern const u8 mapdata_boingotele[3468];
 extern const u8 mapdata_roomzero[3468];
 
 #endif // _MAPDATA_H_

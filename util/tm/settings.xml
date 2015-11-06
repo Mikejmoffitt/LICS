@@ -5,13 +5,14 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside3.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside2.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside1.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/inside1.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_shoot.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/font.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_pilla.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_jraff.bin"/>
   <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_dancyflower.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_buggo.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_boingo.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/projectiles.bin"/>
   <property key="recentFile" value="/opt/toolchains/gen/m68k-elf/lib/libmd.a"/>
 </settings>

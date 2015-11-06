@@ -35,6 +35,8 @@ extern unsigned int tile_src_size;
 extern unsigned int tile_dest_size;
 
 extern unsigned int tile_prio;
+extern unsigned int tile_flip_v;
+extern unsigned int tile_flip_h;
 
 
 // Scrolling down the object listing
