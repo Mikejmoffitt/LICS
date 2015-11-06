@@ -176,7 +176,7 @@ static inline void v_movement(en_shoot *e)
 	{
 		e->head.y = e->y_orig;
 		// Check player prox for swoop enable
-		if (pl.px < e->head.x + SHOOT_PROX && pl.x > e->head.x - SHOOT_PROX)
+		if (pl.px < e->head.x + SHOOT_PROX && pl.px > e->head.x - SHOOT_PROX)
 		{
 			e->swoop_en = 1;
 		}
