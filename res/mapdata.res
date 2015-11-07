@@ -17,5 +17,6 @@ BIN mapdata_pillatower "mapdata/pillatower.bin" 2 2 0
 BIN mapdata_buggozone "mapdata/buggozone.bin" 2 2 0
 BIN mapdata_poweruptower "mapdata/poweruptower.bin" 2 2 0
 BIN mapdata_boingotele "mapdata/boingotele.bin" 2 2 0
+BIN mapdata_undersand "mapdata/undersand.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0
