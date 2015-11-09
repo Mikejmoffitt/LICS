@@ -388,6 +388,11 @@ static void player_eval_grounded(void)
 	}
 }
 
+void player_do_jump(void)
+{
+	pl.dy = plk.jump_dy;
+}
+
 static void player_jump(void)
 {
 	// Very small timeout to prevent lyle from cube-jumping so the occasional

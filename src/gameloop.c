@@ -91,7 +91,7 @@ void gameloop_dma(void)
 	player_dma();
 }
 
-static void gameloop_room_setup(void)
+static void gameloop_room_setup(u16 transition)
 {	
 	// Blank the display
 	system_wait_v();
@@ -106,6 +106,12 @@ static void gameloop_room_setup(void)
 	powerup_init();
 	player_init_soft();
 	pause_init();
+
+	// Depending on room entry, do some things
+	if (transition == STATE_TRANSITION_UP)
+	{
+		player_do_jump();
+	}
 
 	// Load the next room
 	state_load_room(state.next_id);
@@ -145,12 +151,12 @@ static void gameloop_room_setup(void)
 
 void gameloop_main(void)
 {
+	u16 transition = 0;
 	state.next_id = 1;
 	state.next_entrance = 0;
 	state.current_id = 64;
 
 	player_init();
-
 
 	pl.input = JOY_readJoypad(JOY_1);
 	if (pl.input & BUTTON_Z)	
@@ -169,7 +175,7 @@ void gameloop_main(void)
 	// Game is in progress
 	while (1)
 	{
-		gameloop_room_setup();
+		gameloop_room_setup(transition);
 		do
 		{
 			/* Run one frame of engine logic */
@@ -185,6 +191,6 @@ void gameloop_main(void)
 				pause_screen_loop();	
 			}
 		}
-		while (!state_watch_transitions());
+		while (!(transition = state_watch_transitions()));
 	}
 }
