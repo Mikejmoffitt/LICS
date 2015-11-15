@@ -198,10 +198,14 @@ void enemy_draw(void)
 		s16 ex = e->head.x + e->head.xoff[0] - state.cam_x;
 		s16 ey = e->head.y + e->head.yoff[0] - state.cam_y;
 
+		s16 randx, randy;
+		randx = (GET_HVCOUNTER % 4) - 2;
+		randy = ((GET_HVCOUNTER >> 1) % 4) - 2;
+
 		if (e->head.hurt_cnt > 0)
 		{
-			ex = ex - 2 + GET_HVCOUNTER % 4;
-			ey = ey - 2 + (GET_HVCOUNTER >> 1) % 4;
+			ex = ex + randx;
+			ey = ey + randy;
 		}
 
 		// Check bounds
@@ -217,8 +221,8 @@ void enemy_draw(void)
 				s16 ey = e->head.y + e->head.yoff[1] - state.cam_y;
 				if (e->head.hurt_cnt > 0)
 				{
-					ex = ex - 2 + GET_HVCOUNTER % 4;
-					ey = ey - 2 + (GET_HVCOUNTER >> 1) % 4;
+					ex = ex + randx;
+					ey = ey + randy;
 				}
 				sprite_put(ex,ey, e->head.size[1], e->head.attr[1]);
 			}

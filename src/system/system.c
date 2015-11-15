@@ -11,6 +11,8 @@
 #define WAIT_NOP(x) for (i = 0; i < x; i++) { __asm__("nop"); }
 
 static vu16 vbl_active;
+u16 buttons;
+u16 buttons_prev;
 u16 system_osc;
 u16 system_ntsc;
 u16 ntsc_counter;
@@ -63,6 +65,8 @@ static _voidCallback *v_int(void)
 			ntsc_counter--;
 		}
 	}
+	buttons_prev = buttons;
+	buttons = JOY_readJoypad(JOY_1);
 
 	return NULL;
 }
@@ -111,6 +115,11 @@ void system_init(void)
 
 	// Inject our font
 	VDP_doVRamDMA((u32)gfx_font, 0xA400, 1536);
+
+	// Clean up whatever might be there from before
+	VDP_clearPlan(VDP_PLAN_A, 1);
+	VDP_clearPlan(VDP_PLAN_B, 1);
+	VDP_waitDMACompletion();
 
 	sprites_init();
 	save_load();

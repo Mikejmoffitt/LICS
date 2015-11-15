@@ -265,9 +265,7 @@ void pause_screen_loop(void)
 	system_set_h_split(0, 0, NULL);
 	while (in_prog)
 	{
-		pl.input_prev = pl.input;
-		pl.input = JOY_readJoypad(JOY_1); 
-		if ((pl.input & BUTTON_START) && (!(pl.input_prev & BUTTON_START)))
+		if ((buttons & BUTTON_START) && (!(buttons_prev & BUTTON_START)))
 		{
 			in_prog = 0;
 		}

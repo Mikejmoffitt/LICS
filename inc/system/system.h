@@ -14,6 +14,9 @@
 #define SYSTEM_PLANE_W 64
 #define SYSTEM_PLANE_H 32
 
+extern u16 buttons;
+extern u16 buttons_prev;
+
 // This just counts up forever. It is often used for animations.
 extern u16 system_osc;
 

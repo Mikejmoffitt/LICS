@@ -32,6 +32,8 @@ static void puts(const char *s, u16 x, u16 y)
 static void message_screen(const char *s)
 {
 	u16 i = 60 * 5;
+	VDP_doVRamDMAFill(VDP_getWindowAddress(), 64 * 2 * 32, 0);
+	VDP_waitDMACompletion();
 	puts(s, 8, 8);
 //	VDP_drawTextBG(VDP_getWindowPlanAddress(), s, TILE_ATTR(1, 1, 0, 0), 4, 6);
 	VDP_setReg(0x12, 0x1E);
@@ -52,12 +54,8 @@ void gameloop_logic(void)
 	projectiles_run();
 	particles_run();
 	sfx_counters();
-	if (pl.input & BUTTON_Z)
-	{
+	if (buttons & BUTTON_A)
 		message_screen("Oh my lordy!!! It's not broken.");
-		message_screen("Could it really be a success?");
-		message_screen("Is that even real?");
-	}
 	state_update_progress();
 
 }
@@ -152,12 +150,12 @@ void gameloop_main(void)
 	player_init();
 
 
-	pl.input = JOY_readJoypad(JOY_1);
-	if (pl.input & BUTTON_Z)	
+	buttons = JOY_readJoypad(JOY_1);
+	if (buttons & BUTTON_Z)	
 	{
 		save_clear();
 	}
-	if (pl.input & BUTTON_X)	
+	if (buttons & BUTTON_X)	
 	{
 		save_clear();
 		sram.have_lift = 1;
@@ -170,6 +168,8 @@ void gameloop_main(void)
 	while (1)
 	{
 		gameloop_room_setup();
+
+		// Run this loop until a room exit is detected
 		do
 		{
 			/* Run one frame of engine logic */
@@ -180,7 +180,7 @@ void gameloop_main(void)
 			system_wait_v();
 
 			gameloop_dma();
-			if ((pl.input & BUTTON_START) && (!(pl.input_prev & BUTTON_START)))
+			if ((buttons & BUTTON_START) && (!(buttons_prev & BUTTON_START)))
 			{
 				pause_screen_loop();	
 			}

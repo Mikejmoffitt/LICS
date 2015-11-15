@@ -217,7 +217,7 @@ static void anim_func(void *v)
 		if (e->timer >= ksequence[1] && e->timer < ksequence[2])
 		{
 			e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + ((system_osc >> 2) % 2));
-			e->head.xoff[0] = (e->head.direction == ENEMY_RIGHT) ? 8 : -8;
+			e->head.xoff[0] = (e->head.direction == ENEMY_RIGHT) ? 0 : -8;
 		}
 		else
 		{

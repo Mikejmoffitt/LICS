@@ -112,19 +112,19 @@ static void anim_func(void *v)
 	{
 		s16 range_off;
 
-		if (e->cooldown_cnt > kcooldown_time - 3)
+		if (e->cooldown_cnt > kcooldown_time - 5)
 		{
 			range_off = 2;
 		}
-		else if (e->cooldown_cnt > kcooldown_time - 6)
+		else if (e->cooldown_cnt > kcooldown_time - 10)
 		{
 			range_off = -2;
 		}
-		else if (e->cooldown_cnt > kcooldown_time - 9)
+		else if (e->cooldown_cnt > kcooldown_time - 15)
 		{
 			range_off = 1;
 		}
-		else if (e->cooldown_cnt > kcooldown_time - 12)
+		else if (e->cooldown_cnt > kcooldown_time - 20)
 		{
 			range_off = -1;
 		}

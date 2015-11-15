@@ -91,8 +91,10 @@ struct player
 	u16 lift_cnt; // If non-zero, in the middle of lifting
 	u16 hurt_cnt; // If non-zero, hurt anim, no controls
 	u16 action_cnt; // Generic action delay countdown
+	u16 tele_in_cnt;
+	u16 tele_out_cnt;
 	u16 cubejump_disable;
-
+	
 	u16 holding_cube; // flag for if holding a cube
 	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
 	u16 cp_cnt; // Counts up to PLAYER_CUBE_SPAWN
@@ -100,10 +102,6 @@ struct player
 	// Player status
 	u16 hp;
 	u16 cp;
-
-	// Hold last gamepad state
-	u16 input;
-	u16 input_prev;
 };
 
 extern player pl;

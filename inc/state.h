@@ -32,6 +32,10 @@
 #define ENTRANCE_CHK_TOP 0
 #define ENTRANCE_CHK_BOTTOM 32
 
+#define TELEFLAG_NONE 0
+#define TELEFLAG_PRE 1
+#define TELEFLAG_POST 2
+
 #ifndef FZERO
 #define FZERO FIX16(0.0)
 #endif
@@ -68,14 +72,13 @@ struct gamestate
 	
 	// Handling room pointers
 	entrance entrances[STATE_NUM_ENTRANCES];
-	u8 next_id;
-	s8 next_entrance;
-	u8 current_id;
+	u16 next_id;
+	s16 next_entrance;
+	u16 current_id;
+	u16 teleflag;
+	u16 fresh_room;
 
 	u16 world_x, world_y;
-
-	// 
-	u8 fresh_room;
 };
 
 extern gamestate state;

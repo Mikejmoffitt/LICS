@@ -19,7 +19,6 @@ static u16 cp_restore_cnt;
 
 static void player_set_pal(void);
 static void player_eval_control_en();
-static void player_read_pad(); 
 static void player_cp(void);
 static void player_accel(void);
 static void player_eval_grounded(void);
@@ -69,7 +68,7 @@ static void player_init_constants(void)
 	plk.animspeed = system_ntsc ? 6 : 5;
 
 	// Cool cheat codes
-	if (JOY_readJoypad(JOY_1) & BUTTON_Y)
+	if (buttons & BUTTON_Y)
 	{
 		plk.dx_max = system_ntsc ? FIX16(5.0) : FIX16(6.0);
 		plk.x_accel = system_ntsc ? FIX16(0.5) : FIX16(0.6);
@@ -117,6 +116,8 @@ void player_init(void)
 	
 	pl.hp = 5;
 	pl.cp = 30;
+	pl.tele_in_cnt = 0;
+	pl.tele_out_cnt = 0;
 	player_init_soft();
 }
 
@@ -136,8 +137,6 @@ void player_init_soft(void)
 	pl.invuln_cnt = 0;
 	pl.action_cnt = 0;
 	pl.control_disabled = 0;
-	pl.input = 0;
-	pl.input_prev = 0;
 	pl.cubejump_disable = 0;
 	pl.on_cube = NULL;
 	player_set_pal();
@@ -171,20 +170,6 @@ void player_dma(void)
 	VDP_doVRamDMA((u32)lyle_dma_src,lyle_dma_dest,lyle_dma_len);
 }
 
-static void player_read_pad(void)
-{
-	if (!pl.control_disabled)
-	{
-		pl.input_prev = pl.input;
-		pl.input = JOY_readJoypad(JOY_1);
-	}
-	else
-	{
-		pl.input = 0;
-		pl.input_prev = 0;
-	}
-}
-
 static void player_cp(void)
 {
 	// We don't have this power, don't bother
@@ -213,7 +198,7 @@ static void player_cp(void)
 	// Spawning of the cube; are we not holding one, and can afford one?
 	if (!pl.holding_cube && pl.cp >= cube_price)
 	{
-		if (pl.input & BUTTON_B)
+		if (buttons & BUTTON_B)
 		{
 			pl.cp_cnt++;
 			if (pl.cp_cnt == plk.cube_fx + 1)
@@ -285,8 +270,7 @@ static inline void player_walking_sound(void)
 
 static inline void player_hurt_decel(void)
 {
-	// decel
-	if (pl.dx > FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	if (pl.dx > FZERO)
 	{
 		pl.dx = fix16Sub(pl.dx,plk.x_accel >> 1);	
 		// Don't accel into the other direction
@@ -295,7 +279,7 @@ static inline void player_hurt_decel(void)
 			pl.dx = FZERO;
 		}
 	}
-	else if (pl.dx < FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	else
 	{
 		pl.dx = fix16Add(pl.dx,plk.x_accel >> 1);				
 		// Don't accel into the other direction
@@ -308,50 +292,50 @@ static inline void player_hurt_decel(void)
 
 static inline void player_accel(void)
 {
-
-
 	if (pl.control_disabled || pl.lift_cnt)
 	{
 		player_hurt_decel();
 		return;
 	}
 
-
 	// decel
-	if (pl.dx > FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	if (!(buttons & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
-		pl.dx = fix16Sub(pl.dx,plk.x_accel);	
-		// Don't accel into the other direction
-		if (fix16ToInt(pl.dx) < FZERO)
-		{
-			pl.dx = FZERO;
-		}
-	}
-	else if (pl.dx < FZERO && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
-	{
-		pl.dx = fix16Add(pl.dx,plk.x_accel);				
-		// Don't accel into the other direction
 		if (pl.dx > FZERO)
 		{
-			pl.dx = FZERO;
+			pl.dx = fix16Sub(pl.dx,plk.x_accel);	
+			// Don't accel into the other direction
+			if (fix16ToInt(pl.dx) < FZERO)
+			{
+				pl.dx = FZERO;
+			}
+		}
+		else
+		{
+			pl.dx = fix16Add(pl.dx,plk.x_accel);				
+			// Don't accel into the other direction
+			if (pl.dx > FZERO)
+			{
+				pl.dx = FZERO;
+			}
 		}
 	}
 
 	// walking right and left
-	if (pl.input & BUTTON_RIGHT)
+	if (buttons & BUTTON_RIGHT)
 	{
 		pl.dx = fix16Add(pl.dx,plk.x_accel);
 		pl.direction = PLAYER_RIGHT;
 		player_walking_sound();
 	}
-	else if (pl.input & BUTTON_LEFT)
+	else if (buttons & BUTTON_LEFT)
 	{
 		pl.dx = fix16Sub(pl.dx,plk.x_accel);
 		pl.direction = PLAYER_LEFT;
 		player_walking_sound();
 	}
 	// If dy/dx is almost zero, make it zero
-	if (pl.dx > FIX16(-0.1) && pl.dx < FIX16(0.1) && !(pl.input & (BUTTON_RIGHT | BUTTON_LEFT)))
+	if (pl.dx > FIX16(-0.1) && pl.dx < FIX16(0.1) && !(buttons & (BUTTON_RIGHT | BUTTON_LEFT)))
 	{
 		pl.dx = FZERO;
 	}
@@ -397,13 +381,13 @@ static void player_jump(void)
 		pl.cubejump_disable = 2;
 	}
 
-	if (pl.lift_cnt)
+	if (pl.lift_cnt || pl.control_disabled)
 	{
 		return;
 	}
 
 	// C key pressed, negative edge (1 -> 0)
-	if ((pl.input & BUTTON_C) && !(pl.input_prev & BUTTON_C))
+	if ((buttons & BUTTON_C) && !(buttons_prev & BUTTON_C))
 	{
 		// Normal jump off the ground
 		if (pl.grounded || pl.on_cube)
@@ -456,30 +440,30 @@ do_jump:
 
 static void player_toss_cubes(void)
 {
-	if (pl.holding_cube && (pl.input & BUTTON_B) && (!(pl.input_prev & BUTTON_B)))
+	if (pl.holding_cube && (buttons & BUTTON_B) && (!(buttons_prev & BUTTON_B)))
 	{
 		s16 cdx;
 		fix16 cdy;
 		// Holding down; do a short toss
-		if (pl.input & (BUTTON_DOWN))
+		if (buttons & (BUTTON_DOWN))
 		{
 			cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
 			cdy = system_ntsc ? FIX16(-1.77) : FIX16(-2.0);
 		}
 		// Holding up; toss straight up
-		else if (pl.input & BUTTON_UP)
+		else if (buttons & BUTTON_UP)
 		{
 			cdx = 0;
 			cdy = system_ntsc ? FIX16(-4.2) : FIX16(-5.0);
 		}
 		// Throw with direction right
-		else if (pl.input & BUTTON_RIGHT && pl.direction == PLAYER_RIGHT)
+		else if (buttons & BUTTON_RIGHT && pl.direction == PLAYER_RIGHT)
 		{
 			cdx = 4;
 			cdy = system_ntsc ? FIX16(-0.84) : FIX16(-1.0);
 		}
 		// Left
-		else if (pl.input & BUTTON_LEFT && pl.direction == PLAYER_LEFT)
+		else if (buttons & BUTTON_LEFT && pl.direction == PLAYER_LEFT)
 		{
 			cdx = -4;
 			cdy = system_ntsc ? FIX16(-0.84) : FIX16(-1.0);
@@ -529,7 +513,7 @@ static void player_kick_cube(cube *c)
 	u16 py = fix32ToInt(pl.y);
 	u16 px = fix32ToInt(pl.x);
 	// check we are within appropriate Y bounds
-	if ((pl.input & BUTTON_B) && !(pl.input_prev & BUTTON_B) &&
+	if ((buttons & BUTTON_B) && !(buttons_prev & BUTTON_B) &&
 		c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM - 1 && 
 		c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP + 8)
 	{
@@ -567,7 +551,7 @@ static void player_lift_cubes(void)
 	{
 		return;
 	}
-	if (pl.on_cube && pl.lift_cnt == 0 && pl.input & BUTTON_B && !(pl.input_prev & BUTTON_B))
+	if (pl.on_cube && pl.lift_cnt == 0 && buttons & BUTTON_B && !(buttons_prev & BUTTON_B))
 	{	
 		pl.lift_cnt = plk.lift_time + 1;
 		pl.action_cnt = PLAYER_ACTION_LIFT;
@@ -580,7 +564,7 @@ static void player_lift_cubes(void)
 		cube_delete(c);
 
 		// Re-implement the MMF version bug where you can jump while lifting
-		if (pl.input & BUTTON_C)
+		if (buttons & BUTTON_C)
 		{
 			pl.dy = plk.jump_dy;
 		}
@@ -911,7 +895,7 @@ static inline void player_move(void)
 	if (!pl.grounded)
 	{
 		// The jump holding only affects gravity on the way up, though
-		if ((pl.input & BUTTON_C) && pl.dy < FZERO)
+		if (((buttons & BUTTON_C) && !pl.control_disabled) && pl.dy < FZERO)
 		{
 			pl.dy = fix16Add(pl.dy,plk.y_accel_weak);
 		}
@@ -981,7 +965,7 @@ static inline void player_calc_anim(void)
 		
 		if (pl.grounded || pl.on_cube)
 		{
-			if (!(pl.input & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
+			if (!(buttons & (BUTTON_LEFT | BUTTON_RIGHT))) // Standing
 			{
 				pl.anim_frame = 0x00;
 			}
@@ -1096,7 +1080,6 @@ static inline void player_chk_spikes(void)
 void player_run(void)
 {
 	player_eval_control_en();
-	player_read_pad();
 	player_accel();
 	player_toss_cubes();
 	player_lift_cubes();

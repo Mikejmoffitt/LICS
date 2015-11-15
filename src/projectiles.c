@@ -180,7 +180,12 @@ void projectile_shoot_at(s16 x, s16 y, s16 tx, s16 ty)
 		dx = dx >> 1;
 		dy = dy >> 1;
 	}
-	else if (tx - x > 128 || x - tx > 128 || ty - y > 96 || y - ty > 96)
+	if (tx - x > 140 || x - tx > 140 || ty - y > 96 || y - ty > 96)
+	{	
+		dx = dx >> 1;
+		dy = dy >> 1;
+	}
+	if (tx - x > 256 || x - tx > 256 || ty - y > 128 || y - ty > 128)
 	{	
 		dx = dx >> 1;
 		dy = dy >> 1;
