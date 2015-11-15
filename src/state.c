@@ -258,23 +258,23 @@ u16 state_watch_transitions()
 	}
 	else if (pl.dx == FZERO && pl.dy == FZERO)
 	{
-		return 0;
+		return STATE_TRANSITION_NONE;
 	}
 	else if ((pl.px < STATE_TRANSITION_MARGIN) && (pl.dx < FZERO))
 	{
-		return 1;
+		return STATE_TRANSITION_LEFT;
 	}
 	else if ((pl.px > (state.bound_x - STATE_TRANSITION_MARGIN)) && (pl.dx > FZERO))
 	{
-		return 1;
+		return STATE_TRANSITION_RIGHT;
 	}
-	else if ((pl.py < STATE_TRANSITION_MARGIN) && (pl.dy < FZERO))
+	else if ((pl.py - PLAYER_HEIGHT < STATE_TRANSITION_MARGIN ) && (pl.dy < FZERO))
 	{
-		return 1;
+		return STATE_TRANSITION_UP;
 	}
 	else if ((pl.py > (state.bound_y - STATE_TRANSITION_MARGIN - 8)) && (pl.dy > FZERO))
 	{
-		return 1;
+		return STATE_TRANSITION_DOWN;
 	}
 	return 0;
 }

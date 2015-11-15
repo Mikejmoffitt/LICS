@@ -118,6 +118,9 @@ void player_dma_setup(void);
 // Copy graphics into VRAM slot
 void player_dma(void);
 
+// Do a jump
+void player_do_jump(void);
+
 // Run player's logic for one frame
 void player_run(void);
 
