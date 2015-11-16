@@ -67,6 +67,8 @@ static void player_init_constants(void)
 	plk.cube_fx = system_ntsc ? 6 : 5;
 	plk.animspeed = system_ntsc ? 6 : 5;
 
+	plk.tele_anim = system_ntsc ? 75 : 62;
+
 	// Cool cheat codes
 	if (buttons & BUTTON_Y)
 	{
@@ -189,7 +191,7 @@ static void player_cp(void)
 		}
 	}
 	// In the middle of doing something that voids this ability
-	if (pl.lift_cnt || pl.hurt_cnt || pl.action_cnt)
+	if (pl.lift_cnt || pl.hurt_cnt || pl.action_cnt || pl.control_disabled)
 	{
 		return;
 	}
@@ -445,6 +447,10 @@ do_jump:
 
 static void player_toss_cubes(void)
 {
+	if (pl.control_disabled)
+	{
+		return;
+	}
 	if (pl.holding_cube && (buttons & BUTTON_B) && (!(buttons_prev & BUTTON_B)))
 	{
 		s16 cdx;
@@ -552,7 +558,7 @@ static void player_lift_cubes(void)
 	{
 		return;
 	}	// In the middle of doing something that voids this ability
-	if (pl.hurt_cnt || pl.action_cnt)
+	if (pl.hurt_cnt || pl.action_cnt || pl.control_disabled)
 	{
 		return;
 	}
@@ -1034,6 +1040,30 @@ void player_draw(void)
 	{
 		return;
 	}
+
+	// Teleporter in flashing
+	if (pl.tele_out_cnt > 0)
+	{
+		if (pl.tele_out_cnt >= plk.tele_anim && (system_osc >> 2) % 2)
+		{
+			return;
+		}
+		else if (pl.tele_out_cnt < plk.tele_anim)
+		{
+			return;
+		}
+	}
+	else if (pl.tele_in_cnt > 0)
+	{
+		if (pl.tele_in_cnt <= plk.tele_anim && (system_osc >> 2) % 2)
+		{
+			return;
+		}
+		else if (pl.tele_in_cnt > plk.tele_anim)
+		{
+			return;
+		}
+	}
 	u16 size;
 	s16 yoff;
 	s16 xoff = (pl.lift_cnt ? (pl.lift_cnt / 2) % 2 : 0);
@@ -1091,6 +1121,12 @@ static void player_teleport_seq(void)
 {
 	if (pl.tele_out_cnt > 0)
 	{
+		if (pl.holding_cube)
+		{
+			cube *c = cube_spawn(pl.px, pl.py - 32, pl.holding_cube, CUBE_STATE_AIR, FIX16(0.0), FIX16(0.0));
+			cube_destroy(c);
+			pl.holding_cube = NULL;
+		}
 		pl.tele_out_cnt--;
 		// Transition to zero. Trigger a room transition.
 		if (pl.tele_out_cnt == 0)

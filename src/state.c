@@ -255,7 +255,7 @@ u16 state_watch_transitions()
 	if (state.teleflag)
 	{
 		state.teleflag = 0;
-		return 1;
+		return STATE_TRANSITION_TELE;
 	}
 	else if (pl.dx == FZERO && pl.dy == FZERO)
 	{

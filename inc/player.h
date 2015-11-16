@@ -65,6 +65,7 @@ struct player_k
 	u16 cp_spawn_slow;
 	u16 cube_fx;
 	u16 animspeed;
+	u16 tele_anim;
 };
 
 typedef struct player player;

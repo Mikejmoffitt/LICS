@@ -100,7 +100,7 @@ void cubes_run(void);
 void cubes_draw(void);
 void cube_restrict_spawn(cube *c);
 void cube_draw_single(u16 x, u16 y, u16 type);
-void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy);
+cube *cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy);
 void cube_clamp_dx(cube *c);
 void cube_destroy(cube *c);
 

@@ -56,7 +56,7 @@ void en_init_teleporter(en_teleporter *e, u16 data)
 	e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
 
 	e->id = data & 0xFF;
-	e->activator = (data & 0xFF00) >> 16; // Activators remain active always
+	e->activator = (data & 0xFF00) >> 8; // Activators remain active always
 	e->anim_cnt = 0;
 	e->anim_frame = 0;
 	e->active_cnt = 0;
@@ -66,7 +66,6 @@ void en_init_teleporter(en_teleporter *e, u16 data)
 	kanim_len = system_ntsc ? 150 : 125;
 
 	// TEMPORARY DEBUG STUFF FOR UNTIL YOU CAN ACTUALLY FIND THESE
-	e->activator = 1;
 }
 
 // Reset the VRAM allocation position counter
@@ -97,15 +96,18 @@ static void proc_func(void *v)
 		// Center player on teleport pad
 		if (pl.px > e->head.x)
 		{
-			pl.x -= FIX32(1.0);
+			pl.x -= system_ntsc ? FIX32(0.25) : FIX32(0.30);
 		}
 		else if (pl.px < e->head.x)
 		{
-			pl.x += FIX32(1.0);
+			pl.x += system_ntsc ? FIX32(0.25) : FIX32(0.30);
 		}
 
 		// Generate sparkles
-		particle_spawn(e->head.x - 8 + (GET_HVCOUNTER % 16), e->head.y - 32 + (GET_HVCOUNTER % 32), PARTICLE_TYPE_SPARKLE);
+		if (system_osc % 2)
+		{
+			particle_spawn(e->head.x - 8 + (GET_HVCOUNTER % 16), e->head.y - 32 + (GET_HVCOUNTER % 32), PARTICLE_TYPE_SPARKLE);
+		}
 	}
 
 	if (!e->disabled && e->active_cnt == 0 && e->head.touching_player && pl.tele_out_cnt == 0)
@@ -113,15 +115,27 @@ static void proc_func(void *v)
 		// Mark discovery of teleporter
 		sram.tele_active[e->id] = 1;
 
-		// Player is teleporting IN, so disable the teleporter
-		if (pl.tele_in_cnt > 0)
+		// Player is teleporting IN, so disable the teleporter once anim stops
+		if (pl.tele_in_cnt > 1)
+		{
+			// Generate sparkles
+			if (system_osc % 2)
+			{
+				particle_spawn(e->head.x - 8 + (GET_HVCOUNTER % 16), e->head.y - 32 + (GET_HVCOUNTER % 32), PARTICLE_TYPE_SPARKLE);
+			}
+		}
+		// Player has finished teleporting in
+		else if (pl.tele_in_cnt == 1)
 		{
 			e->disabled = 1;
 		}
-		// Otherwise, start up a teleport
+		// Normal active player is ready to teleport
 		else
 		{
+			pl.dx = FIX16(0.0);
+			pl.dy = FIX16(0.0);
 			pl.tele_out_cnt	= kanim_len;
+			pl.tele_in_cnt	= kanim_len;
 			e->active_cnt = kactive_len;
 		}
 	}
@@ -142,7 +156,7 @@ static void anim_func(void *v)
 	else
 	{
 		// Run animation
-		if (e->anim_cnt == 3)
+		if (e->anim_cnt == 2)
 		{
 			if (e->anim_frame == 3)
 			{

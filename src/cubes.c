@@ -725,7 +725,7 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 	sprite_put(x - state.cam_x, y - state.cam_y, SPRITE_SIZE(2,2), frame);
 }
 
-void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
+cube *cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 {
 	int i = CUBES_NUM;
 	while (i--)
@@ -750,7 +750,8 @@ void cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 				c->d1.bounce_count = CUBE_BOUNCE_COUNT_INIT;
 				c->state = state;
 			}
-			break;
+			return c;
 		}
 	}
+	return NULL;
 }
