@@ -456,7 +456,7 @@ static void player_toss_cubes(void)
 		s16 cdx;
 		fix16 cdy;
 		// Holding down; do a short toss
-		if (buttons & (BUTTON_DOWN))
+		if (buttons & (BUTTON_DOWN) && pl.grounded)
 		{
 			cdx = (pl.direction == PLAYER_RIGHT) ? 1 : -1;
 			cdy = system_ntsc ? FIX16(-1.77) : FIX16(-2.0);
