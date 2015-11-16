@@ -428,6 +428,10 @@ static void enemy_player_scan(void)
 			e->head.y >= pl.py + PLAYER_CHK_TOP)
 		{
 			e->head.touching_player = 1;
+			if (pl.tele_in_cnt > 0 || pl.tele_out_cnt > 0)
+			{
+				continue;
+			}
 			if (e->head.harmful == ENEMY_HARM_NORMAL)
 			{
 				player_get_hurt();
