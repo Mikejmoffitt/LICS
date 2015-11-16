@@ -252,8 +252,9 @@ fix32 state_get_entrance_y(void)
 // Watch for the player entering/exiting a room.
 u16 state_watch_transitions()
 {
-	if (state.teleflag == TELEFLAG_PRE)
+	if (state.teleflag)
 	{
+		state.teleflag = 0;
 		return 1;
 	}
 	else if (pl.dx == FZERO && pl.dy == FZERO)

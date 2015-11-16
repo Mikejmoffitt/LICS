@@ -53,6 +53,7 @@ struct save_file
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];
 	u16 magic_2;
+	u16 tele_active[3]; // Which teleporters are active.
 
 	// Settings
 	u16 opt_interlace;

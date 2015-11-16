@@ -38,10 +38,6 @@
 #define ENTRANCE_CHK_TOP 0
 #define ENTRANCE_CHK_BOTTOM 32
 
-#define TELEFLAG_NONE 0
-#define TELEFLAG_PRE 1
-#define TELEFLAG_POST 2
-
 #ifndef FZERO
 #define FZERO FIX16(0.0)
 #endif

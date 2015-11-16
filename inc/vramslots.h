@@ -57,6 +57,7 @@ the length of a 256-tile DMA is only (256 * 16).
 #define KILLZAM_VRAM_LEN 12
 #define FLARGY_VRAM_LEN 36
 #define PLANT_VRAM_LEN 65
+#define TELEPORTER_VRAM_LEN 64
 
 #define MAP_FG_PALNUM 0
 #define BG_PALNUM 1

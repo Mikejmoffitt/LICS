@@ -93,7 +93,7 @@ static void player_set_pal(void)
 
 static inline void player_eval_control_en(void)
 {
-	if (pl.hurt_cnt > 0 || pl.hp == 0)
+	if (pl.hurt_cnt > 0 || pl.hp == 0 || pl.tele_in_cnt > 0 || pl.tele_out_cnt > 0)
 	{
 		pl.control_disabled = 1;
 	}
@@ -251,7 +251,7 @@ static void player_cp(void)
 	// Sparkling effect when cube is starting to form
 	if (pl.cp_cnt > plk.cube_fx && system_osc % 2)
 	{
-		particle_spawn(fix32ToInt(pl.x), fix32ToInt(pl.y) - 32, PARTICLE_TYPE_SPARKLE);
+		particle_spawn(pl.px, pl.py - 32, PARTICLE_TYPE_SPARKLE);
 
 	}
 }
@@ -942,6 +942,11 @@ static inline void player_calc_anim(void)
 	}
 	else
 	{
+		if (pl.tele_out_cnt > 0 || pl.tele_in_cnt > 0)
+		{
+			pl.anim_frame = 0x00;
+			return;
+		}
 		if (pl.throw_cnt > 0)
 		{
 			pl.anim_frame = 0x16;
@@ -1082,9 +1087,27 @@ static inline void player_chk_spikes(void)
 	}
 }
 
+static void player_teleport_seq(void)
+{
+	if (pl.tele_out_cnt > 0)
+	{
+		pl.tele_out_cnt--;
+		// Transition to zero. Trigger a room transition.
+		if (pl.tele_out_cnt == 0)
+		{
+			state.teleflag = 1;
+		}
+	}
+	else if (pl.tele_in_cnt > 0)
+	{
+		pl.tele_in_cnt--;
+	}
+}
+
 void player_run(void)
 {
 	player_eval_control_en();
+	player_teleport_seq();
 	player_accel();
 	player_toss_cubes();
 	player_lift_cubes();

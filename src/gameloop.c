@@ -71,10 +71,10 @@ void gameloop_gfx(void)
 	{
 		hud_draw_cp(pl.cp + 1 + ((pl.cp + 1) >> 1)); // CP scaled 32 --> 48
 	}
-	cubes_draw();
 	particles_draw();
-	player_draw();
 	enemy_draw();
+	player_draw();
+	cubes_draw();
 	projectiles_draw();
 	powerup_draw();
 	system_debug_cpu_meter();

@@ -91,8 +91,9 @@ struct player
 	u16 lift_cnt; // If non-zero, in the middle of lifting
 	u16 hurt_cnt; // If non-zero, hurt anim, no controls
 	u16 action_cnt; // Generic action delay countdown
-	u16 tele_in_cnt;
-	u16 tele_out_cnt;
+	u16 tele_out_cnt; // Counts down to a room transition.
+	u16 tele_in_cnt; // Counts down to player being able to move again post transition.
+	                 // Won't count down if there is a tele_out in progress.
 	u16 cubejump_disable;
 	
 	u16 holding_cube; // flag for if holding a cube

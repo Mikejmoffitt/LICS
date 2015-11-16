@@ -421,7 +421,14 @@ cube_desc_area:
 			break;
 		case OBJ_TELEPORTER:
 			sprintf(desc,"Triggers room event, and player exit.");
-			sprintf(dat2,"On room event, is destroyed");
+			if (o->data & 0xFF00)
+			{
+				sprintf(dat2, "Number %02X (activator)", o->data & 0xFF);
+			}
+			else
+			{
+				sprintf(dat2, "Number %02X", o->data & 0xFF);
+			}
 			break;
 		case OBJ_MAGIBEAR:
 			sprintf(desc,"Walks slowly, barfs shots at player");
