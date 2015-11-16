@@ -24,6 +24,7 @@ extern const u8 gfx_en_laser[384];
 extern const u8 gfx_en_killzam[384];
 extern const u8 gfx_en_flargy[1152];
 extern const u8 gfx_en_plant[2080];
+extern const u8 gfx_en_tossmuffin[864];
 extern const u8 gfx_en_teleporter[1024];
 extern const u8 gfx_inside1[8192];
 extern const u8 gfx_outside1[8192];

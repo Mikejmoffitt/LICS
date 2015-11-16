@@ -18,6 +18,7 @@
 #include "killzam.h"
 #include "flargy.h"
 #include "plant.h"
+#include "tossmuffin.h"
 #include "teleporter.h"
 
 #include "state.h"
@@ -84,6 +85,7 @@ void enemy_init(void)
 	en_unload_killzam();
 	en_unload_flargy();
 	en_unload_plant();
+	en_unload_tossmuffin();
 	en_unload_teleporter();
 	enemy_vram_reset();
 	while (i--)
@@ -392,6 +394,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_PLANT:
 					en_init_plant((en_plant *)e);
+					break;
+				case ENEMY_TOSSMUFFIN:
+					en_init_tossmuffin((en_tossmuffin *)e);
 					break;
 				case ENEMY_TELEPORTER:
 					en_init_teleporter((en_teleporter *)e, data);
