@@ -723,7 +723,7 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 			break;
 	}
 	sprite_put(x - state.cam_x, y - state.cam_y, SPRITE_SIZE(2,2), frame);
-}
+}t 
 
 cube *cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 {

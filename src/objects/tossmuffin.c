@@ -119,7 +119,7 @@ static void proc_func(void *v)
 	if (e->holding_cube && e->lift_cnt > 0)
 	{
 		// Hold the cube in position above the head.
-		e->holding_cube->y = e->head.y - e->head.height - 1;
+		e->holding_cube->y = e->head.y -22;
 		e->holding_cube->x = e->head.x;
 
 		e->lift_cnt--;
