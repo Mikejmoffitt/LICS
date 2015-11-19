@@ -24,7 +24,6 @@ extern u16 system_osc;
 extern u16 system_ntsc;
 extern u16 ntsc_counter; // Counts from 0-5 when in NTSC mode for H-movement speed hack
 
-
 void system_init(void);
 void system_wait_v(void);
 void system_set_debug(u16 val);

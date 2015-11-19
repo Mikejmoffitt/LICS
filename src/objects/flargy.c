@@ -9,7 +9,6 @@ static void anim_func(void *v);
 static void cube_func(void *v, cube *c);
 static void vram_load(void);
 
-static u16 kh_cnt_max;
 static u16 kanim_delay;
 static u16 kpunch_time;
 static fix16 kpunch_dy;
@@ -57,7 +56,6 @@ void en_init_flargy(en_flargy *e)
 
 	kpunch_time = system_ntsc ? 24 : 20;
 	kanim_delay = system_ntsc ? 10 : 8;
-	kh_cnt_max = system_ntsc ? 2 : 1;
 	kpunch_dy = system_ntsc ? FIX16(-1.0) : FIX16(-1.2);
 }
 
@@ -73,6 +71,11 @@ static void proc_func(void *v)
 	en_flargy *e = (en_flargy *)v;
 	if (e->punch_cnt == 0)
 	{
+		// Skip every 5th frame for NTSC/PAL adjustment, so the speed is correct
+		if (system_ntsc && ntsc_counter == 5)
+		{
+			return;
+		}	
 		if (e->h_cnt == 0)
 		{
 			// Reverse if we've walked enough distance
@@ -86,7 +89,7 @@ static void proc_func(void *v)
 				e->walk_cnt--;
 				e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
 			}
-			e->h_cnt = kh_cnt_max;
+			e->h_cnt = 1;
 		}
 		else
 		{

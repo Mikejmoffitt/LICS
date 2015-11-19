@@ -41,6 +41,21 @@ void system_set_h_split(u16 line, u16 num, u16 *p)
 	}
 }
 
+static inline void system_ntsc_proc(void)
+{
+	if (system_ntsc)
+	{
+		if (ntsc_counter == 0)
+		{
+			ntsc_counter = 5;
+		}
+		else
+		{
+			ntsc_counter--;
+		}
+	}
+}
+
 static _voidCallback *v_int(void)
 {
 	vbl_active = 1;
@@ -54,17 +69,8 @@ static _voidCallback *v_int(void)
 	{
 		VDP_setHInterrupt(1);
 	}
-	if (system_ntsc)
-	{
-		if (ntsc_counter == 0)
-		{
-			ntsc_counter = 5;
-		}
-		else
-		{
-			ntsc_counter--;
-		}
-	}
+
+	system_ntsc_proc();
 	buttons_prev = buttons;
 	buttons = JOY_readJoypad(JOY_1);
 
@@ -178,10 +184,19 @@ void system_debug_cpu_meter(void)
 	if (debug_en)
 	{
 		u16 i = GET_VCOUNTER;
+		s16 j = i - 8;
 		while (i < 240)
 		{
 			sprite_put(-4, i, SPRITE_SIZE(1,1), HUD_VRAM_SLOT + 14);
 			i+=8;
 		}
+		while (j > -32)
+		{
+			sprite_put(-4, j, SPRITE_SIZE(1,1), TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, HUD_VRAM_SLOT + 14));
+			j-=8;
+		}
+
+		// Show the current frame % 6 too
+		sprite_put(8 * ntsc_counter, 0, SPRITE_SIZE(1,1), HUD_VRAM_SLOT + 14);
 	}
 }
