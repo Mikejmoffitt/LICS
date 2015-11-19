@@ -6,7 +6,7 @@ extern const u8 gfx_cubes[1664];
 extern const u8 gfx_hud[1024];
 extern const u8 gfx_font[3072];
 extern const u8 gfx_pause[8192];
-extern const u8 gfx_particles[2468];
+extern const u8 gfx_particles[2596];
 extern const u8 gfx_powerups[768];
 extern const u8 gfx_projectiles[416];
 extern const u8 gfx_items[1536];

@@ -130,16 +130,6 @@ void particles_draw(void)
 				break;
 
 			case PARTICLE_TYPE_EXPLOSION:
-			/*
-				21-19: 2
-				18-16: 1
-				15-13: 2
-				12-10: 3
-				9-7: 1
-				6-: 3
-				
-
-			*/
 				if ((p->active > 18) || (p->active < 16 && p->active > 12))
 				{
 					gfx = PARTICLES_VRAM_SLOT + 52;
@@ -158,9 +148,30 @@ void particles_draw(void)
 					size = SPRITE_SIZE(4,4);
 					cent = 16;
 				}
-
 				break;
-				
+			case PARTICLE_TYPE_SAND:
+				cent = 4;
+				if (p->active >= 8)
+				{
+					gfx = PARTICLES_VRAM_SLOT + 77;
+				}
+				else if (p->active >= 6)
+				{
+					gfx = PARTICLES_VRAM_SLOT + 78;
+				}
+				else if (p->active >= 4)
+				{
+					gfx = PARTICLES_VRAM_SLOT + 77;
+				}
+				else if (p->active >= 2)
+				{
+					gfx = PARTICLES_VRAM_SLOT + 79;
+				}
+				else
+				{
+					gfx = PARTICLES_VRAM_SLOT + 80;
+				}
+				size = SPRITE_SIZE(1,1);
 		}
 		s16 tx = p->x - state.cam_x - cent;
 		s16 ty = p->y - state.cam_y - cent;
@@ -169,7 +180,7 @@ void particles_draw(void)
 			continue;
 		}
 		u16 palnum;
-		if (p->type != PARTICLE_TYPE_FIZZLERED && p->type != PARTICLE_TYPE_EXPLOSION)
+		if (p->type != PARTICLE_TYPE_SAND && p->type != PARTICLE_TYPE_FIZZLERED && p->type != PARTICLE_TYPE_EXPLOSION)
 		{
 			palnum = PARTICLES_ALT_PALNUM;
 		}
@@ -203,13 +214,14 @@ void particle_spawn(u16 x, u16 y, u16 type)
 				case PARTICLE_TYPE_EXPLOSION:
 					particles[i].active = 21;
 					break;
+				case PARTICLE_TYPE_SAND:
+					particles[i].active = 20;
 			}
 			particles[i].anim_cnt = 0;
 			if (type == PARTICLE_TYPE_SPARKLE)
 			{
 				particles[i].x += (((system_osc) + GET_HVCOUNTER) % 16) - 8;
 				particles[i].y += (GET_HVCOUNTER % 16) - 8;
-
 			}
 			else
 			{
@@ -223,6 +235,11 @@ void particle_spawn(u16 x, u16 y, u16 type)
 				if (particles[i].dx >= 0)
 				{
 					particles[i].dx++;
+				}
+
+				if (type == PARTICLE_TYPE_SAND)
+				{
+					particles[i].dy -= 2;
 				}
 			}
 			return;
