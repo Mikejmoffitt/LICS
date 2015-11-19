@@ -45,3 +45,7 @@ lyle.bin
 out/rom.bin
 
 docs/sauce/*.0*
+
+res/*.s
+
+util/echo/xm2esf
