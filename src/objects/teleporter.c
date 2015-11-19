@@ -173,21 +173,13 @@ static void anim_func(void *v)
 			e->anim_cnt++;
 		}
 		
-		// Effects flash every frame for psuedo-transparency
-		if (system_osc % 2)
+		if (e->anim_frame == 0)
 		{
-			if (e->anim_frame == 0)
-			{
-				e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
-			}
-			else if (e->anim_frame == 2)
-			{
-				e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 8);
-			}
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
 		}
-		else
+		else if (e->anim_frame == 2)
 		{
-			e->head.attr[1] = NULL;
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 8);
 		}
 
 		if (e->anim_frame >= 2)

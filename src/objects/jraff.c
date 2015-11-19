@@ -2,6 +2,7 @@
 #include "gfx.h"
 #include "vramslots.h"
 #include "map.h"
+#include "system.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
@@ -52,6 +53,11 @@ void en_init_jraff(en_jraff *e)
 static void h_movement(en_jraff *e)
 {
 	s16 test_x;
+	// Skip every 6th frame for NTSC's sake
+	if (system_ntsc && ntsc_counter == 5)
+	{
+		return;
+	}
 	if (e->move_cnt == JRAFF_MOVE_DIV)
 	{
 		e->move_cnt = 0;
