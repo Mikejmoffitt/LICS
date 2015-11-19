@@ -48,7 +48,8 @@ static inline void check_for_player(projectile *p)
 {
 	s32 px = fix32ToInt(p->x);
 	s32 py = fix32ToInt(p->y);
-	if (player_collision(px - PROJECTILE_CHK, 
+	if (pl.invuln_cnt == 0 &&
+	    player_collision(px - PROJECTILE_CHK, 
    	                     px + PROJECTILE_CHK, 
 	                     py - PROJECTILE_CHK, 
 	                     py + PROJECTILE_CHK))
@@ -115,12 +116,15 @@ static inline void movement(projectile *p)
 
 static inline void handle_life(projectile *p)
 {
-	p->active++;
-	if (p->type == PROJECTILE_DEATHORB)
+	if (p->type == PROJECTILE_DEATHORB && p->active > 0)
 	{
-		if (p->active == (system_ntsc ? 181 : 151))
+		if (p->active >= (system_ntsc ? 181 : 151))
 		{
 			p->active = 0;
+		}
+		else
+		{
+			p->active++;
 		}
 	}
 }
