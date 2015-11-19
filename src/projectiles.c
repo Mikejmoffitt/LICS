@@ -81,6 +81,28 @@ static inline void movement(projectile *p)
 		p->y = fix32Add(p->dy << 4, p->y);
 	}
 
+	if (p->type == PROJECTILE_DEATHORB)
+	{
+		fix16 kcmp = system_ntsc ? FIX16(3.0) : FIX16(3.28);
+		fix16 kaccel = system_ntsc ? FIX16(0.21) : FIX16(0.28);
+		if (p->v_dir == PROJECTILE_UP)
+		{
+			p->dy -= kaccel;
+			if (p->dy <= -kcmp)
+			{
+				p->v_dir = PROJECTILE_DOWN;
+			}
+		}
+		else
+		{
+			p->dy += kaccel;
+			if (p->dy >= kcmp)
+			{
+				p->v_dir = PROJECTILE_UP;
+			}
+		}
+	}
+
 	// Check for violation of room boundaries
 	px = fix32ToInt(p->x);
 	py = fix32ToInt(p->y);
@@ -88,6 +110,18 @@ static inline void movement(projectile *p)
 		py < 0 || py > state.bound_y)
 	{
 		p->active = 0;
+	}
+}
+
+static inline void handle_life(projectile *p)
+{
+	p->active++;
+	if (p->type == PROJECTILE_DEATHORB)
+	{
+		if (p->active == (system_ntsc ? 181 : 151))
+		{
+			p->active = 0;
+		}
 	}
 }
 
@@ -104,6 +138,7 @@ void projectiles_run(void)
 			put_particles(p);
 			check_for_player(p);
 			handle_collision(p);
+			handle_life(p);
 		}
 	}
 }
@@ -117,8 +152,17 @@ void projectiles_draw(void)
 		{
 			projectile *p = &projectiles[i];
 
+			// Death orb should flash near the end of its life
+			if (p->type == PROJECTILE_DEATHORB && 
+			    p->active > (system_ntsc ? 109 : 91) &&
+			    system_osc % 4 >= 2)
+			{
+				continue;
+			}
+
 			s16 tx = fix32ToInt(p->x) - state.cam_x - 4;
 			s16 ty = fix32ToInt(p->y) - state.cam_y - 4;
+			u16 size;
 
 			// Projectiles too far off screen are deactivated
 			if (tx < -64 || tx > 384 || ty < -64 || ty > 304)
@@ -131,18 +175,29 @@ void projectiles_draw(void)
 			if (p->type == PROJECTILE_SPIKE)
 			{
 				attr = TILE_ATTR_FULL(HUD_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + 2);
+				size = SPRITE_SIZE(1,1);
 			}
 			else if (p->type == PROJECTILE_SPARK)
 			{
 				attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + 3 + ((system_osc >> 2) % 2));
+				size = SPRITE_SIZE(1,1);
 				ty -= 3;
+			}
+			else if (p->type == PROJECTILE_DEATHORB)
+			{
+				u16 fr_off = ((system_osc >> 2) % 2);
+				tx -= 4;
+				ty -= 4;
+				size = SPRITE_SIZE(2,2);
+				attr = TILE_ATTR_FULL(fr_off ? PLAYER_PALNUM : ENEMY_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + (fr_off ? 5 : 9));
 			}
 			else
 			{
 				attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + ((system_osc >> 2) % 2));
+				size = SPRITE_SIZE(1,1);
 			}
 
-			sprite_put(tx, ty, SPRITE_SIZE(1,1), attr);
+			sprite_put(tx, ty, size, attr);
 		}
 	}
 }
@@ -159,7 +214,7 @@ void projectile_shoot(s16 x, s16 y, fix16 dx, fix16 dy, u16 type)
 			projectiles[i].dx = dx;
 			projectiles[i].dy = dy;
 			projectiles[i].type = type;
-			
+			projectiles[i].v_dir = PROJECTILE_UP;	
 			projectiles[i].active = 1;
 			return;
 		}

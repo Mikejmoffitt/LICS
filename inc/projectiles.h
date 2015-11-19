@@ -6,8 +6,11 @@
 #define PROJECTILE_BALL 0
 #define PROJECTILE_SPIKE 1
 #define PROJECTILE_SPARK 2
-#define PROJECTILE_DEATHBALL 3
+#define PROJECTILE_DEATHORB 3
 #define PROJECTILE_BALL2 4
+
+#define PROJECTILE_UP 0
+#define PROJECTILE_DOWN 1
 
 // Projectile "radius"
 #define PROJECTILE_CHK 3
@@ -23,6 +26,7 @@ struct projectile
 	fix16 dy;
 	u16 active;
 	u16 type;
+	u16 v_dir;
 };
 
 void projectiles_dma_tiles(void);
