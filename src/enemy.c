@@ -20,6 +20,7 @@
 #include "plant.h"
 #include "tossmuffin.h"
 #include "teleporter.h"
+#include "magibear.h"
 
 #include "state.h"
 #include "particles.h"
@@ -87,6 +88,7 @@ void enemy_init(void)
 	en_unload_plant();
 	en_unload_tossmuffin();
 	en_unload_teleporter();
+	en_unload_magibear();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -137,8 +139,8 @@ void enemy_run(void)
 		// Enemy must be within 64px of the screen to be "alive"
 		else if (e->head.x < state.cam_x - ENEMY_ACTIVE_DISTANCE ||
 			e->head.x > state.cam_x + STATE_SC_W + ENEMY_ACTIVE_DISTANCE ||
-			e->head.y < state.cam_y - ENEMY_ACTIVE_DISTANCE ||
-			e->head.y >= state.cam_y + STATE_SC_H + e->head.height)
+			e->head.y < state.cam_y - ENEMY_ACTIVE_DISTANCE * 2 ||
+			e->head.y >= state.cam_y + STATE_SC_H + ENEMY_ACTIVE_DISTANCE)
 		{
 			e->head.active = ENEMY_OFFSCREEN;
 			continue;
@@ -213,7 +215,7 @@ void enemy_draw(void)
 		}
 
 		// Check bounds
-		if (ex > -32 && ex < 320 && ey > -32 && ey < 240)
+		if (ex > -64 && ex < 384 && ey > -64 && ey < 256)
 		{
 			if (e->head.attr[0])
 			{
@@ -400,6 +402,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_TELEPORTER:
 					en_init_teleporter((en_teleporter *)e, data);
+					break;
+				case ENEMY_MAGIBEAR:
+					en_init_magibear((en_magibear *)e);
 					break;
 			}
 			return &enemies[i];
