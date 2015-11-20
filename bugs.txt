@@ -7,9 +7,5 @@ him and force him into the ceiling a bit, after which he can get on top of
 the blocking cube and move it without kicking at all. This may be okay, as
 it only blocks off one CP orb.
 
-If Pilla falls too fast, he'll get lodged in the ground. Need to add some
-push-out sensitivity or a max fall speed. Pilla needs corner collision points
-too, as he checks the center only right now. 
-
 Lyle's cube magic counter isn't reset when he is hit. Maybe okay? Can allow
 for some odd techniques to be used.
