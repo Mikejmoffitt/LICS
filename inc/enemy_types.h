@@ -40,6 +40,7 @@
 #define ENEMY_BOSSF2 37
 #define ENEMY_EGG 38
 #define ENEMY_FISSINS2 39
+#define ENEMY_BOUNDS 40
 // ---------------------
 
 

@@ -55,6 +55,8 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_poweruptower,
 	(map_file *)&mapdata_boingotele,
 	(map_file *)&mapdata_undersand,
+	(map_file *)&mapdata_spikeshelf,
+	(map_file *)&mapdata_kickget,
 	0
 };
 
