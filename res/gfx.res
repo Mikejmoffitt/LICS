@@ -25,6 +25,8 @@ BIN gfx_en_plant "gfx/en_plant.bin" 2 2 0
 BIN gfx_en_tossmuffin "gfx/en_tossmuffin.bin" 2 2 0
 BIN gfx_en_teleporter "gfx/en_teleporter.bin" 2 2 0
 BIN gfx_en_magibear "gfx/en_magibear.bin" 2 2 0
+BIN gfx_en_lava "gfx/en_lava.bin" 2 2 0
+BIN gfx_en_cow "gfx/en_cow.bin" 2 2 0
 
 BIN gfx_en_fissins1 "gfx/en_fissins1.bin" 2 2 0
 BIN gfx_en_fissions2 "gfx/en_fissins2.bin" 2 2 0
