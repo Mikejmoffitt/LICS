@@ -41,6 +41,7 @@
 #define OBJ_BOSSF2 37
 #define OBJ_EGG 38
 #define OBJ_FISSINS2 39
+#define OBJ_BOUNDS 40
 
 int width_for_obj(int i);
 int height_for_obj(int i);

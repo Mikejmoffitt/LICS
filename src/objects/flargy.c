@@ -32,7 +32,7 @@ void en_init_flargy(en_flargy *e)
 	e->head.anim_func = &anim_func;
 	e->head.cube_func = &cube_func;
 
-	e->head.hp = 2;
+	e->head.hp = 3;
 	e->head.x += 8;
 	e->head.y += 31;
 	e->head.width = 7;

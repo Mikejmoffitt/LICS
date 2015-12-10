@@ -4,8 +4,6 @@
 #include "vramslots.h"
 #include "system.h"
 
-#define METAGRUB_DECEL FIX16(0.125)
-
 static void en_anim_metagrub(void *v);
 static void en_proc_metagrub(void *v);
 static inline fix16 get_lunge_dx(u16 dir);
@@ -46,10 +44,10 @@ void en_init_metagrub(en_metagrub *e)
 	e->head.cube_func = NULL;
 	e->dx = FIX16(0.0);
 	e->move_cnt = 0;
-	
+
 	// Region constants
 	lunge_time = system_ntsc ? 24 : 20;
-	decel = system_ntsc ? FIX16(0.105) : FIX16(0.13);
+	decel = system_ntsc ? FIX16(0.096) : FIX16(0.105);
 	lunge_strength = system_ntsc ? FIX16(1.417) : FIX16(1.875);
 }
 

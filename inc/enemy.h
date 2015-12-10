@@ -64,6 +64,8 @@ struct en_header
 	// For use when drawing; should be pre-calculated during active area
 	u16 attr[2];
 	u16 size[2];
+	// If nonzero, sprite repeats towards the top of the screen
+	u16 tall; 
 	// Health information
 	u16 hurt_cnt; // When it reaches zero, hp--;
 	u16 hp; // If hp == 0, enemy is destroyed

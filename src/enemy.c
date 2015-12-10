@@ -106,6 +106,7 @@ void enemy_init(void)
 		e->head.attr[0] = 0;
 		e->head.size[0] = SPRITE_SIZE(1,1);
 		e->head.attr[1] = 0;
+		e->head.tall = 0;
 		e->head.hurt_cnt = 0;
 		e->head.hp = 1;
 		e->head.width = 4;
@@ -221,7 +222,15 @@ void enemy_draw(void)
 			{
 				sprite_put(ex,ey, e->head.size[0], e->head.attr[0]);
 			}
-			if (e->head.attr[1])
+			if (e->head.tall)
+			{
+				while (ey > 0)
+				{
+					ey -= ((e->head.size[0] + 1) & 0x0003) << 3;		
+					sprite_put(ex,ey, e->head.size[0], e->head.attr[0]);
+				}
+			}
+			else if (e->head.attr[1])
 			{
 				s16 ex = e->head.x + e->head.xoff[1] - state.cam_x;
 				s16 ey = e->head.y + e->head.yoff[1] - state.cam_y;

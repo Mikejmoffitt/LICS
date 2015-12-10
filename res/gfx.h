@@ -27,6 +27,8 @@ extern const u8 gfx_en_plant[2080];
 extern const u8 gfx_en_tossmuffin[864];
 extern const u8 gfx_en_teleporter[1024];
 extern const u8 gfx_en_magibear[2688];
+extern const u8 gfx_en_fissins1[256];
+extern const u8 gfx_en_fissions2[256];
 extern const u8 gfx_inside1[8192];
 extern const u8 gfx_outside1[8192];
 extern const u8 gfx_outside2[8192];
