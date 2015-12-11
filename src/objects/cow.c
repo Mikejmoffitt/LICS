@@ -109,7 +109,7 @@ static void proc_func(void *v)
 				goto do_walk;
 			}
 		}
-		else if (system_ntsc % 2 == 0)
+		else if (system_osc % 2 == 0)
 		{
 			goto do_walk;
 		}

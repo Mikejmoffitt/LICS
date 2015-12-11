@@ -18,16 +18,6 @@ static s16 sy_memo;
 static inline entrance *state_entrance_by_num(u16 num)
 {
 	return &state.entrances[num];
-	/*
-	u16 i = STATE_NUM_ENTRANCES;
-	while (i--)
-	{
-		if (state.entrances[i].num == num)
-		{
-			return &(state.entrances[i]);
-		}
-	}
-	return &state.entrances[0];*/
 }
 
 // Go through the object list, doing whatever setup is required

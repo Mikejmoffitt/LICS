@@ -57,6 +57,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_undersand,
 	(map_file *)&mapdata_spikeshelf,
 	(map_file *)&mapdata_kickget,
+	(map_file *)&mapdata_cowzone,
 	0
 };
 

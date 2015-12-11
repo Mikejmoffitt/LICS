@@ -64,7 +64,16 @@ static void enemy_explode(en_generic *e)
 void enemy_dma_tiles(void)
 {
 	// Enemy palette
-	VDP_doCRamDMA((u32)pal_enemy, ENEMY_PALNUM * 32, 16);
+	switch (state.current_room->sprite_palette)
+	{
+		default:
+		case 0:
+			VDP_doCRamDMA((u32)pal_enemy, ENEMY_PALNUM * 32, 16);
+			break;
+		case 1:
+			VDP_doCRamDMA((u32)pal_enemy_cow, ENEMY_PALNUM * 32, 16);
+			break;
+	}
 }
 
 void enemy_init(void)
