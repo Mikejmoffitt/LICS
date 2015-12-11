@@ -804,7 +804,7 @@ void plane_handle_io(void)
 		al_get_next_event(input_queue, &ev);
 		uint8_t entry_val;
 	
-		if (ev.type == ALLEGRO_EVENT_KEY_DOWN)
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN || ev.type == ALLEGRO_EVENT_KEY_CHAR)
 		{
 			switch (ev.keyboard.keycode)
 			{
@@ -979,6 +979,10 @@ do_hex_entry:
 					{
 						map_obj *o = &map_header.objects[obj_list_sel];
 						o->type++;
+						if (o->type >= num_obj_types())
+						{
+							o->type--;
+						}
 					}
 					break;
 				case ALLEGRO_KEY_PAD_MINUS:
@@ -986,7 +990,10 @@ do_hex_entry:
 					if (edit_mode == MODE_OBJECTS)
 					{
 						map_obj *o = &map_header.objects[obj_list_sel];
-						o->type--;
+						if (o->type > 0)
+						{
+							o->type--;
+						}
 					}
 					break;
 			}

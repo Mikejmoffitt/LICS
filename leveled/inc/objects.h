@@ -46,5 +46,6 @@
 int width_for_obj(int i);
 int height_for_obj(int i);
 const char *string_for_obj(int i);
+int num_obj_types(void);
 
 #endif

@@ -1,5 +1,7 @@
 #include "objects.h"
 
+static int num_types;
+
 static const char *obj_name[] =
 {
 	"        ","Room Ptr","Cube    ","Metagrub",
@@ -13,7 +15,7 @@ static const char *obj_name[] =
 	"Ele stop","Fissins ","Boss 1  ","Boss 2  ",
 	"Boss F1 ","Boss F2 ","Egg     ","Fissins2",
 	"Bounds  ",
-	0
+	""
 };
 
 static const int obj_width[] =
@@ -47,6 +49,18 @@ static const int obj_height[] =
 	96,
 	0
 };
+
+int num_obj_types(void)
+{
+	if (!num_types)
+	{
+		while (obj_name[num_types][0])
+		{
+			num_types++;
+		}
+	}
+	return num_types;
+}
 
 int width_for_obj(int i)
 {
