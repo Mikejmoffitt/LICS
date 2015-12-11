@@ -100,6 +100,9 @@ void enemy_get_hurt(en_generic *e);
 void enemy_cube_response(en_generic *e, cube *c);
 void enemy_cube_impact(en_generic *e, cube *c);
 
+// Enemy collision test between two enemies
+u16 enemy_touching_enemy(en_generic *a, en_generic *b);
+
 // Puts an enemy on the map. Returns a handle to the placed enemy if valid,
 // and returns NULL if invalid or out of room.
 en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data);

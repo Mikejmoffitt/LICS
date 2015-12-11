@@ -21,6 +21,8 @@
 #include "tossmuffin.h"
 #include "teleporter.h"
 #include "magibear.h"
+#include "lava.h"
+#include "cow.h"
 
 #include "state.h"
 #include "particles.h"
@@ -89,6 +91,8 @@ void enemy_init(void)
 	en_unload_tossmuffin();
 	en_unload_teleporter();
 	en_unload_magibear();
+	en_unload_lava();
+	en_unload_cow();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -293,6 +297,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 		else
 		{
 			c->dy = -cube_on_cube_dy;
+			c->y -= 2;
 		}
 		if (c->dx == FZERO)
 		{
@@ -300,7 +305,14 @@ void enemy_cube_response(en_generic *e, cube *c)
 		}
 		else
 		{
-			c->dx = c->dx * -1;
+			if (c->x < e->head.x && c->dx > FIX16(0.0))
+			{
+				c->dx = c->dx * -1;
+			}
+			else if (c->x > e->head.x && c->dx < FIX16(0.0))
+			{
+				c->dx = c->dx * -1;
+			}
 			cube_clamp_dx(c);
 		}
 	}
@@ -324,6 +336,14 @@ void enemy_cube_impact(en_generic *e, cube *c)
 	{
 		enemy_cube_response(e, c);
 	}
+}
+
+u16 enemy_touching_enemy(en_generic *a, en_generic *b)
+{
+	return (a->head.x + a->head.width > b->head.x - b->head.width && 
+	        a->head.x - a->head.width < b->head.x + b->head.width &&
+	        a->head.y > b->head.y - b->head.height &&
+	        a->head.y - a->head.height < b->head.y);
 }
 
 en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
@@ -414,6 +434,12 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_MAGIBEAR:
 					en_init_magibear((en_magibear *)e);
+					break;
+				case ENEMY_LAVA:
+					en_init_lava((en_lava *)e);
+					break;
+				case ENEMY_COW:
+					en_init_cow((en_cow *)e);
 					break;
 			}
 			return &enemies[i];

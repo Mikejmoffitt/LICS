@@ -41,7 +41,7 @@ the length of a 256-tile DMA is only (256 * 16).
 
 #define ENEMY_VRAM_START (PROJECTILES_VRAM_SLOT + PROJECTILES_VRAM_LEN)
 
-// Many level objects!
+// Many level objects - length shown in number of tiles 
 #define ITEMS_VRAM_LEN 24
 #define METAGRUB_VRAM_LEN 7
 #define FLIP_VRAM_LEN 12
@@ -60,6 +60,8 @@ the length of a 256-tile DMA is only (256 * 16).
 #define TOSSMUFFIN_VRAM_LEN 27
 #define TELEPORTER_VRAM_LEN 64
 #define MAGIBEAR_VRAM_LEN 84
+#define LAVA_VRAM_LEN 8
+#define COW_VRAM_LEN 99
 
 #define MAP_FG_PALNUM 0
 #define BG_PALNUM 1
