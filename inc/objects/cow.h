@@ -15,6 +15,8 @@ struct en_cow
 	u16 anger_count;
 	u16 anim_frame;
 	u16 anim_cnt;
+	u16 walk_cnt; // For getting that 5px in 12 frame timing for NTSC
+	u16 shot_cnt; // For angry mode
 };
 
 // Initialize enemy at address e

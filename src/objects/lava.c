@@ -102,7 +102,9 @@ static void proc_func(void *v)
 	// If we have a cow reference, we may check collisions with it.
 	if (e->cow && enemy_touching_enemy((en_generic *)e, e->cow))
 	{
-		e->head.y = e->cow->head.y - e->cow->head.height;
+		// This funky alignment makes it so the lava only appears to move in 8px increments
+		// so it doesn't look like a big strip of bacon scrolling upwards
+		e->head.y = (7 + e->cow->head.y - e->cow->head.height) & (~0x0007);
 	}
 }
 
