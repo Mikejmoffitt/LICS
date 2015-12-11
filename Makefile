@@ -77,15 +77,12 @@ RESOURCES+=$(S80S:.s80=.o)
 
 OBJS = $(RESOURCES)
 
-.PHONY: all clean mednafen debug gens
+.PHONY: all clean mednafen gens regen kmod test test32 
 
 all: lyle.bin 
 
 mednafen: lyle.bin
 	@exec mednafen $< 2> /dev/null
-
-debug: lyle.bin
-	@exec gens $< 2> /dev/null
 
 gens: lyle.bin
 	@exec gens $< 2> /dev/null
