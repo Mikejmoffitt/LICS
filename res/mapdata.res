@@ -24,5 +24,6 @@ BIN mapdata_cowzone "mapdata/cowzone.bin" 2 2 0
 BIN mapdata_smallghetto "mapdata/smallghetto.bin" 2 2 0
 BIN mapdata_flargycolumn "mapdata/flargycolumn.bin" 2 2 0
 BIN mapdata_bigghetto "mapdata/bigghetto.bin" 2 2 0
+BIN mapdata_elevatorroom "mapdata/elevatorroom.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0

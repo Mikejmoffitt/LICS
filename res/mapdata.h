@@ -27,6 +27,7 @@ extern const u8 mapdata_cowzone[8268];
 extern const u8 mapdata_smallghetto[8268];
 extern const u8 mapdata_flargycolumn[5868];
 extern const u8 mapdata_bigghetto[15468];
+extern const u8 mapdata_elevatorroom[20268];
 extern const u8 mapdata_roomzero[3468];
 
 #endif // _MAPDATA_H_

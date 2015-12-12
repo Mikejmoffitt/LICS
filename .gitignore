@@ -14,10 +14,11 @@
 *.la
 *.lo
 
-# vim shit
+# editor locks shit
 *.swp
 inc/*.swp
 src/*.swp
+docs/*.#
 
 out/out.bin
 out.bin

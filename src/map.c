@@ -61,6 +61,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_smallghetto,
 	(map_file *)&mapdata_flargycolumn,
 	(map_file *)&mapdata_bigghetto,
+	(map_file *)&mapdata_elevatorroom,
 	0
 };
 

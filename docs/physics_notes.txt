@@ -45,8 +45,6 @@ if (cube at all touches a solid background)
 		count = 1;
 		dy = 3;
 	
-	if (count 
-
 
 
 Then, if the tile immediately below the cube is solid and dy > 2, 
