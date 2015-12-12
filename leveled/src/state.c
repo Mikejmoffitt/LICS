@@ -16,6 +16,7 @@ unsigned int cursor_y;
 unsigned int active_window;
 
 unsigned int tile_sel;
+unsigned int tile_snap;
 unsigned int tile_src_size;
 unsigned int tile_dest_size;
 unsigned int tile_prio;
@@ -44,6 +45,7 @@ void state_init(void)
 	cursor_y = 0;
 	mouse_x = 0;
 	mouse_y = 0;
+	tile_snap = 0;
 	tile_src_size = SEL_FULL;
 	tile_dest_size = SEL_SINGLE;
 	tile_prio = 0;

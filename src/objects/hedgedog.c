@@ -62,7 +62,7 @@ void en_init_hedgedog(en_hedgedog *e)
 	kanim_speed = system_ntsc ? 3 : 2;
 
 	e->dy = FIX16(0.0);
-	e->walk_direction = ENEMY_RIGHT;
+	e->walk_direction = ENEMY_LEFT;
 	e->jump_cnt = 0;
 	e->did_shoot = 0;
 	e->state = HEDGEDOG_GROUNDED;

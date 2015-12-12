@@ -22,5 +22,7 @@ BIN mapdata_spikeshelf "mapdata/spikeshelf.bin" 2 2 0
 BIN mapdata_kickget "mapdata/kickget.bin" 2 2 0
 BIN mapdata_cowzone "mapdata/cowzone.bin" 2 2 0
 BIN mapdata_smallghetto "mapdata/smallghetto.bin" 2 2 0
+BIN mapdata_flargycolumn "mapdata/flargycolumn.bin" 2 2 0
+BIN mapdata_bigghetto "mapdata/bigghetto.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0
