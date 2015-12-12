@@ -797,6 +797,9 @@ void plane_handle_io(void)
 		}
 	}
 
+	int keys_taken[256];
+	memset(&keys_taken[0], 0, 256);
+
 	// User hits save ikey
 	while (!al_is_event_queue_empty(input_queue))
 	{
@@ -806,6 +809,11 @@ void plane_handle_io(void)
 	
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN || ev.type == ALLEGRO_EVENT_KEY_CHAR)
 		{
+			if (keys_taken[ev.keyboard.keycode])
+			{
+				continue;
+			}
+			keys_taken[ev.keyboard.keycode] = 1;
 			switch (ev.keyboard.keycode)
 			{
 				// Let Ctrl+S save 

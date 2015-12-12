@@ -58,6 +58,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_spikeshelf,
 	(map_file *)&mapdata_kickget,
 	(map_file *)&mapdata_cowzone,
+	(map_file *)&mapdata_smallghetto,
 	0
 };
 

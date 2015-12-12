@@ -231,7 +231,10 @@ void pause_setup(void)
 	playsound(SFX_PAUSE);
 
 	// Cover unexplored areas on the map
-	map_progress_cover();
+	if (!(buttons & BUTTON_Y))
+	{
+		map_progress_cover();
+	}
 
 	pause_intro_anim();
 
