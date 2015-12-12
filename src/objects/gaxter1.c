@@ -44,7 +44,7 @@ void en_init_gaxter1(en_gaxter1 *e)
 	e->head.cube_func = NULL; // standard cube reaction
 
 	accel = system_ntsc ? FIX16(0.1429) : FIX16(0.1715);
-	topspeed = system_ntsc ? FIX16(2.8571) : FIX16(3.429);
+	topspeed = system_ntsc ? FIX16(2.25) : FIX16(2.7);
 }
 
 static void en_anim_gaxter1(void *v)
@@ -120,6 +120,6 @@ static void en_proc_gaxter1(void *v)
 	}
 
 	// Movement due to acceleration
-	e->head.x += fix16ToInt(e->dx);
-	e->head.y += fix16ToInt(e->dy);
+	e->head.x += fix16ToInt(e->dx + FIX16(0.5));
+	e->head.y += fix16ToInt(e->dy + FIX16(0.5));
 }

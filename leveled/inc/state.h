@@ -31,6 +31,7 @@ extern unsigned int cursor_y;
 extern unsigned int active_window;
 
 extern unsigned int tile_sel;
+extern unsigned int tile_snap;
 extern unsigned int tile_src_size;
 extern unsigned int tile_dest_size;
 

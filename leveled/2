@@ -602,7 +602,7 @@ static void mouse_in_map(void)
 		cursor_x = scroll_x + (mouse_x - PLANE_DRAW_X) / TILESIZE;
 		cursor_y = scroll_y + (mouse_y - PLANE_DRAW_Y) / TILESIZE;
 		// Lock to 16x16 coords
-		if (tile_snap)
+		if (tile_src_size == SEL_FULL)
 		{
 			cursor_x = 2 * (cursor_x / 2);
 			cursor_y = 2 * (cursor_y / 2);
@@ -613,8 +613,8 @@ static void mouse_in_map(void)
 		unsigned int cdy = PLANE_DRAW_Y + (cursor_y - scroll_y) * TILESIZE;
 
 		// Snap to size
-		unsigned int cdx2 = cdx + ((tile_src_size) ? (2*TILESIZE) : TILESIZE);
-		unsigned int cdy2 = cdy + ((tile_src_size) ? (2*TILESIZE) : TILESIZE);
+		unsigned int cdx2 = cdx + ((tile_snap) ? (2*TILESIZE) : TILESIZE);
+		unsigned int cdy2 = cdy + ((tile_snap) ? (2*TILESIZE) : TILESIZE);
 
 		al_draw_rectangle(cdx,cdy,cdx2,cdy2,al_map_rgba(255,255,0,128),1);
 		unsigned int t_idx = cursor_x + ((cursor_y) * (MAP_WIDTH * map_header.w));
@@ -671,7 +671,7 @@ static void mouse_in_vram(void)
 			unsigned int sel_x = (mouse_x - VRAM_DRAW_X) / TILESIZE;
 			unsigned int sel_y = (mouse_y - VRAM_DRAW_Y) / TILESIZE;
 			// Lock to 16x16 coords
-			if (tile_snap == SEL_FULL)
+			if (tile_src_size == SEL_FULL)
 			{
 				sel_x = 2 * (sel_x / 2);
 				sel_y = 2 * (sel_y / 2);
@@ -824,10 +824,6 @@ void plane_handle_io(void)
 				case ALLEGRO_KEY_F6:
 				case ALLEGRO_KEY_T:
 					tile_src_size = (tile_src_size == SEL_FULL) ? 0 : SEL_FULL;
-					break;
-				case ALLEGRO_KEY_F7:
-				case ALLEGRO_KEY_R:
-					tile_snap = (tile_snap == 1) ? 0 : 1;
 					break;
 				case ALLEGRO_KEY_F8:
 				case ALLEGRO_KEY_I:
