@@ -181,6 +181,10 @@ static void anim_func(void *v)
 		{
 			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 8);
 		}
+		else
+		{
+			e->head.attr[1] = NULL;
+		}
 
 		if (e->anim_frame >= 2)
 		{
