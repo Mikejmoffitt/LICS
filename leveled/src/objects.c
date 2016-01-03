@@ -14,7 +14,7 @@ static const char *obj_name[] =
 	"CP Pad  ","CP Meter","Blue Dog","Elevator",
 	"Ele stop","Fissins ","Boss 1  ","Boss 2  ",
 	"Boss F1 ","Boss F2 ","Egg     ","Fissins2",
-	"Bounds  ",
+	"Bounds  ","SmallEgg","BsktBall","LavaAnim",
 	""
 };
 
@@ -30,7 +30,7 @@ static const int obj_width[] =
 	32,16,48,32,
 	32,16,64,64,
 	64,64,32,16,
-	16,
+	16,16,16,8,
 	0
 };
 
@@ -46,7 +46,7 @@ static const int obj_height[] =
 	8,8,32,64,
 	8,16,64,64,
 	64,64,32,16,
-	96,
+	96,16,16,8,
 	0
 };
 

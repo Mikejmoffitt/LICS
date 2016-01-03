@@ -5,3 +5,4 @@ Tileset names!
 2: Inside1
 3: Sandy1
 4: Teleporter
+5: Outside1 alt (with teal tiles)

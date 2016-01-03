@@ -1,0 +1,7 @@
+Sprite Palettes
+---------------
+
+0: Normal
+1: Cow-modified
+2: Basketball-modified
+3: Elevator Modified

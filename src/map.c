@@ -62,6 +62,10 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_flargycolumn,
 	(map_file *)&mapdata_bigghetto,
 	(map_file *)&mapdata_elevatorroom,
+	(map_file *)&mapdata_topleft,
+	(map_file *)&mapdata_dogtown,
+	(map_file *)&mapdata_pyramid,
+	(map_file *)&mapdata_basketball,
 	0
 };
 

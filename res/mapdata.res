@@ -25,5 +25,9 @@ BIN mapdata_smallghetto "mapdata/smallghetto.bin" 2 2 0
 BIN mapdata_flargycolumn "mapdata/flargycolumn.bin" 2 2 0
 BIN mapdata_bigghetto "mapdata/bigghetto.bin" 2 2 0
 BIN mapdata_elevatorroom "mapdata/elevatorroom.bin" 2 2 0
+BIN mapdata_topleft "mapdata/topleft.bin" 2 2 0
+BIN mapdata_dogtown "mapdata/dogtown.bin" 2 2 0
+BIN mapdata_pyramid "mapdata/pyramid.bin" 2 2 0
+BIN mapdata_basketball "mapdata/basketball.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0
