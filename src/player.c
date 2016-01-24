@@ -1089,6 +1089,7 @@ void player_draw(void)
 		fix32ToInt(pl.y) + yoff - state.cam_y, 
 		size, 
 		TILE_ATTR(PLAYER_PALNUM,0,0,pl.direction) + PLAYER_VRAM_SLOT);
+
 }
 
 static inline void player_entrance_coll(void)
@@ -1103,10 +1104,34 @@ static inline void player_entrance_coll(void)
 		entrance *e = &(state.entrances[i]);
 		if (player_collision(e->x + ENTRANCE_CHK_LEFT, e->x + ENTRANCE_CHK_RIGHT, e->y + ENTRANCE_CHK_TOP, e->y + ENTRANCE_CHK_BOTTOM))
 		{
-			state.next_id = e->to_roomid;
-			state.next_entrance = e->to_num;
+			// Don't bother room lookup if this is marked already
+			if (state.next_id != e->to_roomid)
+			{
+				// Check if room exists, and if not, set map pointer to zero
+				if (map_by_id(e->to_roomid) == NULL)
+				{
+					state.next_id = 0;
+				}
+				state.next_entrance = e->to_num;
+				state.next_id = e->to_roomid;
+			}
+			if (debug_en)
+			{
+				if (state.next_entrance == 0)
+				{
+					sprite_put(pl.px - 8 - state.cam_x, pl.py - 40 - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(3, 0, 0, 0, 0x54E));
+					sprite_put(pl.px - state.cam_x, pl.py - 40 - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(3, 0, 0, 0, 0x547));
+				}
+				else
+				{
+					sprite_put(pl.px - 8 - state.cam_x, pl.py - 40 - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 0, 0, 0, 0x54F));
+					sprite_put(pl.px - state.cam_x, pl.py - 40 - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(1, 0, 0, 0, 0x54B));
+					
+				}
+			}
 		}
 	}
+	// Indicate that the next room pointer set is no good
 }
 
 static inline void player_chk_spikes(void)

@@ -17,7 +17,7 @@ u16 system_osc;
 u16 system_ntsc;
 u16 ntsc_counter;
 
-static u16 debug_en;
+u16 debug_en;
 
 // For doing a palette write at a certain line
 static u16 hsplit_line;

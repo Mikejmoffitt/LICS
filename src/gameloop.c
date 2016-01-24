@@ -54,9 +54,6 @@ void gameloop_logic(void)
 	projectiles_run();
 	particles_run();
 	sfx_counters();
-	if (buttons & BUTTON_A && !(buttons_prev & BUTTON_A))
-		projectile_shoot(pl.px + 128, pl.py - 16, FIX16(-0.75), FIX16(0.0), PROJECTILE_DEATHORB);
-		//message_screen("Oh my lordy!!! It's not broken.");
 	state_update_progress();
 
 }
@@ -189,6 +186,11 @@ void gameloop_main(void)
 			if ((buttons & BUTTON_START) && (!(buttons_prev & BUTTON_START)))
 			{
 				pause_screen_loop();	
+			}
+
+			if (pl.hp == 0)
+			{
+				return;
 			}
 		}
 		while (!(transition = state_watch_transitions()));

@@ -5,7 +5,10 @@
 
 int main(void)
 {
-	system_init();
-	gameloop_main();
+	while(1)
+	{
+		system_init();
+		gameloop_main();
+	}
 	return 0;	
 }

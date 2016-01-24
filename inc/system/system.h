@@ -16,6 +16,7 @@
 
 extern u16 buttons;
 extern u16 buttons_prev;
+extern u16 debug_en;
 
 // This just counts up forever. It is often used for animations.
 extern u16 system_osc;
