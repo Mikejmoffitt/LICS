@@ -66,6 +66,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_dogtown,
 	(map_file *)&mapdata_pyramid,
 	(map_file *)&mapdata_basketball,
+	(map_file *)&mapdata_treesand,
 	0
 };
 
