@@ -231,7 +231,6 @@ static void player_cp(void)
 	if (pl.cp_cnt > plk.cube_fx && system_osc % 2)
 	{
 		particle_spawn(pl.px, pl.py - 32, PARTICLE_TYPE_SPARKLE);
-
 	}
 }
 
@@ -831,6 +830,7 @@ static inline void player_cube_collision(void)
 			}
 			else if (c->state == CUBE_STATE_IDLE)
 			{
+				// Run standard solid collisions
 				player_cube_vertical_collision(c);
 				player_cube_horizontal_collision(c);
 				player_cube_eval_standing(c);
@@ -841,9 +841,12 @@ static inline void player_cube_collision(void)
 				if (pl.hurt_cnt < plk.hurt_time - plk.hurt_timeout)
 				{
 					player_get_bounced();
-					player_get_hurt();
+					// Only hurt the player if the player is below the cube
+					if (pl.py >= c->y + CUBE_BOTTOM)
+					{
+						player_get_hurt();
+					}
 				}
-
 			}
 		}
 
