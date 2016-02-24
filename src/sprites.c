@@ -29,6 +29,10 @@ void sprites_dma_simple()
 	{
 		// Place a dummy sprite invisibly
 		sprite_put(-64,-64,0,0);
+		sprites_clamp_link(0);
+
+		// Just transfer sprite zero to terminate list
+		VDP_doVRamDMA((u32)sprite_table, sprite_addr, 4);
 		return;
 	}
 	// Terminate the list at the last sprite
