@@ -14,7 +14,6 @@
 static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
 static u16 lyle_dma_len;
-static u16 ctype;
 static u16 cp_restore_cnt;
 
 static void player_set_pal(void);
@@ -223,29 +222,7 @@ static void player_cp(void)
 		u16 cube_spawn_period = (sram.have_fast_phantom ? plk.cp_spawn_fast : plk.cp_spawn_slow);
 		if (pl.cp_cnt >= cube_spawn_period)
 		{
-			switch (ctype)
-			{
-				default:
-					ctype = CUBE_PHANTOM;
-					break;
-				case CUBE_PHANTOM:
-					ctype = CUBE_BLUE;
-					break;
-				case CUBE_BLUE:
-					ctype = CUBE_RED;
-					break;
-				case CUBE_RED:
-					ctype = CUBE_YELLOW;
-					break;
-				case CUBE_YELLOW:
-					ctype = CUBE_GREEN;
-					break;
-				case CUBE_GREEN:
-					ctype = CUBE_PHANTOM;
-					break;
-			}
-			ctype = CUBE_PHANTOM;
-			pl.holding_cube = ctype;
+			pl.holding_cube = CUBE_PHANTOM;
 			pl.cp_cnt = 0;
 			pl.cp -= cube_price;
 		}
@@ -254,7 +231,6 @@ static void player_cp(void)
 	if (pl.cp_cnt > plk.cube_fx && system_osc % 2)
 	{
 		particle_spawn(pl.px, pl.py - 32, PARTICLE_TYPE_SPARKLE);
-
 	}
 }
 
@@ -854,6 +830,7 @@ static inline void player_cube_collision(void)
 			}
 			else if (c->state == CUBE_STATE_IDLE)
 			{
+				// Run standard solid collisions
 				player_cube_vertical_collision(c);
 				player_cube_horizontal_collision(c);
 				player_cube_eval_standing(c);
@@ -864,9 +841,12 @@ static inline void player_cube_collision(void)
 				if (pl.hurt_cnt < plk.hurt_time - plk.hurt_timeout)
 				{
 					player_get_bounced();
-					player_get_hurt();
+					// Only hurt the player if the player is below the cube
+					if (pl.py >= c->y + CUBE_BOTTOM)
+					{
+						player_get_hurt();
+					}
 				}
-
 			}
 		}
 
@@ -1203,12 +1183,14 @@ void player_get_hurt(void)
 		player_get_bounced();
 		pl.hurt_cnt = plk.hurt_time;
 		pl.invuln_cnt = plk.invuln_time;
+		pl.cp_cnt = 0;
 
 		if (pl.hp > 0)
 		{
 			pl.hp--;
 		}
 
+		// A cube being held gets dropped
 		if (pl.holding_cube)
 		{
 			u16 cx = fix32ToInt(pl.x);
