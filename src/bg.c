@@ -1,4 +1,4 @@
-include "bg.h"
+#include "bg.h"
 #include "gfx.h"
 #include "pal.h"
 #include "vramslots.h"
