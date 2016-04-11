@@ -12,5 +12,8 @@ extern const u8 sfx_enemyexplode[314];
 extern const u8 sfx_enemystrike[172];
 extern const u8 sfx_pause[144];
 extern const u8 sfx_cubeexplode[618];
+extern const u8 sfx_hurt[170];
+extern const u8 sfx_cubelift[126];
+extern const u8 sfx_powerup_get[106];
 
 #endif // _SFX_H_

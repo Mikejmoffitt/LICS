@@ -9,6 +9,7 @@
 #include "system.h"
 #include "sprites.h"
 #include "save.h"
+#include "music.h"
 
 static u16 kmax_dy;
 static u16 kbounce_sub;
@@ -271,6 +272,7 @@ static inline void powerup_player_collisions(powerup *p)
 			particle_spawn(p->x, p->y, PARTICLE_TYPE_SPARKLE);
 
 		}
+		playsound(SFX_POWERUP_GET);
 		powerup_destroy(p);
 	}
 }

@@ -556,6 +556,7 @@ static void player_lift_cubes(void)
 			pl.dy = plk.jump_dy;
 		}
 		pl.action_cnt = PLAYER_ACTION_LIFT;
+		playsound(SFX_CUBELIFT);
 	}
 }
 
@@ -842,9 +843,13 @@ static inline void player_cube_collision(void)
 				{
 					player_get_bounced();
 					// Only hurt the player if the player is below the cube
-					if (pl.py >= c->y + CUBE_BOTTOM)
+					if ( (c->type != CUBE_GREEN) || (pl.py >= c->y + CUBE_BOTTOM))
 					{
 						player_get_hurt();
+					}
+					else
+					{
+						pl.dy = plk.jump_dy >> 1;
 					}
 				}
 			}
@@ -1203,6 +1208,8 @@ void player_get_hurt(void)
 				cdx, cdy);
 			pl.holding_cube = 0;
 		}
+
+		playsound(SFX_HURT);
 	}
 }
 

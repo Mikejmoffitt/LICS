@@ -9,3 +9,6 @@ BIN sfx_enemyexplode "sfx/enemyexplode.esf" 2 2 0
 BIN sfx_enemystrike "sfx/enemystrike.esf" 2 2 0
 BIN sfx_pause "sfx/pause.esf" 2 2 0
 BIN sfx_cubeexplode "sfx/cubeexplode.esf" 2 2 0
+BIN sfx_hurt "sfx/hurt.esf" 2 2 0
+BIN sfx_cubelift "sfx/cubelift.esf" 2 2 0
+BIN sfx_powerup_get "sfx/powerup_get.esf" 2 2 0

@@ -57,6 +57,9 @@ static const void *sfx_list[] = {
 	(void *)sfx_enemystrike,
 	(void *)sfx_pause,
 	(void *)sfx_cubeexplode,
+	(void *)sfx_hurt,
+	(void *)sfx_cubelift,
+	(void *)sfx_powerup_get,
 	0,
 	0,
 	0,
@@ -77,7 +80,11 @@ static const u16 sfx_len[] = {
 	30,
 	30,
 	18,
-	30
+	30,
+	16,
+	9,
+	8,
+
 };
 
 static const u16 sfx_priority[] = {
@@ -91,7 +98,10 @@ static const u16 sfx_priority[] = {
 	5,
 	4,
 	0,
-	6
+	6,
+	6,
+	3,
+	4
 };
 
 #endif

@@ -1,0 +1,98 @@
+export RELEASE=20151220
+export ARCH=x64
+
+# -----------------------------------------------------------------
+# BUILD UMDKv2 TOOLS
+sudo apt-get update -y
+sudo apt-get install -y build-essential libreadline-dev libusb-1.0-0-dev
+sudo apt-get install -y cvs lzma bison flex texinfo automake libtool zlib1g-dev gawk gperf libncurses5-dev
+cd $HOME
+rm -rf umdkv2-bin
+wget -qO- https://dl.dropboxusercontent.com/u/80983693/umdkv2/fpga-bin-${RELEASE}.tar.gz | tar zxf -
+mkdir -p ${RELEASE}
+cd ${RELEASE}
+wget -qO- http://tiny.cc/msbil | tar zxf -
+cd makestuff/apps
+../scripts/msget.sh makestuff/flcli/${RELEASE}
+../scripts/msget.sh makestuff/gordon
+cd flcli
+make deps
+cp lin.${ARCH}/rel/*.so $HOME/umdkv2-bin/
+cp lin.${ARCH}/rel/flcli $HOME/umdkv2-bin/
+cd ../gordon/usb
+make deps
+cp lin.${ARCH}/rel/*.so $HOME/umdkv2-bin/
+cp lin.${ARCH}/rel/usb $HOME/umdkv2-bin/gordon
+cd ../../..
+scripts/msget.sh makestuff/hdlmake
+cd hdlmake/apps
+mkdir makestuff
+cd makestuff/
+../../../scripts/msget.sh makestuff/umdkv2
+cd umdkv2/scripts
+# -----------------------------------------------------------------
+# BUILD 68000 CROSS-ASSEMBLER AND CROSS-COMPILER
+./build-gcc.sh
+# -----------------------------------------------------------------
+# BUILD GDB-68000
+./build-gdb.sh
+# -----------------------------------------------------------------
+# BUILD SGDK
+./build-sgdk.sh
+# -----------------------------------------------------------------
+# BUILD UMDKv2 TOOLS
+cd ../logread/
+make
+cp lin.${ARCH}/rel/*.so $HOME/umdkv2-bin/
+cp lin.${ARCH}/rel/logread $HOME/umdkv2-bin/
+cd ../hackdump/
+make
+cp lin.${ARCH}/rel/*.so $HOME/umdkv2-bin/
+cp lin.${ARCH}/rel/hackdump $HOME/umdkv2-bin/
+cd ../m68k/menu/
+./rel.sh 
+cd ../../gdb-bridge/monitor/
+make
+cat monitor.bin ../../m68k/menu/menu.bin > $HOME/umdkv2-bin/firmware.bin
+cd ..
+make rel
+cp lin.${ARCH}/rel/*.so $HOME/umdkv2-bin/
+cp lin.${ARCH}/rel/gdb-bridge $HOME/umdkv2-bin/
+cd ../loader/
+make
+cp lin.${ARCH}/rel/*.so $HOME/umdkv2-bin/
+cp lin.${ARCH}/rel/loader $HOME/umdkv2-bin/
+
+# -----------------------------------------------------------------
+# After all this, in $HOME/umdkv2-bin you should now have:
+#   Flash Binaries:
+#     swled.bin        - Simple FPGA configuration for verifying the FPGA boot
+#     fpga-prod.bin    - UMDKv2 FPGA configuration (load at 0x00000)
+#     firmware.bin     - 2nd-stage bootloader and menu program (load at 0x60000)
+#   FPGA Binaries:
+#     fpga-test.xsvf   - FPGA design for testing UMDK's connections
+#     cksum.xsvf       - FPGA design for testing USB integrity and throughput
+#     readback.xsvf    - FPGA design for testing SDRAM
+#     spi-talk.xsvf    - FPGA design for loading flash
+#   Executables:
+#     flcli            - FPGALink command-line interface
+#     gordon           - gordon flash tool
+#     gdb-bridge       - proxy for GDB remote-serial protocol
+#     logread          - render a trace log in human-readable form
+#     hackdump         - compare memory dumps for specific diffs
+#     loader           - various low-level data transfer operations
+#   Dependent Libraries:
+#     libfpgalink.so   - the FPGALink host-side library
+#     libfx2loader.so  - load FX2LP firmware
+#     libbuffer.so     - dynamic memory allocation
+#     liberror.so      - error message handling
+#     libusbwrap.so    - cross-platform host-side USB API
+#     libargtable2.so  - parse command-line arguments
+#
+# You can then add the tools to your PATH:
+#   export PATH=${HOME}/x-tools/m68k-megadrive-elf/bin:${HOME}/umdkv2-bin:${PATH}
+
+cd ${HOME}
+cp README-SW umdkv2-bin/
+tar zcf umdk-l${ARCH}-${RELEASE}.tar.gz umdkv2-bin
+tar zcf xtools-l${ARCH}-${RELEASE}.tar.gz x-tools

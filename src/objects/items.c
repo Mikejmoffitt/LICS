@@ -5,6 +5,7 @@
 #include "cubes.h"
 #include "system.h"
 #include "sprites.h"
+#include "music.h"
 
 static u16 kanim_len;
 static u16 kfloat_len;
@@ -44,6 +45,7 @@ static void proc_func(void *v)
 			if (e->head.touching_player)
 			{
 				sram.have_map = 1;
+				playsound(SFX_POWERUP_GET);
 				save_write();
 				// TODO: Go to popup screen to show message for collection
 //				message_screen("Hello world!");
@@ -57,6 +59,7 @@ static void proc_func(void *v)
 			if (e->head.touching_player)
 			{
 				sram.have_lift = 1;
+				playsound(SFX_POWERUP_GET);
 				save_write();
 			}
 			if (sram.have_lift)
@@ -68,6 +71,7 @@ static void proc_func(void *v)
 			if (e->head.touching_player)
 			{
 				sram.have_jump = 1;
+				playsound(SFX_POWERUP_GET);
 				save_write();
 			}
 			if (sram.have_jump)
@@ -79,6 +83,7 @@ static void proc_func(void *v)
 			if (e->head.touching_player)
 			{
 				sram.have_phantom = 1;
+				playsound(SFX_POWERUP_GET);
 				save_write();
 			}
 			if (sram.have_phantom)
@@ -90,6 +95,7 @@ static void proc_func(void *v)
 			if (e->head.touching_player)
 			{
 				sram.have_kick = 1;
+				playsound(SFX_POWERUP_GET);
 				save_write();
 			}
 			if (sram.have_kick)
@@ -101,6 +107,7 @@ static void proc_func(void *v)
 			if (e->head.touching_player)
 			{
 				sram.have_orange = 1;
+				playsound(SFX_POWERUP_GET);
 				save_write();
 			}
 			if (sram.have_orange)

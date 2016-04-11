@@ -1,0 +1,40 @@
+# The VHDL describing various FPGA designs is built into a bunch of
+# .bin and .xsvf files using the Xilinx ISE command-line tools. The
+# Xilinx ISE installation is pretty big, so unless you really want
+# to build the VHDL yourself, it's probably better to use this pre-
+# built tarball. But if you DO want to build it yourself, you can
+# do it like this:
+#
+export RELEASE=20151220
+export XILINX=/opt/Xilinx/14.7/ISE_DS/ISE
+export PATH=${XILINX}/bin/lin64:${PATH}
+cd $HOME
+rm -rf ${RELEASE} umdkv2-bin fpga-bin-${RELEASE}.tar.gz
+mkdir ${RELEASE} umdkv2-bin
+cd ${RELEASE}
+wget -qO- http://tiny.cc/msbil | tar zxf -
+cd makestuff/
+scripts/msget.sh makestuff/hdlmake/${RELEASE}
+cd hdlmake/apps
+../bin/hdlmake.py -g makestuff/swled
+../bin/hdlmake.py -g makestuff/readback
+../bin/hdlmake.py -g makestuff/spi-talk
+../bin/hdlmake.py -g makestuff/umdkv2
+cd makestuff/swled/cksum/vhdl/
+../../../../../bin/hdlmake.py -t ../../templates/fx2min/vhdl -b lx9r2 -p fpga
+cp fpga.xsvf $HOME/umdkv2-bin/cksum.xsvf
+cp top_level.bin $HOME/umdkv2-bin/cksum.bin
+cd ../../../readback/vhdl/
+../../../../bin/hdlmake.py -t ../templates/fx2min/vhdl -b lx9r3 -p fpga
+cp fpga.xsvf $HOME/umdkv2-bin/readback.xsvf
+cd ../../spi-talk/vhdl/
+../../../../bin/hdlmake.py -t ../templates/fx2min/vhdl -b lx9r3 -p fpga
+cp fpga.xsvf $HOME/umdkv2-bin/spi-talk.xsvf
+cd ../../umdkv2/vhdl/
+../../../../bin/hdlmake.py -t ../templates/fx2min/vhdl -b lx9r3
+cp top_level.bin $HOME/umdkv2-bin/fpga-prod.bin
+../../../../bin/hdlmake.py -t ../templates/fx2min/vhdl -b lx9r3 -p fpga -s "RESET_INIT='1' MAPRAM_INIT='1' MAPRAM_FORCE=true NO_MONITOR=true"
+cp fpga.xsvf $HOME/umdkv2-bin/fpga-test.xsvf
+cd $HOME
+cp README-VHDL umdkv2-bin/
+tar zcf fpga-bin-${RELEASE}.tar.gz umdkv2-bin
