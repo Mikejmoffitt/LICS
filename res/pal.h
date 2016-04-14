@@ -18,5 +18,6 @@ extern const u8 pal_bg3[32];
 extern const u8 pal_bg4[32];
 extern const u8 pal_bg5[32];
 extern const u8 pal_black[128];
+extern const u8 pal_bogologo[64];
 
 #endif // _PAL_H_

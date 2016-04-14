@@ -42,5 +42,6 @@ extern const u8 gfx_bg2[1024];
 extern const u8 gfx_bg3[512];
 extern const u8 gfx_bg4[256];
 extern const u8 gfx_bg5[512];
+extern const u8 gfx_bogologo[3072];
 
 #endif // _GFX_H_

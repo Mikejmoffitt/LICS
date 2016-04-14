@@ -12,6 +12,8 @@ the length of a 256-tile DMA is only (256 * 16).
 
 */
 
+// In-game VRAM slots
+
 #define MAP_FG_VRAM_SLOT 0
 #define MAP_FG_VRAM_LEN 256
 
