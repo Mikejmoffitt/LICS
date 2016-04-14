@@ -103,7 +103,7 @@ static void gameloop_room_setup(u16 transition)
 	player_init_soft();
 	pause_init();
 
-	// Depending on room entry, do some things
+	// Depending on room entry, the player may need to jump into the frame
 	if (transition == STATE_TRANSITION_UP)
 	{
 		player_do_jump();
@@ -133,31 +133,34 @@ static void gameloop_room_setup(u16 transition)
 	// Save player's progress for frequent auto-save
 	save_write();
 
-	// First graphical commit
+	// One frame of logic and graphics is evaluated
 	gameloop_logic();
-
 	gameloop_gfx();
 	gameloop_dma();
 
+	// Play music pulled from room state
 	music_play(state.current_room->music);
 
+	// Wait for vblank, no mid-screen changes wanted
 	system_wait_v();
+
+	// Restore the VDP output
 	VDP_setEnable(1);
 }
 
 void gameloop_main(void)
 {
+	// Variable to track which side of the room the player enters from
 	u16 transition = 0;
+
+	// Initialize a little bit of player and game state
 	state.next_id = 1;
 	state.next_entrance = 0;
 	state.current_id = 64;
 
 	player_init();
 
-	if (buttons & BUTTON_Z)	
-	{
-		save_clear();
-	}
+	// Debug mode cheats
 	if (buttons & BUTTON_X)	
 	{
 		save_clear();
@@ -167,12 +170,14 @@ void gameloop_main(void)
 		sram.have_phantom = 1;
 		sram.have_map = 1;
 	}
-	// Game is in progress
+
+	// Main game loop; runs until after a player death anim, quit, or victory.
 	while (1)
 	{
-
-		// Run this loop until a room exit is detected
+		// Configure the room we are about to enter
 		gameloop_room_setup(transition);
+
+		// Run the gameloop until a room transition is detected
 		do
 		{
 			/* Run one frame of engine logic */
@@ -188,10 +193,6 @@ void gameloop_main(void)
 				pause_screen_loop();	
 			}
 
-			if (pl.hp == 0)
-			{
-				return;
-			}
 		}
 		while (!(transition = state_watch_transitions()));
 	}
