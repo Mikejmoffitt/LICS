@@ -8,8 +8,8 @@ int main(void)
 {
 	while(1)
 	{
-		title_play_intro();
 		system_init();
+		title_play_intro();
 		gameloop_main();
 	}
 	return 0;	
