@@ -8,6 +8,7 @@
 
 static u16 current_bg;
 
+// The way scroll values are set up, row scrolling is only okay for 64x32 (ingame).
 static s16 bg_xscroll_vals[STATE_PLANE_H];
 static s16 bg_yscroll_vals[STATE_PLANE_W / 2];
 static u16 bg_xscroll_cmd;
@@ -32,6 +33,7 @@ void bg_load(u16 num)
 		return;
 	}
 	
+	current_bg = num;
 	VDP_clearPlan(VDP_PLAN_B, 1);
 	// Source data for CRAM palette (first 8 entries)
 	u32 pal_src;
@@ -44,6 +46,8 @@ void bg_load(u16 num)
 	switch (num)
 	{
 		default:
+			// Do nothing for an invalid backdrop
+			return;
 		case 0:
 			current_bg = 0;
 			VDP_waitDMACompletion();
@@ -89,7 +93,6 @@ void bg_load(u16 num)
 	VDP_doVRamDMA(map_src, VDP_getBPlanAddress(), 64 * 32);
 	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 8);
 	VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
-	current_bg = num;
 }
 
 void bg_scroll_x(u16 amt)
@@ -135,7 +138,7 @@ void bg_scroll_y(u16 amt)
 	}
 	else
 	{
-		int i = STATE_PLANE_W / 2;
+		int i = VDP_getPlanWidth() / 2;
 		while (i--)
 		{
 			bg_yscroll_vals[i] = amt >> coeff_tables[current_bg][i];
@@ -149,7 +152,7 @@ void bg_dma_scroll(void)
 {
 	if (bg_xscroll_cmd == STATE_SCROLL_DMA)
 	{
-	 	VDP_setHorizontalScrollTile(PLAN_B, 0, bg_xscroll_vals, STATE_PLANE_H, 1);
+	 	VDP_setHorizontalScrollTile(PLAN_B, 0, bg_xscroll_vals, VDP_getPlanHeight(), 1);
 	}
 	else if (bg_xscroll_cmd)
 	{
@@ -157,7 +160,7 @@ void bg_dma_scroll(void)
 	}
 	if (bg_yscroll_cmd == STATE_SCROLL_DMA)
 	{
-		VDP_setVerticalScrollTile(PLAN_B, 0, bg_yscroll_vals, STATE_PLANE_H, 1);
+		VDP_setVerticalScrollTile(PLAN_B, 0, bg_yscroll_vals, VDP_getPlanHeight(), 1);
 	}
 	else if (bg_yscroll_cmd)
 	{

@@ -56,6 +56,8 @@ Also handles some object list functions.
 #define MAP_SET_TELEPORTER 4
 #define MAP_SET_OUTSIDE3 5
 
+#define MAP_SET_INVALID 255
+
 #define MAP_NAME_SIZE 32
 #define MAP_NUM_OBJS 128
 #define MAP_NUM_ROOM_PTRS 16
@@ -108,6 +110,12 @@ struct map_file
 	u8 map_data[1]; 
 };
 
+// Clear map structures
+void map_init(void);
+
+// Which tilset is loaded?
+u8 map_get_current_tileset(void);
+
 // DMA a tileset into VRAM; prepare for palette
 void map_load_tileset(u8 num);
 
@@ -116,6 +124,9 @@ map_file *map_by_id(u8 num);
 
 // Update the screen as needed based on movement differences
 void map_draw_diffs(u16 moved);
+void map_draw_full(u16 cam_x, u16 cam_y);
+void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side);
+void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side);
 
 // Commit DMA queue to VRAM
 void map_dma(void);

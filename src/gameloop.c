@@ -22,6 +22,8 @@
 #define GAMELOOP_PLANE_W 64
 #define GAMELOOP_PLANE_H 32
 
+static u16 first_entrance;
+
 static void puts(const char *s, u16 x, u16 y)
 {
 	while (*s)
@@ -92,12 +94,8 @@ void gameloop_dma(void)
 
 static void gameloop_room_setup(u16 transition)
 {	
-	// Blank the display
-	system_wait_v();
-	VDP_setEnable(0);
-	system_ntsc = (!IS_PALSYSTEM);
-
 	// Reset object lists, gameplay variables, etc.
+	system_wait_v();
 	cubes_init();
 	enemy_init();
 	particles_init();
@@ -105,15 +103,28 @@ static void gameloop_room_setup(u16 transition)
 	powerup_init();
 	player_init_soft();
 	pause_init();
+	system_wait_v();
+	// Load the next room
+	state_load_room(state.next_id);
+
+	// Determine whether or not we need to blank for tile changes
+	// This is a little hack to make the transition from title screen to game start not flash
+	u16 should_blank = !first_entrance;
+	first_entrance = 1;
+
+	// Blank the display
+	if (should_blank)
+	{
+		VDP_setEnable(0);
+		// Load a bogus backdrop to force it to reload the BG
+		bg_load(255);
+	}
 
 	// Depending on room entry, the player may need to jump into the frame
 	if (transition == STATE_TRANSITION_UP)
 	{
 		player_do_jump();
 	}
-
-	// Load the next room
-	state_load_room(state.next_id);
 
 	// Locate entry position for player
 	player_set_xy_fix32(state_get_entrance_x(), state_get_entrance_y());
@@ -133,9 +144,6 @@ static void gameloop_room_setup(u16 transition)
 	// Set up the far backdrop
 	bg_load(state.current_room->background);
 
-	// Save player's progress for frequent auto-save
-	save_write();
-
 	// One frame of logic and graphics is evaluated
 	gameloop_logic();
 	gameloop_gfx();
@@ -147,8 +155,14 @@ static void gameloop_room_setup(u16 transition)
 	// Wait for vblank, no mid-screen changes wanted
 	system_wait_v();
 
-	// Restore the VDP output
-	VDP_setEnable(1);
+	if (should_blank)
+	{
+		// Restore the VDP output
+		VDP_setEnable(1);
+	}
+
+	// Save player's progress for frequent auto-save
+	save_write();
 }
 
 static inline void gameloop_init(void)
@@ -168,6 +182,12 @@ static inline void gameloop_init(void)
 	VDP_setPlanSize(GAMELOOP_PLANE_W, GAMELOOP_PLANE_H);
 	VDP_setScreenWidth320();
 
+	// Set base addresses for tables
+	VDP_setBPlanAddress(0xC000);
+	VDP_setWindowAddress(0xD000);
+	VDP_setAPlanAddress(0xE000);
+	VDP_setSpriteListAddress(0xF000);
+
 	// Clear both planes
 	VDP_clearPlan(VDP_PLAN_A, 1);
 	VDP_waitDMACompletion();
@@ -183,6 +203,10 @@ static inline void gameloop_init(void)
 	// Clear sprites
 	sprites_init();
 
+	// Initialize backdrop map system
+	map_init();
+
+	first_entrance = 0;
 
 }
 

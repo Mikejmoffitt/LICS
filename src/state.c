@@ -113,7 +113,7 @@ static void state_scroll_fgx(s16 amt)
 	}
 	else
 	{
-		int i = STATE_PLANE_H;
+		int i = VDP_getPlanHeight();
 		while (i--)
 		{
 			state.xscroll_vals[i] = amt;
@@ -133,7 +133,7 @@ static void state_scroll_fgy(s16 amt)
 	}
 	else
 	{
-		int i = STATE_PLANE_W / 2;
+		int i = VDP_getPlanWidth() / 2;
 		while (i--)
 		{
 			state.yscroll_vals[i] = amt;
@@ -208,7 +208,7 @@ void state_dma_scroll(void)
 {
 	if (state.xscroll_cmd == STATE_SCROLL_DMA)
 	{
-	 	VDP_setHorizontalScrollTile(PLAN_A, 0, state.xscroll_vals, STATE_PLANE_H, 1);
+	 	VDP_setHorizontalScrollTile(PLAN_A, 0, state.xscroll_vals, VDP_getPlanHeight(), 1);
 	}
 	else if (state.xscroll_cmd)
 	{
@@ -216,7 +216,7 @@ void state_dma_scroll(void)
 	}
 	if (state.yscroll_cmd == STATE_SCROLL_DMA)
 	{
-		VDP_setVerticalScrollTile(PLAN_A, 0, state.yscroll_vals, STATE_PLANE_H, 1);
+		VDP_setVerticalScrollTile(PLAN_A, 0, state.yscroll_vals, VDP_getPlanHeight(), 1);
 	}
 	else if (state.yscroll_cmd)
 	{
