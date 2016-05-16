@@ -19,6 +19,9 @@
 #include "pause.h"
 #include "projectiles.h"
 
+#define GAMELOOP_PLANE_W 64
+#define GAMELOOP_PLANE_H 32
+
 static void puts(const char *s, u16 x, u16 y)
 {
 	while (*s)
@@ -148,18 +151,8 @@ static void gameloop_room_setup(u16 transition)
 	VDP_setEnable(1);
 }
 
-void gameloop_main(void)
+static inline void gameloop_init(void)
 {
-	// Variable to track which side of the room the player enters from
-	u16 transition = 0;
-
-	// Initialize a little bit of player and game state
-	state.next_id = 1;
-	state.next_entrance = 0;
-	state.current_id = 64;
-
-	player_init();
-
 	// Debug mode cheats
 	if (buttons & BUTTON_X)	
 	{
@@ -170,6 +163,43 @@ void gameloop_main(void)
 		sram.have_phantom = 1;
 		sram.have_map = 1;
 	}
+
+	// The game runs with a 512x256 plane in a 320x240 viewing area.
+	VDP_setPlanSize(GAMELOOP_PLANE_W, GAMELOOP_PLANE_H);
+	VDP_setScreenWidth320();
+
+	// Clear both planes
+	VDP_clearPlan(VDP_PLAN_A, 1);
+	VDP_waitDMACompletion();
+	VDP_clearPlan(VDP_PLAN_B, 1);
+	VDP_waitDMACompletion();
+
+	VDP_setHilightShadow(0);
+	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+
+	// Default to no H split 	
+	system_set_h_split(0, 0, NULL);
+
+	// Clear sprites
+	sprites_init();
+
+
+}
+
+void gameloop_main(void)
+{
+	// Make sure the VDP is all set up for playing the game.
+	gameloop_init();
+
+	// Variable to track which side of the room the player enters from
+	u16 transition = 0;
+
+	// Initialize a little bit of player and game state
+	state.next_id = 1;
+	state.next_entrance = 0;
+	state.current_id = 64;
+
+	player_init();
 
 	// Main game loop; runs until after a player death anim, quit, or victory.
 	while (1)

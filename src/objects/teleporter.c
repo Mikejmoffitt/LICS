@@ -5,6 +5,7 @@
 #include "save.h"
 #include "particles.h"
 #include "player.h"
+#include "music.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
@@ -109,7 +110,8 @@ static void proc_func(void *v)
 			particle_spawn(e->head.x - 8 + (GET_HVCOUNTER % 16), e->head.y - 32 + (GET_HVCOUNTER % 32), PARTICLE_TYPE_SPARKLE);
 		}
 	}
-
+	
+	// Player collides with teleporter active region.
 	if (!e->disabled && e->active_cnt == 0 && e->head.touching_player && pl.tele_out_cnt == 0)
 	{
 		// Mark discovery of teleporter
@@ -118,6 +120,11 @@ static void proc_func(void *v)
 		// Player is teleporting IN, so disable the teleporter once anim stops
 		if (pl.tele_in_cnt > 1)
 		{
+
+			if (pl.tele_in_cnt == (system_ntsc ? 75 : 62))
+			{
+				playsound(SFX_BOGOLOGO);
+			}
 			// Generate sparkles
 			if (system_osc % 2)
 			{
@@ -137,6 +144,7 @@ static void proc_func(void *v)
 			pl.tele_out_cnt	= kanim_len;
 			pl.tele_in_cnt	= kanim_len;
 			e->active_cnt = kactive_len;
+			playsound(SFX_BOGOLOGO);
 		}
 	}
 }

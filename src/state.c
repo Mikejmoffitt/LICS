@@ -84,10 +84,6 @@ static void state_config_scrolling(void)
 // Set up a room by the specified ID.
 void state_load_room(u8 roomnum)
 {
-	if (roomnum == state.current_id)
-	{
-		return;
-	}
 	state.cam_x = STATE_SCROLL_INVALID;
 	state.cam_y = STATE_SCROLL_INVALID;
 	sx_memo = STATE_SCROLL_INVALID;

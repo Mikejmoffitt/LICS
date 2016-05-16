@@ -21,6 +21,7 @@ static fix16 kbounce_coef;
 static fix16 kbounce_cutoff;
 static fix16 kceiling_dy;
 static u16 kspawn_seq[2]; // Flicker time, spawn time
+static u16 cube_constants_set;
 
 static void cube_move(cube *c);
 static void cube_degrade_dx(cube *c);
@@ -48,6 +49,11 @@ void cubes_init(void)
 		c->x = -32;
 		c->y = -32;
 	}
+
+	if (cube_constants_set)
+	{
+		return;
+	}
 	// Set up constants for NTSC/PAL stuff
 	kgravity = system_ntsc ? FIX16(0.15) : FIX16(0.2);
 	cube_on_cube_dy = system_ntsc ? FIX16(-1.833) : FIX16(-2.2);
@@ -56,6 +62,7 @@ void cubes_init(void)
 	kceiling_dy = system_ntsc ? FIX16(2.5) : FIX16(3.0);
 	kspawn_seq[0] = system_ntsc ? 72 : 60;
 	kspawn_seq[1] = system_ntsc ? 120 : 100;
+	cube_constants_set = 1;
 }
 
 void cube_destroy(cube *c)
