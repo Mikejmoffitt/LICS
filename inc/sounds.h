@@ -60,6 +60,7 @@ static const void *sfx_list[] = {
 	(void *)sfx_hurt,
 	(void *)sfx_cubelift,
 	(void *)sfx_powerup_get,
+	(void *)sfx_bogologo,
 	0,
 	0,
 	0,
@@ -84,6 +85,7 @@ static const u16 sfx_len[] = {
 	16,
 	9,
 	8,
+	1
 
 };
 
@@ -101,6 +103,7 @@ static const u16 sfx_priority[] = {
 	6,
 	6,
 	3,
+	4,
 	4
 };
 

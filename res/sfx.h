@@ -15,5 +15,6 @@ extern const u8 sfx_cubeexplode[618];
 extern const u8 sfx_hurt[170];
 extern const u8 sfx_cubelift[126];
 extern const u8 sfx_powerup_get[106];
+extern const u8 sfx_bogologo[662];
 
 #endif // _SFX_H_

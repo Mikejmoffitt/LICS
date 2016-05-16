@@ -17,8 +17,9 @@
 #define SFX_HURT 11
 #define SFX_CUBELIFT 12
 #define SFX_POWERUP_GET 13
-#define SFX_ENEMY_JUMP 14
-#define SFX_ENEMY_SHOOT 15
+#define SFX_BOGOLOGO 14
+#define SFX_ENEMY_JUMP 15
+#define SFX_ENEMY_SHOOT 16
 
 void music_init(void);
 void music_play(u16 num);

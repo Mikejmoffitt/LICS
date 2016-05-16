@@ -12,3 +12,4 @@ BIN sfx_cubeexplode "sfx/cubeexplode.esf" 2 2 0
 BIN sfx_hurt "sfx/hurt.esf" 2 2 0
 BIN sfx_cubelift "sfx/cubelift.esf" 2 2 0
 BIN sfx_powerup_get "sfx/powerup_get.esf" 2 2 0
+BIN sfx_bogologo "sfx/bogologo.esf" 2 2 0

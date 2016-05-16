@@ -5,6 +5,7 @@
 #include "music.h"
 #include "sprites.h"
 #include "system.h"
+#include "music.h"
 
 static void title_setup(void)
 {
@@ -28,17 +29,59 @@ static void place_bogologo(s16 lx, s16 ly, u16 pal)
 
 void title_play_intro(void)
 {
+	u16 i = 0;
+	fix16 scroll_y = FIX16(0);
+	fix16 scroll_dy = 0;
+	u16 logo_falling = 0;
 	title_setup();
 	// Blank wait
-	for (u16 i = 0; i < 30; i++)
+	for (i = 0; i < 30; i++)
 	{
 		sprites_dma_simple();
 		system_wait_v();
 	}
-	for (u16 i = 0; i < 200; i++)
+	// Logo appears; slides up
+	playsound(SFX_BOGOLOGO);
+	while (i < 400)
 	{
-		place_bogologo(96, 88, (i >> 3) % 2);
+
+		// Logo slides up after frame 120
+		if (i == 120)
+		{
+			logo_falling = 1;
+		}
+
+		if (logo_falling)
+		{
+			scroll_dy = fix16Add(scroll_dy, FIX16(0.2));
+			scroll_y = fix16Add(scroll_y, scroll_dy);
+
+			// The bouncing
+			if (scroll_y > FIX16(360))
+			{
+				if (scroll_dy > FIX16(2))
+				{
+					playsound(SFX_CUBEBOUNCE);
+					scroll_dy = -(scroll_dy >> 1);
+				}
+				else if (scroll_dy <= FIX16(2) && scroll_dy > FIX16(0))
+				{
+					scroll_dy = FIX16(0);
+					logo_falling = 0;
+				}
+			}
+		}
+
+
+
+		// Logo flashes for 60 frames
+		if (i >= 60 || (i % 8 < 4))
+		{
+			place_bogologo(96, 88 - fix16ToInt(scroll_y), (i >> 3) % 2);
+		}
 		system_wait_v();
 		sprites_dma_simple();
+		i++;
 	}
+	// Logo slides up as scene slides down
 }
