@@ -32,16 +32,20 @@ static const void *instrument_set[] =
 	(void *)ewf_snare3,         // 12: PCM snare drum 3 (quiet)
 	(void *)eef_arp1,           // 13: PSG Arp1 
 	(void *)eef_arp2,           // 14: PSG Arp2
+	(void *)eif_sawdecay,	    // 15: FM Saw 2 Decay
+	(void *)eif_modhorn,	    // 16: Modhorn
 	0
 };
 
 static const void *bgm_set[] = 
 {
 	0,
-	(void *)bgm_bgm1,           // 01: Alone in the dark
+	(void *)bgm_bgm1,           // 01: A Sad Touch
 	(void *)bgm_bgm2,           // 02: Moskito
 	(void *)bgm_bgm3,           // 03: Jttimarsu
-	(void *)bgm_bgm4,           // 03: Jttimarsu
+	(void *)bgm_bgm4,           // 04: Modern Talking
+	(void *)bgm_bgm5,           // 05: Saturn
+	(void *)bgm_bgm6,           // 06: Alone in the Dark
 	0
 };
 

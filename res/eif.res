@@ -9,3 +9,5 @@ BIN eif_buzztar "eif/buzztar.eif" 2 2 0
 BIN eif_buzztarc1 "eif/buzztarc1.eif" 2 2 0
 BIN eif_drone "eif/drone.eif" 2 2 0
 BIN eif_unsettling "eif/unsettling.eif" 2 2 0
+BIN eif_sawdecay "eif/sawdecay.eif" 2 2 0
+BIN eif_modhorn "eif/modhorn.eif" 2 2 0

@@ -30,11 +30,15 @@ util\vgi2eif.exe xm\inst\buzztar.vgi res\eif\buzztar.eif
 util\vgi2eif.exe xm\inst\buzztarc1.vgi res\eif\buzztarc1.eif
 util\vgi2eif.exe xm\inst\drone.vgi res\eif\drone.eif
 util\vgi2eif.exe xm\inst\unsettling.vgi res\eif\unsettling.eif
+util\vgi2eif.exe xm\inst\sawdecay.vgi res\eif\sawdecay.eif
+util\vgi2eif.exe xm\inst\modhorn.vgi res\eif\modhorn.eif
 
 echo ---------------------------------------------------------------------
 echo Beginning xm2esf conversions
 echo ---------------------------------------------------------------------
 cd util
+xm2esf Z:\home\moffitt\Development\LICS\xm\bgm5\bgm5.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm5.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\bgm6\bgm6.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm6.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm1\bgm1.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm1.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm2\bgm2.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm2.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm3\bgm3.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm3.esf

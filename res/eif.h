@@ -12,5 +12,7 @@ extern const u8 eif_buzztar[30];
 extern const u8 eif_buzztarc1[30];
 extern const u8 eif_drone[30];
 extern const u8 eif_unsettling[30];
+extern const u8 eif_sawdecay[30];
+extern const u8 eif_modhorn[30];
 
 #endif // _EIF_H_

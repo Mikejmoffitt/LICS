@@ -1,29 +1,39 @@
 # Created by XM2ESFGUI
 # FROM DAT OERG866 YEYEYE
-FILE "..\xm\sfx\bogologo.xm"
-TYPE SFX NOLOOP
-TEMPO 2
-PSG 3
-NOISE 0
-FM 0
-PSG1 1
-PSG2 2
-PSG3 3
+
+# PSG1 is often used for SFX so try not to use it
+
+FILE "..\xm\bgm6\bgm6.xm"
+TYPE BGM LOOP
+TEMPO 6
+PSG 2
+NOISE 1
+FM 5
+PCM 1
+FM1 1
+FM2 2
+FM3 3
+FM4 4
+FM5 5
+PCMC 6
+PSG1 7
+PSG2 8
+PSGN 9
 [Instruments]
-1 3
-2 0
-3 0
-4 0
-5 0
+1 2
+2 2
+3 2
+4 2
+5 2
 6 0
 7 0
 8 0
 9 0
-10 0
-11 0
-12 0
-13 0
-14 0
+10 4
+11 9
+12 6
+13 13
+14 11
 15 0
 16 0
 17 0
@@ -139,11 +149,21 @@ PSG3 3
 127 0
 128 0
 [Pitch]
-PSG1 -36
-PSG2 -36
-PSG3 -36
+FM1 -26
+FM2 -2
+FM3 -2
+FM4 -2
+FM5 -2
+PSG1 -50
+PSG2 -50
+PSGN 30
 [Volume]
-PSG1 64
-PSG2 64
-PSG3 64
+FM1 48
+FM2 34
+FM3 52
+FM4 28
+FM5 16
+PSG1 60
+PSG2 60
+PSGN 60
 [END]

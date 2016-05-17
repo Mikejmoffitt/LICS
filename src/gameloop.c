@@ -24,22 +24,12 @@
 
 static u16 did_first_entrance;
 
-static void puts(const char *s, u16 x, u16 y)
-{
-	while (*s)
-	{
-		VDP_setTileMapXY(VDP_getWindowPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
-		x++;
-		s++;
-	}
-}
-
 static void message_screen(const char *s)
 {
 	u16 i = 60 * 5;
 	VDP_doVRamDMAFill(VDP_getWindowAddress(), 64 * 2 * 32, 0);
 	VDP_waitDMACompletion();
-	puts(s, 8, 8);
+	w_puts(s, 8, 8);
 //	VDP_drawTextBG(VDP_getWindowPlanAddress(), s, TILE_ATTR(1, 1, 0, 0), 4, 6);
 	VDP_setReg(0x12, 0x1E);
 	while (i--)

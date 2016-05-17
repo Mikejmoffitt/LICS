@@ -24,6 +24,36 @@ static u16 hsplit_line;
 static u16 hsplit_num;
 static u16 *hsplit_pal;
 
+void w_puts(const char *s, u16 x, u16 y)
+{
+	while (*s)
+	{
+		VDP_setTileMapXY(VDP_getWindowPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		x++;
+		s++;
+	}
+}
+
+void a_puts(const char *s, u16 x, u16 y)
+{
+	while (*s)
+	{
+		VDP_setTileMapXY(VDP_getAPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		x++;
+		s++;
+	}
+}
+
+void b_puts(const char *s, u16 x, u16 y)
+{
+	while (*s)
+	{
+		VDP_setTileMapXY(VDP_getBPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		x++;
+		s++;
+	}
+}
+
 void system_set_h_split(u16 line, u16 num, u16 *p)
 {
 	if (line)
@@ -134,6 +164,11 @@ void system_init(void)
 	if ((JOY_readJoypad(JOY_1) & BUTTON_A))
 	{
 		sram.opt_interlace = SAVE_OPT_INTERLACE_ENABLED;
+	}
+	// Allow holding B to clear SRAM
+	if ((JOY_readJoypad(JOY_1) & BUTTON_B))
+	{
+		save_clear();
 	}
 	// Allow holding C to force 240p
 	if ((JOY_readJoypad(JOY_1) & BUTTON_C))

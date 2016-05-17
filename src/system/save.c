@@ -2,7 +2,7 @@
 
 save_file sram;
 
-void save_write(void)
+static void save_commit(void)
 {
 	SRAM_enable();
 	u16 *sf = (u16 *)&sram;
@@ -14,6 +14,12 @@ void save_write(void)
 	SRAM_disable();
 }
 
+void save_write(void)
+{
+	sram.fresh_save = 0;
+	save_commit();
+}
+
 void save_load(void)
 {
 	SRAM_enableRO();
@@ -23,6 +29,7 @@ void save_load(void)
 	{
 		sf[i] = SRAM_readWord(i * 2);
 	}
+
 	SRAM_disable();
 
 	// Save reality check failed. Clear SRAM to start fresh.
@@ -60,6 +67,9 @@ void save_clear(void)
 	sram.have_kick = 0;
 	sram.have_orange = 0;
 
+
+	sram.fresh_save = 1;
+
 	// Clear map exploration
 	for (j = 0; j < SAVE_MAP_H; j++)
 	{
@@ -84,5 +94,5 @@ void save_clear(void)
 	sram.opt_mus = 0;
 	sram.opt_sfx = 0;
 
-	save_write();
+	save_commit();
 }
