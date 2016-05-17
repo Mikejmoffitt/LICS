@@ -55,11 +55,45 @@ static void title_init(void)
 	system_wait_v();
 	// DMA graphic tile assets - overwrites totally unused enemy graphics. fine.
 	VDP_doVRamDMA((u32)gfx_bogologo, BOGOLOGO_VRAM_SLOT * 32, BOGOLOGO_VRAM_LEN * 16);
+	VDP_doVRamDMA((u32)gfx_titlelogo, TITLELOGO_VRAM_SLOT * 32, TITLELOGO_VRAM_LEN * 16);
 	bg_load(255);
 	bg_load(1);
 	map_dma();
 	VDP_setEnable(1);
 
+}
+
+static inline void place_titlelogo(s16 lx, s16 ly)
+{
+
+	sprite_put(lx, ly, SPRITE_SIZE(4, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT));
+	sprite_put(lx + 32, ly, SPRITE_SIZE(4, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 16));
+	sprite_put(lx + 64, ly, SPRITE_SIZE(4, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 32));
+	sprite_put(lx + 96, ly, SPRITE_SIZE(2, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 48));
+
+	sprite_put(lx, ly+32, SPRITE_SIZE(4, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 56));
+	sprite_put(lx + 32, ly+32, SPRITE_SIZE(4, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 56 + 16));
+
+	sprite_put(lx + 64, ly+32, SPRITE_SIZE(4, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 56 + 32));
+
+	sprite_put(lx + 96, ly+32, SPRITE_SIZE(2, 4), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 56 + 48));
+
+	sprite_put(lx, ly+64, SPRITE_SIZE(4, 1), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 112));
+	sprite_put(lx + 32, ly+64, SPRITE_SIZE(4, 1), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 112 + 4));
+	sprite_put(lx + 64, ly+64, SPRITE_SIZE(4, 1), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 112 + 8));
+	sprite_put(lx + 96, ly+64, SPRITE_SIZE(2, 1), TILE_ATTR_FULL(
+		2, 1, 0, 0, TITLELOGO_VRAM_SLOT + 112 + 12));
 }
 
 static inline void place_bogologo(s16 lx, s16 ly)
@@ -138,6 +172,23 @@ static void title_bg_scroll(fix16 scroll_y)
 
 }
 
+static s16 title_menu(void)
+{
+	while (1)
+	{
+		place_titlelogo(104, 16);
+		system_wait_v();
+		sprites_dma_simple();
+		VDP_doCRamDMA((u32)pal_titlelogo, 64, 16);
+
+		if (buttons & BUTTON_START && !(buttons_prev & BUTTON_START))
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
 void title_play_intro(void)
 {
 	u16 i = 0;
@@ -153,8 +204,17 @@ void title_play_intro(void)
 	}
 	// Logo appears; slides up
 	playsound(SFX_BOGOLOGO);
-	while (i < 400)
+	while (i < (system_ntsc ? 400 : 333))
 	{
+		if (buttons & BUTTON_START && !(buttons_prev & BUTTON_START))
+		{
+			i = (system_ntsc ? 400 : 333);
+			scroll_y = FIX16(360);
+			scroll_dy = FIX16(0);
+			logo_falling = 0;
+			// playsound(SFX_MENU);
+		}
+
 		// Logo slides up after a delay
 		if (i == (system_ntsc ? 120 : 100))
 		{
@@ -178,5 +238,27 @@ void title_play_intro(void)
 		sprites_dma_simple();
 		i++;
 	}
+	// TODO
+	// Hooded dude walks towards cat, snatches; Lyle appears in house
+
+	// Title shows; present menu
+	s16 choice = title_menu();
+
+	system_wait_v();
+	VDP_setEnable(0);
+	VDP_waitDMACompletion();
+	VDP_clearPlan(VDP_PLAN_A, 1);
+	VDP_waitDMACompletion();
+	VDP_clearPlan(VDP_PLAN_B, 1);
+	VDP_waitDMACompletion();
+	VDP_doCRamDMA((u32)pal_black, 0, 16);
+	VDP_doCRamDMA((u32)pal_black, 32, 16);
+	VDP_doCRamDMA((u32)pal_black, 64, 16);
+	VDP_doCRamDMA((u32)pal_black, 96, 16);
+	sprites_dma_simple();
+	system_wait_v();
+	VDP_setEnable(1);
+	
+
 	// Logo slides up as scene slides down
 }

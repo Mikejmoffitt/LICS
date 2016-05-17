@@ -47,3 +47,4 @@ BIN gfx_bg5 "gfx/bg5.bin" 2 2 0
 
 
 BIN gfx_bogologo "gfx/bogologo.bin" 2 2 0
+BIN gfx_titlelogo "gfx/titlelogo.bin" 2 2 0

@@ -22,7 +22,7 @@
 #define GAMELOOP_PLANE_W 64
 #define GAMELOOP_PLANE_H 32
 
-static u16 first_entrance;
+static u16 did_first_entrance;
 
 static void puts(const char *s, u16 x, u16 y)
 {
@@ -109,14 +109,17 @@ static void gameloop_room_setup(u16 transition)
 
 	// Determine whether or not we need to blank for tile changes
 	// This is a little hack to make the transition from title screen to game start not flash
-	u16 should_blank = !first_entrance;
-	first_entrance = 1;
+	u16 should_blank = did_first_entrance;
+	did_first_entrance = 1;
 
 	// Blank the display
 	if (should_blank)
 	{
 		VDP_setEnable(0);
 		// Load a bogus backdrop to force it to reload the BG
+	}
+	else
+	{
 		bg_load(255);
 	}
 
@@ -206,7 +209,7 @@ static inline void gameloop_init(void)
 	// Initialize backdrop map system
 	map_init();
 
-	first_entrance = 0;
+	did_first_entrance = 0;
 
 }
 
