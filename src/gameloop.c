@@ -99,19 +99,7 @@ static void gameloop_room_setup(u16 transition)
 
 	// Determine whether or not we need to blank for tile changes
 	// This is a little hack to make the transition from title screen to game start not flash
-	u16 should_blank = did_first_entrance;
-	did_first_entrance = 1;
-
-	// Blank the display
-	if (should_blank)
-	{
-		VDP_setEnable(0);
-		// Load a bogus backdrop to force it to reload the BG
-	}
-	else
-	{
-		bg_load(255);
-	}
+	VDP_setEnable(0);
 
 	// Depending on room entry, the player may need to jump into the frame
 	if (transition == STATE_TRANSITION_UP)
@@ -148,11 +136,8 @@ static void gameloop_room_setup(u16 transition)
 	// Wait for vblank, no mid-screen changes wanted
 	system_wait_v();
 
-	if (should_blank)
-	{
-		// Restore the VDP output
-		VDP_setEnable(1);
-	}
+	// Restore the VDP output
+	VDP_setEnable(1);
 
 	// Save player's progress for frequent auto-save
 	save_write();
@@ -170,6 +155,9 @@ static inline void gameloop_init(void)
 		sram.have_phantom = 1;
 		sram.have_map = 1;
 	}
+
+	system_wait_v();
+	VDP_setEnable(0);
 
 	// The game runs with a 512x256 plane in a 320x240 viewing area.
 	VDP_setPlanSize(GAMELOOP_PLANE_W, GAMELOOP_PLANE_H);
@@ -198,6 +186,7 @@ static inline void gameloop_init(void)
 
 	// Initialize backdrop map system
 	map_init();
+	VDP_setEnable(1);
 
 	did_first_entrance = 0;
 

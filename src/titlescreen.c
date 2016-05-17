@@ -405,9 +405,10 @@ void title_play_intro(void)
 
 	music_play(6);
 	// Title shows; present menu
-	s16 choice = title_menu();
+	title_menu();
 
 	system_wait_v();
+	music_play(0);
 	VDP_setEnable(0);
 	VDP_waitDMACompletion();
 	VDP_clearPlan(VDP_PLAN_A, 1);
@@ -419,9 +420,9 @@ void title_play_intro(void)
 	VDP_doCRamDMA((u32)pal_black, 64, 16);
 	VDP_doCRamDMA((u32)pal_black, 96, 16);
 	sprites_dma_simple();
-	system_wait_v();
+	bg_load(255);
 	VDP_setEnable(1);
-	music_play(0);
+	system_wait_v();
 	
 
 	// Logo slides up as scene slides down
