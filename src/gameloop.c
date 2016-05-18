@@ -85,7 +85,6 @@ void gameloop_dma(void)
 static void gameloop_room_setup(u16 transition)
 {	
 	// Reset object lists, gameplay variables, etc.
-	system_wait_v();
 	cubes_init();
 	enemy_init();
 	particles_init();
@@ -93,13 +92,12 @@ static void gameloop_room_setup(u16 transition)
 	powerup_init();
 	player_init_soft();
 	pause_init();
+
 	system_wait_v();
+	VDP_setEnable(0);
+
 	// Load the next room
 	state_load_room(state.next_id);
-
-	// Determine whether or not we need to blank for tile changes
-	// This is a little hack to make the transition from title screen to game start not flash
-	VDP_setEnable(0);
 
 	// Depending on room entry, the player may need to jump into the frame
 	if (transition == STATE_TRANSITION_UP)
@@ -107,11 +105,11 @@ static void gameloop_room_setup(u16 transition)
 		player_do_jump();
 	}
 
-	// Locate entry position for player
-	player_set_xy_fix32(state_get_entrance_x(), state_get_entrance_y());
-
 	// DMA needed graphics for this room
 	map_load_tileset(state.current_room->tileset);
+
+	// Set up the far backdrop
+	bg_load(state.current_room->background);
 
 	// Re-load the usuals in case something else is in VRAM there
 	particles_dma_tiles();
@@ -122,8 +120,8 @@ static void gameloop_room_setup(u16 transition)
 	enemy_dma_tiles();
 	powerup_dma_tiles();
 
-	// Set up the far backdrop
-	bg_load(state.current_room->background);
+	// Locate entry position for player
+	player_set_xy_fix32(state_get_entrance_x(), state_get_entrance_y());
 
 	// One frame of logic and graphics is evaluated
 	gameloop_logic();

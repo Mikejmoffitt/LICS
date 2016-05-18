@@ -44,7 +44,7 @@ the length of a 256-tile DMA is only (256 * 16).
 #define ENEMY_VRAM_START (PROJECTILES_VRAM_SLOT + PROJECTILES_VRAM_LEN)
 
 // Many level objects - length shown in number of tiles 
-#define ITEMS_VRAM_LEN 24
+#define ITEMS_VRAM_LEN 48
 #define METAGRUB_VRAM_LEN 7
 #define FLIP_VRAM_LEN 12
 #define BOINGO_VRAM_LEN 56

@@ -351,10 +351,9 @@ static s16 title_menu(void)
 	return 2;
 }
 
-void title_play_intro(void)
+static void logo_bounce(void)
 {
 	u16 i = 0;
-	title_init();
 	fix16 scroll_y = FIX16(0);
 	fix16 scroll_dy = 0;
 	u16 logo_falling = 0;
@@ -364,16 +363,16 @@ void title_play_intro(void)
 		sprites_dma_simple();
 		system_wait_v();
 	}
-	// Logo appears; slides up
 	playsound(SFX_BOGOLOGO);
 	while (i < (system_ntsc ? 400 : 333))
 	{
 		if (buttons & BUTTON_START && !(buttons_prev & BUTTON_START))
 		{
-			i = (system_ntsc ? 400 : 333);
+			i = (system_ntsc ? 400 : 333) - 1;
 			scroll_y = FIX16(360);
 			scroll_dy = FIX16(0);
 			logo_falling = 0;
+			system_wait_v();
 			// playsound(SFX_MENU);
 		}
 
@@ -400,6 +399,14 @@ void title_play_intro(void)
 		sprites_dma_simple();
 		i++;
 	}
+}
+
+void title_play_intro(void)
+{
+	title_init();
+
+	// Logo appears; slides up
+	logo_bounce();
 	// TODO
 	// Hooded dude walks towards cat, snatches; Lyle appears in house
 
