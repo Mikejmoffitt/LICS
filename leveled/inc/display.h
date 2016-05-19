@@ -10,7 +10,7 @@
 
 #define BUFFER_W 496
 #define BUFFER_H 360
-#define PRESCALE 2
+#define PRESCALE 1
 
 // Editor state variables
 extern unsigned int display_w;

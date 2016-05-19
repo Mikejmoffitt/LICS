@@ -82,6 +82,15 @@ void gameloop_dma(void)
 	player_dma();
 }
 
+static void wait_sec(void)
+{
+	u16 i = 60;
+	while (i--)
+	{
+		system_wait_v();
+	}
+}
+
 static void gameloop_room_setup(u16 transition)
 {	
 	// Reset object lists, gameplay variables, etc.
@@ -90,11 +99,12 @@ static void gameloop_room_setup(u16 transition)
 	particles_init();
 	projectiles_init();
 	powerup_init();
-	player_init_soft();
 	pause_init();
 
 	system_wait_v();
 	VDP_setEnable(0);
+	player_init_soft();
+	save_write();
 
 	// Load the next room
 	state_load_room(state.next_id);
@@ -206,8 +216,9 @@ void gameloop_main(void)
 	player_init();
 
 	// Main game loop; runs until after a player death anim, quit, or victory.
-	while (1)
+	while (pl.hp > 0)
 	{
+		
 		// Configure the room we are about to enter
 		gameloop_room_setup(transition);
 
@@ -228,6 +239,9 @@ void gameloop_main(void)
 			}
 
 		}
-		while (!(transition = state_watch_transitions()));
+		while (!(transition = state_watch_transitions()) && pl.hp > 0);
 	}
+	system_wait_v();
+	music_play(0);
+
 }

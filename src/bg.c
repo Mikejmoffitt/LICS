@@ -47,7 +47,6 @@ void bg_load(u16 num)
 	{
 		default:
 			// Do nothing for an invalid backdrop
-			return;
 		case 0:
 			current_bg = 0;
 			VDP_waitDMACompletion();

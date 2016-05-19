@@ -83,6 +83,9 @@ regen: lyle.bin
 kmod: lyle.bin
 	@exec wine ./util/kmod/gens.exe lyle.bin
 
+umdk: lyle.bin
+	@exec util/umdkv2-bin/loader -w $<:0 -x 2
+
 fusion: lyle.bin
 	@exec util/Fusion $< 2> /dev/null
 
@@ -101,10 +104,10 @@ boot/sega.o: boot/rom_head.bin
 %.bin: %.elf
 	@$(OBJC) -O binary $< temp.bin
 	@dd if=temp.bin of=$@ bs=8k conv=sync
-	@$(RM) temp.bin
+	rm temp.bin
 
 %.elf: $(OBJS) $(BOOT_RESOURCES)
-	@$(CC) -o $@ $(LINKFLAGS) $(BOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
+	@$(CC) -n -o $@ $(LINKFLAGS) $(BOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
 
 %.o80: %.s80
 	@$(ASMZ80) $(Z80FLAGS) -o $@ $<

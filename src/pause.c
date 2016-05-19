@@ -212,7 +212,7 @@ static void pause_exit_anim(void)
 		gameloop_gfx();
 		system_wait_v();
 		// Set the palette at the window seam so Lyle and Co don't look weird
-			system_set_h_split((win_v - 2) * 8, 3, (u16 *)pal_lyle);
+		system_set_h_split((win_v - 2) * 8, 3, (u16 *)pal_lyle);
 		VDP_doCRamDMA((u32)pal_pause, PLAYER_PALNUM * 32, 16);
 		sprites_dma_simple();
 	}
@@ -221,6 +221,8 @@ static void pause_exit_anim(void)
 void pause_setup(void)
 {
 	// Copy the layout information for the window plane
+	system_wait_v();
+
 	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
 
 	// Not sure why the DMA seems to miss this, so this is a manual fix.
@@ -238,11 +240,11 @@ void pause_setup(void)
 
 	pause_intro_anim();
 
-	// Fullscreen Window plane
-	VDP_setReg(0x12,0x1E);
-
 	// Bring in the colors
 	VDP_doCRamDMA((u32)pal_pause, PAUSE_PALNUM * 32, 16);
+
+	// Fullscreen Window plane
+	VDP_setReg(0x12,0x1E);
 
 	// Save the player's progress, why not?
 	save_write();
