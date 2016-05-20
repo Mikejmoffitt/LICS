@@ -10,6 +10,7 @@
 #include "state.h"
 #include "bg.h"
 #include "save.h"
+#include "cubes.h"
 
 #define TITLE_PLANE_W 64
 #define TITLE_PLANE_H 64
@@ -51,25 +52,43 @@ static void title_init(void)
 
 
 	VDP_setVerticalScroll(PLAN_B, 256);
-	VDP_setVerticalScroll(PLAN_A, 256);
+	VDP_setVerticalScroll(PLAN_A, 255);
 
 	VDP_setHorizontalScroll(PLAN_B, -30);
 	VDP_setHorizontalScroll(PLAN_A, -120);
 
+	// We are jank-utilizing these here.
 	sprites_init();
 	map_init();
+
+	// Using level 1's tileset / mappings
 	map_load_tileset(MAP_SET_OUTSIDE1);
 	state.current_room = map_by_id(1);
 	state.current_map = (u8 *)&(state.current_room->map_data);
 
+	// Build DMA queue for full-screen level redraw
 	map_draw_full(624, 0);
+
 	system_wait_v();
+
 	// DMA graphic tile assets - overwrites totally unused enemy graphics. fine.
 	VDP_doVRamDMA((u32)gfx_bogologo, BOGOLOGO_VRAM_SLOT * 32, BOGOLOGO_VRAM_LEN * 16);
 	VDP_doVRamDMA((u32)gfx_titlelogo, TITLELOGO_VRAM_SLOT * 32, TITLELOGO_VRAM_LEN * 16);
+
+	// Force it to load backdrop #1
 	bg_load(255);
 	bg_load(1);
+
+	// Commit the full-screen backdrop mapping
 	map_dma();
+
+	// For drawing the green cube on the right
+	cube_dma_tiles();
+	VDP_doCRamDMA((u32)pal_lyle, 32 * PLAYER_PALNUM, 16);
+	state.cam_x = 0;
+	state.cam_y = 0;
+
+	// Done doing writes, bring back the VDP
 	VDP_setEnable(1);
 
 	// Choose New Game by default if there is no fresh save
@@ -157,12 +176,12 @@ static inline void scroll_movement(fix16 *scroll_dy, fix16 *scroll_y, u16 *logo_
 	}
 }
 
-static void title_draw_bogologo(u16 i, fix16 *scroll_y)
+static void title_draw_bogologo(u16 i, fix16 scroll_y)
 {
 	// Logo flashes for 60 frames
-	if ((i >= 60 || (i % 4 < 2)) && *scroll_y <= FIX16(240))
+	if ((i >= 60 || (i % 4 < 2)) && scroll_y <= FIX16(240))
 	{
-		place_bogologo(96, 88 - fix16ToInt(*scroll_y));
+		place_bogologo(96, 88 - fix16ToInt(scroll_y));
 	}
 }
 
@@ -184,6 +203,10 @@ static void title_bg_scroll(fix16 scroll_y)
 	if (scroll_y < FIX16(96))
 	{
 		calc_scroll = 256;
+	}
+	if (!system_ntsc) 
+	{
+		calc_scroll++;
 	}
 	VDP_setVerticalScroll(PLAN_A, calc_scroll);
 	if (!system_ntsc && scroll_y >= FIX16(96))
@@ -301,9 +324,6 @@ static void print_choices(void)
 		{
 			buffer[0] = ((soundtest_choice & 0xF0) >> 4) + '0';
 		}
-
-
-
 		b_puts(buffer, 23, menu_y + 6);
 	}
 	else
@@ -311,6 +331,17 @@ static void print_choices(void)
 		b_puts("  ", 23, menu_y + 6);
 	}
 	
+}
+
+static void draw_green_cube(fix16 scroll_y)
+{
+	if (scroll_y < FIX16(200))
+	{
+		return;
+	}
+	const u16 cube_x = 248;
+	const u16 cube_y = 360 + (system_ntsc ? 176 : 192);
+	cube_draw_single(cube_x, cube_y - fix16ToInt(scroll_y), CUBE_GREEN);
 }
 
 static void soundtest_action(void)
@@ -326,6 +357,7 @@ static s16 title_menu(void)
 	while (1)
 	{
 		place_titlelogo(104, 16);
+		cube_draw_single(248, (system_ntsc ? 176 : 192), CUBE_GREEN);
 		menu_inputs();
 		system_wait_v();
 		sprites_dma_simple();
@@ -387,8 +419,8 @@ static void logo_bounce(void)
 			scroll_movement(&scroll_dy, &scroll_y, &logo_falling);
 		}
 
-		title_draw_bogologo(i, &scroll_y);
-
+		title_draw_bogologo(i, scroll_y);
+		draw_green_cube(scroll_y);
 		system_wait_v();
 		title_bg_scroll(scroll_y);
 		if (scroll_y <= FIX16(240))
