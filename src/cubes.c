@@ -55,7 +55,7 @@ void cubes_init(void)
 		return;
 	}
 	// Set up constants for NTSC/PAL stuff
-	kgravity = system_ntsc ? FIX16(0.15) : FIX16(0.2);
+	kgravity = system_ntsc ? FIX16(0.15) : FIX16(0.216);
 	cube_on_cube_dy = system_ntsc ? FIX16(-1.833) : FIX16(-2.2);
 	kbounce_coef = system_ntsc ? FIX16(0.35) : FIX16(0.35);
 	kbounce_cutoff = system_ntsc ? FIX16(-1.04) : FIX16(-1.3);

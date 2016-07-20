@@ -44,9 +44,9 @@ static void player_init_constants(void)
 {
 	plk.dx_max = system_ntsc ? FIX16(1.54) : FIX16(1.8);
 	plk.dy_max = system_ntsc ? FIX16(6.67) : FIX16(8.0);
-	plk.x_accel = system_ntsc ? FIX16(0.125) : FIX16(0.17);
-	plk.y_accel = system_ntsc ? FIX16(0.21) : FIX16(0.276);
-	plk.y_accel_weak = system_ntsc ? FIX16(0.10) : FIX16(0.156);
+	plk.x_accel = system_ntsc ? FIX16(0.125) : FIX16(0.18);
+	plk.y_accel = system_ntsc ? FIX16(0.21) : FIX16(0.3024);
+	plk.y_accel_weak = system_ntsc ? FIX16(0.10) : FIX16(0.144);
 	plk.jump_dy = system_ntsc ? FIX16(-2.94) : FIX16(-3.58);
 	plk.ceiling_dy = system_ntsc ? FIX16(-0.42) : FIX16(-0.5);
 	plk.hurt_dx = system_ntsc ? FIX16(-1.92) : FIX16(-2.3);

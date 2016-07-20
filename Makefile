@@ -67,7 +67,7 @@ RESOURCES+=$(S80S:.s80=.o)
 
 OBJS = $(RESOURCES)
 
-.PHONY: all clean mednafen gens regen kmod test test32 
+.PHONY: all clean 
 
 all: lyle.bin 
 
@@ -116,11 +116,11 @@ boot/sega.o: boot/rom_head.bin
 	@$(BINTOS) $<
 
 %.o: %.c
-	@echo "$<"
+	@echo "	[ CC ] $<"
 	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerrc.py
 
 %.o: %.s 
-	@echo "$<"
+	@echo "	[ AS ] $<"
 	@$(AS) $(ASFLAGS) $< -o $@
 
 %.s: %.bmp

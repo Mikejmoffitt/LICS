@@ -55,8 +55,8 @@ void en_init_boingo(en_boingo *e)
 	e->head.cube_func = NULL;
 
 	// Establish constants for NTSC/PAL
-	jump_str = (system_ntsc) ? FIX16(-0.83) : FIX16(-1.0);
-	gravity = system_ntsc ? FIX16(0.167) : FIX16(0.2);
+	jump_str = (system_ntsc) ? FIX16(-0.83) : FIX16(-0.9959);
+	gravity = system_ntsc ? FIX16(0.167) : FIX16(0.24048);
 	jump_time = (system_ntsc) ? 24 : 20;
 	anim_speed = system_ntsc ? 11 : 9;
 }

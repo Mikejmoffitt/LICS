@@ -57,7 +57,7 @@ void en_init_gaxter2(en_gaxter2 *e)
 	shot_fire_t = system_ntsc ? 120 : 100;
 	shot_speed = system_ntsc ? FIX16(2.3) : FIX16(2.76);
 
-	ddy = system_ntsc ? FIX16(0.18) : FIX16(0.22);
+	ddy = system_ntsc ? FIX16(0.18) : FIX16(0.26);
 	dy_cutoff = system_ntsc ? FIX16(2.17) : FIX16(2.6);
 
 	e->dy = FIX16(0.0);

@@ -53,7 +53,7 @@ void en_init_hedgedog(en_hedgedog *e)
 	e->head.xoff[0] = -12;
 	e->head.yoff[0] = -16;
 
-	kgravity = system_ntsc ? FIX16(0.167) : FIX16(0.2);
+	kgravity = system_ntsc ? FIX16(0.167) : FIX16(0.24);
 	kjump_str_base = system_ntsc ? FIX16(-5.0) : FIX16(-6.0);
 	kjump_t = system_ntsc ? 72 : 60;
 	kshot_speed[0] = system_ntsc ? FIX16(1.45) : FIX16(1.740);

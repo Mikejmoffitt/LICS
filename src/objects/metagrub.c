@@ -47,8 +47,8 @@ void en_init_metagrub(en_metagrub *e)
 
 	// Region constants
 	lunge_time = system_ntsc ? 24 : 20;
-	decel = system_ntsc ? FIX16(0.096) : FIX16(0.105);
-	lunge_strength = system_ntsc ? FIX16(1.417) : FIX16(1.875);
+	decel = system_ntsc ? FIX16(0.096) : FIX16(0.13824);
+	lunge_strength = system_ntsc ? FIX16(1.417) : FIX16(1.7004);
 }
 
 static fix16 lunge_str_ntsc[] = 
@@ -62,7 +62,7 @@ static fix16 lunge_str_ntsc[] =
 static fix16 lunge_str_pal[] = 
 {
 	FIX16(0.0),
-	FIX16(0.62),
+	FIX16(0.624),
 	FIX16(0.84),
 	FIX16(1.05)
 };

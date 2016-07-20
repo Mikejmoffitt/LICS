@@ -43,7 +43,7 @@ void en_init_gaxter1(en_gaxter1 *e)
 	e->head.proc_func = &en_proc_gaxter1;
 	e->head.cube_func = NULL; // standard cube reaction
 
-	accel = system_ntsc ? FIX16(0.1429) : FIX16(0.1715);
+	accel = system_ntsc ? FIX16(0.1429) : FIX16(0.206);
 	topspeed = system_ntsc ? FIX16(2.25) : FIX16(2.7);
 }
 

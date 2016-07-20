@@ -68,7 +68,7 @@ void en_init_killzam(en_killzam *e)
 	ksequence[3] = system_ntsc ? 192 : 160; // Disappear
 	kanim_delay = system_ntsc ? 8 : 6;
 	khysteresis = system_ntsc ? FIX16(2.083) : FIX16(2.4);
-	kddy = system_ntsc ? FIX16(0.2084) : FIX16(0.22);
+	kddy = system_ntsc ? FIX16(0.2084) : FIX16(0.3);
 }
 
 // Reset the VRAM allocation position counter

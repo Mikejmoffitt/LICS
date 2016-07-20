@@ -80,7 +80,7 @@ void en_init_cow(en_cow *e)
 	kjump_anim_speed = system_ntsc ? 3 : 2;
 	kprep_time = system_ntsc ? 48 : 40;
 	kshot_time = system_ntsc ? 12 : 10;
-	kgravity = system_ntsc ? FIX16(0.104166666667) : FIX16(0.125);
+	kgravity = system_ntsc ? FIX16(0.104166666667) : FIX16(0.15);
 	kjump_str = system_ntsc ? FIX16(4.16666667) : FIX16(5.0);
 }
 

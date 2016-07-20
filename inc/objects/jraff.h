@@ -10,8 +10,6 @@
 #define JRAFF_ANIM_DELAY 10
 #define JRAFF_ANIM_LEN 3
 
-#define JRAFF_GRAVITY FIX16(0.2)
-
 #define JRAFF_MOVE_DIV 1
 
 typedef struct en_jraff en_jraff;

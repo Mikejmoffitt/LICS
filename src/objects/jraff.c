@@ -9,6 +9,9 @@ static void anim_func(void *v);
 
 // Dynamic VRAM slot support
 static u16 vram_pos;
+
+static fix16 kgravity;
+
 static void vram_load(void)
 {
 	if (vram_pos == 0)
@@ -45,6 +48,8 @@ void en_init_jraff(en_jraff *e)
 	e->head.cube_func = NULL;
 	e->head.proc_func = &proc_func;
 	e->head.anim_func = &anim_func;
+
+	kgravity = system_ntsc ? FIX16(0.167) : FIX16(0.24);
 
 	e->anim_cnt = 0;
 	e->anim_frame = 0;
@@ -94,7 +99,7 @@ static void v_movement(en_jraff *e)
 	e->head.y += fix16ToInt(e->dy);
 	if (!map_collision(e->head.x, e->head.y))
 	{
-		e->dy = fix16Add(e->dy, JRAFF_GRAVITY);
+		e->dy = fix16Add(e->dy, kgravity);
 	}
 	if (e->dy > FIX16(0.0) && map_collision(e->head.x, e->head.y))
 	{

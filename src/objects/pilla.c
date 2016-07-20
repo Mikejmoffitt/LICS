@@ -60,7 +60,7 @@ static inline void y_movement(en_pilla *e)
 	}
 	else
 	{
-		e->dy = fix16Add(e->dy, system_ntsc ? FIX16(0.1667) : FIX16(0.2));
+		e->dy = fix16Add(e->dy, system_ntsc ? FIX16(0.1667) : FIX16(0.24));
 	}
 
 	if (e->dy >= (system_ntsc ? FIX16(6.0) : FIX16(5.0)))

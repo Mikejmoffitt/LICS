@@ -53,8 +53,8 @@ void en_init_flip(en_flip *e)
 	e->anim_cnt = 0;
 	e->anim_frame = 0;
 
-	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.22);
-	dy_cutoff = system_ntsc ? FIX16(2.4) : FIX16(2.6);
+	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.288);
+	dy_cutoff = system_ntsc ? FIX16(2.4) : FIX16(2.88);
 	anim_len = system_ntsc ? 10 : 8;
 }
 
