@@ -173,7 +173,7 @@ static int32_t decompress_bios(void)
 {
 	// Configure for writing
 	*reg_mem = 0x0002;
-	
+
 	// Clear first bank of program RAM for laseractive
 	memset((void *)SEGACD_PROGRAM_ADDR, 0, SEGACD_PROGRAM_LEN);
 
@@ -342,7 +342,7 @@ void cdaudio_stop(void)
 void cdaudio_pause(void)
 {
 	get_disc_info();
-	
+
 	if (cdaudio_get_status() == SEGACD_STAT_PLAYING)
 	{
 		wait_do_cmd('Z');
@@ -354,7 +354,7 @@ void cdaudio_pause(void)
 void cdaudio_resume(void)
 {
 	get_disc_info();
-	
+
 	if (cdaudio_get_status() == SEGACD_STAT_PAUSED)
 	{
 		wait_do_cmd('Z');

@@ -98,15 +98,15 @@ static inline void do_shots(en_hedgedog *e)
 		e->did_shoot = 1;
 		if (e->head.direction == ENEMY_RIGHT)
 		{
-			projectile_shoot(e->head.x, e->head.y - 4, kshot_speed[0], kshot_speed[2], PROJECTILE_BALL2); 
-			projectile_shoot(e->head.x, e->head.y - 4, kshot_speed[1], kshot_speed[1], PROJECTILE_BALL2); 
-			projectile_shoot(e->head.x, e->head.y - 4, kshot_speed[2], kshot_speed[0], PROJECTILE_BALL2); 
+			projectile_shoot(e->head.x, e->head.y - 4, kshot_speed[0], kshot_speed[2], PROJECTILE_BALL2);
+			projectile_shoot(e->head.x, e->head.y - 4, kshot_speed[1], kshot_speed[1], PROJECTILE_BALL2);
+			projectile_shoot(e->head.x, e->head.y - 4, kshot_speed[2], kshot_speed[0], PROJECTILE_BALL2);
 		}
 		else
 		{
-			projectile_shoot(e->head.x, e->head.y - 4, -kshot_speed[0], kshot_speed[2], PROJECTILE_BALL2); 
-			projectile_shoot(e->head.x, e->head.y - 4, -kshot_speed[1], kshot_speed[1], PROJECTILE_BALL2); 
-			projectile_shoot(e->head.x, e->head.y - 4, -kshot_speed[2], kshot_speed[0], PROJECTILE_BALL2); 
+			projectile_shoot(e->head.x, e->head.y - 4, -kshot_speed[0], kshot_speed[2], PROJECTILE_BALL2);
+			projectile_shoot(e->head.x, e->head.y - 4, -kshot_speed[1], kshot_speed[1], PROJECTILE_BALL2);
+			projectile_shoot(e->head.x, e->head.y - 4, -kshot_speed[2], kshot_speed[0], PROJECTILE_BALL2);
 		}
 		playsound(SFX_ENEMY_SHOOT);
 	}
@@ -221,7 +221,7 @@ static void anim_func(void *v)
 		}
 	}
 	else
-	{		
+	{
 		if (e->anim_cnt >= (kanim_speed))
 		{
 			e->anim_cnt = 0;

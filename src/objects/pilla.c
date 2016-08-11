@@ -75,13 +75,13 @@ static inline void x_movement(en_pilla *e)
 	{
 		e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
 	}
-	if (e->head.direction == ENEMY_RIGHT && 
+	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + e->head.width, e->head.y - 4))
 	{
 		e->head.direction = ENEMY_LEFT;
 		e->head.x -= 4;
 	}
-	else if (e->head.direction == ENEMY_LEFT && 
+	else if (e->head.direction == ENEMY_LEFT &&
 	    map_collision(e->head.x - e->head.width, e->head.y - 4))
 	{
 		e->head.direction = ENEMY_RIGHT;

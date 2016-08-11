@@ -106,7 +106,7 @@ void cube_destroy(cube *c)
 				if (!sram.cp_orbs_taken[c->type & 0x000F])
 				{
 					// If not, spawn it, assign it the tag
-					powerup_spawn(c->x, c->y, POWERUP_CPORB, c->type & 0x000F);	
+					powerup_spawn(c->x, c->y, POWERUP_CPORB, c->type & 0x000F);
 				}
 				else
 				{
@@ -119,7 +119,7 @@ void cube_destroy(cube *c)
 				if (!sram.hp_orbs_taken[c->type & 0x000F])
 				{
 					// Spawn it with HP orb tag
-					powerup_spawn(c->x, c->y, POWERUP_HPORB, c->type & 0x000F);	
+					powerup_spawn(c->x, c->y, POWERUP_HPORB, c->type & 0x000F);
 				}
 				else
 				{
@@ -143,7 +143,7 @@ static void cube_move(cube *c)
 {
 	// Y movement only applies to an airborn cube
 	if (c->state == CUBE_STATE_AIR)
-	{	
+	{
 		c->y += fix16ToInt(c->dy);
 		c->dy = fix16Add(c->dy, kgravity);
 	}
@@ -212,9 +212,9 @@ static void cube_move(cube *c)
 		}
 	}
 	// Check for cube out of bounds
-	if (c->x + CUBE_RIGHT > state.current_room->w * STATE_SC_W || 
+	if (c->x + CUBE_RIGHT > state.current_room->w * STATE_SC_W ||
 		c->x + CUBE_LEFT < 0 ||
-		c->y + CUBE_BOTTOM > state.current_room->h * STATE_SC_H || 
+		c->y + CUBE_BOTTOM > state.current_room->h * STATE_SC_H ||
 		c->y + CUBE_TOP < 0)
 	{
 		c->state = CUBE_STATE_INACTIVE;
@@ -354,8 +354,8 @@ static void cube_on_cube_collisions(cube *c)
 			continue;
 		}
 		// Collision between C and D registered
-		if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT && 
-		    c->x + CUBE_RIGHT >= d->x + CUBE_LEFT && 
+		if (c->x + CUBE_LEFT <= d->x + CUBE_RIGHT &&
+		    c->x + CUBE_RIGHT >= d->x + CUBE_LEFT &&
 		    c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
 		    c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
 		{
@@ -406,7 +406,7 @@ static void cube_do_ground_recoil(cube *c)
 }
 
 static void cube_bg_bounce_ground(cube *c)
-{	
+{
 	// Check the left and right bottom corners of the cube respectively
 	u16 gnd_chk[2];
 	gnd_chk[0] = map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM);
@@ -448,7 +448,7 @@ static void cube_bg_bounce_sides(cube *c)
 	{
 		return;
 	}
-		
+
 	// Check walls
 	u16 side_chk[2];
 	if (c->dx < 0)
@@ -519,10 +519,10 @@ static void cube_bg_bounce_top(cube *c)
 
 static void cube_bg_collision(cube *c)
 {
-	if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) || 
-		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) || 
-		map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) || 
-		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP)) 
+	if (map_collision(c->x + CUBE_LEFT, c->y + CUBE_BOTTOM) ||
+		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_BOTTOM) ||
+		map_collision(c->x + CUBE_LEFT, c->y + CUBE_TOP) ||
+		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP))
 	{
 		// Cubes that get destryed on impact
 		if (c->type != CUBE_GREEN)
@@ -598,7 +598,7 @@ void cubes_run(void)
 			}
 			else
 			{
-				c->state = CUBE_STATE_INACTIVE;	
+				c->state = CUBE_STATE_INACTIVE;
 				c->x = -32;
 				c->y = -32;
 			}
@@ -607,7 +607,7 @@ void cubes_run(void)
 		else if (c->state != CUBE_STATE_IDLE)
 		{
 			// Collison is processed a frame late intentionally to mimic the
-			// original game's behavior. 
+			// original game's behavior.
 			cube_scan_enemies(c);
 			if (c->state != CUBE_STATE_FIZZLE && c->state != CUBE_STATE_EXPLODE)
 			{
@@ -730,7 +730,7 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 			break;
 	}
 	sprite_put(x - state.cam_x, y - state.cam_y, SPRITE_SIZE(2,2), frame);
-} 
+}
 
 cube *cube_spawn(u16 x, u16 y, u16 type, u16 state, s16 dx, fix16 dy)
 {

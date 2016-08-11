@@ -29,12 +29,12 @@ void echo_init(const void **list) {
    // Take over the Z80
    Z80_RESET();
    Z80_REQUEST();
-   
+
    // Tell Echo to not run any commands by default (the assembly counterpart
    // would tell it to load the instrument list, but we can't do that here
    // due to linker shenanigans)
    z80_ram[0x1FFF] = 0x00;
-   
+
    // Load the instrument list manually, since thanks to linker shenanigans
    // we can't implement the list properly in ROM :/
    volatile uint8_t *dest = &z80_ram[0x1C00];
@@ -44,18 +44,18 @@ void echo_init(const void **list) {
       // This should be considered bad C, but since this is hardware-specific
       // code this should be fine to do (portability is not expected)
       uint32_t ptr = (uint32_t) *list;
-      
+
       // Turn the pointer into the base+address notation Echo wants and store
       // it in Z80 RAM directly (where the list would go)
       dest[0x000] = (ptr >> 8 & 0x7F) | 0x80;
       dest[0x100] = (ptr & 0xFF);
       dest[0x200] = (ptr >> 15 & 0x7F) | (ptr >> 16 & 0x80);
-      
+
       // Go for next pointer
       list++;
       dest++;
    }
-   
+
    // Copy the Echo blob into Z80 RAM
    // No, memcpy() won't do here since we must ensure accesses are byte-sized
    // (memcpy() may not know this and try word or long accesses)
@@ -64,7 +64,7 @@ void echo_init(const void **list) {
    int16_t count = sizeof(echo_blob)-1;
    while (count-- >= 0)
       *dest++ = *src++;
-   
+
    // Let Echo start running!
    Z80_RESET();
    Z80_RELEASE();
@@ -80,7 +80,7 @@ void echo_init(const void **list) {
 void echo_send_command(uint8_t cmd) {
    // We need access to Z80 bus
    Z80_REQUEST();
-   
+
    // Is Echo busy yet?
    while (z80_ram[0x1FFF] != 0x00) {
       Z80_RELEASE();
@@ -88,7 +88,7 @@ void echo_send_command(uint8_t cmd) {
       for (i = 0x3FF; i >= 0; i--);
       Z80_REQUEST();
    }
-   
+
    // Write the command
    z80_ram[0x1FFF] = cmd;
 
@@ -109,10 +109,10 @@ void echo_send_command_addr(uint8_t cmd, const void *addr) {
    // integer. This is a bad practice in general, period, but since we don't
    // care about portability here we can afford to do it this time.
    uint32_t param = (uint32_t) addr;
-   
+
    // We need access to Z80 bus
    Z80_REQUEST();
-   
+
    // Is Echo busy yet?
    while (z80_ram[0x1FFF] != 0x00) {
       Z80_RELEASE();
@@ -120,7 +120,7 @@ void echo_send_command_addr(uint8_t cmd, const void *addr) {
       for (i = 0x3FF; i >= 0; i--);
       Z80_REQUEST();
    }
-   
+
    // Write the command
    z80_ram[0x1FFF] = cmd;
    z80_ram[0x1FFD] = param;
@@ -145,7 +145,7 @@ void echo_send_command_addr(uint8_t cmd, const void *addr) {
 void echo_send_command_byte(uint8_t cmd, uint8_t byte) {
    // We need access to Z80 bus
    Z80_REQUEST();
-   
+
    // Is Echo busy yet?
    while (z80_ram[0x1FFF] != 0x00) {
       Z80_RELEASE();
@@ -153,7 +153,7 @@ void echo_send_command_byte(uint8_t cmd, uint8_t byte) {
       for (i = 0x3FF; i >= 0; i--);
       Z80_REQUEST();
    }
-   
+
    // Write the command
    z80_ram[0x1FFF] = cmd;
    z80_ram[0x1FFC] = byte;
@@ -232,16 +232,16 @@ void echo_set_pcm_rate(uint8_t rate) {
 uint16_t echo_get_status(void) {
    // We need access to the Z80
    Z80_REQUEST();
-   
+
    // Retrieve status from Z80 RAM
    uint16_t status = 0;
    status = z80_ram[0x1FF0];
    if (z80_ram[0x1FFF] != 0)
       status |= ECHO_STAT_BUSY;
-   
+
    // Done with the Z80
    Z80_RELEASE();
-   
+
    // Return status
    return status;
 }

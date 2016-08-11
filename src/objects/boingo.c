@@ -74,7 +74,7 @@ static void en_anim_boingo(void *v)
 		e->head.yoff[0] = -14;
 		e->head.size[0] = SPRITE_SIZE(3,2);
 
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos); 
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
 
 		if (e->anim_cnt >= anim_speed)
 		{
@@ -128,13 +128,13 @@ static void bg_collisions(en_boingo *e)
 	}
 
 	// Left side wall
-	if (e->head.direction == ENEMY_LEFT && 
+	if (e->head.direction == ENEMY_LEFT &&
 	    map_collision(e->head.x - BOINGO_AIR_W, e->head.y - (BOINGO_AIR_H / 2)))
 	{
 		e->head.direction = ENEMY_RIGHT;
 		e->head.x += 4;
 	}
-	else if (e->head.direction == ENEMY_RIGHT && 
+	else if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + BOINGO_AIR_W, e->head.y - (BOINGO_AIR_H / 2)))
 	{
 		e->head.direction = ENEMY_LEFT;
@@ -142,7 +142,7 @@ static void bg_collisions(en_boingo *e)
 	}
 }
 
-static const fix16 str_table_pal[] = 
+static const fix16 str_table_pal[] =
 {
 	FIX16(0.00),
 	FIX16(-0.6),

@@ -12,7 +12,7 @@ static void vram_load(void);
 
 static u16 kmouth_time;
 static u16 kshot_time;
-static u16 kanim_speed; 
+static u16 kanim_speed;
 static u16 kshot_speed;
 
 // Movement is every 5th frame in PAL land; every 6th in NTSC land
@@ -95,12 +95,12 @@ static inline void h_movement(en_magibear *e)
 		return;
 	}
 	// Push out of backdrops
-	if (e->head.direction == ENEMY_LEFT && 
+	if (e->head.direction == ENEMY_LEFT &&
 	    map_collision(e->head.x - e->head.width, e->head.y - 12))
 	{
 		e->head.x++;
 	}
-	else if (e->head.direction == ENEMY_RIGHT && 
+	else if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + e->head.width, e->head.y - 12))
 	{
 		e->head.x--;

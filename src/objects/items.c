@@ -115,7 +115,7 @@ static void proc_func(void *v)
 				e->head.active = ENEMY_DISABLED;
 			}
 			break;
-			
+
 	}
 }
 
@@ -136,7 +136,7 @@ static void anim_func(void *v)
 
 	// Make the item float up and down a little
 	if (e->float_cnt < (kfloat_len / 4))
-	{	
+	{
 		e->head.yoff[0] = -17;
 	}
 	else if (e->float_cnt > (kfloat_len / 2) && e->float_cnt < (3 * kfloat_len / 4))
@@ -169,7 +169,7 @@ void en_init_item(en_item *e, u16 type)
 	e->head.cube_func = &cube_func;
 	e->head.proc_func = &proc_func;
 	e->head.anim_func = &anim_func;
-	
+
 	e->anim_cnt = 0;
 	e->float_cnt = 0;
 	kfloat_len = system_ntsc ? 32 : 38;

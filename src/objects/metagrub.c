@@ -51,7 +51,7 @@ void en_init_metagrub(en_metagrub *e)
 	lunge_strength = system_ntsc ? FIX16(1.417) : FIX16(1.7004);
 }
 
-static fix16 lunge_str_ntsc[] = 
+static fix16 lunge_str_ntsc[] =
 {
 	FIX16(0.0),
 	FIX16(0.52),
@@ -59,7 +59,7 @@ static fix16 lunge_str_ntsc[] =
 	FIX16(0.875)
 };
 
-static fix16 lunge_str_pal[] = 
+static fix16 lunge_str_pal[] =
 {
 	FIX16(0.0),
 	FIX16(0.624),
@@ -113,7 +113,7 @@ static void en_proc_metagrub(void *v)
 	{
 		e->move_cnt = lunge_time;
 		e->dx = fix16Add(-decel, e->dx);
-		e->head.direction = ENEMY_RIGHT;		
+		e->head.direction = ENEMY_RIGHT;
 		if (map_collision(e->head.x + 11, e->head.y - 8))
 		{
 			e->dx = e->dx * -1;;
@@ -126,7 +126,7 @@ static void en_proc_metagrub(void *v)
 		e->move_cnt = lunge_time;
 		e->dx = fix16Add(decel, e->dx);
 		e->head.direction = ENEMY_LEFT;
-		
+
 		if (map_collision(e->head.x - 13, e->head.y - 8))
 		{
 			e->dx = e->dx * -1;;
@@ -159,8 +159,8 @@ static void en_proc_metagrub(void *v)
 		// Reached 0; do the lunge
 		else if (e->move_cnt == 0)
 		{
-			e->dx = get_lunge_dx(e->head.direction); 
+			e->dx = get_lunge_dx(e->head.direction);
 		}
 	}
-	e->head.x = e->head.x + fix16ToInt(e->dx);	
+	e->head.x = e->head.x + fix16ToInt(e->dx);
 }

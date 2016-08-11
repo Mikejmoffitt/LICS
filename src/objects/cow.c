@@ -115,7 +115,7 @@ static void proc_func(void *v)
 		}
 		goto skip_walk;
 do_walk:
-		e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;	
+		e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
 
 		// Collision with a wall; flip cow
 		if (map_collision(e->head.x + (e->head.direction == ENEMY_RIGHT ? e->head.width : -e->head.width), e->head.y - 12))
@@ -149,7 +149,7 @@ skip_walk:
 		// basic gravity
 		e->head.y += fix16ToInt(e->dy);
 		e->dy += kgravity;
-		
+
 		// Land on ground, go back to walking
 		if (e->dy > FIX16(0.0) && map_collision(e->head.x, e->head.y))
 		{
@@ -221,7 +221,7 @@ static void anim_func(void *v)
 		{
 			e->anim_frame++;
 		}
-		
+
 	}
 	else
 	{
@@ -290,7 +290,7 @@ static void anim_func(void *v)
 			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos);
 			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 45);
 			break;
-			
+
 	}
 }
 

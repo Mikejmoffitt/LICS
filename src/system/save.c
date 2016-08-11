@@ -48,7 +48,7 @@ void save_clear(void)
 	while (i--)
 	{
 		sf[i] = 0;
-	}	
+	}
 	// Set magic numbers for save validity check
 	sram.magic_0 = SAVE_MAGIC;
 	sram.magic_1 = SAVE_MAGIC;

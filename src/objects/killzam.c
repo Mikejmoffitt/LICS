@@ -87,7 +87,7 @@ static inline void v_movement(en_killzam *e)
 		{
 			e->v_dir = KILLZAM_UP;
 		}
-	}	
+	}
 	else
 	{
 		e->dy = fix16Sub(e->dy, kddy);
@@ -153,11 +153,11 @@ static void proc_func(void *v)
 	{
 		if ((map_collision(e->head.x - e->head.width, e->head.y)) ||
 			(map_collision(e->head.x - e->head.width, e->head.y)) ||
-			(map_collision(e->head.x + e->head.width, e->head.y - e->head.height)) || 
+			(map_collision(e->head.x + e->head.width, e->head.y - e->head.height)) ||
 			(map_collision(e->head.x + e->head.width, e->head.y - e->head.height)) ||
 			(e->head.touching_player))
 		{
-			e->timer = 0;	
+			e->timer = 0;
 		}
 	}
 	else
@@ -172,8 +172,8 @@ static void proc_func(void *v)
 			e->head.direction = ENEMY_LEFT;
 		}
 	}
-	
-	// Shoot at player 
+
+	// Shoot at player
 	if (e->timer == ksequence[2])
 	{
 		projectile_shoot_at(e->head.x, e->head.y - 8, pl.px, pl.py - 12);

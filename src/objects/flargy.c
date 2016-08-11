@@ -75,7 +75,7 @@ static void proc_func(void *v)
 		if (system_ntsc && ntsc_counter == 5)
 		{
 			return;
-		}	
+		}
 		if (e->h_cnt == 0)
 		{
 			// Reverse if we've walked enough distance
@@ -152,7 +152,7 @@ static void anim_func(void *v)
 		e->head.xoff[1] -= 8;
 	}
 	else
-	{	
+	{
 		// No fist here
 		e->head.attr[1] = NULL;
 
@@ -178,12 +178,12 @@ static void cube_func(void *v, cube *c)
 {
 	en_flargy *e = (en_flargy *)v;
 	if (e->punch_cnt != 0)
-	{	
+	{
 		return;
 	}
 	else if (c->state == CUBE_STATE_AIR || c->state == CUBE_STATE_KICKED)
 	{
-		if (e->head.direction == ENEMY_RIGHT && 
+		if (e->head.direction == ENEMY_RIGHT &&
 		    c->x > e->head.x &&
 		    c->direction != e->head.direction)
 		{
@@ -192,7 +192,7 @@ static void cube_func(void *v, cube *c)
 			e->punch_cnt = kpunch_time;
 			c->state = CUBE_STATE_AIR;
 		}
-		else if (e->head.direction == ENEMY_LEFT && 
+		else if (e->head.direction == ENEMY_LEFT &&
 		    c->x < e->head.x &&
 		    c->direction != e->head.direction)
 		{

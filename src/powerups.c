@@ -44,7 +44,7 @@ void powerup_init(void)
 		p->type = POWERUP_NULL;
 		p->x = -32;
 		p->y = -32;
-		p->dy = kcreation_dy; 
+		p->dy = kcreation_dy;
 		p->num = 0;
 	}
 
@@ -78,7 +78,7 @@ void powerup_spawn(s16 x, s16 y, u16 type, u16 num)
 			p->type = type;
 			p->x = x;
 			p->y = y;
-			p->dy = kcreation_dy; 
+			p->dy = kcreation_dy;
 			p->num = num;
 			return;
 		}
@@ -94,7 +94,7 @@ void powerup_spawn(s16 x, s16 y, u16 type, u16 num)
 			p->type = type;
 			p->x = x;
 			p->y = y;
-			p->dy = kcreation_dy; 
+			p->dy = kcreation_dy;
 			p->num = num;
 			return;
 		}

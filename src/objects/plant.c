@@ -133,7 +133,7 @@ static void anim_func(void *v)
 			range_off = 0;
 		}
 		e->head.size[0] = SPRITE_SIZE(2,4);
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 48); 
+		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 48);
 		e->head.yoff[0] = -49;
 		e->head.xoff[0] = (e->head.direction == ENEMY_RIGHT) ? 0 : -16;
 		e->head.xoff[0]+= (e->head.direction == ENEMY_RIGHT) ? range_off : -range_off;
@@ -167,7 +167,7 @@ static void anim_func(void *v)
 
 		// The head just shows a constant frame
 		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 56);
-		
+
 		// The body wiggles
 		e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + ((e->anim_frame % 2) ? 8 : 0));
 		e->head.xoff[1] = -8;

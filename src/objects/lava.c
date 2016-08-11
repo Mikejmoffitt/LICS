@@ -39,7 +39,7 @@ void en_init_lava(en_lava *e)
 
 	e->head.direction = ENEMY_RIGHT;
 	e->head.size[0] = SPRITE_SIZE(2,2);
-	e->head.tall = 1; 
+	e->head.tall = 1;
 	e->head.xoff[0] = -8;
 	e->head.yoff[0] = -15;
 

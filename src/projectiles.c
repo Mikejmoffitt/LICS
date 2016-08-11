@@ -35,7 +35,7 @@ static inline void handle_collision(projectile *p)
 			p->dy > FIX16(0.0))
 		{
 			p->dy = p->dy * -1;
-		}	
+		}
 		else
 		{
 			p->active = 0;
@@ -49,9 +49,9 @@ static inline void check_for_player(projectile *p)
 	s32 px = fix32ToInt(p->x);
 	s32 py = fix32ToInt(p->y);
 	if (pl.invuln_cnt == 0 &&
-	    player_collision(px - PROJECTILE_CHK, 
-   	                     px + PROJECTILE_CHK, 
-	                     py - PROJECTILE_CHK, 
+	    player_collision(px - PROJECTILE_CHK,
+   	                     px + PROJECTILE_CHK,
+	                     py - PROJECTILE_CHK,
 	                     py + PROJECTILE_CHK))
 	{
 		player_get_hurt();
@@ -157,7 +157,7 @@ void projectiles_draw(void)
 			projectile *p = &projectiles[i];
 
 			// Death orb should flash near the end of its life
-			if (p->type == PROJECTILE_DEATHORB && 
+			if (p->type == PROJECTILE_DEATHORB &&
 			    p->active > (system_ntsc ? 109 : 91) &&
 			    system_osc % 4 >= 2)
 			{
@@ -174,7 +174,7 @@ void projectiles_draw(void)
 				p->active = 0;
 				continue;
 			}
-			
+
 			u16 attr;
 			if (p->type == PROJECTILE_SPIKE)
 			{
@@ -218,7 +218,7 @@ void projectile_shoot(s16 x, s16 y, fix16 dx, fix16 dy, u16 type)
 			projectiles[i].dx = dx;
 			projectiles[i].dy = dy;
 			projectiles[i].type = type;
-			projectiles[i].v_dir = PROJECTILE_UP;	
+			projectiles[i].v_dir = PROJECTILE_UP;
 			projectiles[i].active = 1;
 			return;
 		}
@@ -235,19 +235,19 @@ void projectile_shoot_at(s16 x, s16 y, s16 tx, s16 ty)
 
 	// Reductions for distance, to pretend this isn't a bad function
 	if (tx - x > 64 || x - tx > 64 || ty - y > 48 || y - ty > 48)
-	{	
+	{
 		dx = dx >> 1;
 		dy = dy >> 1;
 	}
 	if (tx - x > 140 || x - tx > 140 || ty - y > 96 || y - ty > 96)
-	{	
+	{
 		dx = dx >> 1;
 		dy = dy >> 1;
 	}
 	if (tx - x > 256 || x - tx > 256 || ty - y > 128 || y - ty > 128)
-	{	
+	{
 		dx = dx >> 1;
 		dy = dy >> 1;
 	}
-	projectile_shoot(x, y, dx, dy, PROJECTILE_BALL2); 
+	projectile_shoot(x, y, dx, dy, PROJECTILE_BALL2);
 }

@@ -84,10 +84,10 @@ static void en_anim_flip(void *v)
 
 static inline void bg_collision(en_flip *e)
 {
-	if (e->head.direction == ENEMY_RIGHT && 
+	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + FLIP_WIDTH, e->head.y))
 	{
-		e->head.direction = ENEMY_LEFT;	
+		e->head.direction = ENEMY_LEFT;
 		e->head.x -= 4;
 		e->h_rev_cnt = 100;
 	}
@@ -113,7 +113,7 @@ static inline void h_movement(en_flip *e)
 		{
 			e->head.x--;
 		}
-		e->h_cnt = 0;	
+		e->h_cnt = 0;
 
 		if (e->h_rev_cnt == FLIP_DISTANCE * 2)
 		{
@@ -124,7 +124,7 @@ static inline void h_movement(en_flip *e)
 		{
 			e->head.direction = ENEMY_LEFT;
 		}
-		
+
 		e->h_rev_cnt++;
 	}
 	else
@@ -144,7 +144,7 @@ static inline void v_movement(en_flip *e)
 		{
 			e->v_dir = FLIP_UP;
 		}
-	}	
+	}
 	else
 	{
 		e->dy = fix16Sub(e->dy, ddy);

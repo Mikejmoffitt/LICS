@@ -200,7 +200,7 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side)
 	if (right_side)
 	{
 		// Add almost one screen width's
-		dma_dest += (STATE_SC_W / 8) * 2; 
+		dma_dest += (STATE_SC_W / 8) * 2;
 		// Horizontal seam
 		if (((plot_x + vis_width) >= (pw)))
 		{
@@ -270,7 +270,7 @@ void map_draw_vertical(u16 cam_x, u16 cam_y, u16 bottom_side)
 		// DMA zero is mostly normal, but it cuts short at the seam
 		dma_len_0 = pw - plot_x;
 		dma_dest_0 = (2 * plot_x) + ((pw * 2) * plot_y);
-		
+
 		// DMA 1 fills in the rest, on the "same row" near the left
 		dma_len_1 = (STATE_SC_W / 8) - dma_len_0 + 1;
 		dma_src_1 = dma_src_0 + (2 * dma_len_0);
@@ -376,7 +376,7 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 		dma_len[0] = pw - plot_x;
 		dma_src[0] = (u32)state.current_map + src_xcomp + src_ycomp;
 		dma_dest[0] = (2 * plot_x) + ((pw * 2) * plot_y);
-		
+
 		// DMA 1 fills in the rest, on the "same row" near the left
 		dma_len[1] = (STATE_SC_W / 8) - dma_len[0] + 1;
 		dma_src[1] = dma_src[0] + (2 * dma_len[0]);
@@ -395,7 +395,7 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 		num_rows -=2;
 	}
 	for (y = 0; y < num_rows; y++)
-	{		
+	{
 		// DMA 1
 		map_dma_queue(dma_src[0],VDP_getAPlanAddress() + dma_dest[0], dma_len[0]);
 		dma_src[0] += map_width;
@@ -460,7 +460,7 @@ void map_dma(void)
 			map_dma_h_len[0],
 			(VDP_getPlanWidth() * 2));
 	}
-	
+
 	if (map_dma_h_len[1])
 	{
 		VDP_doDMAEx(VDP_DMA_VRAM,

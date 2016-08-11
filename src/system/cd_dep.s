@@ -11,4 +11,4 @@ set_sr:
 		move.l  4(sp),d1
 		move.w  d1,sr
 		rts
-	
+

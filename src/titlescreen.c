@@ -41,7 +41,7 @@ static void title_init(void)
 	VDP_waitDMACompletion();
 	VDP_clearPlan(VDP_PLAN_B, 1);
 	VDP_waitDMACompletion();
-	
+
 	VDP_setScreenWidth320();
 	system_set_h_split(0, 0, NULL);
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
@@ -204,7 +204,7 @@ static void title_bg_scroll(fix16 scroll_y)
 	{
 		calc_scroll = 256;
 	}
-	if (!system_ntsc) 
+	if (!system_ntsc)
 	{
 		calc_scroll++;
 	}
@@ -330,7 +330,7 @@ static void print_choices(void)
 	{
 		b_puts("  ", 23, menu_y + 6);
 	}
-	
+
 }
 
 static void draw_green_cube(fix16 scroll_y)
@@ -462,7 +462,7 @@ void title_play_intro(void)
 	bg_load(255);
 	VDP_setEnable(1);
 	system_wait_v();
-	
+
 
 	// Logo slides up as scene slides down
 }

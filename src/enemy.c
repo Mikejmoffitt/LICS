@@ -195,7 +195,7 @@ void enemy_draw(void)
 {
 	u16 i = ENEMIES_NUM;
 	while (i--)
-	{	
+	{
 		en_generic *e = &enemies[i];
 		// Enemies are added in order, only once, so a null enemy type means
 		// this is the end of the list and we can stop processing it.
@@ -239,7 +239,7 @@ void enemy_draw(void)
 			{
 				while (ey > 0)
 				{
-					ey -= ((e->head.size[0] + 1) & 0x0003) << 3;		
+					ey -= ((e->head.size[0] + 1) & 0x0003) << 3;
 					sprite_put(ex,ey, e->head.size[0], e->head.attr[0]);
 				}
 			}
@@ -262,13 +262,13 @@ void enemy_get_hurt(en_generic *e)
 {
 	if (e->head.hurt_cnt == 0)
 	{
-		e->head.hurt_cnt = hurt_time; 
+		e->head.hurt_cnt = hurt_time;
 		playsound(SFX_ENEMY_STRIKE);
 	}
 }
 
 // The typical and default "bounce cube off enemy, damage enemy" reaction.
-// Most enemies will use this. 
+// Most enemies will use this.
 void enemy_cube_response(en_generic *e, cube *c)
 {
 	if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
@@ -280,7 +280,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 		}
 	}
 	if (c->type == CUBE_RED)
-	{	
+	{
 		if (e->head.hp > 1)
 		{
 			e->head.hp--;
@@ -294,7 +294,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 	}
 	if (e->head.hurt_cnt != 0)
 	{
-		return;	
+		return;
 	}
 	if (c->type == CUBE_GREEN)
 	{
@@ -327,7 +327,7 @@ void enemy_cube_response(en_generic *e, cube *c)
 	}
 	else if (c->state != CUBE_STATE_EXPLODE && c->state != CUBE_STATE_FIZZLE)
 	{
-		cube_destroy(c);	
+		cube_destroy(c);
 	}
 	enemy_get_hurt(e);
 }
@@ -349,7 +349,7 @@ void enemy_cube_impact(en_generic *e, cube *c)
 
 u16 enemy_touching_enemy(en_generic *a, en_generic *b)
 {
-	return (a->head.x + a->head.width > b->head.x - b->head.width && 
+	return (a->head.x + a->head.width > b->head.x - b->head.width &&
 	        a->head.x - a->head.width < b->head.x + b->head.width &&
 	        a->head.y > b->head.y - b->head.height &&
 	        a->head.y - a->head.height < b->head.y);
@@ -377,7 +377,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 			e->head.proc_func = NULL;
 			e->head.cube_func = NULL;
 			e->head.active = ENEMY_OFFSCREEN;
-			
+
 			switch (type)
 			{
 				default:

@@ -78,7 +78,7 @@ void gameloop_dma(void)
 {
 	map_dma();
 	sprites_dma_simple();
-	state_dma_scroll();	
+	state_dma_scroll();
 	player_dma();
 }
 
@@ -92,7 +92,7 @@ static void wait_sec(void)
 }
 
 static void gameloop_room_setup(u16 transition)
-{	
+{
 	// Reset object lists, gameplay variables, etc.
 	cubes_init();
 	enemy_init();
@@ -154,7 +154,7 @@ static void gameloop_room_setup(u16 transition)
 static inline void gameloop_init(void)
 {
 	// Debug mode cheats
-	if (buttons & BUTTON_X)	
+	if (buttons & BUTTON_X)
 	{
 		save_clear();
 		sram.have_lift = 1;
@@ -186,7 +186,7 @@ static inline void gameloop_init(void)
 	VDP_setHilightShadow(0);
 	VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 
-	// Default to no H split 	
+	// Default to no H split
 	system_set_h_split(0, 0, NULL);
 
 	// Clear sprites
@@ -218,7 +218,7 @@ void gameloop_main(void)
 	// Main game loop; runs until after a player death anim, quit, or victory.
 	while (pl.hp > 0)
 	{
-		
+
 		// Configure the room we are about to enter
 		gameloop_room_setup(transition);
 
@@ -235,7 +235,7 @@ void gameloop_main(void)
 			gameloop_dma();
 			if ((buttons & BUTTON_START) && (!(buttons_prev & BUTTON_START)))
 			{
-				pause_screen_loop();	
+				pause_screen_loop();
 			}
 
 		}

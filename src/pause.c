@@ -14,8 +14,8 @@
 
 static void pause_pal_cycle(void)
 {
-	
-	const u16 tele_colors[] = 
+
+	const u16 tele_colors[] =
 	{
 		0xEEE, 0x8EE, 0x0EE, 0x0CE,
 		0x0AE, 0x0CE, 0x0EE, 0x8EE
@@ -26,7 +26,7 @@ static void pause_pal_cycle(void)
 		0xEEE, 0xECC, 0xE88, 0xE66,
 		0xE44, 0xE66, 0xE88, 0xECC
 	};
-	
+
 	if (system_osc % 16 >= 8)
 	{
 		VDP_setPaletteColor(59, 0x0E00);
@@ -35,7 +35,7 @@ static void pause_pal_cycle(void)
 	{
 		VDP_setPaletteColor(59, 0x0800);
 	}
-	
+
 	VDP_setPaletteColor(56, special_colors[(system_osc / 16) % 8]);
 	VDP_setPaletteColor(55, tele_colors[(system_osc / 8) % 8]);
 }
@@ -57,7 +57,7 @@ static void pause_place_sprites(void)
 			case 9:
 			case 11:
 				break;
-				
+
 			default:
 			sprite_put(8 * (PAUSE_MAP_X + state.world_x) - 5,
 					   8 * (PAUSE_MAP_Y + state.world_y) - 14,
@@ -65,7 +65,7 @@ static void pause_place_sprites(void)
 					   TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xA8));
 			sprite_put(8 * (PAUSE_MAP_X +  state.world_x),
 					   8 * (PAUSE_MAP_Y + state.world_y),
-					   SPRITE_SIZE(1,1), 
+					   SPRITE_SIZE(1,1),
 					   TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xC0));
 		}
 	}
@@ -75,13 +75,13 @@ static void pause_place_sprites(void)
 	// Cube lifting / tossing
 	if (sram.have_lift)
 	{
-		sprite_put(PAUSE_POWER_X, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE4)); 
+		sprite_put(PAUSE_POWER_X, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE4));
 	}
 
 	// Cube jumping
 	if (sram.have_jump)
 	{
-		sprite_put(PAUSE_POWER_X + 28, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE8)); 
+		sprite_put(PAUSE_POWER_X + 28, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xE8));
 	}
 
 	// CP power levels
@@ -93,7 +93,7 @@ static void pause_place_sprites(void)
 	if (sram.have_phantom)
 	{
 		u16 phantom_x = PAUSE_POWER_X + 60;
-		sprite_put(phantom_x, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF4)); 
+		sprite_put(phantom_x, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF4));
 
 		// Show level counter
 		if (sram.have_cheap_phantom)
@@ -119,13 +119,13 @@ static void pause_place_sprites(void)
 	// Kicking
 	if (sram.have_kick)
 	{
-		sprite_put(PAUSE_POWER_X + 92, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xEC)); 
+		sprite_put(PAUSE_POWER_X + 92, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xEC));
 	}
 
 	// Orange cube lifting
 	if (sram.have_orange)
 	{
-		sprite_put(PAUSE_POWER_X + 112, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0)); 
+		sprite_put(PAUSE_POWER_X + 112, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0));
 	}
 }
 
@@ -158,12 +158,12 @@ static void map_progress_cover(void)
 		}
 	}
 	if (!sram.have_map)
-	{	
+	{
 		for (x = 0; x < 5; x++)
 		{
-		window_tile_set(PAUSE_MAP_X + 10 + x, PAUSE_MAP_Y + 6, 
+		window_tile_set(PAUSE_MAP_X + 10 + x, PAUSE_MAP_Y + 6,
 			TILE_ATTR_FULL(3, 1, 0, 0, 0x1db + x));
-		window_tile_set(PAUSE_MAP_X + 10 + x, PAUSE_MAP_Y + 7, 
+		window_tile_set(PAUSE_MAP_X + 10 + x, PAUSE_MAP_Y + 7,
 			TILE_ATTR_FULL(3, 1, 0, 0, 0x1eb + x));
 		}
 	}
@@ -188,8 +188,8 @@ static void pause_intro_anim(void)
 	while (win_v > 0x82)
 	{
 		win_v-=1;
-		// Window plane vertical 
-		VDP_setReg(0x12,win_v);	
+		// Window plane vertical
+		VDP_setReg(0x12,win_v);
 		gameloop_gfx();
 		system_wait_v();
 		// Set the palette at the window seam so Lyle and Co don't look weird

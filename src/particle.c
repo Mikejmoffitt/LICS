@@ -18,7 +18,7 @@ void particles_init(void)
 	u16 i = PARTICLES_NUM;
 	while(i--)
 	{
-		particles[i].active = 0; 
+		particles[i].active = 0;
 	}
 }
 
@@ -34,7 +34,7 @@ void particles_run(void)
 			{
 				p->x += p->dx / 2;
 				p->y += p->dy / 2;
-				
+
 				if (system_osc % 2)
 				{
 					p->x += p->dx & 1;
@@ -61,7 +61,7 @@ void particles_draw(void)
 		u16 cent;
 		u16 size;
 		switch (p->type)
-		{	
+		{
 			default:
 			case PARTICLE_TYPE_SPARKLE:
 				cent = 8;
@@ -185,7 +185,7 @@ void particles_draw(void)
 			palnum = PARTICLES_ALT_PALNUM;
 		}
 		else
-		{	
+		{
 			palnum = PARTICLES_PALNUM;
 		}
 		sprite_put(tx, ty, size, TILE_ATTR_FULL(palnum, 0, 0, 0, gfx));
@@ -196,7 +196,7 @@ void particle_spawn(u16 x, u16 y, u16 type)
 {
 	u16 i = PARTICLES_NUM;
 	while(i--)
-	{	
+	{
 		if (!particles[i].active)
 		{
 			particles[i].x = x;
@@ -244,6 +244,6 @@ void particle_spawn(u16 x, u16 y, u16 type)
 			}
 			return;
 		}
-		
+
 	}
 }

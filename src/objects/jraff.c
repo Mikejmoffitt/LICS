@@ -103,14 +103,14 @@ static void v_movement(en_jraff *e)
 	}
 	if (e->dy > FIX16(0.0) && map_collision(e->head.x, e->head.y))
 	{
-		e->dy = FIX16(0.0);	
+		e->dy = FIX16(0.0);
 		e->head.y = (e->head.y) & 0xFFF8;
 	}
 }
 
 static void proc_func(void *v)
 {
-	en_jraff *e = (en_jraff *)v;	
+	en_jraff *e = (en_jraff *)v;
 
 	h_movement(e);
 	v_movement(e);
@@ -150,7 +150,7 @@ static void anim_func(void *v)
 	{
 		e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 24);
 	}
-	
+
 	// Top half [0]
 	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + 36 + (12 * e->anim_frame));
 }

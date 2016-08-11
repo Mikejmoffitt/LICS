@@ -11,5 +11,5 @@ toplevel_loop:
 	title_play_intro();
 	gameloop_main();
 	goto toplevel_loop;
-	return 0;	
+	return 0;
 }

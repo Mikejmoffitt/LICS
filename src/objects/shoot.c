@@ -87,10 +87,10 @@ static void en_anim_shoot(void *v)
 
 static inline void bg_collision(en_shoot *e)
 {
-	if (e->head.direction == ENEMY_RIGHT && 
+	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + SHOOT_WIDTH, e->head.y))
 	{
-		e->head.direction = ENEMY_LEFT;	
+		e->head.direction = ENEMY_LEFT;
 		e->head.x -= 4;
 		e->h_rev_cnt = 100;
 	}
@@ -127,7 +127,7 @@ static inline void h_movement(en_shoot *e)
 	{
 		e->head.direction = ENEMY_LEFT;
 	}
-	
+
 	e->h_rev_cnt++;
 	bg_collision(e);
 }
@@ -152,7 +152,7 @@ static inline void v_movement(en_shoot *e)
 				e->v_dir = SHOOT_UP;
 			}
 		}
-	}	
+	}
 	else
 	{
 		e->dy = fix16Sub(e->dy, ddy);

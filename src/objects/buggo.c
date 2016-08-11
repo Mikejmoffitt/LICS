@@ -76,7 +76,7 @@ void en_init_buggo(en_buggo *e, u16 type)
 	e->type = type;
 
 	e->head.hp = (type == BUGGO_T1) ? BUGGO_HP_1 : BUGGO_HP_2;
-	
+
 	// Init region-aware constants
 	kanim_t = system_ntsc ? 5 : 4;
 	kshot_fire = system_ntsc ? 84 : 70;
@@ -101,7 +101,7 @@ static void en_cube_buggo(void *v, cube *c)
 			}
 		}
 		if (c->type == CUBE_RED)
-		{	
+		{
 			if (e->head.hp > 1)
 			{
 				e->head.hp--;
@@ -115,7 +115,7 @@ static void en_cube_buggo(void *v, cube *c)
 	}
 	if (e->head.hurt_cnt != 0)
 	{
-		return;	
+		return;
 	}
 	if (c->state == CUBE_STATE_KICKED)
 	{
@@ -144,7 +144,7 @@ static void en_cube_buggo(void *v, cube *c)
 	}
 	else if (c->state != CUBE_STATE_EXPLODE && c->state != CUBE_STATE_FIZZLE)
 	{
-		cube_destroy(c);	
+		cube_destroy(c);
 	}
 }
 
@@ -244,10 +244,10 @@ static inline void buggo_shot_proc(en_buggo *e)
 
 static inline void bg_collision(en_buggo *e)
 {
-	if (e->head.direction == ENEMY_RIGHT && 
+	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + BUGGO_WIDTH, e->head.y))
 	{
-		e->head.direction = ENEMY_LEFT;	
+		e->head.direction = ENEMY_LEFT;
 		e->head.x -= 4;
 		e->h_rev_cnt = 100;
 	}

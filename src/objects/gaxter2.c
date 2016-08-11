@@ -135,14 +135,14 @@ static inline void shot_proc(en_gaxter2 *e)
 		e->shot_clock = 0;
 		if (e->head.x < pl.px)
 		{
-			projectile_shoot(e->head.x + GAXTER2_WIDTH, e->head.y + 6, 
-			                 shot_speed, shot_speed, 
+			projectile_shoot(e->head.x + GAXTER2_WIDTH, e->head.y + 6,
+			                 shot_speed, shot_speed,
 			                 PROJECTILE_BALL);
 		}
 		else
 		{
-			projectile_shoot(e->head.x - GAXTER2_WIDTH, e->head.y + 6, 
-			                 -shot_speed, shot_speed, 
+			projectile_shoot(e->head.x - GAXTER2_WIDTH, e->head.y + 6,
+			                 -shot_speed, shot_speed,
 			                 PROJECTILE_BALL);
 		}
 	}
@@ -154,10 +154,10 @@ static inline void shot_proc(en_gaxter2 *e)
 
 static inline void bg_collision(en_gaxter2 *e)
 {
-	if (e->head.direction == ENEMY_RIGHT && 
+	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + GAXTER2_WIDTH, e->head.y))
 	{
-		e->head.direction = ENEMY_LEFT;	
+		e->head.direction = ENEMY_LEFT;
 		e->head.x -= 4;
 		e->h_rev_cnt = 100;
 	}
@@ -183,7 +183,7 @@ static inline void h_movement(en_gaxter2 *e)
 		{
 			e->head.x--;
 		}
-		e->h_cnt = 0;	
+		e->h_cnt = 0;
 
 		if (e->h_rev_cnt == GAXTER2_DISTANCE * 2)
 		{
@@ -194,7 +194,7 @@ static inline void h_movement(en_gaxter2 *e)
 		{
 			e->head.direction = ENEMY_LEFT;
 		}
-		
+
 		e->h_rev_cnt++;
 	}
 	else
@@ -214,7 +214,7 @@ static inline void v_movement(en_gaxter2 *e)
 		{
 			e->v_dir = GAXTER2_UP;
 		}
-	}	
+	}
 	else
 	{
 		e->dy = fix16Sub(e->dy, ddy);

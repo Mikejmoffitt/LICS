@@ -44,7 +44,7 @@ static void state_parse_objects(void)
 			case MAP_OBJ_ENTRANCE:
 				d = &state.entrances[o->data & 0x000F];
 				d->x = o->x;
-				d->y = o->y; 
+				d->y = o->y;
 				d->to_num = (o->data & 0x00F0) >> 4;
 				d->to_roomid = (o->data & 0xFF00) >> 8;
 				break;
@@ -161,7 +161,7 @@ u16 state_update_scroll()
 		state.cam_x = (state.current_room->w * STATE_SC_W) - STATE_SC_SEAMX*2;
 	}
 	else if (pl.px > STATE_SC_SEAMX)
-	{	
+	{
 		// Between edges
 		state.cam_x = (pl.px - STATE_SC_SEAMX);
 	}

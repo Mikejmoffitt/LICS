@@ -43,7 +43,7 @@ void en_init_dancyflower(en_dancyflower *e)
 	e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
 	e->head.size[1] = SPRITE_SIZE(3,2);
 	e->head.xoff[1] = -12;
-	e->head.yoff[1] = -48; 
+	e->head.yoff[1] = -48;
 	e->head.x += 12;
 	e->head.y += 48;
 	e->head.harmful = ENEMY_HARM_ALWAYS_BOUNCE_L;
@@ -55,7 +55,7 @@ void en_init_dancyflower(en_dancyflower *e)
 	e->head.proc_func = NULL;
 	e->head.cube_func = &cube_func;
 
-	anim_delay = system_ntsc ? 14 : 11; 
+	anim_delay = system_ntsc ? 14 : 11;
 }
 
 void anim_func(void *v)

@@ -110,7 +110,7 @@ static void proc_func(void *v)
 			particle_spawn(e->head.x - 8 + (GET_HVCOUNTER % 16), e->head.y - 32 + (GET_HVCOUNTER % 32), PARTICLE_TYPE_SPARKLE);
 		}
 	}
-	
+
 	// Player collides with teleporter active region.
 	if (!e->disabled && e->active_cnt == 0 && e->head.touching_player && pl.tele_out_cnt == 0)
 	{
@@ -180,7 +180,7 @@ static void anim_func(void *v)
 		{
 			e->anim_cnt++;
 		}
-		
+
 		if (e->anim_frame == 0)
 		{
 			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);

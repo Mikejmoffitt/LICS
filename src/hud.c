@@ -14,7 +14,7 @@ void hud_draw_health(u16 max, u16 val)
 	val++;
 	unsigned int i = 1;
 	// HP icon
-	sprite_put(HUD_HP_X, HUD_HP_Y, SPRITE_SIZE(2,2), 
+	sprite_put(HUD_HP_X, HUD_HP_Y, SPRITE_SIZE(2,2),
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + 4));
 
 	// Build the bar
@@ -31,13 +31,13 @@ void hud_draw_cp(u16 val)
 	unsigned int i = HUD_CP_BAR_HEIGHT / 8;
 	u16 euro_mod = 240 - VDP_getScreenHeight();
 	// CP icon
-	sprite_put(HUD_CP_X, HUD_CP_Y - euro_mod, SPRITE_SIZE(2,2), 
+	sprite_put(HUD_CP_X, HUD_CP_Y - euro_mod, SPRITE_SIZE(2,2),
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT));
 
 	// Hack to scale the bar properly
 	if (val > 15)
 	{
-		val++;	
+		val++;
 	}
 
 	// Top of the bar

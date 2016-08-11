@@ -212,7 +212,7 @@ void system_wait_v(void)
 void system_set_debug(u16 val)
 {
 	debug_en = val;
-}	
+}
 
 void system_debug_cpu_meter(void)
 {

@@ -15,7 +15,7 @@ static u16 bg_xscroll_cmd;
 static u16 bg_yscroll_cmd;
 
 /* BG scroll coefficient tables */
-static const s16 *coeff_tables[] = 
+static const s16 *coeff_tables[] =
 {
 	0,
 	bgcoef_bg1,
@@ -32,7 +32,7 @@ void bg_load(u16 num)
 	{
 		return;
 	}
-	
+
 	current_bg = num;
 	VDP_clearPlan(VDP_PLAN_B, 1);
 	// Source data for CRAM palette (first 8 entries)

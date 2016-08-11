@@ -100,7 +100,7 @@ static inline void scan_cubes(en_tossmuffin *e)
 				// Turn towards the player with the cube lifted
 				e->head.direction = (e->head.x < pl.px) ? ENEMY_RIGHT : ENEMY_LEFT;
 				break;
-			}		
+			}
 		}
 	}
 }
@@ -145,12 +145,12 @@ static void proc_func(void *v)
 		{
 			e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
 			// Simple BG collision for the sides
-			if (e->head.direction == ENEMY_RIGHT && 
+			if (e->head.direction == ENEMY_RIGHT &&
 			    map_collision(e->head.x + e->head.width, e->head.y - 12))
 			{
 				e->head.direction = ENEMY_LEFT;
 			}
-			else if (e->head.direction == ENEMY_LEFT && 
+			else if (e->head.direction == ENEMY_LEFT &&
 			   map_collision(e->head.x - e->head.width, e->head.y - 12))
 			{
 				e->head.direction = ENEMY_RIGHT;
@@ -194,7 +194,7 @@ static void anim_func(void *v)
 		e->head.yoff[1] = -8;
 		e->head.xoff[1] = -8;
 		// Masking of system_osc makes his legs wiggle every 2 frames
-		e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, 
+		e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction,
 			vram_pos + 14 + ((system_osc >> 1) % 2 ? 2 : 0));
 	}
 	else if (e->toss_cnt > 0)
