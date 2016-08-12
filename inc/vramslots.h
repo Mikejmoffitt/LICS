@@ -47,7 +47,7 @@ the length of a 256-tile DMA is only (256 * 16).
 #define ITEMS_VRAM_LEN 48
 #define METAGRUB_VRAM_LEN 7
 #define FLIP_VRAM_LEN 12
-#define BOINGO_VRAM_LEN 56
+#define BOINGO_VRAM_LEN 60
 #define GAXTER_VRAM_LEN 24
 #define BUGGO_VRAM_LEN 48
 #define DANCYFLOWER_VRAM_LEN 30

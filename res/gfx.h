@@ -12,7 +12,7 @@ extern const u8 gfx_projectiles[416];
 extern const u8 gfx_items[1536];
 extern const u8 gfx_en_metagrub[224];
 extern const u8 gfx_en_flip[384];
-extern const u8 gfx_en_boingo[1792];
+extern const u8 gfx_en_boingo[1920];
 extern const u8 gfx_en_gaxter[768];
 extern const u8 gfx_en_buggo[1536];
 extern const u8 gfx_en_dancyflower[960];

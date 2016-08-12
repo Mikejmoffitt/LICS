@@ -10,6 +10,8 @@ WAVTORAW = wavtoraw
 NM = nm
 RESCOMP= rescomp
 
+ECHO = printf
+
 OPTION = -O1 -std=c99 -Wall 
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
 CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow
@@ -103,8 +105,10 @@ boot/sega.o: boot/rom_head.bin
 
 %.bin: %.elf
 	@$(OBJC) -O binary $< temp.bin
+	@bash -c '$(ECHO) "\e[32m"'
 	@dd if=temp.bin of=$@ bs=8k conv=sync
-	rm temp.bin
+	@rm temp.bin
+	@bash -c '$(ECHO) "\e[0m"'
 
 %.elf: $(OBJS) $(BOOT_RESOURCES)
 	@$(CC) -n -o $@ $(LINKFLAGS) $(BOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
@@ -116,11 +120,11 @@ boot/sega.o: boot/rom_head.bin
 	@$(BINTOS) $<
 
 %.o: %.c
-	@echo "	[ CC ] $<"
+	@bash -c '$(ECHO) "\t\e[96m[ CC ]\e[0m $<\n"'
 	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerrc.py
 
 %.o: %.s 
-	@echo "	[ AS ] $<"
+	@bash -c '$(ECHO) "\t\e[94m[ AS ]\e[0m $<\n"'
 	@$(AS) $(ASFLAGS) $< -o $@
 
 %.s: %.bmp
