@@ -147,10 +147,10 @@ void powerup_draw(void)
 				break;
 
 			case POWERUP_CP:
-				attr = TILE_ATTR_FULL(3, 0, 0, 0, POWERUP_VRAM_SLOT + 20);
+				attr = TILE_ATTR_FULL(2, 0, 0, 0, POWERUP_VRAM_SLOT + 20);
 				break;
 			case POWERUP_CP_2X:
-				attr = TILE_ATTR_FULL(3, 0, 0, 0, POWERUP_VRAM_SLOT + 22);
+				attr = TILE_ATTR_FULL(2, 0, 0, 0, POWERUP_VRAM_SLOT + 22);
 				break;
 			case POWERUP_HP:
 				attr = TILE_ATTR_FULL(1, 0, 0, 0, POWERUP_VRAM_SLOT + 16);
