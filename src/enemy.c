@@ -391,7 +391,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					en_init_flip((en_flip *)e);
 					break;
 				case ENEMY_BOINGO:
-					en_init_boingo((en_boingo *)e);
+					en_init_boingo((en_boingo *)e, data);
 					break;
 				case ENEMY_ITEM:
 					en_init_item((en_item *)e, data);
