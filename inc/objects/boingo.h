@@ -20,6 +20,9 @@
 #define BOINGO_TYPE_ANGRY 1
 #define BOINGO_TYPE_CUBE 2
 #define BOINGO_TYPE_TO_NORMAL 3
+#define BOINGO_TYPE_CUBE_ACTIVE 4
+
+#define BOINGO_CUBE_ACTIVATION_DISTANCE 30
 
 typedef struct en_boingo en_boingo;
 struct en_boingo

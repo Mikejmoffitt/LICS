@@ -16,6 +16,7 @@ static void do_jump(en_boingo *e);
 static fix16 jump_str;
 static fix16 gravity;
 static u16 jump_time;
+static u16 jump_time_angry;
 static u16 anim_speed;
 
 // Dynamic VRAM slot support
@@ -52,7 +53,19 @@ void en_init_boingo(en_boingo *e, u16 type)
 	e->jump_cnt = 0;
 	e->anim_cnt = 0;
 	e->type = type;
-	e->head.hp = type == BOINGO_TYPE_CUBE ? 2 : 1;
+	if (type == BOINGO_TYPE_ANGRY)
+	{
+		e->head.hp = 3;
+	}
+	else if (type == BOINGO_TYPE_CUBE)
+	{
+		e->head.hp = 2;
+		e->head.x -= 4;
+	}
+	else
+	{
+		e->head.hp = 1;
+	}
 
 	e->head.proc_func = &en_proc_boingo;
 	e->head.anim_func = &en_anim_boingo;
@@ -62,6 +75,7 @@ void en_init_boingo(en_boingo *e, u16 type)
 	jump_str = (system_ntsc) ? FIX16(-0.83) : FIX16(-0.9959);
 	gravity = system_ntsc ? FIX16(0.167) : FIX16(0.24048);
 	jump_time = (system_ntsc) ? 24 : 20;
+	jump_time_angry = (system_ntsc) ? 6 : 5;
 	anim_speed = system_ntsc ? 11 : 9;
 }
 
@@ -84,7 +98,33 @@ static void en_anim_boingo(void *v)
 
 	if (e->state == BOINGO_STANDING)
 	{
-		if (e->type != BOINGO_TYPE_CUBE)
+		if (e->type == BOINGO_TYPE_CUBE_ACTIVE) // Active cube
+		{
+			e->head.width = BOINGO_CUBE_GND_W;
+			e->head.height = BOINGO_GND_H;
+
+			// The cube
+			e->head.xoff[0] = -8;
+			e->head.yoff[0] = -19 + e->anim_frame;
+			e->head.size[0] = SPRITE_SIZE(2,2);
+			e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, vram_pos + 56);
+
+			// The legs
+			e->head.xoff[1] = -8;
+			e->head.yoff[1] = -3;
+			e->head.size[1] = SPRITE_SIZE(2,1);
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 24 + (e->anim_frame ? 2 : 0));
+		}
+		else if (e->type == BOINGO_TYPE_CUBE) // Cube, but inactive
+		{
+			// Just the cube
+			e->head.attr[1] = NULL;
+			e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, vram_pos + 56);
+			e->head.xoff[0] = -8;
+			e->head.yoff[0] = -15;
+			e->head.size[0] = SPRITE_SIZE(2,2);
+		}
+		else // Normal or angry
 		{
 			e->head.width = BOINGO_GND_W;
 			e->head.height = BOINGO_GND_H;
@@ -102,14 +142,17 @@ static void en_anim_boingo(void *v)
 				e->head.attr[0] += 32;
 			}
 		}
-		else
+	}
+	else
+	{
+		if (e->type == BOINGO_TYPE_CUBE_ACTIVE) // Active cube
 		{
-			e->head.width = BOINGO_CUBE_GND_W;
-			e->head.height = BOINGO_GND_H;
+			e->head.width = BOINGO_AIR_W;
+			e->head.height = BOINGO_AIR_H;
 
 			// The cube
 			e->head.xoff[0] = -8;
-			e->head.yoff[0] = -19 + e->anim_frame;
+			e->head.yoff[0] = -19;
 			e->head.size[0] = SPRITE_SIZE(2,2);
 			e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, vram_pos + 56);
 
@@ -117,12 +160,9 @@ static void en_anim_boingo(void *v)
 			e->head.xoff[1] = -8;
 			e->head.yoff[1] = -3;
 			e->head.size[1] = SPRITE_SIZE(2,1);
-			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 24 + (e->anim_frame ? 2 : 0));
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 28 + (e->anim_frame ? 2 : 0));
 		}
-	}
-	else
-	{
-		if (e->type != BOINGO_TYPE_CUBE)
+		else // Normal or angry
 		{
 			e->head.width = BOINGO_AIR_W;
 			e->head.height = BOINGO_AIR_H;
@@ -142,25 +182,7 @@ static void en_anim_boingo(void *v)
 				e->head.attr[0] += 32;
 			}
 		}
-		else
-		{
-			e->head.width = BOINGO_AIR_W;
-			e->head.height = BOINGO_AIR_H;
-
-			// The cube
-			e->head.xoff[0] = -8;
-			e->head.yoff[0] = -19;
-			e->head.size[0] = SPRITE_SIZE(2,2);
-			e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, vram_pos + 56);
-
-			// The legs
-			e->head.xoff[1] = -8;
-			e->head.yoff[1] = -3;
-			e->head.size[1] = SPRITE_SIZE(2,1);
-			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 28 + (e->anim_frame ? 2 : 0));
-		}
 	}
-
 }
 
 static void bg_collisions(en_boingo *e)
@@ -220,30 +242,6 @@ static const fix16 str_table_ntsc[] =
 	FIX16(-3.5)
 };
 
-static const fix16 str_table_angry_pal[] =
-{
-	FIX16(0.00),
-	FIX16(-0.6),
-	FIX16(-1.2),
-	FIX16(-1.8),
-	FIX16(-2.4),
-	FIX16(-3.0),
-	FIX16(-3.6),
-	FIX16(-4.2)
-};
-
-static const fix16 str_table_angry_ntsc[] =
-{
-	FIX16(0.00),
-	FIX16(-0.5),
-	FIX16(-1.0),
-	FIX16(-1.5),
-	FIX16(-2.0),
-	FIX16(-2.5),
-	FIX16(-3.0),
-	FIX16(-3.5)
-};
-
 static void do_jump(en_boingo *e)
 {
 	if (pl.px < e->head.x)
@@ -258,16 +256,13 @@ static void do_jump(en_boingo *e)
 	e->dy = jump_str;
 
 	// Additional jump strength from random generator
-	if (e->type != BOINGO_TYPE_ANGRY)
+	if (system_ntsc)
 	{
-		if (system_ntsc)
-		{
-			e->dy += str_table_ntsc[GET_HVCOUNTER & 0x07];
-		}
-		else
-		{
-			e->dy += str_table_pal[GET_HVCOUNTER & 0x07];
-		}
+		e->dy += str_table_ntsc[GET_HVCOUNTER & 0x07];
+	}
+	else
+	{
+		e->dy += str_table_pal[GET_HVCOUNTER & 0x07];
 	}
 	e->state = BOINGO_JUMPING;
 	e->jump_cnt = 0;
@@ -286,24 +281,36 @@ static void en_proc_boingo(void *v)
 		playsound(SFX_ENEMY_EXPLODE);
 		e->type = BOINGO_TYPE_NORMAL;
 	}
-	// Standing state
-	if (e->state == BOINGO_STANDING)
+	else if (e->type == BOINGO_TYPE_CUBE)
 	{
-		if (e->jump_cnt >= jump_time)
+		// Player approaches
+		if (e->head.x < pl.px + BOINGO_CUBE_ACTIVATION_DISTANCE &&
+		    e->head.x > pl.px - BOINGO_CUBE_ACTIVATION_DISTANCE)
 		{
-			do_jump(e);
-		}
-		else
-		{
-			e->jump_cnt++;
+			e->type = BOINGO_TYPE_CUBE_ACTIVE;
 		}
 	}
-	else if (e->state == BOINGO_JUMPING)
+	else
 	{
-		e->head.y += fix16ToInt(e->dy);
-		e->dy = fix16Add(e->dy, gravity);
-		e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
-		bg_collisions(e);
+		// Standing state
+		if (e->state == BOINGO_STANDING)
+		{
+			if (e->jump_cnt >= (e->type == BOINGO_TYPE_ANGRY ? jump_time_angry : jump_time))
+			{
+				do_jump(e);
+			}
+			else
+			{
+				e->jump_cnt++;
+			}
+		}
+		else if (e->state == BOINGO_JUMPING)
+		{
+			e->head.y += fix16ToInt(e->dy);
+			e->dy = fix16Add(e->dy, gravity);
+			e->head.x += (e->head.direction == ENEMY_RIGHT) ? 1 : -1;
+			bg_collisions(e);
+		}
 	}
 }
 
@@ -312,6 +319,14 @@ static void cube_func(void *v, cube *c)
 	en_boingo *e = (en_boingo *)v;
 
 	if (e->type == BOINGO_TYPE_CUBE)
+	{
+		cube_clamp_dx(c);
+		c->dy = system_ntsc ? FIX16(-1.833) : FIX16(-2.2);
+		playsound(SFX_CUBEBOUNCE);
+		return;
+	}
+
+	if (e->type == BOINGO_TYPE_CUBE_ACTIVE)
 	{
 		e->type = BOINGO_TYPE_TO_NORMAL;
 	}
