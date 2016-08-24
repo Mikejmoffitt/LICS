@@ -95,7 +95,7 @@ cube_desc_area:
 			sprintf(desc,"Jumps left and right");
 			if (o->data == 0x0001)
 			{
-				sprintf(dat2, "ANgry version");
+				sprintf(dat2, "Angry version");
 			}
 			else if (o->data == 0x0002)
 			{

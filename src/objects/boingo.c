@@ -31,7 +31,7 @@ void en_unload_boingo(void)
 	vram_pos = 0;
 }
 
-void en_init_boingo(en_boingo *e)
+void en_init_boingo(en_boingo *e, u16 type)
 {
 	vram_load();
 	e->head.hp = 1;
@@ -49,6 +49,7 @@ void en_init_boingo(en_boingo *e)
 	e->state = BOINGO_STANDING;
 	e->jump_cnt = 0;
 	e->anim_cnt = 0;
+	e->type = type;
 
 	e->head.proc_func = &en_proc_boingo;
 	e->head.anim_func = &en_anim_boingo;
@@ -68,13 +69,27 @@ static void en_anim_boingo(void *v)
 
 	if (e->state == BOINGO_STANDING)
 	{
-		e->head.width = BOINGO_GND_W;
-		e->head.height = BOINGO_GND_H;
-		e->head.xoff[0] = -12;
-		e->head.yoff[0] = -14;
-		e->head.size[0] = SPRITE_SIZE(3,2);
-
-		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
+		if (e->type != BOINGO_TYPE_CUBE)
+		{
+			e->head.width = BOINGO_GND_W;
+			e->head.height = BOINGO_GND_H;
+			e->head.xoff[0] = -12;
+			e->head.yoff[0] = -14;
+			e->head.size[0] = SPRITE_SIZE(3,2);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
+			e->head.attr[1] = NULL;
+		}
+		else
+		{
+			e->head.width = BOINGO_CUBE_GND_W;
+			e->head.height = BOINGO_GND_H;
+			e->head.xoff[0] = -8;
+			e->head.yoff[0] = -12 + e->anim_frame;
+			e->head.xoff[1] = -8;
+			e->head.yoff[1] = --3 + e->anim_frame;
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 56);
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 24 + (e->anim_frame ? 4 : 0));
+		}
 
 		if (e->anim_cnt >= anim_speed)
 		{
@@ -91,6 +106,7 @@ static void en_anim_boingo(void *v)
 		e->head.size[0] = SPRITE_SIZE(2,3);
 
 		e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 12);
+		e->head.attr[1] = NULL;
 
 		if (e->anim_cnt >= BOINGO_ANIM_SPEED_JUMP)
 		{
@@ -166,6 +182,30 @@ static const fix16 str_table_ntsc[] =
 	FIX16(-3.5)
 };
 
+static const fix16 str_table_angry_pal[] =
+{
+	FIX16(0.00),
+	FIX16(-0.6),
+	FIX16(-1.2),
+	FIX16(-1.8),
+	FIX16(-2.4),
+	FIX16(-3.0),
+	FIX16(-3.6),
+	FIX16(-4.2)
+};
+
+static const fix16 str_table_angry_ntsc[] =
+{
+	FIX16(0.00),
+	FIX16(-0.5),
+	FIX16(-1.0),
+	FIX16(-1.5),
+	FIX16(-2.0),
+	FIX16(-2.5),
+	FIX16(-3.0),
+	FIX16(-3.5)
+};
+
 static void do_jump(en_boingo *e)
 {
 	if (pl.px < e->head.x)
@@ -180,13 +220,16 @@ static void do_jump(en_boingo *e)
 	e->dy = jump_str;
 
 	// Additional jump strength from random generator
-	if (system_ntsc)
+	if (e->type == BOINGO_NORMAL)
 	{
-		e->dy += str_table_ntsc[GET_HVCOUNTER & 0x07];
-	}
-	else
-	{
-		e->dy += str_table_pal[GET_HVCOUNTER & 0x07];
+		if (system_ntsc)
+		{
+			e->dy += str_table_ntsc[GET_HVCOUNTER & 0x07];
+		}
+		else
+		{
+			e->dy += str_table_pal[GET_HVCOUNTER & 0x07];
+		}
 	}
 	e->state = BOINGO_JUMPING;
 	e->jump_cnt = 0;
