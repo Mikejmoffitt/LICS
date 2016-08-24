@@ -16,7 +16,7 @@ void map_data_interview(void)
 	scanf("%d",&arg);
 	map_header.id = arg;
 
-	printf("\nTileset chioce? (prev == %d)\n>",map_header.tileset);
+	printf("\nTileset choice? (prev == %d)\n>",map_header.tileset);
 	scanf("%d",&arg);
 	map_header.tileset = arg;
 

@@ -506,12 +506,15 @@ void plane_handle_io(void)
 					map_data_interview();
 					plane_load_fg();
 					break;
+				case ALLEGRO_KEY_F9:
 				case ALLEGRO_KEY_P:
 					tile_prio = tile_prio ? 0 : 1;
 					break;
+				case ALLEGRO_KEY_F10:
 				case ALLEGRO_KEY_X:
 					tile_flip_h = tile_flip_h ? 0 : 1;
 					break;
+				case ALLEGRO_KEY_F11:
 				case ALLEGRO_KEY_Y:
 					tile_flip_v = tile_flip_v ? 0 : 1;
 					break;
