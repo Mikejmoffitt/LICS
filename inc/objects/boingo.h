@@ -19,6 +19,7 @@
 #define BOINGO_TYPE_NORMAL 0
 #define BOINGO_TYPE_ANGRY 1
 #define BOINGO_TYPE_CUBE 2
+#define BOINGO_TYPE_TO_NORMAL 3
 
 typedef struct en_boingo en_boingo;
 struct en_boingo
@@ -32,7 +33,7 @@ struct en_boingo
 	fix16 dy;
 };
 
-void en_init_boingo(en_boingo *e, type);
+void en_init_boingo(en_boingo *e, u16 type);
 void en_unload_boingo(void);
 
 #endif
