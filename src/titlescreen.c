@@ -146,8 +146,6 @@ static inline void place_bogologo(s16 lx, s16 ly)
 			sprite_put(lx + (x * 32), ly + (y * 8), SPRITE_SIZE(4, 1), TILE_ATTR_FULL(
 				2, 1, 0, 0,
 				BOGOLOGO_VRAM_SLOT + (x * 4) + (y * 16)));
-
-
 		}
 	}
 }
@@ -354,6 +352,7 @@ static void soundtest_action(void)
 static s16 title_menu(void)
 {
 	VDP_doCRamDMA((u32)pal_titlelogo, 64, 16);
+	b_puts("mikejmoffitt.com", 5, (system_ntsc ? 28 : 30));
 	while (1)
 	{
 		place_titlelogo(104, 16);
