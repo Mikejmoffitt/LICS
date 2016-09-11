@@ -23,6 +23,7 @@
 #include "magibear.h"
 #include "lava.h"
 #include "cow.h"
+#include "lavaanim.h"
 
 #include "state.h"
 #include "particles.h"
@@ -102,6 +103,7 @@ void enemy_init(void)
 	en_unload_magibear();
 	en_unload_lava();
 	en_unload_cow();
+	en_unload_lavaanim();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -449,6 +451,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_COW:
 					en_init_cow((en_cow *)e);
+					break;
+				case ENEMY_LAVAANIM:
+					en_init_lavaanim((en_lavaanim *)e);
 					break;
 			}
 			return &enemies[i];

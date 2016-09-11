@@ -31,6 +31,8 @@ BIN gfx_en_cow "gfx/en_cow.bin" 2 2 0
 BIN gfx_en_fissins1 "gfx/en_fissins1.bin" 2 2 0
 BIN gfx_en_fissions2 "gfx/en_fissins2.bin" 2 2 0
 
+BIN gfx_en_lavaanim "gfx/en_lavaanim.bin" 2 2 0
+
 BIN gfx_inside1 "gfx/inside1.bin" 2 2 0
 BIN gfx_outside1 "gfx/outside1.bin" 2 2 0
 BIN gfx_outside2 "gfx/outside2.bin" 2 2 0

@@ -42,7 +42,8 @@
 #define ENEMY_FISSINS2 39
 #define ENEMY_BOUNDS 40
 #define ENEMY_SMALLEGG 41
-#define ENEMY_LAVAANIM 42
+#define ENEMY_BASKETBALL 42
+#define ENEMY_LAVAANIM 43
 // ---------------------
 
 
