@@ -44,6 +44,7 @@ static void pause_place_sprites(void)
 {
 	if (sram.have_map)
 	{
+		// Flashing sequence for the "Here" indicator
 		switch (system_osc % 32)
 		{
 			case 0:
@@ -110,7 +111,6 @@ static void pause_place_sprites(void)
 			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB2));
 		}
 		else
-#define PILLA_VRAM_LEN 24
 		{
 			sprite_put(phantom_x + 1, PAUSE_POWER_Y + 18, SPRITE_SIZE(2,1), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xB0));
 		}
@@ -233,6 +233,7 @@ void pause_setup(void)
 	playsound(SFX_PAUSE);
 
 	// Cover unexplored areas on the map
+	// TODO: Remove debug map reveal with Y
 	if (!(buttons & BUTTON_Y))
 	{
 		map_progress_cover();

@@ -24,21 +24,6 @@
 
 static u16 did_first_entrance;
 
-static void message_screen(const char *s)
-{
-	u16 i = 60 * 5;
-	VDP_doVRamDMAFill(VDP_getWindowAddress(), 64 * 2 * 32, 0);
-	VDP_waitDMACompletion();
-	w_puts(s, 8, 8);
-//	VDP_drawTextBG(VDP_getWindowPlanAddress(), s, TILE_ATTR(1, 1, 0, 0), 4, 6);
-	VDP_setReg(0x12, 0x1E);
-	while (i--)
-	{
-		system_wait_v();
-		sprites_dma_simple();
-	}
-	VDP_setReg(0x12, 0x00);
-}
 
 void gameloop_logic(void)
 {

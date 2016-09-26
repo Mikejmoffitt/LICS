@@ -82,6 +82,7 @@ void bg_load(u16 num)
 			gfx_src = (u32)gfx_bg5;
 			map_src = (u32)map_bg5;
 			gfx_len = 16;
+			break;
 		case 6:
 			// Pal and gfx from bg1 are reused
 			pal_src = (u32)pal_bg1;

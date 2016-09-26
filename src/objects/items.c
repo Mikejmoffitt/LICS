@@ -6,6 +6,7 @@
 #include "system.h"
 #include "sprites.h"
 #include "music.h"
+#include "messagescreen.h"
 
 static u16 kanim_len;
 static u16 kfloat_len;
@@ -47,8 +48,7 @@ static void proc_func(void *v)
 				sram.have_map = 1;
 				playsound(SFX_POWERUP_GET);
 				save_write();
-				// TODO: Go to popup screen to show message for collection
-//				message_screen("Hello world!");
+				message_screen("Map now viewable on pause screen\n\nPress start during the game\nto pause and save");
 			}
 			if (sram.have_map)
 			{
@@ -61,6 +61,7 @@ static void proc_func(void *v)
 				sram.have_lift = 1;
 				playsound(SFX_POWERUP_GET);
 				save_write();
+				message_screen("Stand on top of cube and\npress B to lift\n\nB to throw\n\nUp + B for upward throw\nDown + B for short throw\nLeft/Right + B for long throw\n\nCareful to not get hit\nby thrown cubes");
 			}
 			if (sram.have_lift)
 			{
@@ -72,6 +73,7 @@ static void proc_func(void *v)
 			{
 				sram.have_jump = 1;
 				playsound(SFX_POWERUP_GET);
+				message_screen("Press C while jumping and holding\na cube to throw downwards\nand jump higher");
 				save_write();
 			}
 			if (sram.have_jump)
@@ -84,6 +86,7 @@ static void proc_func(void *v)
 			{
 				sram.have_phantom = 1;
 				playsound(SFX_POWERUP_GET);
+				message_screen("Hold down B to create Phantom Cube\n\nConsumes Cube Points (CP)");
 				save_write();
 			}
 			if (sram.have_phantom)
@@ -96,6 +99,7 @@ static void proc_func(void *v)
 			{
 				sram.have_kick = 1;
 				playsound(SFX_POWERUP_GET);
+				message_screen("Stand next to cube and\npress B to kick");
 				save_write();
 			}
 			if (sram.have_kick)
@@ -108,6 +112,7 @@ static void proc_func(void *v)
 			{
 				sram.have_orange = 1;
 				playsound(SFX_POWERUP_GET);
+				message_screen("Lift the large orange cubes");
 				save_write();
 			}
 			if (sram.have_orange)

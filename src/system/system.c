@@ -26,8 +26,16 @@ static u16 *hsplit_pal;
 
 void w_puts(const char *s, u16 x, u16 y)
 {
+	u16 orig_x = x;
 	while (*s)
 	{
+		if (*s == '\n')
+		{
+			x = orig_x;
+			y++;
+			s++;
+			continue;
+		}
 		VDP_setTileMapXY(VDP_getWindowPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
 		x++;
 		s++;
