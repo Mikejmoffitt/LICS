@@ -243,3 +243,27 @@ void system_debug_cpu_meter(void)
 		sprite_put(8 * ntsc_counter, 0, SPRITE_SIZE(1,1), HUD_VRAM_SLOT + 14);
 	}
 }
+
+void palette_att(u16 *pal, u16 att)
+{
+	u16 i = 16;
+	// Sanitize attenuation range
+	att &= 0x000F;
+
+	// For each color in the palette, darken it
+	while (i--)
+	{
+		// Separate color components
+		u16 r = (pal[i] & 0xF) >> 0;
+		u16 g = (pal[i] & 0xF0) >> 4;
+		u16 b = (pal[i] & 0xF00) >> 8;
+
+		// Do attenuation
+		r = ((r >= att) ? (r - att) : 0);
+		g = ((g >= att) ? (g - att) : 0);
+		b = ((b >= att) ? (b - att) : 0);
+
+		// Commit to the palette entry
+		pal[i] = (b << 8) | (g << 4) | (r << 0);
+	}
+}

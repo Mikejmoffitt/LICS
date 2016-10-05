@@ -37,4 +37,6 @@ void system_set_debug(u16 val);
 void system_debug_cpu_meter(void);
 void system_set_h_split(u16 line, u16 num, u16 *p);
 
+void palette_att(u16 *pal, u16 amnt);
+
 #endif
