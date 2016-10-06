@@ -230,8 +230,10 @@ void gameloop_main(void)
 
 		}
 		while (!(transition = state_watch_transitions()) && pl.hp > 0);
+
 	}
 	system_wait_v();
 	music_play(0);
+	fade_out();
 
 }

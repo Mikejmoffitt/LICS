@@ -35,11 +35,9 @@ static void map_clear(void)
 static void message_init(void)
 {
 	system_wait_v();
+	VDP_setReg(0x12,0x1E);
 	map_clear();
 	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
-	stopsound();
-	playsound(SFX_PAUSE);
-	VDP_setReg(0x12,0x1E);
 }
 
 static void message_loop(const char *s)
@@ -73,10 +71,9 @@ static void message_loop(const char *s)
 
 void message_screen(const char *s)
 {
-	// Palette to fade from
 	u16 orig_pal[64];
-	u16 orig_pal_mod[64];
-	u16 fade = 0;
+	stopsound();
+	playsound(SFX_PAUSE);
 
 	// Back up the palette
 	VDP_getPalette(0, &orig_pal[0]);
@@ -84,80 +81,28 @@ void message_screen(const char *s)
 	VDP_getPalette(2, &orig_pal[32]);
 	VDP_getPalette(3, &orig_pal[48]);
 
-	u16 new_pal[64];
-
-	for (int i = 0; i < 64; i++)
-	{
-		orig_pal_mod[i] = orig_pal[i];
-	}
-
-	// Fade to black
-	fade = 0;
-	while (fade < 16)
-	{
-		palette_att(&orig_pal_mod[0], 1);
-		palette_att(&orig_pal_mod[16], 1);
-		palette_att(&orig_pal_mod[32], 1);
-		palette_att(&orig_pal_mod[48], 1);
-		system_wait_v();
-		VDP_doCRamDMA((u32)orig_pal_mod, 0, 64);
-		fade++;
-	}
+	fade_out();
 
 	message_init();
+	system_wait_v();
 
-	// Fade in new screen
-	fade = 0;
-	while (fade < 16)
-	{
-		for (int i = 0; i < 64; i++)
-		{
-			u16 *pal_pause_16 = (u16 *)pal_pause;
-			new_pal[i]    = pal_pause_16[i & 0x0F];
-		}
-		palette_att(&new_pal[0], 15 - fade);
-		palette_att(&new_pal[16], 15 - fade);
-		palette_att(&new_pal[32], 15 - fade);
-		palette_att(&new_pal[48], 15 - fade);
-		system_wait_v();
-		VDP_doCRamDMA((u32)new_pal, 0, 64);
-		fade++;
-	}
+	// New palette
+	VDP_doCRamDMA((u32)pal_pause, 0, 16);
+	VDP_doCRamDMA((u32)&orig_pal[16], 32, 16);
+	VDP_doCRamDMA((u32)&orig_pal[32], 64, 16);
+	VDP_doCRamDMA((u32)pal_pause, 96, 16);
+	
+	fade_in();
 
 	message_loop(s);
 
-	// Fade to black
-	fade = 0;
-	while (fade < 16)
-	{
-		palette_att(&new_pal[0], 1);
-		palette_att(&new_pal[16], 1);
-		palette_att(&new_pal[32], 1);
-		palette_att(&new_pal[48], 1);
-		system_wait_v();
-		VDP_doCRamDMA((u32)new_pal, 0, 64);
-		fade++;
-	}
+	fade_out();
 
 	system_wait_v();
 	// Kill the window plane
 	VDP_setReg(0x12, 0x00);
+	// Restore palette
+	VDP_doCRamDMA((u32)orig_pal, 0, 64);
+	fade_in();
 	system_set_h_split(0, 0, NULL);
-
-	// Fade in original palette
-	fade = 0;
-	while (fade < 16)
-	{
-		for (int i = 0; i < 64; i++)
-		{
-			new_pal[i] = orig_pal[i];
-		}
-		palette_att(&new_pal[0], 15 - fade);
-		palette_att(&new_pal[16], 15 - fade);
-		palette_att(&new_pal[32], 15 - fade);
-		palette_att(&new_pal[48], 15 - fade);
-		system_wait_v();
-		VDP_doCRamDMA((u32)new_pal, 0, 64);
-		fade++;
-	}
 }

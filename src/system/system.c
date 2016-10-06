@@ -267,3 +267,69 @@ void palette_att(u16 *pal, u16 att)
 		pal[i] = (b << 8) | (g << 4) | (r << 0);
 	}
 }
+
+// Grab the current palette, fade out from it
+void fade_out(void)
+{
+	u16 fade;
+	// Palette to fade from
+	u16 orig_pal[64];
+	VDP_getPalette(0, &orig_pal[0]);
+	VDP_getPalette(1, &orig_pal[16]);
+	VDP_getPalette(2, &orig_pal[32]);
+	VDP_getPalette(3, &orig_pal[48]);
+
+	fade = 0;
+	while (fade < 16)
+	{
+		palette_att(&orig_pal[0], 1);
+		palette_att(&orig_pal[16], 1);
+		palette_att(&orig_pal[32], 1);
+		palette_att(&orig_pal[48], 1);
+		system_wait_v();
+		VDP_doCRamDMA((u32)orig_pal, 0, 64);
+		fade++;
+	}
+}
+
+void fade_in_to(u16 *orig_pal)
+{
+	u16 new_pal[64];
+	u16 fade = 0;
+
+	fade = 0;
+	while (fade < 16)
+	{
+		for (u16 i = 0; i < 64; i++)
+		{;
+			new_pal[i] = orig_pal[i];
+		}
+		palette_att(&new_pal[0],  15 - fade);
+		palette_att(&new_pal[16], 15 - fade);
+		palette_att(&new_pal[32], 15 - fade);
+		palette_att(&new_pal[48], 15 - fade);
+		system_wait_v();
+		VDP_doCRamDMA((u32)new_pal, 0, 64);
+		fade++;
+	}
+}
+
+void fade_in(void)
+{
+	// Grab the palette to fade in to
+	u16 orig_pal[64];
+
+	const u16 pal_black[] = {
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+	// Back up the palette
+	VDP_getPalette(0, &orig_pal[0]);
+	VDP_getPalette(1, &orig_pal[16]);
+	VDP_getPalette(2, &orig_pal[32]);
+	VDP_getPalette(3, &orig_pal[48]);
+	VDP_doCRamDMA((u32)pal_black, 0, 64);
+	fade_in_to(orig_pal);
+}

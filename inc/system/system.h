@@ -38,5 +38,8 @@ void system_debug_cpu_meter(void);
 void system_set_h_split(u16 line, u16 num, u16 *p);
 
 void palette_att(u16 *pal, u16 amnt);
+void fade_out(void);
+void fade_in(void);
+void fade_in_to(u16 *orig_pal);
 
 #endif

@@ -51,3 +51,9 @@ docs/sauce/*.0*
 res/*.s
 
 util/echo/xm2esf
+
+src/*.swp
+src/*/*.swp
+inc/*.swp
+inc/*/*.swp
+

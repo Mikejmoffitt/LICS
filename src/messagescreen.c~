@@ -1,0 +1,79 @@
+#include "messagescreen.h"
+#include <genesis.h>
+#include "system.h"
+#include "sprites.h"
+#include "pause.h"
+#include "pal.h"
+#include "gfx.h"
+#include "sounds.h"
+#include "hud.h"
+#include "pausemap.h"
+#include "state.h"
+#include "music.h"
+
+static void map_clear(void)
+{
+	u16 y, x;
+	for (y = 0; y < SAVE_MAP_H; y++)
+	{
+		for (x = 0; x < SAVE_MAP_W; x++)
+		{
+			window_tile_set(PAUSE_MAP_X + x, PAUSE_MAP_Y + y, 0x500 + ' ');
+		}
+	}
+}
+
+void message_screen(const char *s)
+{
+	u16 show_prompt_timeout = 60 * 2;
+
+	// Copy the layout information for the window plane
+	system_wait_v();
+	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
+	window_tile_set(0,0, TILE_ATTR_FULL(3, 1, 0, 0, PAUSE_VRAM_SLOT)); // Odd DMA fix
+
+	stopsound();
+	playsound(SFX_PAUSE);
+
+	map_clear();
+
+	// Bring in the colors
+	VDP_doCRamDMA((u32)pal_pause, PAUSE_PALNUM * 32, 16);
+
+	// Fullscreen Window plane
+	VDP_setReg(0x12,0x1E);
+
+	VDP_waitDMACompletion();
+	w_puts(s, 3, 8);
+	for (;;)
+	{
+		if (show_prompt_timeout > 0)
+		{
+			show_prompt_timeout--;
+			if (show_prompt_timeout == 0)
+			{
+				w_puts("Press Start", 9, 24);
+			}
+		}
+		else
+		{
+			if (buttons & (BUTTON_START))
+			{
+				break;
+			}
+		}
+		system_wait_v();
+		sprites_dma_simple();
+	}
+	system_wait_v();
+	sprites_dma_simple();
+	VDP_setReg(0x12, 0x00);
+	playsound(SFX_PAUSE);
+	
+	// no Window plane here
+	VDP_setReg(0x12,0x00);
+
+	// Bring in the colors
+	VDP_doCRamDMA((u32)pal_lyle, PAUSE_PALNUM * 32, 16);
+	system_set_h_split(0, 0, NULL);
+}
