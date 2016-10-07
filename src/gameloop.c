@@ -214,11 +214,6 @@ void gameloop_main(void)
 			gameloop_logic();
 			gameloop_gfx();
 
-			if (buttons & BUTTON_A)
-			{
-				message_screen("Screen palette test");
-			}
-
 			/* Wait for VBlank. */
 			system_wait_v();
 

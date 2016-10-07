@@ -2,6 +2,7 @@ BIN gfx_lyle "gfx/lyle.bin" 2 2 0
 BIN gfx_cubes "gfx/cubes.bin" 2 2 0
 BIN gfx_hud "gfx/hud.bin" 2 2 0
 BIN gfx_font "gfx/font.bin" 2 2 0
+BIN gfx_font_opaque "gfx/font_opaque.bin" 2 2 0
 BIN gfx_pause "gfx/pause.bin" 2 2 0
 BIN gfx_particles "gfx/particles.bin" 2 2 0
 BIN gfx_powerups "gfx/powerups.bin" 2 2 0

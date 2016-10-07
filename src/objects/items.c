@@ -33,7 +33,6 @@ static void cube_func(void *v, cube *c)
 	return;
 }
 
-
 static void proc_func(void *v)
 {
 	en_item *e = (en_item *)v;
@@ -48,7 +47,15 @@ static void proc_func(void *v)
 				sram.have_map = 1;
 				playsound(SFX_POWERUP_GET);
 				save_write();
-				message_screen("Map now viewable on pause screen\n\nPress start during the game\nto pause and save");
+				message_screen("\n\n\n\n\
+         - GOT MAP -\n\
+\n\
+       map now viewable\n\
+       on pause screen\n\
+\n\
+    press start during the\n\
+    game to pause and save");
+/*-------------------------*/
 			}
 			if (sram.have_map)
 			{
@@ -61,7 +68,21 @@ static void proc_func(void *v)
 				sram.have_lift = 1;
 				playsound(SFX_POWERUP_GET);
 				save_write();
-				message_screen("Stand on top of cube and\npress B to lift\n\nB to throw\n\nUp + B for upward throw\nDown + B for short throw\nLeft/Right + B for long throw\n\nCareful to not get hit\nby thrown cubes");
+				message_screen("\n\
+     - GOT CUBE THROW -\n\
+\n\
+ * stand on top of cube and\n\
+   press B to lift\n\
+\n\
+ * button B to throw\n\
+ \n\
+ * U + B for upward throw\n\
+ * D + B for short throw\n\
+ * L/R + B for long throw\n\
+ \n\
+ * careful not to get hit\n\
+   by thrown cubes");
+/*-------------------------*/
 			}
 			if (sram.have_lift)
 			{
@@ -73,6 +94,13 @@ static void proc_func(void *v)
 			{
 				sram.have_jump = 1;
 				playsound(SFX_POWERUP_GET);
+				message_screen("\n\n\n\n\n\
+      - GOT CUBE JUMP -\n\
+\n\
+ * press C while jumping and\n\
+   holding a cube to throw\n\
+   downwards and jump higher");
+/*-------------------------*/
 				message_screen("Press C while jumping and holding\na cube to throw downwards\nand jump higher");
 				save_write();
 			}

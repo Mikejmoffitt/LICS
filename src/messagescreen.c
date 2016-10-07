@@ -12,7 +12,7 @@
 #include "music.h"
 #include "vramslots.h"
 
-static void map_clear(void)
+static inline void screen_clear(void)
 {
 	u16 y, x;
 	for (y = 4; y < 32; y++)
@@ -27,7 +27,7 @@ static void map_clear(void)
 			pwdata = (u16 *)GFX_DATA_PORT;
 
 			*plctrl = GFX_WRITE_VRAM_ADDR(vaddr);
-			*pwdata = (u16)(0x500 + ' ');
+			*pwdata = (u16)(TILE_ATTR_FULL(1, 1, 0, 0, (0x500 + ' ')));
 		}
 	}
 }
@@ -36,17 +36,35 @@ static void message_init(void)
 {
 	system_wait_v();
 	VDP_setReg(0x12,0x1E);
-	map_clear();
-	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 32));
+
+	// Clear the whole screen
+	screen_clear();
+
+	// Copy in just the very top of the pause screen layout, to get the Pause
+	// text along the top.
+	VDP_doVRamDMA((u32)pausemap_layout, VDP_getWindowAddress(), (64 * 4));
+
+	// Get the opaque font in there
+	VDP_doVRamDMA((u32)gfx_font_opaque, 0xA400, 1536);
+
 }
 
-static void message_loop(const char *s)
+static void print_message(const char *s)
+{
+
+	// Draw text box
+	w_puts("~________________________________~", 3, 5);
+	w_puts("|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n", 3, 6);
+	w_puts("|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n|\n", 36, 6);
+	w_puts("~________________________________~", 3, 23);
+
+	// Print message
+	w_puts(s, 5, 7);
+}
+
+static void wait_for_buttons(void)
 {
 	u16 show_prompt_timeout = 100;
-	// Fullscreen Window plane
-	VDP_waitDMACompletion();
-	w_puts(s, 3, 8);
-
 	for (;;)
 	{
 		if (show_prompt_timeout > 0)
@@ -54,17 +72,16 @@ static void message_loop(const char *s)
 			show_prompt_timeout--;
 			if (show_prompt_timeout == 0)
 			{
-				w_puts("Press Start", 14, 24);
+				w_puts("Push button to continue", 9, 25);
 			}
 		}
 		else
 		{
-			if (buttons & (BUTTON_START))
+			if (buttons & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_X | BUTTON_Y | BUTTON_Z | BUTTON_START))
 			{
 				break;
 			}
 		}
-
 		system_wait_v();
 	}
 }
@@ -72,6 +89,7 @@ static void message_loop(const char *s)
 void message_screen(const char *s)
 {
 	u16 orig_pal[64];
+	u16 new_pal[64];
 	stopsound();
 	playsound(SFX_PAUSE);
 
@@ -84,17 +102,25 @@ void message_screen(const char *s)
 	fade_out();
 
 	message_init();
+	print_message(s);
 	system_wait_v();
 
 	// New palette
-	VDP_doCRamDMA((u32)pal_pause, 0, 16);
-	VDP_doCRamDMA((u32)&orig_pal[16], 32, 16);
-	VDP_doCRamDMA((u32)&orig_pal[32], 64, 16);
-	VDP_doCRamDMA((u32)pal_pause, 96, 16);
-	
-	fade_in();
+	for (u16 i = 0; i < 16; i++)
+	{
+		u16 *pal_1 = (u16 *)pal_pause;
+		u16 *pal_2 = (u16 *)&orig_pal[16];
+		u16 *pal_3 = (u16 *)&orig_pal[32];
+		u16 *pal_4 = (u16 *)pal_pause;
+		new_pal[i]    = pal_1[i];
+		new_pal[i+16] = pal_2[i];
+		new_pal[i+32] = pal_3[i];
+		new_pal[i+48] = pal_4[i];
+	}
 
-	message_loop(s);
+	fade_in_to(new_pal);
+
+	wait_for_buttons();
 
 	fade_out();
 
@@ -102,7 +128,6 @@ void message_screen(const char *s)
 	// Kill the window plane
 	VDP_setReg(0x12, 0x00);
 	// Restore palette
-	VDP_doCRamDMA((u32)orig_pal, 0, 64);
-	fade_in();
+	fade_in_to(orig_pal);
 	system_set_h_split(0, 0, NULL);
 }
