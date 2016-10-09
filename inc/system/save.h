@@ -40,6 +40,7 @@ struct save_file
 	// HP orbs collected
 	u16 hp_orbs_taken[SAVE_NUM_ORBS];
 	u16 max_hp;
+
 	// abilities gained
 	u16 have_map;
 	u16 have_lift;
@@ -50,6 +51,8 @@ struct save_file
 	u16 have_fast_phantom;
 	u16 have_cheap_phantom;
 	u16 have_orange;
+	u16 touched_cube;
+
 	// Map reveal info
 	u16 map[SAVE_MAP_H][SAVE_MAP_W];
 	u16 magic_2;

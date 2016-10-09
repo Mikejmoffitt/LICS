@@ -10,6 +10,8 @@
 #include "system.h"
 #include "cubes.h"
 #include "particles.h"
+#include "messagescreen.h"
+#include "messagestrings.h"
 
 static u32 lyle_dma_src;
 static u16 lyle_dma_dest;
@@ -825,6 +827,11 @@ static inline void player_cube_collision(void)
 			c->y + CUBE_TOP <= py + PLAYER_CHK_BOTTOM + 1 &&
 			c->y + CUBE_BOTTOM >= py + PLAYER_CHK_TOP - 1 )
 		{
+			if (!sram.touched_cube)
+			{
+				message_screen(string_cube_msg);
+				sram.touched_cube = 1;
+			}
 			if (c->type == CUBE_SPAWNER)
 			{
 				cube_restrict_spawn(c);

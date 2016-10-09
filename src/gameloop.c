@@ -67,15 +67,6 @@ void gameloop_dma(void)
 	player_dma();
 }
 
-static void wait_sec(void)
-{
-	u16 i = 60;
-	while (i--)
-	{
-		system_wait_v();
-	}
-}
-
 static void gameloop_room_setup(u16 transition)
 {
 	// Reset object lists, gameplay variables, etc.

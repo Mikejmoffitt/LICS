@@ -49,6 +49,7 @@ void save_clear(void)
 	{
 		sf[i] = 0;
 	}
+
 	// Set magic numbers for save validity check
 	sram.magic_0 = SAVE_MAGIC;
 	sram.magic_1 = SAVE_MAGIC;
@@ -57,7 +58,6 @@ void save_clear(void)
 	// Reset abilities
 	sram.max_hp = SAVE_DEFAULT_HP;
 
-	// Debuggity stuff
 	sram.have_map = 0;
 	sram.have_lift = 0;
 	sram.have_jump = 0;
@@ -66,7 +66,7 @@ void save_clear(void)
 	sram.have_cheap_phantom = 0;
 	sram.have_kick = 0;
 	sram.have_orange = 0;
-
+	sram.touched_cube = 0;
 
 	sram.fresh_save = 1;
 
@@ -85,6 +85,7 @@ void save_clear(void)
 		sram.cp_orbs_taken[i] = 0;
 		sram.hp_orbs_taken[i] = 0;
 	}
+
 	sram.cp_orbs_spent = 0;
 	sram.cp_orbs_have = 0;
 

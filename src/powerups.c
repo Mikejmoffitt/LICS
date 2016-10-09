@@ -10,6 +10,8 @@
 #include "sprites.h"
 #include "save.h"
 #include "music.h"
+#include "messagestrings.h"
+#include "messagescreen.h"
 
 static u16 kmax_dy;
 static u16 kbounce_sub;
@@ -213,6 +215,7 @@ static inline void powerup_orb_collect(powerup *p)
 		}
 		// Mark orb as taken
 		sram.cp_orbs_taken[p->num] = 1;
+		message_screen("got CP orb");
 	}
 	else if (p->type == POWERUP_HPORB)
 	{
@@ -225,6 +228,9 @@ static inline void powerup_orb_collect(powerup *p)
 		sram.hp_orbs_taken[p->num] = 1;
 		// Max out player's HP as well
 		pl.hp = sram.max_hp;
+
+		// Show message
+		message_screen(string_item_health_increase);
 	}
 	// Write to SRAM / EEPROM the player's progress
 	save_write();
