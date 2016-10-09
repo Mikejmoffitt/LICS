@@ -29,6 +29,7 @@ struct en_flip
 	u16 anim_cnt;
 	u16 anim_frame;
 	u16 y_orig;
+	u16 pal_adjust;
 };
 
 void en_init_flip(en_flip *e);

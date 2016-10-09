@@ -52,6 +52,7 @@ void en_init_flip(en_flip *e)
 	e->h_rev_cnt = 100;
 	e->anim_cnt = 0;
 	e->anim_frame = 0;
+	e->pal_adjust = 0;
 
 	ddy = system_ntsc ? FIX16(0.2) : FIX16(0.288);
 	dy_cutoff = system_ntsc ? FIX16(2.4) : FIX16(2.88);
@@ -82,7 +83,7 @@ static void en_anim_flip(void *v)
 
 }
 
-static inline void bg_collision(en_flip *e)
+static void bg_collision(en_flip *e)
 {
 	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + FLIP_WIDTH, e->head.y))
@@ -100,9 +101,9 @@ static inline void bg_collision(en_flip *e)
 	}
 }
 
-static inline void h_movement(en_flip *e)
+static inline void h_movement_kernel(en_flip *e)
 {
-	// Horizontal Movement
+
 	if (e->h_cnt == FLIP_H_CNT_MAX)
 	{
 		if (e->head.direction == ENEMY_RIGHT)
@@ -124,13 +125,28 @@ static inline void h_movement(en_flip *e)
 		{
 			e->head.direction = ENEMY_LEFT;
 		}
-
 		e->h_rev_cnt++;
 	}
 	else
 	{
 		e->h_cnt++;
 	}
+}
+
+static inline void h_movement(en_flip *e)
+{
+	// Horizontal Movement
+	if (!system_ntsc)
+	{
+		e->pal_adjust++;
+		if (e->pal_adjust == 4)
+		{
+			e->pal_adjust = 0;
+			h_movement_kernel(e);
+			bg_collision(e);
+		}
+	}
+	h_movement_kernel(e);
 	bg_collision(e);
 }
 
