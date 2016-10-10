@@ -70,8 +70,8 @@ static void player_init_constants(void)
 
 	plk.tele_anim = system_ntsc ? 75 : 62;
 
-	// Cool cheat codes
-	if (buttons & BUTTON_Y)
+	// Debug cheats for
+	if (debug_en && (buttons & BUTTON_Y))
 	{
 		plk.dx_max = system_ntsc ? FIX16(5.0) : FIX16(6.0);
 		plk.x_accel = system_ntsc ? FIX16(0.5) : FIX16(0.6);

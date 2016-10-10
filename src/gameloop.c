@@ -137,7 +137,11 @@ static inline void gameloop_init(void)
 		sram.have_jump = 1;
 		sram.have_kick = 1;
 		sram.have_phantom = 1;
+		sram.have_fast_phantom = 1;
+		sram.have_cheap_phantom = 1;
+		sram.have_double_phantom = 1;
 		sram.have_map = 1;
+		sram.touched_cube = 1;
 	}
 
 	system_wait_v();

@@ -233,11 +233,7 @@ void pause_setup(void)
 	playsound(SFX_PAUSE);
 
 	// Cover unexplored areas on the map
-	// TODO: Remove debug map reveal with Y
-	if (!(buttons & BUTTON_Y))
-	{
-		map_progress_cover();
-	}
+	map_progress_cover();
 
 	pause_intro_anim();
 

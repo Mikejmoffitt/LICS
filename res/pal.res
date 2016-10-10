@@ -9,6 +9,7 @@ BIN pal_inside1 "pal/inside1.pal" 2 2 0
 BIN pal_sandy1 "pal/sandy1.pal" 2 2 0
 BIN pal_teleporter "pal/teleporter.pal" 2 2 0
 BIN pal_outside3 "pal/outside3.pal" 2 2 0
+BIN pal_purplezone "pal/purplezone.pal" 2 2 0
 
 BIN pal_bg_common "pal/bg_common.pal" 2 2 0
 BIN pal_bg1 "pal/bg1.pal" 2 2 0

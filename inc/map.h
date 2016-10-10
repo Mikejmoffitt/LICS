@@ -55,6 +55,7 @@ Also handles some object list functions.
 #define MAP_SET_SANDY1 3
 #define MAP_SET_TELEPORTER 4
 #define MAP_SET_OUTSIDE3 5
+#define MAP_SET_PURPLEZONE 6
 
 #define MAP_SET_INVALID 255
 

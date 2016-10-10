@@ -30,5 +30,6 @@ BIN mapdata_dogtown "mapdata/dogtown.bin" 2 2 0
 BIN mapdata_pyramid "mapdata/pyramid.bin" 2 2 0
 BIN mapdata_basketball "mapdata/basketball.bin" 2 2 0
 BIN mapdata_treesand "mapdata/treesand.bin" 2 2 0
+BIN mapdata_purplezone "mapdata/purplezone.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0

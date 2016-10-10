@@ -69,6 +69,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_pyramid,
 	(map_file *)&mapdata_basketball,
 	(map_file *)&mapdata_treesand,
+	(map_file *)&mapdata_purplezone,
 	0
 };
 
@@ -135,6 +136,10 @@ void map_load_tileset(u8 num)
 		case MAP_SET_OUTSIDE3:
 			tsrc_ptr = (u32)gfx_outside3;
 			psrc_ptr = (u32)pal_outside3;
+			break;
+		case MAP_SET_PURPLEZONE:
+			tsrc_ptr = (u32)gfx_purplezone;
+			psrc_ptr = (u32)pal_purplezone;
 			break;
 	}
 	VDP_doVRamDMA(tsrc_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_VRAM_LEN * 16);

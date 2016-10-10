@@ -94,6 +94,10 @@ void plane_load_fg(void)
 			sprintf(tile,"res/gfx/outside3.bin");
 			sprintf(pal,"res/pal/outside3.pal");
 			break;
+		case MAP_SET_PURPLEZONE:
+			sprintf(tile,"res/gfx/purplezone.bin");
+			sprintf(pal,"res/pal/purplezone.pal");
+			break;
 	}
 
 	printf("Opening %s for tile data...\n",tile);
