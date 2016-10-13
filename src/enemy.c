@@ -25,6 +25,8 @@
 #include "cow.h"
 #include "lavaanim.h"
 
+#include "bounds.h"
+
 #include "state.h"
 #include "particles.h"
 
@@ -104,6 +106,7 @@ void enemy_init(void)
 	en_unload_lava();
 	en_unload_cow();
 	en_unload_lavaanim();
+	en_unload_bounds();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -454,6 +457,10 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_LAVAANIM:
 					en_init_lavaanim((en_lavaanim *)e);
+					break;
+
+				case ENEMY_BOUNDS:
+					en_init_bounds((en_bounds *)e);
 					break;
 			}
 			return &enemies[i];

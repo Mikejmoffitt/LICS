@@ -4,6 +4,7 @@
 #include "player.h"
 #include "system.h"
 #include "cubes.h"
+#include "cow.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
@@ -62,21 +63,32 @@ void en_unload_lava(void)
 static void proc_func(void *v)
 {
 	en_lava *e = (en_lava *)v;
+	en_cow *cow = (en_cow *)e->cow;
 
 	// Make sure to always push the player away
 	e->head.harmful = (e->head.x < pl.px ? ENEMY_HARM_ALWAYS_BOUNCE_R : ENEMY_HARM_ALWAYS_BOUNCE_L);
 
-	if (!map_collision(e->head.x, e->head.y + 1))
+	// Check for collisions, unless cow is finished
+	if (cow && cow->state != COW_FINISHED)
 	{
-		// move down at 100px/second if not touching the ground
-		if (system_ntsc)
+		if (!map_collision(e->head.x, e->head.y + 1))
 		{
-			e->head.y += (ntsc_counter != 0 && ntsc_counter != 3) ? 2 : 1;
+			// move down at 100px/second if not touching the ground
+			if (system_ntsc)
+			{
+				e->head.y += (ntsc_counter != 0 && ntsc_counter != 3) ? 2 : 1;
+			}
+			else
+			{
+				e->head.y += 2;
+			}
 		}
-		else
-		{
-			e->head.y += 2;
-		}
+	}
+
+	// the lava inexplicably goes up when the cow is done
+	else if (cow && cow->state == COW_FINISHED)
+	{
+		e->head.y -= 2;
 	}
 
 	// Delayed cow-reference-search

@@ -8,8 +8,8 @@
 #include <allegro5/allegro_ttf.h>
 #include "state.h"
 
-#define BUFFER_W 496
-#define BUFFER_H 360
+#define BUFFER_W 512
+#define BUFFER_H 384
 #define PRESCALE 1
 
 // Editor state variables

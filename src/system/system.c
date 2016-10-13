@@ -168,26 +168,25 @@ void system_init(void)
 	sprites_init();
 	save_load();
 	system_set_debug(0);
+
 	// Allow holding A to force 480i
 	if ((JOY_readJoypad(JOY_1) & BUTTON_A))
 	{
 		sram.opt_interlace = SAVE_OPT_INTERLACE_ENABLED;
 	}
-	// Allow holding B to clear SRAM
-	if ((JOY_readJoypad(JOY_1) & BUTTON_B))
-	{
-		save_clear();
-	}
+
 	// Allow holding C to force 240p
 	if ((JOY_readJoypad(JOY_1) & BUTTON_C))
 	{
 		sram.opt_interlace = SAVE_OPT_INTERLACE_NORMAL;
 	}
+
 	// Hold Z for debug
 	if ((JOY_readJoypad(JOY_1) & BUTTON_Z))
 	{
 		system_set_debug(1);
 	}
+
 	if (sram.opt_interlace == SAVE_OPT_INTERLACE_ENABLED)
 	{
 		VDP_setScanMode(INTERLACED_MODE1);

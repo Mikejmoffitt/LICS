@@ -30,6 +30,7 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 			goto cube_desc_area;
 		case OBJ_CONTAINER:
 			sprintf(dat2,"A background element that can be struck.");
+			break;
 		case OBJ_CUBE:
 cube_desc_area:
 			if (o->data == 0x0100)
@@ -83,6 +84,10 @@ cube_desc_area:
 				{
 					sprintf(dat2,"HP ORB #%X",o->data & 0x000F);
 				}
+			}
+			else
+			{
+				sprintf(dat2,"invalid (start at $0100)");
 			}
 			break;
 		case OBJ_METAGRUB:

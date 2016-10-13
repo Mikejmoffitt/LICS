@@ -4,6 +4,13 @@
 #include <genesis.h>
 #include "enemy.h"
 
+#define COW_EATING 0
+#define COW_FINISHED 1
+#define COW_WALKING 2
+#define COW_JUMPING 3
+#define COW_ANGRY 4
+#define COW_PREPARING 5
+
 // Structure defining specific object type
 typedef struct en_cow en_cow;
 struct en_cow

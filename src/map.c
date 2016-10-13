@@ -6,6 +6,7 @@
 #include "mapdata.h"
 #include "state.h"
 #include "player.h"
+#include "sprites.h"
 #include "system.h"
 
 #define MAP_DMA_QUEUE_MAX 96
@@ -70,8 +71,132 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_basketball,
 	(map_file *)&mapdata_treesand,
 	(map_file *)&mapdata_purplezone,
+	(map_file *)&mapdata_littlepurple,
 	0
 };
+
+void map_debug_chooser(void)
+{
+// Clear screen
+	u16 y, x;
+	for (y = 4; y < 32; y++)
+	{
+		for (x = 0; x < 40; x++)
+		{
+			vu32 *plctrl;
+			vu16 *pwdata;
+			u32 vaddr = VDP_getWindowAddress() + (x * 2) + (y << 7);
+
+			plctrl = (u32 *)GFX_CTRL_PORT;
+			pwdata = (u16 *)GFX_DATA_PORT;
+
+			*plctrl = GFX_WRITE_VRAM_ADDR(vaddr);
+			*pwdata = (u16)(TILE_ATTR_FULL(1, 1, 0, 0, (0x500 + ' ')));
+		}
+	}
+
+	// Show window plane
+	system_wait_v();
+	VDP_setReg(0x12,0x1E);
+
+	u16 room_choice = 0;
+
+	while (buttons & BUTTON_START)
+	{
+		system_wait_v();
+	}
+
+goto do_render;
+
+	for (;;)
+	{
+		// Select a room
+		if ((room_choice != 0) && (buttons & BUTTON_UP) && !(buttons_prev & BUTTON_UP))
+		{
+			{
+				room_choice--;
+			}
+		}
+		else if ((buttons & BUTTON_DOWN) && !(buttons_prev & BUTTON_DOWN))
+		{
+			room_choice++;
+			if (maplist[room_choice] == 0)
+			{
+				room_choice--;
+			}
+		}
+		else
+		{
+			goto skip_print;
+		}
+
+do_render:
+		// Clear screen
+		VDP_doVRamDMAFill(VDP_getWindowAddress(), 40 * 64, 0);
+		VDP_waitDMACompletion();
+		system_wait_v();
+		for (s16 i = room_choice - 8; i < room_choice + 8; i++)
+		{
+			if (i < 0)
+			{
+				continue;
+			}
+			if (i >= (sizeof(maplist) / sizeof(map_file *) - 1))
+			{
+				continue;
+			}
+
+			if (i == room_choice)
+			{
+				w_puts("->", 1, 7+(i-room_choice));
+			}
+
+			// Print current selection
+			const map_file *map = maplist[i];
+			char num_chr[3];
+			num_chr[2] = '\0';
+			u8 room_high = (i & 0xF0) >> 4;
+
+			if ((i & 0xF) < 0xA)
+			{
+				num_chr[1] = '0' + (i & 0xF);
+			}
+			else
+			{
+				num_chr[1] = 'A' + (i & 0xF) - 0xA;
+			}
+
+			if (room_high < 0xA)
+			{
+				num_chr[0] = '0' + room_high;
+			}
+			else
+			{
+				num_chr[0] = 'A' + (room_high - 0xA);
+			}
+
+			w_puts(num_chr, 4, 7+(i-room_choice));
+			w_puts(map->name, 7, 7+(i-room_choice));
+		}
+
+		const map_file *map = maplist[room_choice];
+skip_print:
+		// If a button is pressed, latch map and exit
+		if (buttons & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_START))
+		{
+			state.next_id = map->id;
+			state.next_entrance = 0;
+			return;
+		}
+
+		system_wait_v();
+		w_puts(map->name, 7, 7);
+		sprites_dma_simple();
+	}
+
+	// Hide window plane
+	VDP_setReg(0x12,0x1E);
+}
 
 void map_init(void)
 {
@@ -370,6 +495,7 @@ void map_draw_full(u16 cam_x, u16 cam_y)
 	dma_dest[1] = 0;
 
 	// Copy sources
+
 	u32 dma_src[2];
 	dma_src[0] = 0;
 	dma_src[1] = 0;

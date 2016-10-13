@@ -193,6 +193,11 @@ void gameloop_main(void)
 	state.next_entrance = 0;
 	state.current_id = 64;
 
+	if (buttons & BUTTON_START)
+	{
+		map_debug_chooser();
+	}
+
 	player_init();
 
 	// Main game loop; runs until after a player death anim, quit, or victory.
