@@ -73,6 +73,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_purplezone,
 	(map_file *)&mapdata_littlepurple,
 	(map_file *)&mapdata_orangeget,
+	(map_file *)&mapdata_phantomget,
 	0
 };
 
