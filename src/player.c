@@ -1109,7 +1109,7 @@ static inline void player_entrance_coll(void)
 			}
 			if (debug_en)
 			{
-				if (state.next_entrance & 0xFF00 == 0)
+				if (state.next_entrance == 0)
 				{
 					sprite_put(pl.px - 8 - state.cam_x, pl.py - 40 - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(3, 0, 0, 0, 0x54E));
 					sprite_put(pl.px - state.cam_x, pl.py - 40 - state.cam_y, SPRITE_SIZE(1,1), TILE_ATTR_FULL(3, 0, 0, 0, 0x547));
