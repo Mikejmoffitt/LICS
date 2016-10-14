@@ -72,6 +72,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_treesand,
 	(map_file *)&mapdata_purplezone,
 	(map_file *)&mapdata_littlepurple,
+	(map_file *)&mapdata_orangeget,
 	0
 };
 
@@ -113,14 +114,12 @@ goto do_render;
 		// Select a room
 		if ((room_choice != 0) && (buttons & BUTTON_UP) && !(buttons_prev & BUTTON_UP))
 		{
-			{
-				room_choice--;
-			}
+			room_choice--;
 		}
 		else if ((buttons & BUTTON_DOWN) && !(buttons_prev & BUTTON_DOWN))
 		{
 			room_choice++;
-			if (maplist[room_choice] == 0)
+			while (maplist[room_choice] == 0)
 			{
 				room_choice--;
 			}
@@ -132,9 +131,9 @@ goto do_render;
 
 do_render:
 		// Clear screen
+		system_wait_v();
 		VDP_doVRamDMAFill(VDP_getWindowAddress(), 40 * 64, 0);
 		VDP_waitDMACompletion();
-		system_wait_v();
 		for (s16 i = room_choice - 8; i < room_choice + 8; i++)
 		{
 			if (i < 0)

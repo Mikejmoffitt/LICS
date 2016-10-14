@@ -125,7 +125,7 @@ static void pause_place_sprites(void)
 	// Orange cube lifting
 	if (sram.have_orange)
 	{
-		sprite_put(PAUSE_POWER_X + 112, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0));
+		sprite_put(PAUSE_POWER_X + 120, PAUSE_POWER_Y, SPRITE_SIZE(2,2), TILE_ATTR_FULL(PAUSE_PALNUM, 1, 0, 0, PAUSE_VRAM_SLOT + 0xF0));
 	}
 }
 

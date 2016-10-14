@@ -1,10 +1,13 @@
 KNOWN BUGS
 ----------
 
-Lyle can sequence break by standing next to the blocking green cube, and 
+Lyle can sequence break by standing next to the blocking green cube, and
 tossing the other one into the ceiling while he faces right. It will hit
 him and force him into the ceiling a bit, after which he can get on top of
 the blocking cube and move it without kicking at all. This may be okay, as
 it only blocks off one CP orb.
 
 Green cubes shouldn't hurt Lyle from below at low speeds.
+
+A green cube can bounce off of a floor buggo for a long time. This is
+hilarious, it might not be a problem?
