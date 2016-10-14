@@ -55,7 +55,10 @@ void gameloop_gfx(void)
 	cubes_draw();
 	projectiles_draw();
 	powerup_draw();
-	system_debug_cpu_meter();
+	if (buttons & BUTTON_X)
+	{
+		system_debug_cpu_meter();
+	}
 
 }
 
@@ -129,20 +132,6 @@ static void gameloop_room_setup(u16 transition)
 
 static inline void gameloop_init(void)
 {
-	// Debug mode cheats
-	if (buttons & BUTTON_X)
-	{
-		save_clear();
-		sram.have_lift = 1;
-		sram.have_jump = 1;
-		sram.have_kick = 1;
-		sram.have_phantom = 1;
-		sram.have_fast_phantom = 1;
-		sram.have_cheap_phantom = 1;
-		sram.have_double_phantom = 1;
-		sram.have_map = 1;
-		sram.touched_cube = 1;
-	}
 
 	system_wait_v();
 	VDP_setEnable(0);
@@ -193,9 +182,23 @@ void gameloop_main(void)
 	state.next_entrance = 0;
 	state.current_id = 64;
 
-	if (buttons & BUTTON_START)
+	system_wait_v();
+
+	if (buttons & BUTTON_X)
 	{
+
+		save_clear();
+		sram.have_lift = 1;
+		sram.have_jump = 1;
+		sram.have_kick = 1;
+		sram.have_phantom = 1;
+		sram.have_fast_phantom = 1;
+		sram.have_cheap_phantom = 1;
+		sram.have_double_phantom = 1;
+		sram.have_map = 1;
+		sram.touched_cube = 1;
 		map_debug_chooser();
+		system_set_debug(1);
 	}
 
 	player_init();
