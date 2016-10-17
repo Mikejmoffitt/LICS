@@ -44,6 +44,7 @@
 #define ENEMY_SMALLEGG 41
 #define ENEMY_BASKETBALL 42
 #define ENEMY_LAVAANIM 43
+#define ENEMY_SPOOKO 44
 // ---------------------
 
 

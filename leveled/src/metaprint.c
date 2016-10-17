@@ -270,6 +270,9 @@ cube_desc_area:
 				sprintf(dat2,"This is the fissins");
 			}
 			break;
+		case OBJ_SPOOKO:
+			sprintf(desc,"Spooky scary");
+			break;
 	}
 
 	plane_print_label(x, y + 40, al_map_rgb(255,255,255), name);
@@ -284,7 +287,6 @@ cube_desc_area:
 		int cx = x + (TILESIZE * (35 + meta_cursor_pos));
 		al_draw_filled_rectangle(cx + 1, y + 47, cx + TILESIZE, y + 54,
 			al_map_rgba(255, 0, 0, 0));
-
 	}
 }
 
