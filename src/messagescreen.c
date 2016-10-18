@@ -70,12 +70,17 @@ static void wait_for_buttons(void)
 		if (show_prompt_timeout > 0)
 		{
 			show_prompt_timeout--;
-			if (show_prompt_timeout == 0)
+			if (show_prompt_timeout == 14)
 			{
-				w_puts("Push button to continue", 9, 25);
+				w_puts("PUSH BUTTON TO CONTINUE", 9, 25);
+			}
+			else if (show_prompt_timeout == 0)
+			{
+				w_puts("                       ", 9, 25);
+				show_prompt_timeout = 30;
 			}
 		}
-		else
+		if (show_prompt_timeout <= 30)
 		{
 			if (buttons & (BUTTON_A | BUTTON_B | BUTTON_C | BUTTON_X | BUTTON_Y | BUTTON_Z | BUTTON_START))
 			{

@@ -4,24 +4,24 @@ const char *string_cube_msg = "\n\n\n\
            - CUBE -\n\
 \n\
  * LYLE is too much of a\n\
-   weakling to pick these up\n\
+   weakling to pick CUBES up\n\
    just yet\n\
 \n\
- * Time to do some searching";
+ * time to do some SEARCHING";
 
 const char *string_item_map = "\n\n\n\n\
          - GOT MAP -\n\
 \n\
- * map now viewable on\n\
-   pause screen\n\
+ * MAP now viewable on\n\
+   PAUES SCREEN\n\
 \n\
- * press start during the\n\
-   game to pause and save";
+ * press START during the\n\
+   game to PAUSE and SAVE";
 
 const char *string_item_cube = "\n\
      - GOT CUBE THROW -\n\
 \n\
- * stand on top of cube and\n\
+ * stand on top of CUBE and\n\
    press B to lift\n\
 \n\
  * button B to throw\n\
@@ -30,63 +30,63 @@ const char *string_item_cube = "\n\
  * D + B for short throw\n\
  * L/R + B for long throw\n\
  \n\
- * careful not to get hit\n\
-   by thrown cubes";
+ * careful not to get HIT\n\
+   by THROWN CUBES";
 
 const char *string_item_jump = "\n\n\n\n\n\
       - GOT CUBE JUMP -\n\
 \n\
- * press C while jumping and\n\
-   holding a cube to throw\n\
-   downwards and jump higher";
+ * press C WHILE JUMPING and\n\
+   holding a cube to THROW\n\
+   DOWNWARDS and JUMP higher";
 
 const char *string_item_kick = "\n\n\n\n\n\
       - GOT CUBE KICK -\n\
 \n\
- * stand next to cube and\n\
- * press B to kick";
+ * stand next to CUBE and\n\
+ * press B to KICK";
 
 const char *string_item_orange = "\n\n\n\n\n\n\
       - GOT ORANGE CUBE -\n\
 \n\
- * lift the large orange\n\
+ * lift the large ORANGE\n\
    cubes";
 
 const char *string_item_phantom = "\n\n\n\n\
      - GOT PHANTOM CUBE -\n\
 \n\
  * hold down B to create\n\
-   phantom cube\n\
+   PHANTOM CUBES\n\
 \n\
- * consumes cube points (cp)";
+ * consumes cube points (CP)";
 
 const char *string_item_phantom_2x = "\n\n\n\n\
   - GOT X2 PHANTOM DAMAGE -\n\
 \n\
- * phantom cube damage x2";
+ * PHANTOM CUBE damage X2";
 
 const char *string_item_phantom_time = "\n\n\n\
  - GOT FAST PHANTOM CUBES -\n\
 \n\
- * phantom cube creation\n\
-   time halved\n\
+ * PHANTOM CUBE creation\n\
+   time HALVED\n\
 \n\
- * multiple cube jumps now\n\
+ * MULTIPLE CUBE JUMPS now\n\
    possible\n\
 \n\
- * keep button 2 held while\n\
-   jumping";
+ * keep BUTTON 2 held while\n\
+   JUMPING";
 
 const char *string_item_phantom_price = "\n\n\n\n\n\n\
   - GOT PHANTOM PRICE CUT -\n\
 \n\
- * cp consumption halved";
+ * CP consumption HALVED";
 
 const char *string_item_health_increase = "\n\n\n\n\n\
        - GOT HP ORB -\n\
 \n\
- * maximum hp increased one\n\
+ * maximum HP increased ONE\n\
    unit\n\
 \n\
- * hp restored";
+ * hp RESTORED";
 /*-------------------------*/
