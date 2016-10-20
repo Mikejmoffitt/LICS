@@ -5,9 +5,6 @@ LD = m68k-elf-ld
 RM = rm -f
 ASMZ80 = zasm
 BINTOS = bintos
-PCMTORAW = pcmtoraw
-WAVTORAW = wavtoraw
-NM = nm
 RESCOMP= rescomp
 
 ECHO = printf
