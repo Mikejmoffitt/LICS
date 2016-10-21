@@ -132,6 +132,9 @@ void map_draw_horizontal(u16 cam_x, u16 cam_y, u16 right_side);
 // Commit DMA queue to VRAM
 void map_dma(void);
 
+// Show a map selection screen
+void map_debug_chooser(void);
+
 // Is this spot solid? (background)
 u16 map_collision(u16 x, u16 y);
 
