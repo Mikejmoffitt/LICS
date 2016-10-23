@@ -13,7 +13,7 @@ const char *string_item_map = "\n\n\n\n\
          - GOT MAP -\n\
 \n\
  * MAP now viewable on\n\
-   PAUES SCREEN\n\
+   PAUSE SCREEN\n\
 \n\
  * press START during the\n\
    game to PAUSE and SAVE";
