@@ -57,3 +57,4 @@ src/*/*.swp
 inc/*.swp
 inc/*/*.swp
 
+res/*.h

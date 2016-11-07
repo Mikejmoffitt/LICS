@@ -96,7 +96,7 @@ static void player_set_pal(void)
 
 static inline void player_eval_control_en(void)
 {
-	if (pl.hurt_cnt > 0 || pl.hp == 0 || pl.tele_in_cnt > 0 || pl.tele_out_cnt > 0)
+	if (pl.ext_disable || pl.hurt_cnt > 0 || pl.hp == 0 || pl.tele_in_cnt > 0 || pl.tele_out_cnt > 0)
 	{
 		pl.control_disabled = 1;
 	}
@@ -116,7 +116,7 @@ void player_init(void)
 	pl.px = 0;
 	pl.py = 0;
 	pl.direction = PLAYER_RIGHT;
-
+	pl.ext_disable = 0;
 	pl.hp = 5;
 	pl.cp = 30;
 	pl.tele_in_cnt = 0;
@@ -333,6 +333,11 @@ static inline void player_accel(void)
 
 static void player_eval_grounded(void)
 {
+	if (pl.ext_disable)
+	{
+		pl.grounded = 1;
+		return;
+	}
 	if (pl.dy < FZERO)
 	{
 		pl.grounded = 0;
@@ -603,6 +608,10 @@ static void player_bg_horizontal_collision(void)
 	u16 py = fix32ToInt(pl.y);
 	u16 px = fix32ToInt(pl.x);
 
+	if (pl.ext_disable)
+	{
+		return;
+	}
 	// Horizontal collision
 	if (pl.dx > FZERO)
 	{
@@ -635,6 +644,10 @@ static void player_bg_vertical_collision(void)
 	u16 py = fix32ToInt(pl.y);
 	u16 px = fix32ToInt(pl.x);
 	px -= fix16ToInt(pl.dx);
+	if (pl.ext_disable)
+	{
+		return;
+	}
 	// Vertical collision
 	// "Am I now stuck with my feet in the ground?"
 	if (pl.dy > FZERO)
@@ -809,6 +822,10 @@ static void player_cube_eval_standing(cube *c)
 
 static inline void player_cube_collision(void)
 {
+	if (pl.ext_disable)
+	{
+		return;
+	}
 	u16 px = (u16)fix32ToInt(pl.x);
 	u16 py = (u16)fix32ToInt(pl.y);
 	int i = CUBES_NUM;
@@ -895,7 +912,7 @@ static inline void player_move(void)
 	player_cube_collision();
 
 	// In the air, gravity is affected by the player holding jump or not
-	if (!pl.grounded)
+	if (!pl.grounded && !pl.ext_disable)
 	{
 		// The jump holding only affects gravity on the way up, though
 		if (((buttons & BUTTON_C) && !pl.control_disabled) && pl.dy < FZERO)
@@ -918,6 +935,12 @@ static inline void player_move(void)
 
 static inline void player_calc_anim(void)
 {
+	if (pl.ext_disable)
+	{
+		pl.anim_frame = (pl.holding_cube ? 0x08 : 0x00);
+		pl.anim_cnt = 0;
+		return;
+	}
 	if (pl.grounded || pl.on_cube)
 	{
 		pl.anim_cnt++;

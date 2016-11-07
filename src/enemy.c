@@ -23,10 +23,11 @@
 #include "magibear.h"
 #include "lava.h"
 #include "cow.h"
+#include "elevator.h"
+#include "elevator_stop.h"
+#include "bounds.h"
 #include "lavaanim.h"
 #include "spooko.h"
-
-#include "bounds.h"
 
 #include "state.h"
 #include "particles.h"
@@ -77,6 +78,9 @@ void enemy_dma_tiles(void)
 		case 1:
 			VDP_doCRamDMA((u32)pal_enemy_cow, ENEMY_PALNUM * 32, 16);
 			break;
+		case 2:
+			VDP_doCRamDMA((u32)pal_enemy_elevator, ENEMY_PALNUM * 32, 16);
+			break;
 	}
 }
 
@@ -106,6 +110,8 @@ void enemy_init(void)
 	en_unload_magibear();
 	en_unload_lava();
 	en_unload_cow();
+	en_unload_elevator();
+	en_unload_elevator_stop();
 	en_unload_lavaanim();
 	en_unload_spooko();
 	en_unload_bounds();
@@ -457,6 +463,14 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 				case ENEMY_COW:
 					en_init_cow((en_cow *)e);
 					break;
+
+				case ENEMY_ELEVATOR:
+					en_init_elevator((en_elevator *)e);
+					break;
+				case ENEMY_ELEVATOR_STOP:
+					en_init_elevator_stop((en_elevator_stop *)e, data);
+					break;
+
 				case ENEMY_LAVAANIM:
 					en_init_lavaanim((en_lavaanim *)e);
 					break;

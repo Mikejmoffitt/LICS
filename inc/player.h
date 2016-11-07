@@ -80,6 +80,7 @@ struct player
 	u16 grounded;
 	u16 direction;
 	u16 control_disabled;
+	u16 ext_disable;
 
 	// Animation vars
 	u16 anim_cnt; // Counts always, used for modulus for animations

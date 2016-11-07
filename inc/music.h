@@ -20,6 +20,7 @@
 #define SFX_BOGOLOGO 14
 #define SFX_ENEMY_JUMP 15
 #define SFX_ENEMY_SHOOT 16
+#define SFX_ELEVATOR_MOVE 17
 
 void music_init(void);
 void music_play(u16 num);
