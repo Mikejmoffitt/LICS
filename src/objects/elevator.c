@@ -4,11 +4,15 @@
 #include "vramslots.h"
 #include "system.h"
 #include "player.h"
+#include "music.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
 static void cube_func(void *v, cube *c);
 static void vram_load(void);
+
+// TODO: NTSC Elevator is still 6/5 the PAL speed. Need to slot it down.
+// TODO: Elevator sound effects / ambient, and backdrop
 
 // Dynamic VRAM slot allocation support code
 static u16 vram_pos;
@@ -98,11 +102,47 @@ static void check_stop_coll(en_elevator *e)
 		if ((x->head.y < (e->head.y + 2)) && ((x->head.y + 2) > e->head.y))
 		{
 			pl.y = FIX32(e->head.y - 1);
+			pl.dy = FIX16(0.0);
 			e->moving = ELEVATOR_MOVING_NONE;
 			e->head.y = x->head.y+1;
 			stopsound();
 			return;
 		}
+	}
+}
+
+static void run_movement(en_elevator *e)
+{
+	// Move elevator, and latch player
+	if (e->moving == ELEVATOR_MOVING_DOWN)
+	{
+		e->head.y += 2;
+		pl.dy = FIX16(2.0);
+	}
+	else if (e->moving == ELEVATOR_MOVING_UP)
+	{
+		e->head.y -= 2;
+		pl.dy = FIX16(-2.0);
+	}
+
+	if (e->moving == ELEVATOR_MOVING_NONE)
+	{
+		pl.ext_disable = 0;
+	}
+	else
+	{
+		// Keep player in bounds 
+		if ((pl.px > e->head.x + 6) && pl.px > FIX16(0.0))
+		{
+			pl.px -= system_ntsc ? FIX16(0.10) : FIX16(0.12);
+		}
+		else if (pl.px > e->head.x - 6 && pl.px < FIX16(0.0))
+		{
+			pl.px += system_ntsc ? FIX16(0.10) : FIX16(0.12);
+		}
+		pl.y = FIX32(e->head.y - 1);
+		pl.ext_disable = 1;
+		check_stop_coll(e);
 	}
 }
 
@@ -126,38 +166,7 @@ static void proc_func(void *v)
 		e->fresh_obj = 0;
 	}
 
-	// Move elevator, and latch player
-	if (e->moving == ELEVATOR_MOVING_DOWN)
-	{
-		e->head.y += 2;
-		pl.dy = FIX16(2.0);
-		pl.y = FIX32(e->head.y - 1);
-	}
-	else if (e->moving == ELEVATOR_MOVING_UP)
-	{
-		e->head.y -= 2;
-		pl.dy = FIX16(-2.0);
-		pl.y = FIX32(e->head.y - 1);
-	}
-
-	if (e->moving == ELEVATOR_MOVING_NONE)
-	{
-		pl.ext_disable = 0;
-	}
-	else
-	{
-		// Keep player in bounds 
-		if ((pl.px > e->head.x + 6) && pl.px > FIX16(0.0))
-		{
-			pl.px -= system_ntsc ? FIX16(0.10) : FIX16(0.12);
-		}
-		else if (pl.px > e->head.x - 6 && pl.px < FIX16(0.0))
-		{
-			pl.px += system_ntsc ? FIX16(0.10) : FIX16(0.12);
-		}
-		pl.ext_disable = 1;
-		check_stop_coll(e);
-	}
+	run_movement(e);
 }
 
 // Single-frame animation and sprite placement handler
