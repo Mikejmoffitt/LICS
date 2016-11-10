@@ -131,15 +131,6 @@ static void run_movement(en_elevator *e)
 	}
 	else
 	{
-		// Keep player in bounds 
-		if ((pl.px > e->head.x + 6) && pl.px > FIX16(0.0))
-		{
-			pl.px -= system_ntsc ? FIX16(0.10) : FIX16(0.12);
-		}
-		else if (pl.px > e->head.x - 6 && pl.px < FIX16(0.0))
-		{
-			pl.px += system_ntsc ? FIX16(0.10) : FIX16(0.12);
-		}
 		pl.y = FIX32(e->head.y - 1);
 		pl.ext_disable = 1;
 		check_stop_coll(e);

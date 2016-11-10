@@ -76,20 +76,26 @@ void en_unload_elevator_stop(void)
 static void proc_func(void *v)
 {
 	en_elevator_stop *e = (en_elevator_stop *)v;
-
-	if ((pl.px < e->head.x + STOP_SENSITIVITY &&
-	    pl.px > e->head.x - STOP_SENSITIVITY) &&
-	    e->head.touching_player &&
-	    !pl.control_disabled &&
-	    pl.grounded)
+	
+	// Check that Lyle isn't going too fast
+	if (pl.dx == FIX16(0.0))
 	{
-		if (buttons & BUTTON_DOWN && e->directions != ELE_STOP_UP)
+		// Check for overlap with the stop, with a narrow horizontal range
+		if ((pl.px < e->head.x + STOP_SENSITIVITY &&
+			pl.px > e->head.x - STOP_SENSITIVITY) &&
+			e->head.touching_player &&
+			!pl.control_disabled &&
+			pl.grounded)
 		{
-			trigger_elevator_move(ELEVATOR_MOVING_DOWN);
-		}
-		else if (buttons & BUTTON_UP && e->directions != ELE_STOP_DOWN)
-		{
-			trigger_elevator_move(ELEVATOR_MOVING_UP);
+			// Check for buttons
+			if (buttons & BUTTON_DOWN && e->directions != ELE_STOP_UP)
+			{
+				trigger_elevator_move(ELEVATOR_MOVING_DOWN);
+			}
+			else if (buttons & BUTTON_UP && e->directions != ELE_STOP_DOWN)
+			{
+				trigger_elevator_move(ELEVATOR_MOVING_UP);
+			}
 		}
 	}
 }

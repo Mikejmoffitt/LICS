@@ -14,7 +14,7 @@ static const void *instrument_set[] =
 	(void *)eif_bass1,          // 00: FM Bass 1
 	(void *)eif_sqchords1,      // 01: FM Square 1
 	(void *)eif_sawlead,        // 02: FM Saw 1
-	(void *)eef_flat,           // 03: PSG flat 
+	(void *)eef_flat,           // 03: PSG flat
 	(void *)ewf_bassdrum1,      // 04: PCM kick drum 1
 	(void *)ewf_snare1,	        // 05: PCM snare drum 1
 	(void *)eef_hat,            // 06: PSG hihat
@@ -30,14 +30,14 @@ static const void *instrument_set[] =
 	(void *)eif_drone,          // 10: FM Drone
 	(void *)eif_unsettling,	    // 11: FM Unsettling
 	(void *)ewf_snare3,         // 12: PCM snare drum 3 (quiet)
-	(void *)eef_arp1,           // 13: PSG Arp1 
+	(void *)eef_arp1,           // 13: PSG Arp1
 	(void *)eef_arp2,           // 14: PSG Arp2
 	(void *)eif_sawdecay,	    // 15: FM Saw 2 Decay
 	(void *)eif_modhorn,	    // 16: Modhorn
 	0
 };
 
-static const void *bgm_set[] = 
+static const void *bgm_set[] =
 {
 	0,
 	(void *)bgm_bgm1,           // 01: A Sad Touch
@@ -46,6 +46,7 @@ static const void *bgm_set[] =
 	(void *)bgm_bgm4,           // 04: Modern Talking
 	(void *)bgm_bgm5,           // 05: Saturn
 	(void *)bgm_bgm6,           // 06: Alone in the Dark
+	(void *)bgm_bgm7,           // 07: Elevator Room drone
 	0
 };
 
@@ -65,50 +66,47 @@ static const void *sfx_list[] = {
 	(void *)sfx_cubelift,
 	(void *)sfx_powerup_get,
 	(void *)sfx_bogologo,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+	(void *)sfx_elevatormove,
 	0
 };
 
 static const u16 sfx_len[] = {
-	2,
-	2,
-	2,
-	9,
-	7,
-	16,
-	38,
-	30,
-	30,
-	18,
-	30,
-	16,
-	9,
-	8,
-	1
+	2,  // jump
+	2,  // walk1
+	2,  // walk2
+	9,  // cubetoss
+	7,  // cubebounce
+	16, // fizzle
+	38, // cubespawn
+	30, // enemyexplode
+	30, // enemystrike
+	18, // pause
+	30, // cubeexplode
+	16, // hurt
+	9,  // cubelift
+	8,  // powerup_get
+	1,  // bogologo
+	3   // elevatormove
 
 };
 
 static const u16 sfx_priority[] = {
-	0,
-	0,
-	0,
-	3,
-	1,
-	2,
-	3,
-	5,
-	4,
-	0,
-	6,
-	6,
-	3,
-	4,
-	4
+	0,  // jump
+	0,  // walk1
+	0,  // walk2
+	3,  // cubetoss
+	1,  // cubebounce
+	2,  // fizzle
+	3,  // cubespawn
+	5,  // enemyexplode
+	4,  // enemystrike
+	0,  // pause
+	6,  // cubeexplode
+	6,  // hurt
+	3,  // cubelift
+	4,  // powerup_get
+	4,  // bogologo
+	8   // elevatormove
 };
 
 #endif
