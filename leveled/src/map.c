@@ -11,31 +11,31 @@ void map_data_interview(void)
 	char in_buffer[MAP_NAME_LEN];
 	memset(in_buffer, 0, sizeof(char) * MAP_NAME_LEN);
 
-	printf("\nRoom ID? (prev == %d)\n>",map_header.id);
+	printf("\nRoom ID? (prev == %d)\nDEC >",map_header.id);
 	unsigned int arg;
 	scanf("%d",&arg);
 	map_header.id = arg;
 
-	printf("\nTileset choice? (prev == %d)\n>",map_header.tileset);
+	printf("\nTileset choice? (prev == %d)\nDEC >",map_header.tileset);
 	scanf("%d",&arg);
 	map_header.tileset = arg;
 
-	printf("\nSprite palette? (prev == %d)\n>",map_header.sprite_palette);
+	printf("\nSprite palette? (prev == %d)\nDEC >",map_header.sprite_palette);
 	scanf("%d",&arg);
 	map_header.sprite_palette = arg;
 
-	printf("\nBackground? (prev == %d)\n>",map_header.background);
+	printf("\nBackground? (prev == %d)\nDEC >",map_header.background);
 	scanf("%d",&arg);
 	map_header.background = arg;
 
-	printf("\nMusic? (prev == %d)\n>",map_header.music);
+	printf("\nMusic? (prev == %d)\nDEC >",map_header.music);
 	scanf("%d",&arg);
 	map_header.music = arg;
 
-	printf("\nTop-left Map coords? (prev == %d,%d)\n>",map_header.map_x,map_header.map_y);
+	printf("\nTop-left Map coords? (prev == %d,%d)\nDEC X>",map_header.map_x,map_header.map_y);
 	scanf("%d",&arg);
 	map_header.map_x = arg;
-	printf(" ");
+	printf("DEC Y>");
 	scanf("%d",&arg);
 	map_header.map_y = arg;
 }
@@ -48,19 +48,19 @@ void map_new(void)
 	char in_buffer[MAP_NAME_LEN];
 	printf("\nRoom title? (%d chars)\n",MAP_NAME_LEN - 1);
 	printf("<%s>",map_header.name);
-	printf("\n>");
+	printf("\nSTR >");
 	fgets(in_buffer, MAP_NAME_LEN, stdin);
 	memset(map_header.name,0,MAP_NAME_LEN);
 	snprintf(map_header.name,MAP_NAME_LEN - 1,"%s",in_buffer);
 
 	while (map_header.w == 0 || map_header.w >= MAP_MAX_WIDTH)
 	{
-		printf("\nWidth in %d-column screens? (integer)\n>",MAP_WIDTH);
+		printf("\nWidth in %d-column screens? (DEC)\n>",MAP_WIDTH);
 		scanf("%d",(int *)&map_header.w);
 	}
 	while (map_header.h == 0 || map_header.h >= MAP_MAX_HEIGHT)
 	{
-		printf("\nHeight in %d-row screens? (integer)\n>",MAP_HEIGHT);
+		printf("\nHeight in %d-row screens? (DEC)\n>",MAP_HEIGHT);
 		scanf("%d",(int *)&map_header.h);
 	}
 	if (map_data)

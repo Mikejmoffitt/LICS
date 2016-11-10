@@ -11,7 +11,7 @@ static void plane_meta_object_text(unsigned int x, unsigned int y)
 	char dat2[1 + (META_DRAW_W / TILESIZE)];
 	char posd[1 + (META_DRAW_W / TILESIZE)];
 
-	sprintf(name,"Object Type: %02X, named %s",o->type, string_for_obj(o->type));
+	sprintf(name,"Object Type: %02X: %s",o->type, string_for_obj(o->type));
 	sprintf(posd,"X: %04X Y: %04X",o->x, o->y);
 	sprintf(dat1,"                       Raw Data: 0x%04X",o->data);
 	sprintf(dat2,"                                       ");
