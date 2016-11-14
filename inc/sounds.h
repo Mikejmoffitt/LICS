@@ -16,7 +16,7 @@ static const void *instrument_set[] =
 	(void *)eif_sawlead,        // 02: FM Saw 1
 	(void *)eef_flat,           // 03: PSG flat
 	(void *)ewf_bassdrum1,      // 04: PCM kick drum 1
-	(void *)ewf_snare1,	        // 05: PCM snare drum 1
+	(void *)ewf_snare1,         // 05: PCM snare drum 1
 	(void *)eef_hat,            // 06: PSG hihat
 	(void *)eef_qdecay,         // 07: PSG quick hit
 	(void *)ewf_hat1,           // 08: PCM hihat 1
@@ -28,12 +28,15 @@ static const void *instrument_set[] =
 	(void *)eif_buzztar,        // 0E: FM Buzztar
 	(void *)eif_buzztarc1,      // 0F: FM Buzztar (decay)
 	(void *)eif_drone,          // 10: FM Drone
-	(void *)eif_unsettling,	    // 11: FM Unsettling
+	(void *)eif_unsettling,     // 11: FM Unsettling
 	(void *)ewf_snare3,         // 12: PCM snare drum 3 (quiet)
 	(void *)eef_arp1,           // 13: PSG Arp1
 	(void *)eef_arp2,           // 14: PSG Arp2
-	(void *)eif_sawdecay,	    // 15: FM Saw 2 Decay
-	(void *)eif_modhorn,	    // 16: Modhorn
+	(void *)eif_sawdecay,       // 15: FM Saw 2 Decay
+	(void *)eif_modhorn,        // 16: FM Modhorn
+	(void *)eif_sine,           // 17: FM Sine decay
+	(void *)eif_sqpluck,        // 18: FM Square pluck
+	(void *)eif_evilbass,       // 19: FM Evil Bass
 	0
 };
 
@@ -45,8 +48,16 @@ static const void *bgm_set[] =
 	(void *)bgm_bgm3,           // 03: Jttimarsu
 	(void *)bgm_bgm4,           // 04: Modern Talking
 	(void *)bgm_bgm5,           // 05: Saturn
-	(void *)bgm_bgm6,           // 06: Alone in the Dark
-	(void *)bgm_bgm7,           // 07: Elevator Room drone
+	(void *)bgm_bgm6,           // 06: Heidi #7
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	(void *)bgm_bgm14,           // 14: Alone in the Dark
+	(void *)bgm_bgm15,           // 15: Elevator Room drone
 	0
 };
 

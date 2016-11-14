@@ -11,3 +11,6 @@ BIN eif_drone "eif/drone.eif" 2 2 0
 BIN eif_unsettling "eif/unsettling.eif" 2 2 0
 BIN eif_sawdecay "eif/sawdecay.eif" 2 2 0
 BIN eif_modhorn "eif/modhorn.eif" 2 2 0
+BIN eif_sine "eif/sine.eif" 2 2 0
+BIN eif_sqpluck "eif/sqpluck.eif" 2 2 0
+BIN eif_evilbass "eif/evilbass.eif" 2 2 0

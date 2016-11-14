@@ -3,38 +3,37 @@
 
 # PSG1 is often used for SFX so try not to use it
 
-FILE "..\xm\bgm6\bgm6.xm"
+FILE "..\xm\bgm14\bgm14.xm"
 TYPE BGM LOOP
-
-TEMPO 7
-PSG 0
+TEMPO 6
+PSG 2
 NOISE 1
 FM 5
 PCM 1
-
 FM1 1
 FM2 2
 FM3 3
 FM4 4
 FM5 5
 PCMC 6
-PSGN 7
-
+PSG1 7
+PSG2 8
+PSGN 9
 [Instruments]
-1 5
-2 4
-3 19
-4 17
+1 2
+2 2
+3 2
+4 2
 5 2
 6 0
 7 0
 8 0
 9 0
-10 6
-11 18
-12 0
-13 0
-14 0
+10 4
+11 9
+12 6
+13 13
+14 11
 15 0
 16 0
 17 0
@@ -150,17 +149,21 @@ PSGN 7
 127 0
 128 0
 [Pitch]
-FM1 12
-FM2 12
-FM3 12
-FM4 12
-FM5 12
+FM1 -26
+FM2 -2
+FM3 -2
+FM4 -2
+FM5 -2
+PSG1 -50
+PSG2 -50
 PSGN 30
 [Volume]
-FM1 46
-FM2 64
-FM3 64
-FM4 64
-FM5 64
+FM1 56
+FM2 46
+FM3 52
+FM4 24
+FM5 12
+PSG1 50
+PSG2 50
 PSGN 64
 [END]

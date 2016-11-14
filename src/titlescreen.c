@@ -441,7 +441,7 @@ void title_play_intro(void)
 	// TODO
 	// Hooded dude walks towards cat, snatches; Lyle appears in house
 
-	music_play(6);
+	music_play(14);
 	// Title shows; present menu
 	title_menu();
 
