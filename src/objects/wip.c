@@ -57,7 +57,7 @@ static void proc_func(void *v)
 {
 	en_wip *e = (en_wip *)v;
 	e->head.hp = 0xFF;
-	if (e->head.x >= pl.px)
+	if (e->head.x >= 128)
 	{
 		e->head.harmful = ENEMY_HARM_ALWAYS_BOUNCE_L;
 	}
