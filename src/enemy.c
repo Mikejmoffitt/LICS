@@ -28,6 +28,7 @@
 #include "bounds.h"
 #include "lavaanim.h"
 #include "spooko.h"
+#include "wip.h"
 
 #include "state.h"
 #include "particles.h"
@@ -114,6 +115,7 @@ void enemy_init(void)
 	en_unload_elevator_stop();
 	en_unload_lavaanim();
 	en_unload_spooko();
+	en_unload_wip();
 	en_unload_bounds();
 	enemy_vram_reset();
 	while (i--)
@@ -481,6 +483,10 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 
 				case ENEMY_BOUNDS:
 					en_init_bounds((en_bounds *)e);
+					break;
+
+				case ENEMY_WIP:
+					en_init_wip((en_wip *)e);
 					break;
 			}
 			return &enemies[i];

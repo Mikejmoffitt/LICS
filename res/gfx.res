@@ -36,6 +36,8 @@ BIN gfx_en_fissions2 "gfx/en_fissins2.bin" 2 2 0
 BIN gfx_en_elevator "gfx/en_elevator.bin" 2 2 0
 BIN gfx_en_elevator_stop "gfx/en_elevator_stop.bin" 2 2 0
 
+BIN gfx_en_wip "gfx/en_wip.bin" 2 2 0
+
 BIN gfx_en_lavaanim "gfx/en_lavaanim.bin" 2 2 0
 
 BIN gfx_inside1 "gfx/inside1.bin" 2 2 0

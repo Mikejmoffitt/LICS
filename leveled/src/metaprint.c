@@ -273,6 +273,9 @@ cube_desc_area:
 		case OBJ_SPOOKO:
 			sprintf(desc,"Spooky scary");
 			break;
+		case OBJ_WIP:
+			sprintf(desc,"Under Construction sign.");
+			break;
 	}
 
 	plane_print_label(x, y + 40, al_map_rgb(255,255,255), name);
