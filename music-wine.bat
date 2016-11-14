@@ -12,8 +12,11 @@ echo ---------------------------------------------------------------------
 util\pcm2ewf.exe xm\rawsamples\snare1.raw res\ewf\snare1.ewf
 util\pcm2ewf.exe xm\rawsamples\snare2.raw res\ewf\snare2.ewf
 util\pcm2ewf.exe xm\rawsamples\snare3.raw res\ewf\snare3.ewf
+util\pcm2ewf.exe xm\rawsamples\snare4.raw res\ewf\snare4.ewf
 util\pcm2ewf.exe xm\rawsamples\bassdrum1.raw res\ewf\bassdrum1.ewf
 util\pcm2ewf.exe xm\rawsamples\hat1.raw res\ewf\hat1.ewf
+util\pcm2ewf.exe xm\rawsamples\hat2.raw res\ewf\hat2.ewf
+util\pcm2ewf.exe xm\rawsamples\bassdrum2.raw res\ewf\bassdrum2.ewf
 
 REM convert VGI instruments to EIF instruments
 echo ---------------------------------------------------------------------
@@ -40,8 +43,9 @@ echo ---------------------------------------------------------------------
 echo Beginning xm2esf conversions
 echo ---------------------------------------------------------------------
 cd util
-xm2esf Z:\home\moffitt\Development\LICS\xm\bgm6\bgm6.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm6.esf
+xm2esf Z:\home\moffitt\Development\LICS\xm\bgm8\bgm8.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm8.esf
 pause
+xm2esf Z:\home\moffitt\Development\LICS\xm\bgm6\bgm6.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm6.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm15\bgm15.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm15.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm5\bgm5.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm5.esf
 xm2esf Z:\home\moffitt\Development\LICS\xm\bgm14\bgm14.xif Z:\home\moffitt\Development\LICS\res\bgm\bgm14.esf

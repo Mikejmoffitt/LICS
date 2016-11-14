@@ -37,6 +37,9 @@ static const void *instrument_set[] =
 	(void *)eif_sine,           // 17: FM Sine decay
 	(void *)eif_sqpluck,        // 18: FM Square pluck
 	(void *)eif_evilbass,       // 19: FM Evil Bass
+	(void *)ewf_bassdrum2,      // 1A: PCM kick drum 2 (chippy)
+	(void *)ewf_snare4,         // 1B: PCM snare 4 (chippy)
+	(void *)ewf_hat2,           // 1C: PCM hihat 2
 	0
 };
 
@@ -50,7 +53,7 @@ static const void *bgm_set[] =
 	(void *)bgm_bgm5,           // 05: Saturn
 	(void *)bgm_bgm6,           // 06: Heidi #7
 	0,
-	0,
+	(void *)bgm_bgm8,           // 08: ST-Style
 	0,
 	0,
 	0,
