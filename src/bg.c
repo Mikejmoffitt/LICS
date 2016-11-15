@@ -25,11 +25,11 @@ static const s16 *coeff_tables[] =
 	bgcoef_bg5,
 	bgcoef_bg1, // BGMAP 1 coefs are reused
 	bgcoef_bg7,
-	0,
 	0, // DUMMY
 	0, // DUMMY
+	bgcoef_bg10,
 	0, // DUMMY
-	0, // DUMMY
+	bgcoef_bg12,
 	bgcoef_bg13,
 	bgcoef_bg13 // BGMAP 13 coefs are reused
 };
@@ -105,6 +105,20 @@ void bg_load(u16 num)
 			gfx_len = 36;
 			break;
 
+		case 10:
+			pal_src = (u32)pal_bg10;
+			gfx_src = (u32)gfx_bg10;
+			map_src = (u32)map_bg10;
+			gfx_len = 88;
+			break;
+
+		case 12:
+			// Pal and gfx from bg10 are reused
+			pal_src = (u32)pal_bg10;
+			gfx_src = (u32)gfx_bg10;
+			map_src = (u32)map_bg12;
+			gfx_len = 88;
+			break;
 		case 13:
 			pal_src = (u32)pal_bg13;
 			gfx_src = (u32)gfx_bg13;

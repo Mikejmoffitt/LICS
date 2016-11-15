@@ -6,5 +6,9 @@ BIN map_bg5 "bgmaps/bg5.map" 2 2 0
 BIN map_bg6 "bgmaps/bg6.map" 2 2 0
 BIN map_bg7 "bgmaps/bg7.map" 2 2 0
 
+BIN map_bg10 "bgmaps/bg10.map" 2 2 0
+
+BIN map_bg12 "bgmaps/bg12.map" 2 2 0
+
 BIN map_bg13 "bgmaps/bg13.map" 2 2 0
 BIN map_bg14 "bgmaps/bg14.map" 2 2 0
