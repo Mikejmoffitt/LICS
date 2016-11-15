@@ -5,12 +5,11 @@
   <property key="viewStatusBar" value="true"/>
   <property key="viewToolBar" value="true"/>
   <property key="maxRecentFiles" value="10"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_boingo.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/cubes.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bogologo.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside3.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside2.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/outside1.bin"/>
-  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/inside1.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/bg7.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_wip.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_elevator_stop.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/en_elevator.bin"/>
+  <property key="recentFile" value="/home/moffitt/Development/LICS/res/gfx/font_opaque.bin"/>
+  <property key="recentFile" value="/home/moffitt/Downloads/ascii.chr"/>
   <property key="recentFile" value="/opt/toolchains/gen/m68k-elf/lib/libmd.a"/>
 </settings>

@@ -16,9 +16,8 @@ FM3 3
 FM4 4
 FM5 5
 PCMC 6
-PSG1 7
-PSG2 8
-PSGN 9
+PSG3 7
+PSGN 8
 [Instruments]
 1 0
 2 0
