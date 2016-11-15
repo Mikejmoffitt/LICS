@@ -53,6 +53,7 @@ BIN gfx_bg2 "gfx/bg2.bin" 2 2 0
 BIN gfx_bg3 "gfx/bg3.bin" 2 2 0
 BIN gfx_bg4 "gfx/bg4.bin" 2 2 0
 BIN gfx_bg5 "gfx/bg5.bin" 2 2 0
+BIN gfx_bg7 "gfx/bg7.bin" 2 2 0
 
 BIN gfx_bg13 "gfx/bg13.bin" 2 2 0
 

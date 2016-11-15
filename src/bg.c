@@ -24,13 +24,14 @@ static const s16 *coeff_tables[] =
 	bgcoef_bg4,
 	bgcoef_bg5,
 	bgcoef_bg1, // BGMAP 1 coefs are reused
+	bgcoef_bg7,
+	0,
 	0, // DUMMY
 	0, // DUMMY
 	0, // DUMMY
 	0, // DUMMY
-	0, // DUMMY
-	0, // DUMMY
-	bgcoef_bg13
+	bgcoef_bg13,
+	bgcoef_bg13 // BGMAP 13 coefs are reused
 };
 
 // Set up the called-upon BG number's tiles, palette, and mapping
@@ -97,6 +98,12 @@ void bg_load(u16 num)
 			map_src = (u32)map_bg6;
 			gfx_len = 64;
 			break;
+		case 7:
+			pal_src = (u32)pal_bg7;
+			gfx_src = (u32)gfx_bg7;
+			map_src = (u32)map_bg7;
+			gfx_len = 36;
+			break;
 
 		case 13:
 			pal_src = (u32)pal_bg13;
@@ -104,6 +111,13 @@ void bg_load(u16 num)
 			map_src = (u32)map_bg13;
 			gfx_len = 24;
 			break;
+
+		case 14:
+			// Pal and gfx from bg13 are reused
+			pal_src = (u32)pal_bg13;
+			gfx_src = (u32)gfx_bg13;
+			map_src = (u32)map_bg14;
+			gfx_len = 24;
 	}
 	// Multiply length by 16 for number of words per tile
 	gfx_len = gfx_len << 4;
