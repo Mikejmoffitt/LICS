@@ -20,7 +20,9 @@ BIN pal_bg4 "pal/bg4.pal" 2 2 0
 BIN pal_bg5 "pal/bg5.pal" 2 2 0
 BIN pal_bg7 "pal/bg7.pal" 2 2 0
 
+
 BIN pal_bg10 "pal/bg10.pal" 2 2 0
+BIN pal_bg11 "pal/bg11.pal" 2 2 0
 
 BIN pal_bg13 "pal/bg13.pal" 2 2 0
 

@@ -17,21 +17,22 @@ static u16 bg_yscroll_cmd;
 /* BG scroll coefficient tables */
 static const s16 *coeff_tables[] =
 {
-	0,
+	bgcoef_fixed0,
 	bgcoef_bg1,
-	bgcoef_bg2,
+	bgcoef_fixed1,
 	bgcoef_bg3,
 	bgcoef_bg4,
-	bgcoef_bg5,
-	bgcoef_bg1, // BGMAP 1 coefs are reused
+	bgcoef_fixed1,
+	bgcoef_bg1, // Reused from BG 1
 	bgcoef_bg7,
-	0, // DUMMY
-	0, // DUMMY
+	bgcoef_fixed0, // TODO: Replace with real data
+	bgcoef_fixed0, // TODO: Replace with real data
 	bgcoef_bg10,
-	0, // DUMMY
+	bgcoef_fixed1,
 	bgcoef_bg12,
 	bgcoef_bg13,
-	bgcoef_bg13 // BGMAP 13 coefs are reused
+	bgcoef_bg13,
+	0
 };
 
 // Set up the called-upon BG number's tiles, palette, and mapping
@@ -111,7 +112,12 @@ void bg_load(u16 num)
 			map_src = (u32)map_bg10;
 			gfx_len = 88;
 			break;
-
+		case 11:
+			pal_src = (u32)pal_bg11;
+			gfx_src = (u32)gfx_bg11;
+			map_src = (u32)map_bg11;
+			gfx_len = 18;
+			break;
 		case 12:
 			// Pal and gfx from bg10 are reused
 			pal_src = (u32)pal_bg10;
