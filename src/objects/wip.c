@@ -71,5 +71,5 @@ static void proc_func(void *v)
 static void anim_func(void *v)
 {
 	en_wip *e = (en_wip *)v;
-	(void)v;
+	(void)e;
 }
