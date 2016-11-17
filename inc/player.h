@@ -40,6 +40,11 @@
 #define PLAYER_DRAW_LEFT -8
 #define PLAYER_DRAW_TOP -23
 
+#define DYING_SEQ_NONE 0
+#define DYING_SEQ_AIR 1
+#define DYING_SEQ_GROUNDED 2
+#define DYING_SEQ_DONE 255
+
 // Hold the player's constants, loaded and calculated at init
 typedef struct player_k player_k;
 struct player_k
@@ -105,9 +110,14 @@ struct player
 	// Player status
 	u16 hp;
 	u16 cp;
+	u16 death_counter;
+	u16 dying_seq;
 };
 
 extern player pl;
+
+// Is the player dead, and done playing?
+u16 player_is_alive(void);
 
 // Init function for Lyle's variables
 void player_init(void);
