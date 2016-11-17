@@ -255,7 +255,7 @@ u16 player_is_alive(void)
 	return pl.dying_seq != DYING_SEQ_DONE;
 }
 
-static inline void player_hurt_decel(void)
+static void player_death_sequence(void)
 {
 	// Slow descend as player dies
 	if (pl.hp == 0)
@@ -267,6 +267,8 @@ static inline void player_hurt_decel(void)
 			pl.hurt_cnt = 0;
 			pl.dx = FIX16(0.0);
 			pl.dy = (system_ntsc ? FIX16(-4.56) : FIX16(-3.8));
+			music_play(0);
+			stopsound();
 		}
 		else if (pl.dying_seq == DYING_SEQ_AIR)
 		{
@@ -286,6 +288,11 @@ static inline void player_hurt_decel(void)
 			}
 		}
 	}
+}
+
+static inline void player_hurt_decel(void)
+{
+
 	if (pl.dx > FZERO)
 	{
 		pl.dx = fix16Sub(pl.dx,plk.x_accel >> 1);
@@ -1247,6 +1254,7 @@ static void player_teleport_seq(void)
 void player_run(void)
 {
 	player_eval_control_en();
+	player_death_sequence();
 	player_teleport_seq();
 	player_accel();
 	player_toss_cubes();
