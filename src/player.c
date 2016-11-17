@@ -121,6 +121,8 @@ void player_init(void)
 	pl.cp = 30;
 	pl.tele_in_cnt = 0;
 	pl.tele_out_cnt = 0;
+	pl.death_counter = 0;
+	pl.dying_seq = DYING_SEQ_NONE;
 	player_init_soft();
 }
 
@@ -248,8 +250,42 @@ static inline void player_walking_sound(void)
 	}
 }
 
+u16 player_is_alive(void)
+{
+	return pl.dying_seq != DYING_SEQ_DONE;
+}
+
 static inline void player_hurt_decel(void)
 {
+	// Slow descend as player dies
+	if (pl.hp == 0)
+	{
+		if (pl.dying_seq == DYING_SEQ_NONE)
+		{
+			// Pop lyle up in the air
+			pl.dying_seq = DYING_SEQ_AIR;
+			pl.hurt_cnt = 0;
+			pl.dx = FIX16(0.0);
+			pl.dy = (system_ntsc ? FIX16(-4.56) : FIX16(-3.8));
+		}
+		else if (pl.dying_seq == DYING_SEQ_AIR)
+		{
+			pl.death_counter++;
+			if (pl.grounded || pl.on_cube)
+			{
+				pl.dying_seq = DYING_SEQ_GROUNDED;
+				pl.death_counter = 0;
+			}
+		}
+		else if (pl.dying_seq == DYING_SEQ_GROUNDED)
+		{
+			pl.death_counter++;
+			if (pl.death_counter >= (system_ntsc ? 168 : 140))
+			{
+				pl.dying_seq = DYING_SEQ_DONE;
+			}
+		}
+	}
 	if (pl.dx > FZERO)
 	{
 		pl.dx = fix16Sub(pl.dx,plk.x_accel >> 1);
@@ -914,8 +950,12 @@ static inline void player_move(void)
 	// In the air, gravity is affected by the player holding jump or not
 	if (!pl.grounded && !pl.ext_disable)
 	{
+		if (pl.dying_seq == DYING_SEQ_AIR)
+		{
+			pl.dy += system_ntsc ? FIX16(0.1333) : FIX16(0.1111);
+		}
 		// The jump holding only affects gravity on the way up, though
-		if (((buttons & BUTTON_C) && !pl.control_disabled) && pl.dy < FZERO)
+		else if (((buttons & BUTTON_C) && !pl.control_disabled) && pl.dy < FZERO)
 		{
 			pl.dy = fix16Add(pl.dy,plk.y_accel_weak);
 		}
@@ -957,9 +997,20 @@ static inline void player_calc_anim(void)
 	{
 		return;
 	}
-	if (pl.hp == 0)
+	if (pl.dying_seq == DYING_SEQ_AIR)
 	{
-		pl.anim_frame = 0x0F;
+		pl.anim_frame = 0x0F + ((pl.death_counter >> 2) & 1);
+	}
+	else if (pl.dying_seq >= DYING_SEQ_GROUNDED)
+	{
+		if (pl.death_counter < 6)
+		{
+			pl.anim_frame = 0x11;
+		}
+		else
+		{
+			pl.anim_frame = 0x12;
+		}
 	}
 	else
 	{
@@ -1100,10 +1151,23 @@ void player_draw(void)
 		yoff = PLAYER_DRAW_TOP;
 		xoff = (pl.direction) ? -8 : 0;
 	}
-	sprite_put(fix32ToInt(pl.x) + xoff + PLAYER_DRAW_LEFT - state.cam_x,
-		fix32ToInt(pl.y) + yoff - state.cam_y,
-		size,
-		TILE_ATTR(PLAYER_PALNUM,0,0,pl.direction) + PLAYER_VRAM_SLOT);
+
+	if (pl.dying_seq == DYING_SEQ_AIR)
+	{
+		sprite_put(fix32ToInt(pl.x) + xoff + PLAYER_DRAW_LEFT - state.cam_x,
+			fix32ToInt(pl.y) + yoff - state.cam_y,
+			size,
+			TILE_ATTR(PLAYER_PALNUM,0,
+			((pl.death_counter >> 2)+1) % 4 > 1,
+			(pl.death_counter >> 2) % 4 > 1) + PLAYER_VRAM_SLOT);
+	}
+	else
+	{
+		sprite_put(fix32ToInt(pl.x) + xoff + PLAYER_DRAW_LEFT - state.cam_x,
+			fix32ToInt(pl.y) + yoff - state.cam_y,
+			size,
+			TILE_ATTR(PLAYER_PALNUM,0,0,pl.direction) + PLAYER_VRAM_SLOT);
+	}
 
 }
 
@@ -1213,6 +1277,10 @@ void player_get_bounced(void)
 
 void player_get_hurt(void)
 {
+	if (pl.dying_seq != DYING_SEQ_NONE)
+	{
+		return;
+	}
 	if (pl.invuln_cnt == 0)
 	{
 		player_get_bounced();

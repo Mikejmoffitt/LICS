@@ -169,6 +169,14 @@ static inline void gameloop_init(void)
 
 }
 
+static void handle_pause(void)
+{
+	if ((buttons & BUTTON_START) && (!(buttons_prev & BUTTON_START)))
+	{
+		pause_screen_loop();
+	}
+}
+
 void gameloop_main(void)
 {
 	// Make sure the VDP is all set up for playing the game.
@@ -204,9 +212,8 @@ void gameloop_main(void)
 	player_init();
 
 	// Main game loop; runs until after a player death anim, quit, or victory.
-	while (pl.hp > 0)
+	while (player_is_alive())
 	{
-
 		// Configure the room we are about to enter
 		gameloop_room_setup(transition);
 
@@ -221,13 +228,10 @@ void gameloop_main(void)
 			system_wait_v();
 
 			gameloop_dma();
-			if ((buttons & BUTTON_START) && (!(buttons_prev & BUTTON_START)))
-			{
-				pause_screen_loop();
-			}
+			handle_pause();
 
 		}
-		while (!(transition = state_watch_transitions()) && pl.hp > 0);
+		while (!(transition = state_watch_transitions()) && player_is_alive());
 
 	}
 	system_wait_v();
