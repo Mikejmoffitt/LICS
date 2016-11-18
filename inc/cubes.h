@@ -26,6 +26,7 @@
 #define CUBE_BLUE 0x0100
 #define CUBE_PHANTOM 0x0200
 #define CUBE_GREEN 0x0300
+#define CUBE_GREENBLUE 0x0301
 #define CUBE_RED 0x0400
 #define CUBE_YELLOW 0x0800
 #define CUBE_ORANGE 0x1000
@@ -54,7 +55,7 @@ Example values:
 #define CUBE_YELLOW_HPORB 0x80
 
 #define CUBE_STATE_INACTIVE 0
-#define CUBE_STATE_IDLE 1 
+#define CUBE_STATE_IDLE 1
 #define CUBE_STATE_AIR 2
 #define CUBE_STATE_KICKED 3
 

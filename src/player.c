@@ -450,6 +450,11 @@ static void player_jump(void)
 				cx = ((cx + 4) / 8) * 8;
 			}
 
+			// If it's a greenblue cube, make it regular blue
+			if (pl.holding_cube == CUBE_GREENBLUE)
+			{
+				pl.holding_cube = CUBE_BLUE;
+			}
 			// Generate a cube to throw
 			cube_spawn(cx,
 				cy,
@@ -525,6 +530,11 @@ static void player_toss_cubes(void)
 			cy += 8;
 		}
 
+		// If it's a greenblue cube, make it regular blue
+		if (pl.holding_cube == CUBE_GREENBLUE)
+		{
+			pl.holding_cube = CUBE_BLUE;
+		}
 		// Generate a cube to throw
 		cube_spawn(cx, cy,
 			pl.holding_cube,
@@ -906,7 +916,7 @@ static inline void player_cube_collision(void)
 			}
 			else if (c->state == CUBE_STATE_AIR && pl.throw_cnt == 0 && pl.kick_cnt == 0 && pl.throwdown_cnt == 0)
 			{
-				if (pl.hurt_cnt < plk.hurt_time - plk.hurt_timeout)
+				if (pl.hurt_cnt < plk.hurt_time - plk.hurt_timeout && pl.tele_out_cnt == 0)
 				{
 					player_get_bounced();
 					// Only hurt the player if the player is below the cube
@@ -1285,7 +1295,7 @@ void player_get_bounced(void)
 
 void player_get_hurt(void)
 {
-	if (pl.dying_seq != DYING_SEQ_NONE)
+	if (pl.dying_seq != DYING_SEQ_NONE || pl.tele_out_cnt > 0)
 	{
 		return;
 	}

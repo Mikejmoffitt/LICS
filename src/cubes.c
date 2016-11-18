@@ -68,7 +68,7 @@ void cubes_init(void)
 void cube_destroy(cube *c)
 {
 	c->dx = 0;
-	c->dy = 7;
+	c->dy = 7; // dy is abused as a counter
 	if (c->state != CUBE_STATE_EXPLODE && c->state != CUBE_STATE_FIZZLE)
 	{
 		if (c->type == CUBE_RED)
@@ -261,7 +261,8 @@ static inline void normal_cube_col(cube *c, cube *d)
 	{
 		c->dy = FZERO;
 	}
-	if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
+	if (d->type != CUBE_GREEN && d->type != CUBE_GREENBLUE &&
+	    d->state != CUBE_STATE_IDLE)
 	{
 		cube_destroy(d);
 	}
@@ -297,7 +298,8 @@ static inline void green_cube_col(cube *c, cube *d)
 	{
 		c->dy = FZERO;
 	}
-	if (d->type != CUBE_GREEN && d->state != CUBE_STATE_IDLE)
+	if (d->type != CUBE_GREEN && d->type != CUBE_GREENBLUE &&
+	    d->state != CUBE_STATE_IDLE)
 	{
 		cube_destroy(d);
 	}
@@ -359,7 +361,7 @@ static void cube_on_cube_collisions(cube *c)
 		    c->y + CUBE_TOP <= d->y + CUBE_BOTTOM &&
 		    c->y + CUBE_BOTTOM >= d->y + CUBE_TOP)
 		{
-			if (c->type == CUBE_GREEN)
+			if (c->type == CUBE_GREEN || c->type == CUBE_GREENBLUE)
 			{
 				green_cube_col(c, d);
 			}
@@ -525,7 +527,7 @@ static void cube_bg_collision(cube *c)
 		map_collision(c->x + CUBE_RIGHT, c->y + CUBE_TOP))
 	{
 		// Cubes that get destryed on impact
-		if (c->type != CUBE_GREEN)
+		if (c->type != CUBE_GREEN && c->type != CUBE_GREENBLUE)
 		{
 			cube_destroy(c);
 		}
@@ -702,7 +704,7 @@ void cubes_draw(void)
 void cube_draw_single(u16 x, u16 y, u16 type)
 {
 	u16 palnum;
-	if (type == CUBE_BLUE || type == CUBE_ORANGE || type == CUBE_SPAWNER)
+	if (type == CUBE_BLUE || type == CUBE_ORANGE || type == CUBE_GREENBLUE || type == CUBE_SPAWNER)
 	{
 		palnum = CUBE_ALT_PALNUM;
 	}
@@ -711,12 +713,13 @@ void cube_draw_single(u16 x, u16 y, u16 type)
 		palnum = CUBE_PALNUM;
 	}
 	u16 frame = TILE_ATTR_FULL(palnum, 0, 0, 0, CUBE_VRAM_SLOT);
-	switch (type & 0xFF00)
+	switch (type & 0xFF01)
 	{
 		case CUBE_PHANTOM:
 			frame += 16 + (4 * ((system_osc / 4) % 4));
 			break;
 		case CUBE_YELLOW:
+		case (CUBE_YELLOW | 0x0001):
 			frame += 4;
 			break;
 		case CUBE_RED:

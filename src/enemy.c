@@ -28,6 +28,7 @@
 #include "bounds.h"
 #include "lavaanim.h"
 #include "spooko.h"
+#include "boss1.h"
 #include "wip.h"
 
 #include "state.h"
@@ -115,6 +116,7 @@ void enemy_init(void)
 	en_unload_elevator_stop();
 	en_unload_lavaanim();
 	en_unload_spooko();
+	en_unload_boss1();
 	en_unload_wip();
 	en_unload_bounds();
 	enemy_vram_reset();
@@ -480,6 +482,8 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 				case ENEMY_SPOOKO:
 					en_init_spooko((en_spooko *)e, data);
 					break;
+				case ENEMY_BOSS1:
+					en_init_boss1((en_boss1 *)e);
 
 				case ENEMY_BOUNDS:
 					en_init_bounds((en_bounds *)e);
@@ -561,7 +565,6 @@ static void enemy_player_scan(void)
 		}
 	}
 }
-
 
 u16 enemy_vram_alloc(u16 len)
 {

@@ -69,6 +69,7 @@ the length of a 256-tile DMA is only (256 * 16).
 #define LAVAANIM_VRAM_LEN 8
 #define SPOOKO_VRAM_LEN 6
 #define WIP_VRAM_LEN 24
+#define BOSS1_VRAM_LEN 200
 
 #define MAP_FG_PALNUM 0
 #define BG_PALNUM 1

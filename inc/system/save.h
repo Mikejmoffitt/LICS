@@ -65,6 +65,10 @@ struct save_file
 	u16 opt_mus;
 	u16 opt_sfx;
 	u16 opt_ctrlscheme;
+
+	u16 beat_boss1;
+	u16 beat_boss2;
+	u16 beat_boss3;
 };
 
 extern save_file sram;

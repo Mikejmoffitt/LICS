@@ -67,6 +67,9 @@ void save_clear(void)
 	sram.have_kick = 0;
 	sram.have_orange = 0;
 	sram.touched_cube = 0;
+	sram.beat_boss1 = 0;
+	sram.beat_boss2 = 0;
+	sram.beat_boss3 = 0;
 
 	sram.fresh_save = 1;
 
