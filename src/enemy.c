@@ -484,6 +484,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					break;
 				case ENEMY_BOSS1:
 					en_init_boss1((en_boss1 *)e);
+					break;
 
 				case ENEMY_BOUNDS:
 					en_init_bounds((en_bounds *)e);

@@ -10,6 +10,9 @@ struct en_boss1
 {	
 	// Header present in each drawable and processable enemy type
 	en_header head;
+	fix16 dy;
+	u16 anim_seq;
+	u16 intro_timer;
 };
 
 // Initialize enemy at address e
