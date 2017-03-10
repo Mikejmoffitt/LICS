@@ -37,11 +37,11 @@ void en_init_wip(en_wip *e)
 	e->head.direction = ENEMY_RIGHT;
 
 	e->head.size[0] = SPRITE_SIZE(3,4);
-	e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 1, 0, 0, vram_pos);
+	e->head.attr[0] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, vram_pos);
 	e->head.xoff[0] = -24;
 	e->head.yoff[0] = -32;
 	e->head.size[1] = SPRITE_SIZE(3,4);
-	e->head.attr[1] = TILE_ATTR_FULL(PLAYER_PALNUM, 1, 0, 0, vram_pos + 12);
+	e->head.attr[1] = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, vram_pos + 12);
 	e->head.xoff[1] = 0;
 	e->head.yoff[1] = -32;
 }

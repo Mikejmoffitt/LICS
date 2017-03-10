@@ -176,8 +176,8 @@ static void anim_func(void *v)
 	}
 
 	// Upper and lower halves, animated with offsets provided by anim_frame
-	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 1, 0, 0, vram_pos + (e->anim_frame ? 32 : 0));
-	e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 1, 0, 0, vram_pos + 16 + (e->anim_frame ? 32 : 0));
+	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + (e->anim_frame ? 32 : 0));
+	e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 16 + (e->anim_frame ? 32 : 0));
 }
 
 // Do nothing with a cube

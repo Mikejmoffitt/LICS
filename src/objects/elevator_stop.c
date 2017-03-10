@@ -123,22 +123,22 @@ static void anim_func(void *v)
 		// animation frame. Show a black arrow otherwise.
 		if (e->anim_frame && e->directions != ELE_STOP_DOWN)
 		{
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 1, 0, 0, vram_pos + 4);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 4);
 		}
 		else
 		{
-			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 1, 0, 0, vram_pos);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos);
 		}
 
 		// Flash the down arrow if it's not an up-only elevator, and we are at that
 		// animation frame. Show a black arrow otherwise.
 		if (e->anim_frame && e->directions != ELE_STOP_UP)
 		{
-			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 1, 1, 0, vram_pos + 4);
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 1, 0, vram_pos + 4);
 		}
 		else
 		{
-			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 1, 1, 0, vram_pos);
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 1, 0, vram_pos);
 		}
 	}
 	else
