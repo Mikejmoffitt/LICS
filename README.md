@@ -13,36 +13,4 @@ This project is written in C99, and is built using the SGDK toolchain. All game 
 
 While common C practices promote the use of a relatively size-agnostic "unsigned int" type, here "u16", a 16-bit word shorthand is used. This is because the Mega Drive (from here on "MD") has as its CPU the Motorola 68000. While registers are 32-bit, both RAM and ROM are 16-bit. As a result anything above 16-bit words will take nearly double the time to be manipulated in memory. When approprite, u32 is used in faith that GCC will place it in a 32-bit register and not use memory. Results vary strongly across different optimization levels and versions of GCC in use, so unfortunately this sort of manual semi-optimization has become important.
 
-Sik's excellent Echo sound engine is used for playback of BGM and SFX.
-
-Project Filesystem Structure
-----------------------------
-These directories are relevant to building the game software:
-+	Makefile (For Linux / Mac OS X)
-+	src/ (source code)
-+	inc/ (headers)
-+	res/ (binary resources)
-+	res/gfx/ (graphics)
-+	res/pal/ (palettes)
-+	res/bgm/ (music)
-+	res/eif/ (instruments)
-+	res/eef/ (PSG envelopes)
-+	res/ewf/ (PCM data)
-+	res/mapdata/ (rooms/maps)
-+	res/bgmaps/ (PLANE B background mappings)
-+	out/ (various stages of output)
-+	boot/ (header information)
-+	scd/ (sega CD build process; ignored)
-+	lyle.bin (built game binary, padded and ready to go to the Genesis)
-
-These directories store resources and tools used for creation of game assets:
-+	docs/ (helpful documents and notes on the game's operation and creation)
-+	docs/original-sauce/ (the original Multimedia Fusion game source)
-+	leveled/ (level editor project source)
-+	editor (binary of level editor)
-+	font.ttf (font used for level editor)
-+	xm/ (XM sound files for converting to BGM or SFX; organized within)
-+	music_lin.sh (Script to convert XM music to ESF files)
-+	music_wine.bat
-+	sfx_lin.sh (Script to convert XM sounds to ESF files)
-+	sfx_wine.bat
+The Echo sound engine (by Sik) is used for playback of BGM and SFX.
