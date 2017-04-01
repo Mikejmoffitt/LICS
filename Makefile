@@ -9,7 +9,7 @@ RESCOMP= rescomp
 
 ECHO = printf
 
-OPTION = -O1 -std=c99 -Wall
+OPTION = -O1 -std=c99 -Wall -fdiagnostics-color=auto
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
 CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow
 Z80FLAGS = -vb2
@@ -84,8 +84,7 @@ boot/sega.o: boot/rom_head.bin
 
 %.o: %.c
 	@bash -c '$(ECHO) "\t\e[96m[ CC ]\e[0m $<\n"'
-	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 2>&1 | python3 ./gccerrc.py
-
+	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 
 %.o: %.s
 	@bash -c '$(ECHO) "\t\e[94m[ AS ]\e[0m $<\n"'
 	@$(AS) $(ASFLAGS) $< -o $@
