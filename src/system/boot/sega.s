@@ -2,54 +2,110 @@
 
 *-------------------------------------------------------
 *
-*       Sega CD startup code for the GNU Assembler
+*       Sega startup code for the GNU Assembler
+*       Translated from:
+*       Sega startup code for the Sozobon C compiler
+*       Written by Paul W. Lee
+*       Modified by Charles Coty
+*       Modified by Stephane Dallongeville
 *
 *-------------------------------------------------------
 
         .org    0x00000000
 
-_Entry_Point:            
-        move    #0x2700, %sr        /* interrupts */
+_Start_Of_Rom:
+_Vecteurs_68K:
+        dc.l    0x00FFFE00              /* Stack address */
+        dc.l    _Entry_Point            /* Program start address */
+        dc.l    _Bus_Error
+        dc.l    _Address_Error
+        dc.l    _Illegal_Instruction
+        dc.l    _Zero_Divide
+        dc.l    _Chk_Instruction
+        dc.l    _Trapv_Instruction
+        dc.l    _Privilege_Violation
+        dc.l    _Trace
+        dc.l    _Line_1010_Emulation
+        dc.l    _Line_1111_Emulation
+        dc.l     _Error_Exception, _Error_Exception, _Error_Exception, _Error_Exception
+        dc.l     _Error_Exception, _Error_Exception, _Error_Exception, _Error_Exception
+        dc.l     _Error_Exception, _Error_Exception, _Error_Exception, _Error_Exception
+        dc.l    _Error_Exception, _INT, _EXTINT, _INT
+        dc.l    _HINT
+        dc.l    _INT
+        dc.l    _VINT
+        dc.l    _INT
+        dc.l    _INT,_INT,_INT,_INT,_INT,_INT,_INT,_INT
+        dc.l    _INT,_INT,_INT,_INT,_INT,_INT,_INT,_INT
+        dc.l    _INT,_INT,_INT,_INT,_INT,_INT,_INT,_INT
+        dc.l    _INT,_INT,_INT,_INT,_INT,_INT,_INT,_INT
 
-* Clear Work RAM (0xFF0000 to 0xFFFCFF)
-        lea     0xFF0000,%a0
-        moveq   #0,%d0
-        move.w  #0x3F3F,%d1
-cram:
-        move.l  %d0,(%a0)+
-        dbra    %d1,cram        
+        .incbin "src/system/boot/rom_head.bin", 0x10, 0x100
 
-* Enable VBlank
-        lea     _VBL, %a1
-        jsr     0x0368
+_Entry_Point:
+        move    #0x2700,%sr
+        tst.l   0xa10008
+        bne.s   SkipJoyDetect
+        tst.w   0xa1000c
+SkipJoyDetect:
+        bne.s   SkipSetup
 
         lea     Table,%a5
         movem.w (%a5)+,%d5-%d7
-        movem.l (%a5)+,%a0-%a4    	      
-        
-        jmp     continue
+        movem.l (%a5)+,%a0-%a4
+* Check Version Number
+        move.b  -0x10ff(%a1),%d0
+        andi.b  #0x0f,%d0
+        beq.s   WrongVersion
+* Sega Security Code (SEGA)
+        move.l  #0x53454741,0x2f00(%a1)
+WrongVersion:
+        move.w  (%a4),%d0
+        moveq   #0x00,%d0
+        movea.l %d0,%a6
+        move    %a6,%usp
+        move.w  %d7,(%a1)
+        move.w  %d7,(%a2)
+        jmp     Continue
 
 Table:
-        dc.w    0x8000, 0x3fff, 0x0100, 0x00a0, 0x0000, 0x00a1, 0x1100, 0x00a1
-        dc.w    0x1200, 0x00c0, 0x0000, 0x00c0, 0x0004   
+        dc.w    0x8000,0x3fff,0x0100
+        dc.l    0xA00000,0xA11100,0xA11200,0xC00000,0xC00004
 
-continue:                        
-        lea     __stack,%a0
-        movea.l %a0,%sp                   /* set stack pointer to top of Work RAM */        
+SkipSetup:
+        move.w  #0,%a7
+        jmp     _reset_entry
 
-* Define known Jump Table, DMA is used to copy font (corrupted font)               
-	    move.l	(_HBL),(0xFFFD0E)        
-	    move.l	(_Chk_Instruction),(0xFFFD7A)        
-	    move.l	(_Address_Error),(0xFFFD80)           
-	    move.l	(_Zero_Divide),(0xFFFD86)           
-	    move.l	(_Trapv_Instruction),(0xFFFD8C)           
-	    move.l	(_Line_1010_Emulation),(0xFFFD92)        
-	    move.l	(_Line_1111_Emulation),(0xFFFD98)           
-	    move.l	(_Privilege_Violation),(0xFFFD9E)           
-	    move.l	(_Trace),(0xFFFDA4)
+Continue:
 
-        and.w	#0xF8FF, %sr
-        jmp     _start_entry                    /* call main() */        
+* clear Genesis RAM
+        lea     0xff0000,%a0
+        moveq   #0,%d0
+        move.w  #0x3FFF,%d1
+
+ClearRam:
+        move.l  %d0,(%a0)+
+        dbra    %d1,ClearRam
+
+* copy initialized variables from ROM to Work RAM
+        lea     _stext,%a0
+        lea     0xFF0000,%a1
+        move.l  #_sdata,%d0
+        lsr.l   #1,%d0
+        beq     NoCopy
+
+        subq.w  #1,%d0
+CopyVar:
+        move.w  (%a0)+,(%a1)+
+        dbra    %d0,CopyVar
+
+NoCopy:
+
+* Jump to initialisation process...
+
+        move.w  #0,%a7
+        jmp     _start_entry
+
 
 *------------------------------------------------
 *
@@ -57,85 +113,103 @@ continue:
 *
 *------------------------------------------------
 
-.text
-
-
 _Bus_Error:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _buserror_callback
+        move.l  busErrorCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Address_Error:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _addresserror_callback
+        move.l  addressErrorCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Illegal_Instruction:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _illegalinst_callback
+        move.l  illegalInstCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Zero_Divide:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _zerodivide_callback
+        move.l  zeroDivideCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Chk_Instruction:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _chkinst_callback
+        move.l  chkInstCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Trapv_Instruction:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _trapvinst_callback
+        move.l  trapvInstCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Privilege_Violation:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _privilegeviolation_callback
+        move.l  privilegeViolationCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Trace:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _trace_callback
+        move.l  traceCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Line_1010_Emulation:
 _Line_1111_Emulation:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr     _line1x1x_callback
+        move.l  line1x1xCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _Error_Exception:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr    _errorexception_callback
+        move.l  errorExceptionCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 _INT:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr    _int_callback
-        movem.l (%sp)+,%d0-%d1/%a0-%a1
-        rte
-_HBL:
-        movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr    _hint_callback
+        move.l  intCB, %a0
+        jsr    (%a0)
         movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
-_VBL:
+_EXTINT:
         movem.l %d0-%d1/%a0-%a1,-(%sp)
-        jsr    _vint_callback        
-        movem.l (%sp)+,%d0-%d1/%a0-%a1        
+        move.l  internalExtIntCB, %a0
+        jsr    (%a0)
+        movem.l (%sp)+,%d0-%d1/%a0-%a1
+        rte
+
+_HINT:
+        movem.l %d0-%d1/%a0-%a1,-(%sp)
+        move.l  internalHIntCB, %a0
+        jsr    (%a0)
+        movem.l (%sp)+,%d0-%d1/%a0-%a1
+        rte
+
+_VINT:
+        movem.l %d0-%d1/%a0-%a1,-(%sp)
+        move.l  internalVIntCB, %a0
+        jsr    (%a0)
+        movem.l (%sp)+,%d0-%d1/%a0-%a1
         rte
 
 *------------------------------------------------
@@ -343,3 +417,4 @@ ltuns:
         move.l  %d3,%d0
         move.l  %a2,%d3           /* restore d3 */
         rts
+

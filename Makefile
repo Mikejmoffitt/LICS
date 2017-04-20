@@ -12,7 +12,7 @@ ECHO = printf
 OPTION = -O1 -std=c99 -Wall -fdiagnostics-color=auto
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
 CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow
-Z80FLAGS = -vb2
+Z80FLAGS = -vb2 -Isrc/system/
 ASFLAGS = -m68000 --register-prefix-optional
 LIBS =  -L$(GENDEV)/m68k-elf/lib -L$(GENDEV)/m68k-elf/lib/gcc/m68k-elf/* -L$(GENDEV)/m68k-elf/m68k-elf/lib -lmd -lnosys -lgcc
 LINKFLAGS = -T $(GENDEV)/ldscripts/sgdk.ld -nostdlib
@@ -21,7 +21,7 @@ ARCHIVES = $(GENDEV)/m68k-elf/lib/libmd.a $(GENDEV)/m68k-elf/lib/gcc/m68k-elf/*/
 RESOURCES=
 BOOT_RESOURCES=
 
-BOOTSS=$(wildcard boot/*.s)
+BOOTSS=$(wildcard src/system/boot/*.s)
 BOOT_RESOURCES+=$(BOOTSS:.s=.o)
 
 RESS=$(wildcard res/*.res)
@@ -63,8 +63,8 @@ test: lyle.bin
 test32: lyle.bin
 	@exec util/megaloader/mega32 md $< /dev/ttyUSB0 2> /dev/null
 
-boot/sega.o: boot/rom_head.bin
-	@$(AS) $(ASFLAGS) boot/sega.s -o $@
+src/system/boot/sega.o: src/system/boot/rom_head.bin
+	@$(AS) $(ASFLAGS) src/system/boot/sega.s -o $@
 
 %.bin: %.elf
 	@$(OBJC) -O binary $< temp.bin
@@ -98,11 +98,11 @@ boot/sega.o: boot/rom_head.bin
 %.s: %.res
 	@ $(RESCOMP) $< $@ > /dev/null
 
-boot/rom_head.bin: boot/rom_head.o
+src/system/boot/rom_head.bin: src/system/boot/rom_head.o
 	@$(LD) $(LINKFLAGS) --oformat binary -o $@ $<
 
 clean:
 	@$(RM) $(RESOURCES)
 	@$(RM) *.o *.bin *.elf *.map
-	@$(RM) boot/*.o boot/*.bin
+	@$(RM) src/system/boot/*.o src/system/boot/*.bin
 	@$(RM) $(RESS:.res=.h) $(RESS:.res=.s)
