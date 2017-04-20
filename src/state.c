@@ -8,6 +8,7 @@
 #include "pal.h"
 #include "save.h"
 #include "enemy.h"
+#include "enemy_types.h"
 #include "items.h"
 
 gamestate state;
@@ -39,16 +40,16 @@ static void state_parse_objects(void)
 		o = &(state.current_room->objects[i]);
 		switch (o->type)
 		{
-			case MAP_OBJ_NULL:
+			case ENEMY_NULL:
 				continue;
-			case MAP_OBJ_ENTRANCE:
+			case ENEMY_ENTRANCE:
 				d = &state.entrances[o->data & 0x000F];
 				d->x = o->x;
 				d->y = o->y;
 				d->to_num = (o->data & 0x00F0) >> 4;
 				d->to_roomid = (o->data & 0xFF00) >> 8;
 				break;
-			case MAP_OBJ_CUBE:
+			case ENEMY_CUBE:
 				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
 				break;
 			default:
@@ -77,6 +78,8 @@ static void state_config_scrolling(void)
 	{
 		VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
 	}
+
+	state.bg_cam_x_offset = 0;
 
 	VDP_setReg(0x0B, VDP_getReg(0x0B) | 0x80);
 }
@@ -194,10 +197,10 @@ u16 state_update_scroll()
 		bg_scroll_y(state.cam_y);
 	}
 
-	if (state.cam_x != sx_memo)
+	if (state.cam_x != sx_memo || state.bg_cam_x_offset != 0)
 	{
 		state_scroll_fgx(state.cam_x);
-		bg_scroll_x(state.cam_x);
+		bg_scroll_x(state.cam_x + state.bg_cam_x_offset);
 	}
 
 	return (state.xscroll_cmd ? STATE_MOVED_X : 0) | (state.yscroll_cmd ? STATE_MOVED_Y : 0);

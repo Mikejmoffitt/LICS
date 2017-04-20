@@ -82,6 +82,8 @@ struct gamestate
 	u16 fresh_room;
 
 	u16 world_x, world_y;
+
+	s16 bg_cam_x_offset;
 };
 
 extern gamestate state;

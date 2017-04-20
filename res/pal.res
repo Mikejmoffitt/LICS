@@ -26,6 +26,7 @@ BIN pal_bg10 "pal/bg10.pal" 2 2 0
 BIN pal_bg11 "pal/bg11.pal" 2 2 0
 
 BIN pal_bg13 "pal/bg13.pal" 2 2 0
+BIN pal_bg15 "pal/bg15.pal" 2 2 0
 
 BIN pal_black "pal/black.pal" 2 2 0
 

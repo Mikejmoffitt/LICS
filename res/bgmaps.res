@@ -11,3 +11,4 @@ BIN map_bg11 "bgmaps/bg11.map" 2 2 0
 BIN map_bg12 "bgmaps/bg12.map" 2 2 0
 BIN map_bg13 "bgmaps/bg13.map" 2 2 0
 BIN map_bg14 "bgmaps/bg14.map" 2 2 0
+BIN map_bg15 "bgmaps/bg15.map" 2 2 0

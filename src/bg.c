@@ -31,7 +31,8 @@ static const s16 *coeff_tables[] =
 	bgcoef_fixed1,
 	bgcoef_bg12,
 	bgcoef_bg13,
-	bgcoef_bg13,
+	bgcoef_bg13, // Repeat for elevator room without center line
+	bgcoef_bg15,
 	0
 };
 
@@ -131,13 +132,19 @@ void bg_load(u16 num)
 			map_src = (u32)map_bg13;
 			gfx_len = 24;
 			break;
-
 		case 14:
 			// Pal and gfx from bg13 are reused
 			pal_src = (u32)pal_bg13;
 			gfx_src = (u32)gfx_bg13;
 			map_src = (u32)map_bg14;
 			gfx_len = 24;
+			break;
+		case 15:
+			pal_src = (u32)pal_bg15;
+			gfx_src = (u32)gfx_bg15;
+			map_src = (u32)map_bg15;
+			gfx_len = 24;
+			break;
 	}
 	// Multiply length by 16 for number of words per tile
 	gfx_len = gfx_len << 4;

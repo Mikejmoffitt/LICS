@@ -178,7 +178,7 @@ cube_desc_area:
 			sprintf(desc,"Jumps up and fires a few shots");
 			break;
 		case OBJ_SHOOT:
-			sprintf(desc,"Like Flip, but swoops down when player approaches");
+			sprintf(desc,"Like Flip, but swoops at player.");
 			break;
 		case OBJ_LASER:
 			sprintf(desc,"A laser effect that fades in and out.");
@@ -275,6 +275,9 @@ cube_desc_area:
 			break;
 		case OBJ_WIP:
 			sprintf(desc,"Under Construction sign.");
+			break;
+		case OBJ_BGSCROLLY:
+			sprintf(desc,"Makes the far BG scroll constantly.");
 			break;
 	}
 

@@ -3,6 +3,8 @@
 
 // Enemy type numbers -- these line up to MAP_OBJ numbers intentionally
 #define ENEMY_NULL 0
+#define ENEMY_ENTRANCE 1 // Psuedo-enemy
+#define ENEMY_CUBE 2 // Psuedo-enemy
 #define ENEMY_METAGRUB 3
 #define ENEMY_FLIP 4
 #define ENEMY_BOINGO 5
@@ -25,14 +27,14 @@
 #define ENEMY_MAGIBEAR 22
 #define ENEMY_LAVA 23
 #define ENEMY_COW 24
-#define ENEMY_CONTAINER 25
-#define ENEMY_HOOP 26
-#define ENEMY_FALSEBLOCK 27
+#define ENEMY_CONTAINER 25 // Psuedo-enemy
+#define ENEMY_HOOP 26 // Psuedo-enemy
+#define ENEMY_FALSEBLOCK 27 // Psuedo-enemy
 #define ENEMY_CP_PAD 28
 #define ENEMY_CP_METER 29
 #define ENEMY_DOG 30
-#define ENEMY_ELEVATOR 31
-#define ENEMY_ELEVATOR_STOP 32
+#define ENEMY_ELEVATOR 31 // Psuedo-enemy
+#define ENEMY_ELEVATOR_STOP 32 // Psuedo-enemy
 #define ENEMY_FISSINS1 33
 #define ENEMY_BOSS1 34
 #define ENEMY_BOSS2 35
@@ -43,9 +45,10 @@
 #define ENEMY_BOUNDS 40
 #define ENEMY_SMALLEGG 41
 #define ENEMY_BASKETBALL 42
-#define ENEMY_LAVAANIM 43
-#define ENEMY_SPOOKO 44
-#define ENEMY_WIP 45
+#define ENEMY_LAVAANIM 43 // Psuedo-enemy
+#define ENEMY_SPOOKO 44 // Psuedo-enemy
+#define ENEMY_WIP 45 // Psuedo-enemy
+#define ENEMY_BGSCROLLY 46 // Psuedo-enemy
 // ---------------------
 
 

@@ -47,6 +47,7 @@
 #define OBJ_LAVAANIM 43
 #define OBJ_SPOOKO 44
 #define OBJ_WIP 45
+#define OBJ_BGSCROLLY 46
 
 int width_for_obj(int i);
 int height_for_obj(int i);

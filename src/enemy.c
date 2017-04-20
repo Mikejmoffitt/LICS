@@ -30,6 +30,7 @@
 #include "spooko.h"
 #include "boss1.h"
 #include "wip.h"
+#include "bgscrolly.h"
 
 #include "state.h"
 #include "particles.h"
@@ -119,6 +120,7 @@ void enemy_init(void)
 	en_unload_boss1();
 	en_unload_wip();
 	en_unload_bounds();
+	en_unload_bgscrolly();
 	enemy_vram_reset();
 	while (i--)
 	{
@@ -492,6 +494,9 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 
 				case ENEMY_WIP:
 					en_init_wip((en_wip *)e);
+					break;
+				case ENEMY_BGSCROLLY:
+					en_init_bgscrolly((en_bgscrolly *)e);
 					break;
 			}
 			return &enemies[i];

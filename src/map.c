@@ -75,6 +75,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_orangeget,
 	(map_file *)&mapdata_phantomget,
 	(map_file *)&mapdata_boss1,
+	(map_file *)&mapdata_rooftop,
 	0
 };
 
@@ -266,6 +267,10 @@ void map_load_tileset(u8 num)
 		case MAP_SET_PURPLEZONE:
 			tsrc_ptr = (u32)gfx_purplezone;
 			psrc_ptr = (u32)pal_purplezone;
+			break;
+		case MAP_SET_ROOFTOP:
+			tsrc_ptr = (u32)gfx_rooftop;
+			psrc_ptr = (u32)pal_rooftop;
 			break;
 	}
 	VDP_doVRamDMA(tsrc_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_VRAM_LEN * 16);

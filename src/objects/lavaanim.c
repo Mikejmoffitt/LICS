@@ -40,7 +40,6 @@ void en_init_lavaanim(en_lavaanim *e)
 	e->head.xoff[0] = -8;
 	e->head.yoff[0] = -15;
 
-	e->initialized = 0;
 	e->anim_cnt = 0;
 	e->anim_frame = 0;
 

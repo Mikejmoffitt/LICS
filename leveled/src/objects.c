@@ -15,7 +15,7 @@ static const char *obj_name[] =
 	"Ele stop","Fissins ","Boss 1  ","Boss 2  ",
 	"Boss F1 ","Boss F2 ","Egg     ","Fissins2",
 	"Bounds  ","SmallEgg","BsktBall","LavaAnim",
-	"Spooko  ","WIP     ",0
+	"Spooko  ","WIP     ","BgScroll",0
 };
 
 static const int obj_width[] =
@@ -31,7 +31,7 @@ static const int obj_width[] =
 	32,16,48,64,
 	64,64,32,16,
 	16,16,16,8,
-	16,48,0
+	16,48,8,0
 };
 
 static const int obj_height[] = 
@@ -47,20 +47,12 @@ static const int obj_height[] =
 	8,16,32,64,
 	64,64,32,16,
 	96,16,16,8,
-	16,32,0
+	16,32,8,0
 };
 
 int num_obj_types(void)
 {
 	return sizeof(obj_name) / sizeof(char *);
-	if (!num_types)
-	{
-		while (obj_name[num_types][0])
-		{
-			num_types++;
-		}
-	}
-	return num_types;
 }
 
 int width_for_obj(int i)

@@ -62,7 +62,7 @@ BIN gfx_bg11 "gfx/bg11.bin" 2 2 0
 
 BIN gfx_bg13 "gfx/bg13.bin" 2 2 0
 
-
+BIN gfx_bg15 "gfx/bg15.bin" 2 2 0
 
 BIN gfx_bogologo "gfx/bogologo.bin" 2 2 0
 BIN gfx_titlelogo "gfx/titlelogo.bin" 2 2 0
