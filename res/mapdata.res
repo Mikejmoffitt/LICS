@@ -36,5 +36,6 @@ BIN mapdata_orangeget "mapdata/orangeget.bin" 2 2 0
 BIN mapdata_phantomget "mapdata/phantomget.bin" 2 2 0
 BIN mapdata_boss1 "mapdata/boss1.bin" 2 2 0
 BIN mapdata_rooftop "mapdata/rooftop.bin" 2 2 0
+BIN mapdata_roofroom "mapdata/roofroom.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0

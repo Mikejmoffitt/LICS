@@ -76,6 +76,7 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_phantomget,
 	(map_file *)&mapdata_boss1,
 	(map_file *)&mapdata_rooftop,
+	(map_file *)&mapdata_roofroom,
 	0
 };
 
