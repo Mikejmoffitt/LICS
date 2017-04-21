@@ -137,6 +137,7 @@ void player_init_soft(void)
 	pl.throwdown_cnt = 0;
 	pl.kick_cnt = 0;
 	pl.lift_cnt = 0;
+	pl.lift_fail = 0;
 	pl.cp_cnt = 0;
 	pl.hurt_cnt = 0;
 	pl.invuln_cnt = 0;
@@ -592,7 +593,7 @@ static void player_lift_cubes(void)
 {
 	if (!sram.have_lift)
 	{
-		return;
+		pl.lift_fail = 1;
 	}	// In the middle of doing something that voids this ability
 	if (pl.hurt_cnt || pl.action_cnt || pl.control_disabled)
 	{
@@ -606,17 +607,23 @@ static void player_lift_cubes(void)
 	}
 	if (pl.lift_cnt == 1 && pl.on_cube)
 	{
-		cube *c = (cube *)pl.on_cube;
-		pl.holding_cube = c->type;
-		cube_delete(c);
-
-		// Re-implement the MMF version bug where you can jump while lifting
-		if (buttons & BUTTON_C)
+		if (!pl.lift_fail)
 		{
-			pl.dy = plk.jump_dy;
+			cube *c = (cube *)pl.on_cube;
+			pl.holding_cube = c->type;
+			cube_delete(c);
+			// Re-implement the MMF version bug where you can jump while lifting
+			if (buttons & BUTTON_C)
+			{
+				pl.dy = plk.jump_dy;
+			}
+			pl.action_cnt = PLAYER_ACTION_LIFT;
+			playsound(SFX_CUBELIFT);
 		}
-		pl.action_cnt = PLAYER_ACTION_LIFT;
-		playsound(SFX_CUBELIFT);
+		else
+		{
+			pl.lift_fail = 0;
+		}
 	}
 }
 

@@ -102,6 +102,7 @@ struct player
 	u16 tele_in_cnt; // Counts down to player being able to move again post transition.
 	                 // Won't count down if there is a tele_out in progress.
 	u16 cubejump_disable;
+	u16 lift_fail; // If non-zero, a cube lift will fail. Resets after.
 	
 	u16 holding_cube; // flag for if holding a cube
 	u16 invuln_cnt; // If non-zero, lyle is flashing and invincible
