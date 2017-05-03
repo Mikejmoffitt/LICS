@@ -7,12 +7,16 @@
 #ifndef SPRITES_H
 #define SPRITES_H
 
+#define NUM_SPRITES 80
+
 #include <genesis.h>
+
+extern u16 next_spr;
+extern u16 sprite_addr;
+extern u16 sprite_table[NUM_SPRITES * 4];
 
 // General helper functions for manipulating sprites and maintaining a cache
 // of sprite data to be DMA'd.
-
-#define NUM_SPRITES 80
 
 u16 sprites_get_addr(void);
 
@@ -29,10 +33,29 @@ void sprites_dma_simple(void);
 void sprites_clamp_list(u8 num);
 
 // Set properties for sprite in the sprite table
-void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link);
+static inline void sprite_set(u8 num, s16 x, s16 y, u8 size, u16 attr, u8 link)
+{
+	// Sprite table only holds 80 sprites
+	if (num >= NUM_SPRITES)
+	{
+		return;
+	}
+	u16 *addr = &sprite_table[num << 2];
+	*addr = 128 + y;
+	addr++;
+	*addr = (size << 8) + link;
+	addr++;
+	*addr = attr;
+	addr++;
+	*addr = 128 + x;
+}
 
 // Simple sprite placement that implies sprite number
-void sprite_put(s16 x, s16 y, u8 size, u16 attr);
+static inline void sprite_put(s16 x, s16 y, u8 size, u16 attr)
+{
+	sprite_set(next_spr, x, y, size, attr, next_spr + 1);
+	next_spr++;
+}
 
 // Accessors to internal variables
 u8 sprites_get_next_sprite(void);
