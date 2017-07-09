@@ -38,5 +38,7 @@ BIN mapdata_boss1 "mapdata/boss1.bin" 2 2 0
 BIN mapdata_rooftop "mapdata/rooftop.bin" 2 2 0
 BIN mapdata_roofroom "mapdata/roofroom.bin" 2 2 0
 BIN mapdata_underpurple "mapdata/underpurple.bin" 2 2 0
+BIN mapdata_smallhouse "mapdata/smallhouse.bin" 2 2 0
+BIN mapdata_purplebricks "mapdata/purplebricks.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0
