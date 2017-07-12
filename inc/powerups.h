@@ -13,9 +13,9 @@
 #define POWERUP_L_WIDTH 7
 
 #define POWERUP_NULL  0
-#define POWERUP_HP    1 
+#define POWERUP_HP    1
 #define POWERUP_CP    2
-#define POWERUP_HP_2X 3 
+#define POWERUP_HP_2X 3
 #define POWERUP_CP_2X 4
 #define POWERUP_CPORB 5
 #define POWERUP_HPORB 6
