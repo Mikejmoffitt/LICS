@@ -78,6 +78,8 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_rooftop,
 	(map_file *)&mapdata_roofroom,
 	(map_file *)&mapdata_underpurple,
+	(map_file *)&mapdata_smallhouse,
+	(map_file *)&mapdata_purplebricks,
 	0
 };
 

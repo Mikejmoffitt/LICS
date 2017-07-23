@@ -64,10 +64,12 @@ void gameloop_gfx(void)
 
 void gameloop_dma(void)
 {
+	SYS_disableInts();
 	map_dma();
 	sprites_dma_simple();
 	state_dma_scroll();
 	player_dma();
+	SYS_enableInts();
 }
 
 static void gameloop_room_setup(u16 transition)

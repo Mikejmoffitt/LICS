@@ -48,6 +48,8 @@ u16 vram_slot;
 
 static u16 hurt_time;
 
+static u8 powerup_spawn_chance;
+
 static void enemy_explode(en_generic *e);
 static void enemy_player_scan();
 
@@ -62,10 +64,21 @@ static void enemy_explode(en_generic *e)
 	particle_spawn(e->head.x, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
 	particle_spawn(e->head.x + e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
 	particle_spawn(e->head.x - e->head.width, e->head.y - e->head.height, PARTICLE_TYPE_FIZZLERED);
-	if (GET_HVCOUNTER % 2)
+
+	// Spawn powerups with a likelihood of 5/8
+	switch (powerup_spawn_chance & 0x07)
 	{
-		powerup_spawn(e->head.x, e->head.y, 1 + (system_osc & (e->head.powerup_range)), 0);
+		case 0:
+		case 2:
+		case 3:
+		case 5:
+		case 6:
+			powerup_spawn(e->head.x, e->head.y, 1 + (system_osc & (e->head.powerup_range)), 0);
+		default:
+			break;
 	}
+
+	powerup_spawn_chance++;
 	playsound(SFX_ENEMY_EXPLODE);
 }
 
@@ -122,6 +135,8 @@ void enemy_init(void)
 	en_unload_bounds();
 	en_unload_bgscrolly();
 	enemy_vram_reset();
+
+	powerup_spawn_chance = GET_HVCOUNTER;
 	while (i--)
 	{
 		en_generic *e = &enemies[i];

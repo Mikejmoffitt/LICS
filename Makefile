@@ -11,7 +11,7 @@ ECHO = printf
 
 OPTION = -O1 -std=c99 -Wall -fdiagnostics-color=auto
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
-CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow
+CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow -pedantic
 Z80FLAGS = -vb2 -Isrc/system/
 ASFLAGS = -m68000 --register-prefix-optional
 LIBS =  -L$(GENDEV)/m68k-elf/lib -L$(GENDEV)/m68k-elf/lib/gcc/m68k-elf/* -L$(GENDEV)/m68k-elf/m68k-elf/lib -lmd -lnosys -lgcc
