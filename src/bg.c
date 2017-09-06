@@ -156,9 +156,6 @@ void bg_load(u16 num)
 			gfx_src = (u32)gfx_bg2;
 			map_src = (u32)map_bg2;
 			gfx_len = 32;
-			map_dest += 1792;
-			map_size = map_size >> 1;
-
 			break;
 	}
 	// Multiply length by 16 for number of words per tile
