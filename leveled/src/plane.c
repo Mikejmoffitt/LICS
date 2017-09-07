@@ -102,6 +102,10 @@ void plane_load_fg(void)
 			sprintf(tile,"res/gfx/rooftop.bin");
 			sprintf(pal,"res/pal/rooftop.pal");
 			break;
+		case MAP_SET_TECHNOZONE:
+			sprintf(tile,"res/gfx/technozone.bin");
+			sprintf(pal,"res/pal/technozone.pal");
+			break;
 	}
 
 	printf("Opening %s for tile data...\n",tile);
