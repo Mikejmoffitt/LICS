@@ -49,6 +49,7 @@ BIN gfx_teleporter "gfx/teleporter.bin" 2 2 0
 BIN gfx_outside3 "gfx/outside3.bin" 2 2 0
 BIN gfx_purplezone "gfx/purplezone.bin" 2 2 0
 BIN gfx_rooftop "gfx/rooftop.bin" 2 2 0
+BIN gfx_technozone "gfx/technozone.bin" 2 2 0
 
 BIN gfx_bg1 "gfx/bg1.bin" 2 2 0
 BIN gfx_bg2 "gfx/bg2.bin" 2 2 0

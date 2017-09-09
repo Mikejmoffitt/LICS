@@ -33,6 +33,8 @@ static const s16 *coeff_tables[] =
 	bgcoef_bg13,
 	bgcoef_bg13, // Repeat for elevator room without center line
 	bgcoef_bg15,
+	bgcoef_fixed1,
+	bgcoef_fixed1, // Copy of BG2 mostly
 	0
 };
 
@@ -54,6 +56,9 @@ void bg_load(u16 num)
 	u16 gfx_len;
 	// Source data for graphics mapping
 	u32 map_src;
+	// Layout data size (default covers two screens)
+	u32 map_size = 64 * 32;
+	u32 map_dest = VDP_getBPlanAddress();
 	switch (num)
 	{
 		default:
@@ -145,6 +150,13 @@ void bg_load(u16 num)
 			map_src = (u32)map_bg15;
 			gfx_len = 24;
 			break;
+		case 17:
+			// Pal and gfx from bg2 are reused
+			pal_src = (u32)pal_bg2;
+			gfx_src = (u32)gfx_bg2;
+			map_src = (u32)map_bg2;
+			gfx_len = 32;
+			break;
 	}
 	// Multiply length by 16 for number of words per tile
 	gfx_len = gfx_len << 4;
@@ -152,7 +164,7 @@ void bg_load(u16 num)
 	// Load the common 8 words
 	VDP_waitDMACompletion();
 	VDP_doVRamDMA(gfx_src, 32 * BG_VRAM_SLOT, gfx_len);
-	VDP_doVRamDMA(map_src, VDP_getBPlanAddress(), 64 * 32);
+	VDP_doVRamDMA(map_src, map_dest, map_size);
 	VDP_doCRamDMA(pal_src, 32 * BG_PALNUM, 8);
 	VDP_doCRamDMA((u32)pal_bg_common, (32 * BG_PALNUM) + 16, 8);
 }

@@ -3,6 +3,8 @@
 #include "system.h"
 #include "player.h"
 
+// TODO: Verify shoot's swoop distance.
+
 static void en_anim_shoot(void *v);
 static void en_proc_shoot(void *v);
 
@@ -87,6 +89,10 @@ static void en_anim_shoot(void *v)
 
 static inline void bg_collision(en_shoot *e)
 {
+	// TODO: Verify this early return is okay.
+	// I don't think shoot ever is supposed to hit the background, at least not during a swoop.
+	(void)e;
+	return;
 	if (e->head.direction == ENEMY_RIGHT &&
 	    map_collision(e->head.x + SHOOT_WIDTH, e->head.y))
 	{

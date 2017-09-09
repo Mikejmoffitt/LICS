@@ -40,5 +40,11 @@ BIN mapdata_roofroom "mapdata/roofroom.bin" 2 2 0
 BIN mapdata_underpurple "mapdata/underpurple.bin" 2 2 0
 BIN mapdata_smallhouse "mapdata/smallhouse.bin" 2 2 0
 BIN mapdata_purplebricks "mapdata/purplebricks.bin" 2 2 0
+BIN mapdata_bottomtele "mapdata/bottomtele.bin" 2 2 0
+BIN mapdata_cproom "mapdata/cproom.bin" 2 2 0
+BIN mapdata_longsand "mapdata/longsand.bin" 2 2 0
+BIN mapdata_technofirst "mapdata/technofirst.bin" 2 2 0
+BIN mapdata_technocolumn "mapdata/technocolumn.bin" 2 2 0
+BIN mapdata_technoatrium "mapdata/technoatrium.bin" 2 2 0
 
 BIN mapdata_roomzero "mapdata/roomzero.bin" 2 2 0

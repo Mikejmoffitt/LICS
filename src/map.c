@@ -80,6 +80,12 @@ static const map_file *maplist[] = {
 	(map_file *)&mapdata_underpurple,
 	(map_file *)&mapdata_smallhouse,
 	(map_file *)&mapdata_purplebricks,
+	(map_file *)&mapdata_bottomtele,
+	(map_file *)&mapdata_cproom,
+	(map_file *)&mapdata_longsand,
+	(map_file *)&mapdata_technofirst,
+	(map_file *)&mapdata_technocolumn,
+	(map_file *)&mapdata_technoatrium,
 	0
 };
 
@@ -275,6 +281,10 @@ void map_load_tileset(u8 num)
 		case MAP_SET_ROOFTOP:
 			tsrc_ptr = (u32)gfx_rooftop;
 			psrc_ptr = (u32)pal_rooftop;
+			break;
+		case MAP_SET_TECHNOZONE:
+			tsrc_ptr = (u32)gfx_technozone;
+			psrc_ptr = (u32)pal_technozone;
 			break;
 	}
 	VDP_doVRamDMA(tsrc_ptr,MAP_FG_VRAM_SLOT * 32,MAP_FG_VRAM_LEN * 16);

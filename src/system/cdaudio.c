@@ -103,9 +103,11 @@ static inline void wait_cpu_running(void)
 // returning zero if there is a mismatch.
 static int32_t memcmp(const volatile void *s1, const volatile void *s2, int32_t n)
 {
+	const volatile uint8_t *b1 = (const uint8_t *)s1;
+	const volatile uint8_t *b2 = (const uint8_t *)s2;
 	while (n--)
 	{
-		if (*(uint8_t *)(s1 + n) != *(uint8_t *)(s2 + n))
+		if (*(b1 + n) != *(b2 + n))
 		{
 			return 1;
 		}
