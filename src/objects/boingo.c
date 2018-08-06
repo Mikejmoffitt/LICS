@@ -5,6 +5,7 @@
 #include "system.h"
 #include "music.h"
 #include "particles.h"
+#include "save.h"
 
 static void cube_func(void *v, cube *c);
 static void en_proc_boingo(void *v);
@@ -318,6 +319,12 @@ static void cube_func(void *v, cube *c)
 {
 	en_boingo *e = (en_boingo *)v;
 
+	if (e->type == BOINGO_TYPE_NORMAL ||
+	    e->type == BOINGO_TYPE_ANGRY)
+	{
+		e->head.cube_func = NULL;
+	}
+
 	if (e->type == BOINGO_TYPE_CUBE)
 	{
 		cube_clamp_dx(c);
@@ -329,6 +336,11 @@ static void cube_func(void *v, cube *c)
 	if (e->type == BOINGO_TYPE_CUBE_ACTIVE)
 	{
 		e->type = BOINGO_TYPE_TO_NORMAL;
+		e->head.cube_func = NULL;
+		if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
+		{
+			e->head.hp += 1;
+		}
 	}
 
 	enemy_cube_response((en_generic *)e, c);
