@@ -5,6 +5,7 @@
 #include "system.h"
 #include "cubes.h"
 #include "cow.h"
+#include "system/save.h"
 
 static void proc_func(void *v);
 static void anim_func(void *v);
@@ -66,10 +67,15 @@ static void proc_func(void *v)
 	en_cow *cow = (en_cow *)e->cow;
 
 	// Make sure to always push the player away
-	e->head.harmful = (e->head.x < pl.px ? ENEMY_HARM_ALWAYS_BOUNCE_R : ENEMY_HARM_ALWAYS_BOUNCE_L);
+//	e->head.harmful = (e->head.x < pl.px ? ENEMY_HARM_ALWAYS_BOUNCE_R : ENEMY_HARM_ALWAYS_BOUNCE_L);
 
+	// Lava is gone if CP orb $5 is collected
+	if (sram.cp_orbs_taken[5] && e->head.y <= 240)
+	{
+		e->head.active = ENEMY_DISABLED;
+	}
 	// Check for collisions, unless cow is finished
-	if (cow && cow->state != COW_FINISHED)
+	else if (cow && cow->state != COW_FINISHED)
 	{
 		if (!map_collision(e->head.x, e->head.y + 1))
 		{
@@ -83,12 +89,6 @@ static void proc_func(void *v)
 				e->head.y += 2;
 			}
 		}
-	}
-
-	// the lava inexplicably goes up when the cow is done
-	else if (cow && cow->state == COW_FINISHED)
-	{
-		e->head.y -= 2;
 	}
 
 	// Delayed cow-reference-search
