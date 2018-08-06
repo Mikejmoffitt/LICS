@@ -305,6 +305,10 @@ void enemy_get_hurt(en_generic *e)
 // Most enemies will use this.
 void enemy_cube_response(en_generic *e, cube *c)
 {
+	if (e->head.hurt_cnt != 0)
+	{
+		return;
+	}
 	if (c->type == CUBE_PHANTOM && sram.have_double_phantom)
 	{
 		// Let the enemy get hurt extra
@@ -325,10 +329,6 @@ void enemy_cube_response(en_generic *e, cube *c)
 			e->head.hp--;
 		}
 
-	}
-	if (e->head.hurt_cnt != 0)
-	{
-		return;
 	}
 	if (c->type == CUBE_GREEN)
 	{
