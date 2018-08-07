@@ -277,7 +277,15 @@ cube_desc_area:
 			sprintf(desc,"Under Construction sign.");
 			break;
 		case OBJ_BGSCROLLY:
-			sprintf(desc,"Makes the far BG scroll constantly.");
+			sprintf(desc,"Enables BG scroll modifications.");
+			if (o->data == 0x0000)
+			{
+				sprintf(dat2,"Scrolls the far BG horizontally constantly.");
+			}
+			else if (o->data < 0x0010)
+			{
+				sprintf(dat2,"Justifies the screen %d pixels from the bottom.", o->data);
+			}
 			break;
 	}
 

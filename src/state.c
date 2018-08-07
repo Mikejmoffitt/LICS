@@ -16,6 +16,8 @@ gamestate state;
 static s16 sx_memo;
 static s16 sy_memo;
 
+static u16 y_justify;
+
 static inline entrance *state_entrance_by_num(u16 num)
 {
 	return &state.entrances[num];
@@ -52,6 +54,12 @@ static void state_parse_objects(void)
 			case ENEMY_CUBE:
 				cube_spawn(o->x - CUBE_LEFT, o->y - CUBE_TOP, o->data, CUBE_STATE_IDLE, 0, 0);
 				break;
+			case ENEMY_BGSCROLLY:
+				if (o->data)
+				{
+					state_set_y_justify(o->data);
+					break;
+				} // fall through to placement otherwise
 			default:
 				enemy_place(o->x, o->y, o->type, o->data);
 				break;
@@ -87,6 +95,7 @@ static void state_config_scrolling(void)
 // Set up a room by the specified ID.
 void state_load_room(u8 roomnum)
 {
+	state_set_y_justify(0);
 	state.cam_x = STATE_SCROLL_INVALID;
 	state.cam_y = STATE_SCROLL_INVALID;
 	sx_memo = STATE_SCROLL_INVALID;
@@ -177,7 +186,7 @@ u16 state_update_scroll()
 	// Vertical scrolling TODO: Make euro mode less ghetto looking
 	if (!state.vs_en)
 	{
-		state.cam_y = (system_ntsc) ? 16 : 0;
+		state.cam_y = (system_ntsc) ? 16 - y_justify : 0;
 	}
 	else if (py >= (state.current_room->h * STATE_SC_H) - (VDP_getScreenHeight() / 2))
 	{
@@ -204,6 +213,15 @@ u16 state_update_scroll()
 	}
 
 	return (state.xscroll_cmd ? STATE_MOVED_X : 0) | (state.yscroll_cmd ? STATE_MOVED_Y : 0);
+}
+
+void state_set_y_justify(u16 j)
+{
+	if (j > 0x10)
+	{
+		j = 0x10;
+	}
+	y_justify = j;
 }
 
 // Transfer scrolling information to VRAM as needed

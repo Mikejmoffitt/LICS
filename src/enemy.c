@@ -511,7 +511,7 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 					en_init_wip((en_wip *)e);
 					break;
 				case ENEMY_BGSCROLLY:
-					en_init_bgscrolly((en_bgscrolly *)e);
+					en_init_bgscrolly((en_bgscrolly *)e, data);
 					break;
 			}
 			return &enemies[i];

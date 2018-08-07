@@ -107,6 +107,9 @@ void state_dma_scroll(void);
 fix32 state_get_entrance_x(void);
 fix32 state_get_entrance_y(void);
 
+// Specify camera offset from bottom in NTSC (default is 0, full bottom)
+void state_set_y_justify(u16 j);
+
 // Check if player has reached a screen edge, load new room if needed
 u16 state_watch_transitions(void);
 

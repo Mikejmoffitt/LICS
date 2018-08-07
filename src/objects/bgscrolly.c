@@ -1,3 +1,4 @@
+// Provides a few BG scroll options
 #include "bgscrolly.h"
 #include "system.h"
 #include "player.h"
@@ -15,7 +16,7 @@ static void vram_load(void)
 }
 
 // Initialization boilerplate
-void en_init_bgscrolly(en_bgscrolly *e)
+void en_init_bgscrolly(en_bgscrolly *e, u16 data)
 {
 	vram_load();
 	e->head.proc_func = &proc_func;
@@ -30,6 +31,8 @@ void en_init_bgscrolly(en_bgscrolly *e)
 	e->head.size[0] = SPRITE_SIZE(1,1);
 	e->head.xoff[0] = -8;
 	e->head.yoff[0] = -15;
+	e->action = data;
+	e->enabled = 0;
 
 	e->head.harmful = ENEMY_HARM_NONE;
 }
@@ -44,8 +47,8 @@ void en_unload_bgscrolly(void)
 static void proc_func(void *v)
 {
 	en_bgscrolly *e = (en_bgscrolly *)v;
-	// If not yet active, activate and destroy all others
-	if (!e->head.active)
+	// If not yet active, activate and destroy all others that do X scroll
+	if (!e->enabled)
 	{
 		u16 i = ENEMIES_NUM;
 		while(i--)
@@ -58,6 +61,7 @@ static void proc_func(void *v)
 			}
 		}
 		// Mark this one as active
+		e->enabled = 1;
 		e->head.active = 1;
 	}
 	else
