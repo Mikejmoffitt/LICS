@@ -89,7 +89,8 @@ void en_init_boss1(en_boss1 *e)
 	e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + 12);
 
 	e->dy = FIX16(0.0);
-	e->phase_timer = 0;
+	e->phase_counter = 0;
+	e->pending_shots = 0;
 	e->anim_seq = 0;
 }
 
@@ -105,7 +106,7 @@ void en_unload_boss1(void)
 #define BOSS1_ANIM_ROARING 3
 #define BOSS1_ANIM_HITWALL 4
 #define BOSS1_ANIM_TURNING 5
-#define BOSS1_ANIM_DESCENDING 5
+#define BOSS1_ANIM_DESCENDING 6
 
 #define BOSS1_APPROACH_START (system_ntsc ? 240 : 200)
 #define BOSS1_APPROACH_STOP (system_ntsc ? 282 : 235)
@@ -113,45 +114,155 @@ void en_unload_boss1(void)
 #define BOSS1_ROAR_STOP (system_ntsc ? 360 : 300)
 #define BOSS1_DESCEND_START (system_ntsc ? 396 : 330)
 #define BOSS1_DESCEND_STOP (system_ntsc ? 480 : 400)
+
 // Descend stops when he hits the ground
 // States
 
 static void proc_battle(void *v)
 {
-	(void)v;
-	return;
+	en_boss1 *e = (en_boss1 *)v;
+	if (e->head.hp > 0)
+	{
+		// Run logic on only 5/6 of the frames in NTSC mode for speed adjust
+		if ((system_ntsc && ntsc_counter != 1) || !system_ntsc)
+		{
+			e->phase_counter++;
+		}
+		else if (e->phase_counter < 230)
+		{
+			return;
+		}
+	}
+	// This is a nearly direct port of the original MMF logic. Just full
+	// disclosure - this isn't really how I'd do it.
+	// TODO: Refactor to use a simple state machine.
+	if (e->phase_counter == -20)
+	{
+		// TODO screen shake enable
+		// TODO playsound(crash)
+		set_animation(e, BOSS1_ANIM_HITWALL);
+	}
+	else if (e->phase_counter == 5)
+	{
+		set_animation(e, BOSS1_ANIM_STOPPED);
+	}
+	else if (e->phase_counter == 18 && e->pending_shots == 15)
+	{
+		set_animation(e, BOSS1_ANIM_TURNING);
+		e->head.direction = (e->head.direction == ENEMY_RIGHT) ?
+		                    ENEMY_LEFT : ENEMY_RIGHT;
+	}
+	else if (e->phase_counter == 19 && e->pending_shots > 0)
+	{
+		e->phase_counter--;
+		e->pending_shots--;
+		// TODO enable cube falling
+	}
+	else if (e->phase_counter == 20)
+	{
+		// TODO stop screen shake
+	}
+	else if (e->phase_counter == 25)
+	{
+		set_animation(e, BOSS1_ANIM_STOPPED);
+	}
+	else if (e->phase_counter == 50)
+	{
+		// TODO set pending shots to random(5)
+		e->pending_shots = 3;
+	}
+	else if (e->phase_counter == 70) // <-- shots remaining, returns here
+	{
+		set_animation(e, BOSS1_ANIM_STOPPED);
+	}
+	else if (e->phase_counter == 100 && e->pending_shots > 0)
+	{
+		set_animation(e, BOSS1_ANIM_ROARING);
+	}
+	else if (e->phase_counter == 120 && e->pending_shots > 0)
+	{
+		// TODO Fire bouncy shot at player; expand bullets type?
+		e->pending_shots--;
+		e->phase_counter = 51;
+	}
+	else if (e->phase_counter == 200)
+	{
+		set_animation(e, BOSS1_ANIM_WALKING);
+	}
+	else if (e->phase_counter == 229)
+	{
+		set_animation(e, BOSS1_ANIM_RUNNING);
+	}
+	else if (e->phase_counter >= 230)
+	{
+		s16 px_per_frame = 3;
+		if ((system_ntsc && ntsc_counter != 1) || !system_ntsc)
+		{
+			px_per_frame = (ntsc_counter % 2) ? 3 : 2;
+		}
+
+		if (e->head.direction == ENEMY_RIGHT)
+		{
+			e->head.x += px_per_frame;
+			if (map_collision(e->head.x + e->head.width,
+				              e->head.y - (e->head.height / 2)))
+			{
+				e->phase_counter = -21;
+				e->pending_shots = 15; // Per MMF, re-used as a turn anim timer
+			}
+		}
+		else
+		{
+			e->head.x -= px_per_frame;
+			if (map_collision(e->head.x - e->head.width,
+				              e->head.y - (e->head.height / 2)))
+			{
+				e->phase_counter = -21;
+				e->pending_shots = 15; // Per MMF, re-used as a turn anim timer
+			}
+		}
+	}
+}
+
+static void set_animation(en_boss1 *e, u16 seq)
+{
+	if (seq != e->anim_seq)
+	{
+		e->anim_seq = seq;
+		e->anim_counter = 0;
+	}
 }
 
 static void proc_approach(void *v)
 {
 	en_boss1 *e = (en_boss1 *)v;
-	e->phase_timer++;
-	if (e->phase_timer >= BOSS1_APPROACH_START && e->phase_timer < BOSS1_APPROACH_STOP)
+	e->phase_counter++;
+	if (e->phase_counter >= BOSS1_APPROACH_START && e->phase_counter < BOSS1_APPROACH_STOP)
 	{
-		set_animation(e, BOSS1_ANIM_WALKING);
+		set_animation(e, BOSS1_ANIM_RUNNING);
 		if ((system_ntsc && ntsc_counter != 1) || !system_ntsc)
 		{
 			e->head.x += 1;
 		}
 		// Debug color
 	}
-	else if (e->phase_timer >= BOSS1_ROAR_START && e->phase_timer < BOSS1_ROAR_STOP)
+	else if (e->phase_counter >= BOSS1_ROAR_START && e->phase_counter < BOSS1_ROAR_STOP)
 	{
 		set_animation(e, BOSS1_ANIM_ROARING);
-		if (e->phase_timer == BOSS1_ROAR_START)
+		if (e->phase_counter == BOSS1_ROAR_START)
 		{
 			// playsound(sfx_boss1_roar);
 		}
 	}
-	else if (e->phase_timer >= BOSS1_ROAR_STOP && e->phase_timer < BOSS1_DESCEND_START)
+	else if (e->phase_counter >= BOSS1_ROAR_STOP && e->phase_counter < BOSS1_DESCEND_START)
 	{
 		set_animation(e, BOSS1_ANIM_STOPPED);
 	}
-	else if (e->phase_timer >= BOSS1_DESCEND_START)
+	else if (e->phase_counter >= BOSS1_DESCEND_START)
 	{
 		set_animation(e, BOSS1_ANIM_DESCENDING);
 		// Jump off the ledge
-		if (e->phase_timer == BOSS1_DESCEND_START)
+		if (e->phase_counter == BOSS1_DESCEND_START)
 		{
 			e->dy = system_ntsc ? FIX16(-1.666) : FIX16(-2.000);
 		}
@@ -171,6 +282,7 @@ static void proc_approach(void *v)
 			e->head.y = 208;
 			e->head.proc_func = proc_battle;
 			set_animation(e, BOSS1_ANIM_STOPPED);
+			e->phase_counter = 0;
 			e->head.cube_func = NULL; // No longer invulnerable
 			// playsound(sfx_crash);
 			return;
@@ -193,24 +305,14 @@ static void proc_func(void *v)
 	// Kick off the boss battle
 	else if (e->head.proc_func == proc_func)
 	{
-		e->phase_timer = 0;
+		e->phase_counter = 0;
 		e->head.proc_func = proc_approach;
 	}
 }
 
-static void set_animation(en_boss1 *e, uint16_t seq)
-{
-	if (seq != e->anim_seq)
-	{
-		e->anim_seq = seq;
-		e->anim_counter = 0;
-	}
-}
-
-// Single-frame animation and sprite placement handler
 static void anim_func(void *v)
 {
-	uint16_t frame_num = 0;
+	u16 frame_num = 0;
 	en_boss1 *e = (en_boss1 *)v;
 	e->head.size[0] = SPRITE_SIZE(3,4);
 	e->head.size[1] = SPRITE_SIZE(3,4);
@@ -228,7 +330,7 @@ static void anim_func(void *v)
 		case BOSS1_ANIM_STOPPED:
 			frame_num = 0;
 			break;
-		case BOSS1_ANIM_WALKING:
+		case BOSS1_ANIM_RUNNING:
 			if (e->anim_counter >= 9)
 			{
 				e->anim_counter = 0;
@@ -240,6 +342,30 @@ static void anim_func(void *v)
 				e->head.yoff[1] -= (frame_num - 3);
 			}
 			break;
+		case BOSS1_ANIM_WALKING:
+			if (e->anim_counter >= 12)
+			{
+				e->anim_counter = 0;
+			}
+			if (e->anim_counter < 3)
+			{
+				frame_num = 1;
+			}
+			else if (e->anim_counter >= 6 && e->anim_counter < 9)
+			{
+				frame_num = 2;
+			}
+			if (frame_num != 0)
+			{
+				e->head.yoff[0] -= 1;
+				e->head.yoff[1] -= 1;
+			}
+			break;
+		case BOSS1_ANIM_HITWALL:
+			e->head.xoff[0] += ((e->anim_counter % 4 < 2) ? 1 : -1);
+			e->head.xoff[1] += ((e->anim_counter % 4 < 2) ? 1 : -1);
+			frame_num = 6;
+			break;
 		case BOSS1_ANIM_ROARING:
 			e->head.xoff[0] += ((e->anim_counter % 4 < 2) ? 1 : -1);
 			e->head.xoff[1] += ((e->anim_counter % 4 < 2) ? 1 : -1);
@@ -248,8 +374,29 @@ static void anim_func(void *v)
 		case BOSS1_ANIM_DESCENDING:
 			frame_num = 4;
 			break;
+		case BOSS1_ANIM_TURNING:
+			frame_num = 8;
+			e->head.xoff[0] = -16;
+			e->head.xoff[1] = 0;
+			e->head.size[0] = SPRITE_SIZE(2,4);
+			e->head.size[1] = SPRITE_SIZE(2,4);
+			e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0,
+			                                 vram_pos + (24 * frame_num));
+			e->head.attr[1] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 1,
+			                                 vram_pos + (24 * frame_num));
+			return;
 	}
-	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, 0, vram_pos + (24 * frame_num));
+	if (e->head.direction == ENEMY_LEFT)
+	{
+		s16 st;
+		st = e->head.xoff[0];
+		e->head.xoff[0] = e->head.xoff[1];
+		e->head.xoff[1] = st;
+		st = e->head.yoff[0];
+		e->head.yoff[0] = e->head.yoff[1];
+		e->head.yoff[1] = st;
+	}
+	e->head.attr[0] = TILE_ATTR_FULL(ENEMY_PALNUM, 0, 0, e->head.direction, vram_pos + (24 * frame_num));
 	e->head.attr[1] = e->head.attr[0] + 12;
 }
 

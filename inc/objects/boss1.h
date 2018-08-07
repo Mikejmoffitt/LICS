@@ -13,7 +13,8 @@ struct en_boss1
 	fix16 dy;
 	u16 anim_seq;
 	u16 anim_counter;
-	u16 phase_timer;
+	s16 phase_counter;
+	u16 pending_shots;
 };
 
 // Initialize enemy at address e
