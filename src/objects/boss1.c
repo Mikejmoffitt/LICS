@@ -196,9 +196,9 @@ static void proc_battle(void *v)
 	else if (e->phase_counter >= 230)
 	{
 		s16 px_per_frame = 3;
-		if ((system_ntsc && ntsc_counter != 1) || !system_ntsc)
+		if ((system_ntsc && (ntsc_counter % 2)))
 		{
-			px_per_frame = (ntsc_counter % 2) ? 3 : 2;
+			px_per_frame = 2;
 		}
 
 		if (e->head.direction == ENEMY_RIGHT)
