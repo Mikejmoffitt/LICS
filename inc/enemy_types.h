@@ -49,6 +49,7 @@
 #define ENEMY_SPOOKO 44 // Psuedo-enemy
 #define ENEMY_WIP 45 // Psuedo-enemy
 #define ENEMY_BGSCROLLY 46 // Psuedo-enemy
+#define ENEMY_FAKECUBE 47 // Psuedo-enemy
 // ---------------------
 
 

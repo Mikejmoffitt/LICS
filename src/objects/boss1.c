@@ -4,6 +4,7 @@
 #include "system.h"
 #include "save.h"
 #include "cubes.h"
+#include "projectiles.h"
 
 // BOSS 1 STATES
 // =============
@@ -69,7 +70,7 @@ void en_init_boss1(en_boss1 *e)
 	vram_load();
 	e->head.proc_func = &proc_func;
 	e->head.anim_func = &anim_func;
-	e->head.cube_func = &cube_invuln;
+//	e->head.cube_func = &cube_invuln;
 
 	e->head.hp = 5;
 	e->head.x = -28;
@@ -121,6 +122,9 @@ void en_unload_boss1(void)
 static void proc_battle(void *v)
 {
 	en_boss1 *e = (en_boss1 *)v;
+	if (system_osc % 32 == 0)
+	{
+	}	
 	if (e->head.hp > 0)
 	{
 		// Run logic on only 5/6 of the frames in NTSC mode for speed adjust
@@ -154,9 +158,10 @@ static void proc_battle(void *v)
 	}
 	else if (e->phase_counter == 19 && e->pending_shots > 0)
 	{
-		e->phase_counter--;
+		e->phase_counter = 0;
 		e->pending_shots--;
 		// TODO enable cube falling
+		// The 6th-to-last cube is the one that doesn't break when dropped down
 	}
 	else if (e->phase_counter == 20)
 	{
@@ -168,8 +173,11 @@ static void proc_battle(void *v)
 	}
 	else if (e->phase_counter == 50)
 	{
-		// TODO set pending shots to random(5)
-		e->pending_shots = 3;
+		e->pending_shots = GET_HVCOUNTER / 16;
+		while (e->pending_shots >= 5)
+		{
+			e->pending_shots -= 5;
+		}
 	}
 	else if (e->phase_counter == 70) // <-- shots remaining, returns here
 	{
@@ -181,7 +189,15 @@ static void proc_battle(void *v)
 	}
 	else if (e->phase_counter == 120 && e->pending_shots > 0)
 	{
-		// TODO Fire bouncy shot at player; expand bullets type?
+		fix16 proj_dx = system_ntsc ? FIX16(0.8333) : FIX16(1.0);
+		if (e->head.direction == ENEMY_LEFT)
+		{
+			proj_dx = -proj_dx;
+		}
+		fix16 proj_dy = system_ntsc ? FIX16(-3.3333) : FIX16(-4.0);
+		s16 proj_x = e->head.x + ((e->head.direction == ENEMY_RIGHT) ? 13 : -13);;// + (e->head.direction == ENEMY_RIGHT) ? 13 : -13;
+		s16 proj_y = e->head.y - 14;
+		projectile_shoot(proj_x, e->head.y - 14, proj_dx, proj_dy, PROJECTILE_DEATHORB2);
 		e->pending_shots--;
 		e->phase_counter = 51;
 	}

@@ -24,15 +24,23 @@ void projectiles_init(void)
 	}
 }
 
-// Destroy the particle, or in the case of the ball, bounce upwards first
-static inline void handle_collision(projectile *p)
+static inline void collision_basic(projectile *p)
 {
 	s32 px = fix32ToInt(p->x);
 	s32 py = fix32ToInt(p->y);
 	if (map_collision(px, py))
 	{
-		if (p->type == PROJECTILE_BALL &&
-			p->dy > FIX16(0.0))
+		p->active = 0;
+	}
+}
+
+static inline void collision_ball(projectile *p)
+{
+	s32 px = fix32ToInt(p->x);
+	s32 py = fix32ToInt(p->y);
+	if (map_collision(px, py))
+	{
+		if (p->dy > FIX16(0.0))
 		{
 			p->dy = p->dy * -1;
 		}
@@ -43,6 +51,56 @@ static inline void handle_collision(projectile *p)
 	}
 }
 
+static inline void collision_deathorb2(projectile *p)
+{
+	s32 px = fix32ToInt(p->x);
+	s32 py = fix32ToInt(p->y);
+	if ((p->dx > FIX16(0.0) && map_collision(px + 9, py - 8)) ||
+	    (p->dx < FIX16(0.0) && map_collision(px - 9, py - 8)) ||
+	    (px >= 304) || (px <= 16))
+	{
+		p->active = 0;
+	}
+	else if (map_collision(px, py + 8))
+	{
+		if (p->dy > FIX16(0.0))
+		{
+			p->dy = system_ntsc ? FIX16(-5.2083) : FIX16(-6.25);
+			switch(GET_HVCOUNTER % 4)
+			{
+				default:
+				case 0:
+					break;
+				case 1:
+					p->dy += system_ntsc ? FIX16(0.2083) : FIX16(0.25);
+				case 2:
+					p->dy += system_ntsc ? FIX16(0.2083) : FIX16(0.25);
+				case 3:
+					p->dy += system_ntsc ? FIX16(0.2083) : FIX16(0.25);
+					p->dy += system_ntsc ? FIX16(0.2083) : FIX16(0.25);
+			}
+		}
+	}
+}
+
+// Destroy the particle, or in the case of the ball, bounce upwards first
+static inline void handle_collision(projectile *p)
+{
+	switch (p->type)
+	{
+		default:
+			collision_basic(p);
+			break;
+		case PROJECTILE_BALL:
+			collision_ball(p);
+			break;
+		case PROJECTILE_DEATHORB2:
+			collision_deathorb2(p);
+			break;
+			
+	}
+}
+
 // Hurt player and destroy the particle on collision
 static inline void check_for_player(projectile *p)
 {
@@ -50,7 +108,7 @@ static inline void check_for_player(projectile *p)
 	s32 py = fix32ToInt(p->y);
 	if (pl.invuln_cnt == 0 &&
 	    player_collision(px - PROJECTILE_CHK,
-   	                     px + PROJECTILE_CHK,
+	                     px + PROJECTILE_CHK,
 	                     py - PROJECTILE_CHK,
 	                     py + PROJECTILE_CHK))
 	{
@@ -102,6 +160,11 @@ static inline void movement(projectile *p)
 				p->v_dir = PROJECTILE_UP;
 			}
 		}
+	}
+	else if (p->type == PROJECTILE_DEATHORB2)
+	{
+		fix16 k_gravity = system_ntsc ? FIX16(0.1736) : FIX16(0.25);
+		p->dy += k_gravity;
 	}
 
 	// Check for violation of room boundaries
@@ -178,12 +241,15 @@ void projectiles_draw(void)
 			u16 attr;
 			if (p->type == PROJECTILE_SPIKE)
 			{
-				attr = TILE_ATTR_FULL(HUD_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + 2);
+				attr = TILE_ATTR_FULL(HUD_PALNUM, 0, 0, 0,
+				                      PROJECTILES_VRAM_SLOT + 2);
 				size = SPRITE_SIZE(1,1);
 			}
 			else if (p->type == PROJECTILE_SPARK)
 			{
-				attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + 3 + ((system_osc >> 2) % 2));
+				attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0,
+				                      PROJECTILES_VRAM_SLOT + 3 +
+				                      ((system_osc >> 2) % 2));
 				size = SPRITE_SIZE(1,1);
 				ty -= 3;
 			}
@@ -193,11 +259,24 @@ void projectiles_draw(void)
 				tx -= 4;
 				ty -= 4;
 				size = SPRITE_SIZE(2,2);
-				attr = TILE_ATTR_FULL(fr_off ? PLAYER_PALNUM : ENEMY_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + (fr_off ? 5 : 9));
+				attr = TILE_ATTR_FULL(fr_off ? PLAYER_PALNUM : ENEMY_PALNUM,
+				                      0, 0, 0, PROJECTILES_VRAM_SLOT +
+				                      (fr_off ? 5 : 9));
+			}
+			else if (p->type == PROJECTILE_DEATHORB2)
+			{
+				u16 frame = (system_osc >> 2) % 4;
+				size = SPRITE_SIZE(2,2);
+				
+				attr = TILE_ATTR_FULL((frame%2) ? BG_PALNUM : PLAYER_PALNUM,
+				                      0, p->dx < FIX16(0.0), 0,
+				                      PROJECTILES_VRAM_SLOT + 13 + (4 * frame));
 			}
 			else
 			{
-				attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0, PROJECTILES_VRAM_SLOT + ((system_osc >> 2) % 2));
+				attr = TILE_ATTR_FULL(PLAYER_PALNUM, 0, 0, 0,
+				                      PROJECTILES_VRAM_SLOT +
+				                      ((system_osc >> 2) % 2));
 				size = SPRITE_SIZE(1,1);
 			}
 

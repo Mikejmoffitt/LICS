@@ -280,12 +280,15 @@ cube_desc_area:
 			sprintf(desc,"Enables BG scroll modifications.");
 			if (o->data == 0x0000)
 			{
-				sprintf(dat2,"Scrolls the far BG horizontally constantly.");
+				sprintf(dat2,"Scrolls the far BG horizontally.");
 			}
 			else if (o->data < 0x0010)
 			{
-				sprintf(dat2,"Justifies the screen %d pixels from the bottom.", o->data);
+				sprintf(dat2,"Screen off %d pixels from bottom.", o->data);
 			}
+			break;
+		case OBJ_FAKECUBE:
+			sprintf(desc,"Fake ceiling cube for boss 1.");
 			break;
 	}
 

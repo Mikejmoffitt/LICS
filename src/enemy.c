@@ -31,6 +31,7 @@
 #include "boss1.h"
 #include "wip.h"
 #include "bgscrolly.h"
+#include "fakecube.h"
 
 #include "state.h"
 #include "particles.h"
@@ -134,6 +135,7 @@ void enemy_init(void)
 	en_unload_wip();
 	en_unload_bounds();
 	en_unload_bgscrolly();
+	en_unload_fakecube();
 	enemy_vram_reset();
 
 	powerup_spawn_chance = GET_HVCOUNTER;
@@ -510,8 +512,13 @@ en_generic *enemy_place(u16 x, u16 y, u16 type, u16 data)
 				case ENEMY_WIP:
 					en_init_wip((en_wip *)e);
 					break;
+
 				case ENEMY_BGSCROLLY:
 					en_init_bgscrolly((en_bgscrolly *)e, data);
+					break;
+
+				case ENEMY_FAKECUBE:
+					en_init_fakecube((en_fakecube *)e);
 					break;
 			}
 			return &enemies[i];
