@@ -927,7 +927,7 @@ static inline void player_cube_collision(void)
 				{
 					player_get_bounced();
 					// Only hurt the player if the player is below the cube
-					if ( (c->type != CUBE_GREEN) || (pl.py >= c->y + CUBE_BOTTOM))
+					if ( (c->type != CUBE_GREEN && c->type != CUBE_GREENBLUE) || (pl.py >= c->y + CUBE_BOTTOM))
 					{
 						player_get_hurt();
 					}
