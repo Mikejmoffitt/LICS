@@ -41,7 +41,8 @@ static void proc_func(void *v)
 	en_fakecube *e = (en_fakecube *)v;
 	// If the player has phantom power, convert all fakecubes into actual
 	// idle cubes to protect a potential ceiling exit
-	if (sram.have_phantom)
+	// TODO: Remove impossible logic after finished testing the boss
+	if (1 == 0 && sram.have_phantom)
 	{
 		cube_spawn(e->head.x, e->head.y, CUBE_BLUE,
 		           CUBE_STATE_IDLE, FIX16(0.0), FIX16(0.0));
@@ -53,11 +54,6 @@ static void proc_func(void *v)
 	if (e->hide_counter > 0)
 	{
 		e->hide_counter--;
-	}
-	else
-	{
-		// TODO remove test cube drop
-		en_fakecube_drop_cube(e);
 	}
 }
 
@@ -85,17 +81,16 @@ static void anim_func(void *v)
 static void cube_func(void *v, cube *c)
 {
 	en_fakecube *e = (en_fakecube *)v;
-	// Cubes thrown up at the cube ceiling are destroyed
-	if (e->hide_counter == 0 && c->dy < FIX16(0.0))
+	u16 reappear_val = system_ntsc ? 60 : 50;
+	if ((c->x > e->head.x - 2) && (c->x < e->head.x + 2))
 	{
-		cube_destroy(c);
+		if (e->hide_counter < reappear_val)
+		{
+			e->hide_counter = system_ntsc ? (240) : (200);
+		}
+		else if (c->dy <= FIX16(0.0))
+		{
+//			c->state = CUBE_STATE_INACTIVE;
+		}
 	}
-}
-
-// Drop a blue cube from the ceiling
-void en_fakecube_drop_cube(en_fakecube *e)
-{
-	cube_spawn(e->head.x, e->head.y, CUBE_BLUE,
-	           CUBE_STATE_AIR, FIX16(0.0), FIX16(0.0));
-	e->hide_counter = system_ntsc ? (240) : (200);
 }

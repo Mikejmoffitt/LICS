@@ -5,8 +5,10 @@
 #include "save.h"
 #include "cubes.h"
 #include "projectiles.h"
+#include "fakecube.h"
+#include "system/sprites.h"
 
-// BOSS 1 STATES
+// BOSS 1 STATE/
 // =============
 //
 // APPROACHING
@@ -54,6 +56,15 @@ static void vram_load(void)
 	}
 }
 
+static const u16 cube_drop_table[] =
+{
+	9, 11, 10, 1, 5, 6, 12, 2, 4, 3, 14, 8, 7, 13, 0,
+	3, 9, 6, 13, 5, 10, 12, 8, 14, 2, 0, 1, 11, 7, 4,
+	10, 8, 4, 14, 1, 0, 11, 9, 2, 5, 3, 6, 12, 13, 7,
+	8, 12, 6, 1, 7, 0, 5, 11, 9, 10, 4, 3, 13, 14, 2,
+	9, 12, 3, 6
+};
+
 // For when the boss is invulnerable
 static void cube_invuln(void *v, cube *c)
 {
@@ -93,6 +104,7 @@ void en_init_boss1(en_boss1 *e)
 	e->phase_counter = 0;
 	e->pending_shots = 0;
 	e->anim_seq = 0;
+	e->random_drop_idx = GET_HVCOUNTER % 64;
 }
 
 // Reset the VRAM allocation position counter
@@ -118,6 +130,25 @@ void en_unload_boss1(void)
 
 // Descend stops when he hits the ground
 // States
+
+static void cube_drop(en_boss1 *e)
+{
+	u16 i = ENEMIES_NUM;
+	u16 cube_type = (e->pending_shots == 6) ? CUBE_GREENBLUE : CUBE_BLUE;
+	// Select the desired cube drop position
+	s16 selected_pos = (e->head.direction == ENEMY_LEFT) ? 16 : 64;
+	selected_pos += cube_drop_table[e->random_drop_idx] * 16;
+	e->random_drop_idx++;
+	if (e->random_drop_idx >= 64)
+	{
+		e->random_drop_idx = 0;
+	}
+
+	cube_spawn(selected_pos - CUBE_LEFT, 15, cube_type,
+	           CUBE_STATE_AIR, FIX16(0.0), FIX16(0.0));
+
+	return;
+}
 
 static void proc_battle(void *v)
 {
@@ -160,6 +191,8 @@ static void proc_battle(void *v)
 	{
 		e->phase_counter = 0;
 		e->pending_shots--;
+
+		cube_drop(e);
 		// TODO enable cube falling
 		// The 6th-to-last cube is the one that doesn't break when dropped down
 	}
@@ -253,6 +286,12 @@ static void proc_approach(void *v)
 {
 	en_boss1 *e = (en_boss1 *)v;
 	e->phase_counter++;
+
+	// Scramble randomization during intro by reading gamepad and HV counter
+
+	e->random_drop_idx += buttons + GET_HVCOUNTER;
+	e->random_drop_idx = e->random_drop_idx % 64;
+
 	if (e->phase_counter >= BOSS1_APPROACH_START && e->phase_counter < BOSS1_APPROACH_STOP)
 	{
 		set_animation(e, BOSS1_ANIM_RUNNING);
@@ -328,6 +367,7 @@ static void proc_func(void *v)
 
 static void anim_func(void *v)
 {
+
 	u16 frame_num = 0;
 	en_boss1 *e = (en_boss1 *)v;
 	e->head.size[0] = SPRITE_SIZE(3,4);

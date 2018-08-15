@@ -19,7 +19,4 @@ void en_init_fakecube(en_fakecube *e);
 // Deallocate VRAM associated with this type of enemy
 void en_unload_fakecube(void);
 
-// Spawn a regular blue cube from a fake ceiling cube
-void en_fakecube_drop_cube(en_fakecube *e);
-
 #endif
