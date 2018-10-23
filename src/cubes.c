@@ -1,16 +1,16 @@
 #include "cubes.h"
 #include "vramslots.h"
 #include "gfx.h"
-#include "sprites.h"
+#include "system/sprites.h"
 #include "state.h"
-#include "system.h"
+#include "system/system.h"
 #include "player.h"
 #include "map.h"
 #include "particles.h"
-#include "music.h"
+#include "system/music.h"
 #include "enemy.h"
 #include "powerups.h"
-#include "save.h"
+#include "system/save.h"
 
 cube cubes[CUBES_NUM];
 

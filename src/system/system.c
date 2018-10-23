@@ -36,7 +36,7 @@ void w_puts(const char *s, u16 x, u16 y)
 			s++;
 			continue;
 		}
-		VDP_setTileMapXY(VDP_getWindowPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		VDP_setTileMapXY(PLAN_WINDOW, TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
 		x++;
 		s++;
 	}
@@ -46,7 +46,7 @@ void a_puts(const char *s, u16 x, u16 y)
 {
 	while (*s)
 	{
-		VDP_setTileMapXY(VDP_getAPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		VDP_setTileMapXY(PLAN_A, TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
 		x++;
 		s++;
 	}
@@ -56,7 +56,7 @@ void b_puts(const char *s, u16 x, u16 y)
 {
 	while (*s)
 	{
-		VDP_setTileMapXY(VDP_getBPlanAddress(), TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
+		VDP_setTileMapXY(PLAN_B, TILE_ATTR_FULL(1, 1, 0, 0, 0x500 + *s), x, y);
 		x++;
 		s++;
 	}
@@ -161,8 +161,8 @@ void system_init(void)
 	VDP_doVRamDMA((u32)gfx_font, 0xA400, 1536);
 
 	// Clean up whatever might be there from before
-	VDP_clearPlan(VDP_PLAN_A, 1);
-	VDP_clearPlan(VDP_PLAN_B, 1);
+	VDP_clearPlan(PLAN_A, 1);
+	VDP_clearPlan(PLAN_B, 1);
 	VDP_waitDMACompletion();
 
 	sprites_init();

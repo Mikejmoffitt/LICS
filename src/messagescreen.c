@@ -1,15 +1,15 @@
 #include "messagescreen.h"
 #include <genesis.h>
-#include "system.h"
-#include "sprites.h"
+#include "system/system.h"
+#include "system/sprites.h"
 #include "pause.h"
 #include "pal.h"
 #include "gfx.h"
 #include "hud.h"
 #include "pausemap.h"
 #include "state.h"
-#include "save.h"
-#include "music.h"
+#include "system/save.h"
+#include "system/music.h"
 #include "vramslots.h"
 
 static inline void screen_clear(void)

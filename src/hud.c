@@ -1,8 +1,8 @@
 #include "hud.h"
-#include "sprites.h"
+#include "system/sprites.h"
 #include "gfx.h"
 #include "vramslots.h"
-#include "system.h"
+#include "system/system.h"
 
 void hud_dma_tiles(void)
 {

@@ -4,7 +4,6 @@
 
 #include "cdaudio.h"
 #include <genesis.h>
-#include <stdlib.h>
 
 typedef struct cd_info cd_info;
 struct cd_info

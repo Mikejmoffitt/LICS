@@ -1,108 +1,151 @@
-CC = m68k-elf-gcc
-AS = m68k-elf-as
-OBJC = m68k-elf-objcopy
-LD = m68k-elf-ld
-RM = rm -f
-ASMZ80 = zasm
-BINTOS = bintos
-RESCOMP= rescomp
+BIN= $(GDK)/bin
+LIB= $(GDK)/lib
 
-ECHO = printf
+LIBSRC= $(GDK)/src
+LIBRES= $(GDK)/res
+LIBINCLUDE= $(GDK)/inc
 
-OPTION = -O1 -std=c99 -Wall -fdiagnostics-color=auto
-INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
-CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow -pedantic
-Z80FLAGS = -vb2 -Isrc/system/
-ASFLAGS = -m68000 --register-prefix-optional
-LIBS =  -L$(GENDEV)/m68k-elf/lib -L$(GENDEV)/m68k-elf/lib/gcc/m68k-elf/* -L$(GENDEV)/m68k-elf/m68k-elf/lib -lmd -lnosys -lgcc
-LINKFLAGS = -T $(GENDEV)/ldscripts/sgdk.ld -nostdlib
-ARCHIVES = $(GENDEV)/m68k-elf/lib/libmd.a $(GENDEV)/m68k-elf/lib/gcc/m68k-elf/*/libgcc.a
+SRC= src
+RES= res
 
-RESOURCES=
-BOOT_RESOURCES=
+SHELL= $(BIN)/sh
+RM= $(BIN)/rm
+CP= $(BIN)/cp
+CC= $(BIN)/gcc
+GAS= $(GENDEV)/bin/m68k-elf-as
+LD= $(BIN)/ld
+NM= $(BIN)/nm
+ECHO= echo
+OBJCPY= $(BIN)/objcopy
+ASMZ80= $(BIN)/sjasm
+MACCER= $(BIN)/mac68k
+SIZEBND= $(BIN)/sizebnd
+BINTOS= $(BIN)/bintos
+RESCOMP= $(BIN)/rescomp
+MKDIR= $(BIN)/mkdir
 
-BOOTSS=$(wildcard src/system/boot/*.s)
-BOOT_RESOURCES+=$(BOOTSS:.s=.o)
+include $(GENDEV)/sgdk/mkfiles/makefile.vars
 
-RESS=$(wildcard res/*.res)
-RESOURCES+=$(RESS:.res=.o)
-CS=$(wildcard src/*.c) $(wildcard src/*/*.c)
-SS=$(wildcard src/*.s) $(wildcard src/*/*.s)
-S80S=$(wildcard src/*.s80) $(wildcard src/*/*.s80)
-SS+=$(wildcard *.s)
-S80S+=$(wildcard *.s80)
+SRC_C= $(wildcard *.c)
+SRC_C+= $(wildcard $(SRC)/*.c)
+SRC_C+= $(wildcard $(SRC)/system/*.c)
+SRC_C+= $(wildcard $(SRC)/obj/*.c)
+SRC_S= $(wildcard *.s)
+SRC_S+= $(wildcard $(SRC)/*.s)
+SRC_ASM= $(wildcard *.asm)
+SRC_ASM+= $(wildcard $(SRC)/*.asm)
+SRC_S80= $(wildcard *.s80)
+SRC_S80+= $(wildcard $(SRC)/*.s80)
 
-RESOURCES+=$(CS:.c=.o)
-RESOURCES+=$(SS:.s=.o)
-RESOURCES+=$(S80S:.s80=.o)
+RES_C= $(wildcard $(RES)/*.c)
+RES_S= $(wildcard $(RES)/*.s)
+RES_RES= $(wildcard *.res)
+RES_RES+= $(wildcard $(RES)/*.res)
 
-OBJS = $(RESOURCES)
+OBJ= $(RES_RES:.res=.o)
+OBJ+= $(RES_S:.s=.o)
+OBJ+= $(RES_C:.c=.o)
+OBJ+= $(SRC_S80:.s80=.o)
+OBJ+= $(SRC_ASM:.asm=.o)
+OBJ+= $(SRC_S:.s=.o)
+OBJ+= $(SRC_C:.c=.o)
 
-.PHONY: all clean
+OBJS= $(addprefix out/, $(OBJ))
 
-all: lyle.bin
+INCS= -I$(SRC) -I$(RES) -I$(SRC)/** -I$(LIBINCLUDE) -I$(LIBRES)
+DEFAULT_FLAGS= -m68000 -Wall -fno-builtin $(INCS) -B$(BIN)
+FLAGSZ80= -i$(SRC) -i$(RES) -i$(LIBSRC) -i$(LIBINCLUDE)
 
-gens: lyle.bin
-	@exec gens $< 2> /dev/null
 
-regen: lyle.bin
-	@exec wine ./util/regen/Regen.exe ../../lyle.bin
+release: FLAGS= $(DEFAULT_FLAGS) -O3 -flto -fuse-linker-plugin -fno-web -fno-gcse -fno-unit-at-a-time -fomit-frame-pointer
+#release: FLAGS= $(DEFAULT_FLAGS) -O1 -fomit-frame-pointer
+release: LIBMD= $(LIB)/libmd.a
+release: pre-build out/rom.bin
 
-kmod: lyle.bin
-	@exec wine ./util/kmod/gens.exe lyle.bin
+debug: FLAGS= $(DEFAULT_FLAGS) -O1 -ggdb -DDEBUG=1
+debug: LIBMD= $(LIB)/libmd_debug.a
+debug: pre-build out/rom.bin out/rom.out out/symbol.txt
 
-umdk: lyle.bin
-	@exec util/umdkv2-bin/loader -w $<:0 -x 2
 
-fusion: lyle.bin
-	@exec util/Fusion $< 2> /dev/null
+all: release
+default: release
 
-test: lyle.bin
-	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
+Default: release
+Debug: debug
+Release: release
 
-test32: lyle.bin
-	@exec util/megaloader/mega32 md $< /dev/ttyUSB0 2> /dev/null
+.PHONY: clean
 
-src/system/boot/sega.o: src/system/boot/rom_head.bin
-	@$(AS) $(ASFLAGS) src/system/boot/sega.s -o $@
+cleanobj:
+	$(RM) -f $(OBJS) out/sega.o out/rom_head.bin out/rom_head.o out/rom.out
 
-%.bin: %.elf
-	@$(OBJC) -O binary $< temp.bin
-	@bash -c '$(ECHO) "\e[32m"'
-	@dd if=temp.bin of=$@ bs=8k conv=sync
-	@rm temp.bin
-	@bash -c '$(ECHO) "\e[0m"'
+clean: cleanobj
+	$(RM) -f out.lst out/cmd_ out/rom.nm out/rom.wch out/rom.bin
 
-%.elf: $(OBJS) $(BOOT_RESOURCES)
-	@$(CC) -n -o $@ $(LINKFLAGS) $(BOOT_RESOURCES) $(ARCHIVES) $(OBJS) $(LIBS)
+cleanrelease: clean
 
-%.o80: %.s80
-	@$(ASMZ80) $(Z80FLAGS) -o $@ $<
+cleandebug: clean
+	$(RM) -f  out/symbol.txt
 
-%.c: %.o80
-	@$(BINTOS) $<
+cleandefault: clean
+cleanDefault: clean
+cleanRelease: cleanrelease
+cleanDebug: cleandebug
 
-%.o: %.c
-	@bash -c '$(ECHO) "\t\e[96m[ CC ]\e[0m $<\n"'
-	@$(CC) $(CCFLAGS) $(INCS) -c $< -o $@ 
-%.o: %.s
-	@bash -c '$(ECHO) "\t\e[94m[ AS ]\e[0m $<\n"'
-	@$(AS) $(ASFLAGS) $< -o $@
 
-%.s: %.esf
-	@$(BINTOS) -align 32768 $<
+pre-build:
+	$(MKDIR) -p $(SRC)/boot
+	$(MKDIR) -p out
+	$(MKDIR) -p out/src
+	$(MKDIR) -p out/src/system
+	$(MKDIR) -p out/src/obj
+	$(MKDIR) -p out/res
 
-%.s: %.eif
-	@$(BINTOS) -align 256 $<
+
+out/rom.bin: out/rom.out
+	$(OBJCPY) -O binary out/rom.out out/rom.bin
+	$(SIZEBND) out/rom.bin -sizealign 131072
+
+out/symbol.txt: out/rom.out
+	$(NM) --plugin=liblto_plugin-0.dll -n out/rom.out > out/symbol.txt
+
+out/rom.out: out/sega.o out/cmd_ $(LIBMD)
+	$(CC) -B$(BIN) -n -T $(GDK)/md.ld -nostdlib out/sega.o @out/cmd_ $(LIBMD) $(LIB)/libgcc.a -o out/rom.out
+	$(RM) out/cmd_
+
+out/cmd_: $(OBJS)
+	$(ECHO) "$(OBJS)" > out/cmd_
+
+out/sega.o: $(SRC)/boot/sega.s out/rom_head.bin
+	$(CC) $(DEFAULT_FLAGS) -c $(SRC)/boot/sega.s -o $@
+
+out/rom_head.bin: out/rom_head.o
+	$(LD) -T $(GDK)/md.ld -nostdlib --oformat binary -o $@ $<
+
+out/rom_head.o: $(SRC)/boot/rom_head.c
+	$(CC) $(DEFAULT_FLAGS) -c $< -o $@
+
+$(SRC)/boot/sega.s: $(LIBSRC)/boot/sega.s
+	$(CP) $< $@
+
+$(SRC)/boot/rom_head.c: $(LIBSRC)/boot/rom_head.c
+	$(CP) $< $@
+
+
+out/%.o: %.c
+	$(CC) $(FLAGS) -c $< -o $@
+
+out/%.o: %.s
+	$(CC) $(FLAGS) -register-prefix-optional -c $< -o $@
 
 %.s: %.res
-	@ $(RESCOMP) $< $@ > /dev/null
+	$(RESCOMP) $< $@
 
-src/system/boot/rom_head.bin: src/system/boot/rom_head.o
-	@$(LD) $(LINKFLAGS) --oformat binary -o $@ $<
+%.s: %.asm
+	$(MACCER) -o $@ $<
 
-clean:
-	@$(RM) $(RESOURCES)
-	@$(RM) *.o *.bin *.elf *.map
-	@$(RM) src/system/boot/*.o src/system/boot/*.bin
-	@$(RM) $(RESS:.res=.h) $(RESS:.res=.s)
+%.o80: %.s80
+	$(ASMZ80) $(FLAGSZ80) $< $@ out.lst
+
+%.s: %.o80
+	$(BINTOS) $<

@@ -3,14 +3,14 @@
 #include "vramslots.h"
 #include "gfx.h"
 #include "pal.h"
-#include "system.h"
+#include "system/system.h"
 #include "pausemap.h"
-#include "sprites.h"
-#include "save.h"
+#include "system/sprites.h"
+#include "system/save.h"
 #include "hud.h"
 #include "state.h"
-#include "music.h"
-#include "gameloop.h"
+#include "system/music.h"
+#include "system/gameloop.h"
 
 static void pause_pal_cycle(void)
 {
