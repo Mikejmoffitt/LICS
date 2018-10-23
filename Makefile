@@ -1,3 +1,4 @@
+GENDEV := /opt/gendev/
 BIN= $(GDK)/bin
 LIB= $(GDK)/lib
 
@@ -32,6 +33,7 @@ SRC_C+= $(wildcard $(SRC)/system/*.c)
 SRC_C+= $(wildcard $(SRC)/obj/*.c)
 SRC_S= $(wildcard *.s)
 SRC_S+= $(wildcard $(SRC)/*.s)
+SRC_S+= $(wildcard $(SRC)/system/*.s)
 SRC_ASM= $(wildcard *.asm)
 SRC_ASM+= $(wildcard $(SRC)/*.asm)
 SRC_S80= $(wildcard *.s80)
@@ -77,15 +79,15 @@ Release: release
 .PHONY: clean
 
 cleanobj:
-	$(RM) -f $(OBJS) out/sega.o out/rom_head.bin out/rom_head.o out/rom.out
+	@$(RM) -f $(OBJS) out/sega.o out/rom_head.bin out/rom_head.o out/rom.out
 
 clean: cleanobj
-	$(RM) -f out.lst out/cmd_ out/rom.nm out/rom.wch out/rom.bin
+	@$(RM) -f out.lst out/cmd_ out/rom.nm out/rom.wch out/rom.bin
 
 cleanrelease: clean
 
 cleandebug: clean
-	$(RM) -f  out/symbol.txt
+	@$(RM) -f  out/symbol.txt
 
 cleandefault: clean
 cleanDefault: clean
@@ -94,52 +96,58 @@ cleanDebug: cleandebug
 
 
 pre-build:
-	$(MKDIR) -p $(SRC)/boot
-	$(MKDIR) -p out
-	$(MKDIR) -p out/src
-	$(MKDIR) -p out/src/system
-	$(MKDIR) -p out/src/obj
-	$(MKDIR) -p out/res
+	@$(MKDIR) -p $(SRC)/boot
+	@$(MKDIR) -p out
+	@$(MKDIR) -p out/src
+	@$(MKDIR) -p out/src/system
+	@$(MKDIR) -p out/src/obj
+	@$(MKDIR) -p out/res
 
 
 out/rom.bin: out/rom.out
-	$(OBJCPY) -O binary out/rom.out out/rom.bin
-	$(SIZEBND) out/rom.bin -sizealign 131072
+	@$(OBJCPY) -O binary out/rom.out out/rom.bin
+	@$(SIZEBND) out/rom.bin -sizealign 131072
 
 out/symbol.txt: out/rom.out
-	$(NM) --plugin=liblto_plugin-0.dll -n out/rom.out > out/symbol.txt
+	@$(NM) --plugin=liblto_plugin-0.dll -n out/rom.out > out/symbol.txt
 
 out/rom.out: out/sega.o out/cmd_ $(LIBMD)
-	$(CC) -B$(BIN) -n -T $(GDK)/md.ld -nostdlib out/sega.o @out/cmd_ $(LIBMD) $(LIB)/libgcc.a -o out/rom.out
-	$(RM) out/cmd_
+	@$(CC) -B$(BIN) -n -T $(GDK)/md.ld -nostdlib out/sega.o @out/cmd_ $(LIBMD) $(LIB)/libgcc.a -o out/rom.out
+	@$(RM) out/cmd_
+	@bash -c 'printf "\e[92m\nBuild Successful\e[0m\n\n"'
 
 out/cmd_: $(OBJS)
-	$(ECHO) "$(OBJS)" > out/cmd_
+	@$(ECHO) "$(OBJS)" > out/cmd_
 
 out/sega.o: $(SRC)/boot/sega.s out/rom_head.bin
-	$(CC) $(DEFAULT_FLAGS) -c $(SRC)/boot/sega.s -o $@
+	@$(CC) $(DEFAULT_FLAGS) -c $(SRC)/boot/sega.s -o $@
 
 out/rom_head.bin: out/rom_head.o
-	$(LD) -T $(GDK)/md.ld -nostdlib --oformat binary -o $@ $<
+	@$(LD) -T $(GDK)/md.ld -nostdlib --oformat binary -o $@ $<
 
 out/rom_head.o: $(SRC)/boot/rom_head.c
-	$(CC) $(DEFAULT_FLAGS) -c $< -o $@
+	@$(CC) $(DEFAULT_FLAGS) -c $< -o $@
 
 $(SRC)/boot/sega.s: $(LIBSRC)/boot/sega.s
-	$(CP) $< $@
+	@bash -c 'printf "\t\e[96m[ ASM ]\e[0m $<\n"'
+	@$(CP) $< $@
 
 $(SRC)/boot/rom_head.c: $(LIBSRC)/boot/rom_head.c
-	$(CP) $< $@
+	@bash -c 'printf "\t\e[96m[  C  ]\e[0m $<\n"'
+	@$(CP) $< $@
 
 
 out/%.o: %.c
-	$(CC) $(FLAGS) -c $< -o $@
+	@bash -c 'printf "\t\e[96m[  C  ]\e[0m $<\n"'
+	@$(CC) $(FLAGS) -c $< -o $@
 
 out/%.o: %.s
-	$(CC) $(FLAGS) -register-prefix-optional -c $< -o $@
+	@bash -c 'printf "\t\e[96m[ ASM ]\e[0m $<\n"'
+	@$(CC) $(FLAGS) -c $< -o $@
 
 %.s: %.res
-	$(RESCOMP) $< $@
+	@bash -c 'printf "\t\e[96m[ RES ]\e[0m $<\n"'
+	@$(RESCOMP) $< $@ 2>&1 > /dev/null
 
 %.s: %.asm
 	$(MACCER) -o $@ $<
@@ -149,3 +157,12 @@ out/%.o: %.s
 
 %.s: %.o80
 	$(BINTOS) $<
+
+gens: release
+	@exec gens out/rom.bin 2> /dev/null
+
+fusion: release
+	@exec util/Fusion out/rom.bin 2> /dev/null
+
+flash: lyle.bin
+	@exec util/megaloader/megaloader md $< /dev/ttyUSB0 2> /dev/null
