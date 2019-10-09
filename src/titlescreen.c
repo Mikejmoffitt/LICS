@@ -2,14 +2,14 @@
 #include <genesis.h>
 #include "pal.h"
 #include "gfx.h"
-#include "system/music.h"
-#include "system/sprites.h"
-#include "system/system.h"
-#include "system/music.h"
+#include "music.h"
+#include "sprites.h"
+#include "system.h"
+#include "music.h"
 #include "map.h"
 #include "state.h"
 #include "bg.h"
-#include "system/save.h"
+#include "save.h"
 #include "cubes.h"
 
 #define TITLE_PLANE_W 64
@@ -37,9 +37,9 @@ static void title_init(void)
 	VDP_doVRamDMA((u32)gfx_font, 0xA400, 1536);
 
 	VDP_setPlanSize(TITLE_PLANE_W, TITLE_PLANE_H);
-	VDP_clearPlan(PLAN_A, 1);
+	VDP_clearPlan(VDP_PLAN_A, 1);
 	VDP_waitDMACompletion();
-	VDP_clearPlan(PLAN_B, 1);
+	VDP_clearPlan(VDP_PLAN_B, 1);
 	VDP_waitDMACompletion();
 
 	VDP_setScreenWidth320();
@@ -449,9 +449,9 @@ void title_play_intro(void)
 	music_play(0);
 	VDP_setEnable(0);
 	VDP_waitDMACompletion();
-	VDP_clearPlan(PLAN_A, 1);
+	VDP_clearPlan(VDP_PLAN_A, 1);
 	VDP_waitDMACompletion();
-	VDP_clearPlan(PLAN_B, 1);
+	VDP_clearPlan(VDP_PLAN_B, 1);
 	VDP_waitDMACompletion();
 	VDP_doCRamDMA((u32)pal_black, 0, 16);
 	VDP_doCRamDMA((u32)pal_black, 32, 16);

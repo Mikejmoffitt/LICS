@@ -6,8 +6,8 @@
 #include "mapdata.h"
 #include "state.h"
 #include "player.h"
-#include "system/sprites.h"
-#include "system/system.h"
+#include "sprites.h"
+#include "system.h"
 
 #define MAP_DMA_QUEUE_MAX 96
 static u32 map_dma_src_queue[MAP_DMA_QUEUE_MAX];

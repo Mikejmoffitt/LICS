@@ -1,7 +1,7 @@
 #include "particles.h"
 #include "state.h"
-#include "system/sprites.h"
-#include "system/system.h"
+#include "sprites.h"
+#include "system.h"
 #include "vramslots.h"
 #include "gfx.h"
 

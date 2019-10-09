@@ -1,15 +1,15 @@
 #include "state.h"
 #include "bg.h"
-#include "system/music.h"
+#include "music.h"
 #include "cubes.h"
 #include "player.h"
-#include "system/system.h"
+#include "system.h"
 #include "vramslots.h"
 #include "pal.h"
-#include "system/save.h"
+#include "save.h"
 #include "enemy.h"
 #include "enemy_types.h"
-#include "obj/items.h"
+#include "items.h"
 
 gamestate state;
 

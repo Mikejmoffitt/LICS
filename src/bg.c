@@ -47,7 +47,7 @@ void bg_load(u16 num)
 	}
 
 	current_bg = num;
-	VDP_clearPlan(PLAN_B, 1);
+	VDP_clearPlan(VDP_PLAN_B, 1);
 	// Source data for CRAM palette (first 8 entries)
 	u32 pal_src;
 	// Source data for VRAM tiles
