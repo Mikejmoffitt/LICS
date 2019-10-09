@@ -113,7 +113,7 @@ void map_debug_chooser(void)
 	system_wait_v();
 	VDP_setReg(0x12,0x1E);
 
-	u16 room_choice = 0;
+	s16 room_choice = 0;
 
 	while (buttons & BUTTON_START)
 	{

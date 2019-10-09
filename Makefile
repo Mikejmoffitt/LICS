@@ -9,7 +9,7 @@ RESCOMP= rescomp
 
 ECHO = printf
 
-OPTION = -O1 -std=c99 -Wall -fdiagnostics-color=auto
+OPTION = -O1 -std=c99 -Wall -Wpedantic -Wextra  -fdiagnostics-color=auto
 INCS = -I$(GENDEV)/m68k-elf/include -I$(GENDEV)/m68k-elf/m68k-elf/include -Isrc -Ires -Iinc -Iinc/objects -Iinc/system
 CCFLAGS = $(OPTION) -m68000 -c -fomit-frame-pointer -fno-builtin -Wno-overflow -pedantic
 Z80FLAGS = -vb2 -Isrc/system/

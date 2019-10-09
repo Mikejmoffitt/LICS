@@ -122,8 +122,8 @@ void powerup_draw(void)
 	u16 i = NUM_POWERUPS;
 	while (i--)
 	{
-		u16 sx;
-		u16 sy;
+		s16 sx;
+		s16 sy;
 		u16 attr;
 		powerup *p = &powerups[i];
 		if (p->type == POWERUP_NULL)

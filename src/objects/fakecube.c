@@ -67,7 +67,7 @@ static void anim_func(void *v)
 	{
 		e->head.attr[0] = NULL;
 	}
-	else if (e->hide_counter > 0 && ((system_osc >> 2) % 2)
+	else if (((e->hide_counter > 0) && (((system_osc >> 2) % 2)))
 	         || e->hide_counter == 0)
 	{
 		e->head.attr[0] = TILE_ATTR_FULL(BG_PALNUM, 0, 0, 0, CUBE_VRAM_SLOT);

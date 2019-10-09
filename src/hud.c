@@ -12,7 +12,7 @@ void hud_dma_tiles(void)
 void hud_draw_health(u16 max, u16 val)
 {
 	val++;
-	unsigned int i = 1;
+	u16 i = 1;
 	// HP icon
 	sprite_put(HUD_HP_X, HUD_HP_Y, SPRITE_SIZE(2,2),
 		TILE_ATTR_FULL(HUD_PALNUM, 1, 0, 0, HUD_VRAM_SLOT + 4));

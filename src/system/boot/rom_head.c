@@ -1,6 +1,5 @@
 #include "types.h"
 
-
 const struct
 {
     char console[16];               /* Console Name (16) */
