@@ -6,9 +6,9 @@
 | exit:  d0 = previous SR value
 		.global set_sr
 set_sr:
-		moveq   #0, %d0
-		move.w  %sr, %d0
-		move.l  4(%sp), %d1
-		move.w  %d1, %sr
+		moveq   #0, d0
+		move.w  sr,d0
+		move.l  4(sp), d1
+		move.w  d1,sr
 		rts
 
